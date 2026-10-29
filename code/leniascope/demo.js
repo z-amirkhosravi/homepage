@@ -43,7 +43,7 @@ let colormap = defaultColormap;
 
 const active = () => handles.get(current);
 
-// The note under the controls is empty and hidden unless there is something to report.
+// The note under the controls holds a suggestion; an error or the fallback message replaces it.
 function showError(message) {
   note.textContent = message;
   note.hidden = false;
