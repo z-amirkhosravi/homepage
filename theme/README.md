@@ -26,11 +26,20 @@ Replace **every occurrence** of each slot; `{{section}}` and `{{description}}` a
 | `{{section}}` | Front-matter section | yes |
 | `{{root}}` | Relative prefix to the wiki root | — |
 | `{{toc}}` | `ol.toc-list` of sections with nested statements | no |
+| `{{notice}}` | `div.article-notice`, or empty (since `theme-v3`) | no |
 | `{{controls}}` | `div.reading-controls`, or empty | no |
 | `{{article}}` | Rendered article, beginning with its `h1` | no |
 | `{{adjacent}}` | `nav.adjacent`, or empty | no |
 
-The template moves the description and reading controls beneath the article's `h1` with a short inline script. Without scripting they appear just above the title.
+The template moves the description, article notice and reading controls beneath the article's `h1` with a short inline script. Without scripting they appear just above the title.
+
+## Attribution Markup (since `theme-v3`)
+
+| Element | Markup | Position |
+| --- | --- | --- |
+| Article notice | `<div class="article-notice" data-article-kind="exposition\|research">` containing the existing notice paragraphs | `{{notice}}` slot |
+| Statement attribution | `<p class="statement-attribution" data-origin="…"><span class="statement-attribution-label">Attribution.</span> …</p>` | In `div.statement`, after `h3.statement-title`, before `div.statement-body` |
+| Proof source | `<p class="proof-source"><span class="proof-source-label">Proof source.</span> …</p>` | First child of `div.proof-body` |
 
 ## Behaviour
 
