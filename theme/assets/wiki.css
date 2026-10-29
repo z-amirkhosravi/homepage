@@ -84,8 +84,9 @@ strong, b { font-weight: 600; }
 .toc a[aria-current="true"] { color: var(--text); font-weight: 700; }
 main { flex: 999 1 560px; min-width: 0; }
 
-.page-head { display: flex; justify-content: space-between; align-items: baseline; gap: 4px 16px; max-width: var(--measure); margin: 0 0 8px; }
-.page-section { margin: 0; font: var(--small) var(--sans); color: var(--muted); }
+/* The section appears once, in the breadcrumb; the page head holds only the article-kind label. */
+.page-head { display: flex; justify-content: flex-end; max-width: var(--measure); margin: 0 0 8px; }
+.page-head:empty { display: none; }
 /* Compact Expository / Research label at the upper right of the page heading. */
 .article-kind { flex: none; padding: 1px 8px; border: 1px solid #C8C8C8; border-radius: 2px; font: 13px/1.5 var(--sans); letter-spacing: 0.04em; color: #555555; }
 article h1 { margin: 0; max-width: calc(var(--base) * 36); font: 400 clamp(34px, 4vw, calc(var(--base) * 2.42))/1.1 var(--display); }

@@ -17,7 +17,7 @@ The build copies `assets/` to `dist/assets/theme/`. `page.html` links the styles
 
 ## Template Slots
 
-Replace **every occurrence** of each slot; `{{section}}` and `{{description}}` appear twice. After filling, no `{{` may remain.
+Replace **every occurrence** of each slot; `{{description}}` appears twice. Since `theme-v4`, `{{section}}` is shown once, in the breadcrumb. After filling, no `{{` may remain.
 
 | Slot | Content | Escaped |
 | --- | --- | --- |
@@ -31,7 +31,7 @@ Replace **every occurrence** of each slot; `{{section}}` and `{{description}}` a
 | `{{article}}` | Rendered article, beginning with its `h1` | no |
 | `{{adjacent}}` | `nav.adjacent`, or empty | no |
 
-The section line and the article-kind label share the line above the title, the label at its right end. The template moves the description and reading controls beneath the article's `h1` with a short inline script. Without scripting they appear just above the title.
+The article-kind label sits at the right end of a line above the title. The template moves the description and reading controls beneath the article's `h1` with a short inline script. Without scripting they appear just above the title.
 
 ## Attribution Markup
 
