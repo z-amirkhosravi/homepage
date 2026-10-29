@@ -172,7 +172,8 @@
     proofs.forEach(p => p.addEventListener('toggle', () => { update(); if (p.open) fitEquations(); }));
   }
 
-  // Reveal the target of a fragment link: its discussion, proof and presentation.
+  // Reveal the target of a fragment link: its discussion, proof and presentation, and every
+  // disclosure containing it, including the target itself (a Lean panel, for example).
   function revealHash() {
     let id;
     try { id = decodeURIComponent(location.hash.slice(1)); } catch { return; }
@@ -181,7 +182,7 @@
     if (target.closest('.discussion') && discussionHidden) setDiscussion(false);
     const panel = target.dataset.proofTarget ? document.getElementById(target.dataset.proofTarget) : target.closest('[data-proof-level]');
     if (panel) selectProof(panel.closest('.proof-presentations'), panel.dataset.proofLevel);
-    for (let p = target.parentElement; p; p = p.parentElement) if (p.tagName === 'DETAILS' && !p.classList.contains('toc')) p.open = true;
+    for (let p = target; p; p = p.parentElement) if (p.tagName === 'DETAILS' && !p.classList.contains('toc')) p.open = true;
     requestAnimationFrame(() => { target.scrollIntoView({block: 'start'}); markCurrent(); });
   }
   window.addEventListener('hashchange', revealHash);
