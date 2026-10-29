@@ -90,7 +90,6 @@ p { margin: 0 0 10px; }
 .ramp-menu:focus-visible li.active { outline: 2px solid var(--link); outline-offset: -2px; }
 .ramp-menu .ramp { width: 56px; flex: none; }
 .demo-note { margin-top: 8px; font: 14px/1.45 var(--sans); color: var(--muted); }
-.demo-note .placeholder { color: #767676; }
 
 @media (prefers-reduced-motion: reduce) {
   .switch .knob { transition: none; }

@@ -43,8 +43,10 @@ let colormap = defaultColormap;
 
 const active = () => handles.get(current);
 
+// The note under the controls is empty and hidden unless there is something to report.
 function showError(message) {
   note.textContent = message;
+  note.hidden = false;
 }
 
 // Shows the current dimension's canvas, or its still when that simulation is unavailable, and
@@ -166,7 +168,7 @@ function showFallback() {
   video.hidden = false;
   for (const group of document.querySelectorAll('.demo-controls .ctl-group')) group.hidden = true;
   recording.hidden = false;
-  note.textContent = 'The live simulation needs WebGPU, which this browser does not provide. The recording shows a seed developing into tubes.';
+  showError('The live simulation needs WebGPU, which this browser does not provide. The recording shows a seed developing into tubes.');
 }
 
 recording.addEventListener('click', () => {
