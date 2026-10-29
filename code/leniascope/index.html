@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leniascope</title>
+<meta name="description" content="An implementation of Bert Chan's Lenia, a continuous generalization of Conway's Game of Life, with an interactive 3D simulation.">
+<link rel="stylesheet" href="../../assets/site.css?v=1">
+<link rel="modulepreload" href="assets/leniascope.js?v=2.4.0">
+<script type="module" src="demo.js?v=1"></script>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="../../" aria-label="Home"><img src="../../theme/assets/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="../" aria-current="true">Code</a></li>
+<li><a href="../../math/">Math</a></li>
+<li><a href="../../math-2/">Math 2.0</a></li>
+<li><a href="../../about/">About</a></li>
+</ul>
+</nav>
+</header>
+<main id="main">
+<h1>Leniascope</h1>
+<p class="lede">An implementation of Bert Chan’s <a href="https://en.wikipedia.org/wiki/Lenia">Lenia</a>, a continuous generalization of Conway’s Game of Life.</p>
+
+<section class="demo" aria-label="Interactive demo">
+<div class="demo-stage">
+<canvas id="lenia" aria-label="Interactive 3D Lenia simulation"></canvas>
+<div class="demo-fallback" hidden>
+<video muted playsinline loop preload="none" poster="assets/poster.png" aria-label="Recorded 3D Lenia seed developing into tubes">
+<source src="assets/fallback.webm" type="video/webm">
+</video>
+</div>
+</div>
+<div class="demo-controls" role="group" aria-label="Simulation controls">
+<button type="button" id="demo-play" disabled>Pause</button>
+<button type="button" id="demo-step" disabled>Step</button>
+<button type="button" id="demo-reset" disabled>Reset</button>
+<button type="button" id="demo-new-seed" disabled>New seed</button>
+<span class="gap" aria-hidden="true"></span>
+<select id="demo-pattern" aria-label="Pattern" disabled></select>
+<select id="demo-view" aria-label="View" disabled>
+<option value="volume">Volume</option>
+<option value="surface">Surface</option>
+</select>
+<select id="demo-colormap" aria-label="Colormap" disabled></select>
+<button type="button" id="demo-recording" hidden>Play recording</button>
+</div>
+<p class="demo-note" id="demo-note"><span class="placeholder">[One or two lines on how to use the demo]</span></p>
+</section>
+
+<section class="prose">
+<p>Lenia is a continuous generalization of Conway’s <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">Game of Life</a>, where:</p>
+<ul>
+<li>The on/off state of each pixel is replaced by a value in the real interval [0, 1].</li>
+<li>The “neighbour count” of each pixel is replaced by a weighted average of an area around the pixel.</li>
+<li>The discrete change in state is replaced by growth via a difference equation modelling an ODE.</li>
+</ul>
+<p>Most random initial states of enough mass evolve into the same type of almost plant-like, pseudo-periodic organism. The exception is the Orbium: it moves, has bilateral symmetry like actual living animals, and even looks vaguely like a jellyfish.</p>
+
+<h2>Implementation</h2>
+<p class="placeholder">[Implementation of the current version: the desktop application and this browser version.]</p>
+<p><a href="https://github.com/z-amirkhosravi/leniascope">Source on GitHub</a></p>
+</section>
+</main>
+</div>
+<footer class="site-footer">
+<a href="../../about/">About</a>
+<a href="https://github.com/z-amirkhosravi">GitHub</a>
+</footer>
+</body>
+</html>

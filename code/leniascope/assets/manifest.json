@@ -1,0 +1,15 @@
+{
+  "version": "2.4.0",
+  "entry": "leniascope.js",
+  "bytes": 50423,
+  "gzipBytes": 14654,
+  "sha256": "95de6bea6d224b21d835cc78a5b024ef3c8ac7468ab9af192fc922bf34d09022",
+  "backends": [
+    "webgpu"
+  ],
+  "presets": [
+    "random",
+    "classic-tubes",
+    "spheres"
+  ]
+}
