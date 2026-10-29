@@ -13,7 +13,7 @@ The visual layer of the Math 2.0 wiki: page template, stylesheet, reading script
 | `assets/fonts/` | Libertinus Serif, Serif Display, Sans and Math (OFL), Temml prime font (MIT) |
 | `assets/banner.jpg` | Banner, linking to the homepage |
 
-The build copies `assets/` to `dist/assets/theme/`.
+The build copies `assets/` to `dist/assets/theme/`. `page.html` links the stylesheets and script with `?v=N`, the theme release number, so browsers fetch new files after a theme update; each release increments it.
 
 ## Template Slots
 
