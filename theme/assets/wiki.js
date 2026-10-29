@@ -147,6 +147,22 @@
     selector.addEventListener('change', e => { if (e.target.matches('input[type="radio"]')) selectProof(group, e.target.value); });
   });
 
+  // The selector sits on the "Proof" line when there is room; otherwise it moves below,
+  // so it never covers the proof citation.
+  function placeSelectors() {
+    for (const selector of document.querySelectorAll('.proof-selector')) {
+      selector.classList.remove('below');
+      if (selector.hidden || getComputedStyle(selector).position !== 'absolute') continue;
+      const summary = selector.closest('details.proof')?.querySelector(':scope > summary');
+      const last = summary && [...summary.children].filter(el => !el.classList.contains('visually-hidden')).pop();
+      if (last && last.getBoundingClientRect().right + 12 > selector.getBoundingClientRect().left) selector.classList.add('below');
+    }
+  }
+  placeSelectors();
+  document.fonts.ready.then(placeSelectors);
+  window.addEventListener('resize', () => requestAnimationFrame(placeSelectors));
+  document.querySelectorAll('details.proof').forEach(p => p.addEventListener('toggle', placeSelectors));
+
   // Collapse or expand every proof.
   const proofToggle = document.querySelector('.proof-toggle');
   if (proofToggle) {

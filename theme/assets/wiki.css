@@ -146,11 +146,13 @@ math { font-family: "Libertinus Math", math; font-size: 1em; }
 .proof > summary::-webkit-details-marker { display: none; }
 .proof-heading { font-style: italic; }
 .proof > summary .proof-citation { margin-left: 0.35em; }
-.proof > summary::after { content: "Show proof"; margin-left: auto; font: var(--small) var(--sans); color: var(--link); }
+.proof > summary::after { content: "Show proof"; margin-left: auto; padding-left: 12px; white-space: nowrap; font: var(--small) var(--sans); color: var(--link); }
 .proof[open] > summary::after { content: "Hide proof"; }
 .proof-body { padding-top: 8px; }
 .proof-body > :not(.proof-presentations):last-child::after, .proof-version > :last-child::after { content: "∎"; float: right; margin-left: 12px; }
 .proof-selector { position: absolute; top: 0; right: 7em; display: flex; align-items: center; gap: 0 14px; min-height: 36px; margin: 0; padding: 0; border: 0; font: var(--small) var(--sans); color: var(--muted); }
+/* When the summary line has no room (long citation, narrow screen), the selector moves to its own line. */
+.proof-selector.below { position: static; justify-content: flex-end; margin: 0 0 6px; }
 .proof-selector legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 .proof-selector label { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; cursor: pointer; }
 .proof-selector input { margin: 0; accent-color: var(--link); }
@@ -191,10 +193,13 @@ ol.bibliography > li::before { content: "[" counter(bib) "]"; position: absolute
   .math-item { grid-template-columns: minmax(0, 1fr); }
   .math-item > .statement-meta { grid-column: 1; grid-row: 2; padding-top: 10px; gap: 6px; }
   .math-item > .proof { grid-row: 3; }
+  .proof-selector { position: static; justify-content: flex-start; margin: 0 0 6px; }
 }
 
 @media print {
   .banner, .site-header, .wiki-strip, .toc, .reading-controls, .proof-selector, .adjacent, .site-footer { display: none !important; }
   .proof > summary::after { content: none; }
+  /* Print collapsed proofs too, including without scripting. */
+  details.proof::details-content { content-visibility: visible; display: block; }
   .equation { overflow: visible; background: none; }
 }
