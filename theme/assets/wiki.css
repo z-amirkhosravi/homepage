@@ -1,0 +1,179 @@
+/* Wiki theme. Owned by the Website project; see theme/README.md. */
+
+@font-face { font-family: "Libertinus Serif"; src: url(fonts/LibertinusSerif-Regular.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Libertinus Serif"; font-style: italic; src: url(fonts/LibertinusSerif-Italic.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Libertinus Serif"; font-weight: 600; src: url(fonts/LibertinusSerif-Semibold.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Libertinus Serif"; font-weight: 600; font-style: italic; src: url(fonts/LibertinusSerif-SemiboldItalic.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Libertinus Serif Display"; src: url(fonts/LibertinusSerifDisplay-Regular.woff2) format("woff2"); font-display: swap; }
+@font-face { font-family: "Libertinus Sans"; src: url(fonts/LibertinusSans-Regular.woff2) format("woff2"); font-display: swap; }
+/* Recompressed from the 7.051 OTF: the release WOFF2 lacks the MATH table. */
+@font-face { font-family: "Libertinus Math"; src: url(fonts/LibertinusMath-Regular.woff2) format("woff2"); font-display: block; }
+@font-face { font-family: "Temml"; src: url(fonts/Temml.woff2) format("woff2"); }
+
+:root {
+  --text: #262626;
+  --muted: #666666;
+  --faint: #767676;
+  --link: #2D6A8F;
+  --link-hover: #1E4B66;
+  --link-line: rgba(45, 106, 143, 0.4);
+  --rule: #E2E2E2;
+  --panel: #F3F6F8;
+  --serif: "Libertinus Serif", Georgia, serif;
+  --display: "Libertinus Serif Display", "Libertinus Serif", Georgia, serif;
+  --sans: "Libertinus Sans", "Gill Sans", sans-serif;
+  --measure: 640px;
+  --gutter: clamp(20px, 4vw, 48px);
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 24px; }
+body { margin: 0; background: #ffffff; color: var(--text); font: 19px/1.6 var(--serif); -webkit-font-smoothing: antialiased; }
+a { color: var(--link); text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: var(--link-line); }
+a:hover { color: var(--link-hover); text-decoration-color: currentColor; }
+a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; border-radius: 2px; }
+strong, b { font-weight: 600; }
+[hidden] { display: none !important; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
+.skip-link { position: absolute; left: 12px; top: -48px; padding: 8px 12px; background: #ffffff; font-family: var(--sans); font-size: 15px; z-index: 10; }
+.skip-link:focus { top: 12px; }
+
+/* Banner, site navigation, wiki strip */
+.banner { display: block; }
+.banner img { display: block; width: 100%; height: clamp(92px, 13.2vw, 200px); object-fit: cover; object-position: 50% 50%; }
+.frame { max-width: 1120px; margin: 0 auto; padding: 0 var(--gutter); }
+.site-header { padding-top: 20px; }
+.site-header ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 28px; font-size: 20px; }
+.site-header a { text-decoration-line: none; }
+.site-header a:hover { text-decoration-line: underline; }
+.site-header a[aria-current] { color: var(--text); text-decoration-line: underline; text-decoration-color: var(--text); text-underline-offset: 7px; }
+
+.wiki-strip { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 32px; margin-top: 28px; padding: 10px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); font-family: var(--sans); font-size: 15px; color: var(--muted); }
+.wiki-strip ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 10px; }
+.wiki-strip ol a { text-decoration-line: none; }
+
+.search { position: relative; flex: 0 1 300px; min-width: 0; }
+.search input { width: 100%; height: 40px; padding: 0 12px; border: 1px solid #BDBDBD; border-radius: 2px; background: #ffffff; font: 15px var(--sans); color: var(--text); }
+.search-panel { position: absolute; right: 0; top: calc(100% + 6px); z-index: 5; width: min(480px, calc(100vw - 2 * var(--gutter))); max-height: min(70vh, 560px); overflow-y: auto; padding: 8px 16px; background: #ffffff; border: 1px solid #BDBDBD; box-shadow: 0 6px 24px rgba(38, 38, 38, 0.12); }
+#search-status { margin: 4px 0; color: var(--muted); }
+#search-results { list-style: none; margin: 0; padding: 0; }
+#search-results li + li { border-top: 1px solid var(--rule); }
+#search-results a { display: block; padding: 10px 0; text-decoration-line: none; color: var(--text); }
+#search-results a:hover strong, #search-results a:focus strong { color: var(--link-hover); text-decoration-line: underline; }
+#search-results span { display: block; font-size: 13px; color: var(--muted); }
+#search-results strong { display: block; font: 400 17px/1.35 var(--serif); color: var(--link); }
+#search-results p { margin: 2px 0 0; font-size: 14px; line-height: 1.45; color: var(--muted); }
+
+/* Contents and main column */
+.wiki-body { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 24px 40px; margin-top: 48px; }
+.toc { flex: 0 0 160px; position: sticky; top: 24px; max-height: calc(100vh - 48px); overflow-y: auto; font: 15px/1.4 var(--sans); }
+.toc summary { list-style: none; margin: 6px 0 12px; color: var(--muted); pointer-events: none; }
+.toc summary::-webkit-details-marker { display: none; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.toc ol ol { margin-top: 8px; padding-left: 12px; gap: 8px; }
+.toc a { text-decoration-line: none; }
+.toc a:hover { text-decoration-line: underline; }
+.toc a[aria-current="true"] { color: var(--text); font-weight: 700; }
+main { flex: 999 1 560px; min-width: 0; }
+
+.page-section { margin: 0 0 8px; font: 15px var(--sans); color: var(--muted); }
+article h1 { margin: 0; max-width: 680px; font: 400 clamp(34px, 4vw, 46px)/1.1 var(--display); }
+.page-intro { margin: 14px 0 28px; }
+.page-description { margin: 0; max-width: var(--measure); font-size: 21px; line-height: 1.5; color: #555555; }
+.reading-controls { display: flex; flex-wrap: wrap; gap: 0 24px; margin-top: 12px; }
+.reading-controls button { min-height: 44px; padding: 0; border: 0; background: none; cursor: pointer; font: 15px var(--sans); color: var(--link); }
+.reading-controls button:hover { color: var(--link-hover); text-decoration: underline; }
+
+/* Prose */
+article > :not(.math-item):not(h1) { max-width: var(--measure); }
+article p { margin: 0 0 16px; }
+article h2 { margin: 56px 0 16px; font-size: 26px; font-weight: 600; line-height: 1.2; }
+article h3 { margin: 32px 0 12px; font-size: 20px; font-weight: 600; line-height: 1.35; }
+article ul, article ol { padding-left: 1.2em; margin: 0 0 16px; }
+article li { margin-bottom: 6px; }
+article .anchor { display: none; }
+article code { overflow-wrap: anywhere; }
+/* Set by wiki.js on inline formulas wider than their line, so they scroll instead of widening the page. */
+math.too-wide { display: inline-block; max-width: 100%; overflow-x: auto; overflow-y: hidden; vertical-align: middle; }
+.eyebrow { margin: 0 0 8px; font: 15px var(--sans); color: var(--muted); }
+
+/* Display mathematics */
+.equation { --ground: #ffffff; margin: 14px 0; overflow-x: auto; overflow-y: hidden;
+  background:
+    linear-gradient(to right, var(--ground) 40%, transparent) left / 28px 100% no-repeat local,
+    linear-gradient(to left, var(--ground) 40%, transparent) right / 28px 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, rgba(38, 38, 38, 0.16), transparent) left / 12px 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, rgba(38, 38, 38, 0.16), transparent) right / 12px 100% no-repeat scroll; }
+math { font-family: "Libertinus Math", math; font-size: 1em; }
+
+/* Statements: text column with metadata in the margin, proof beneath */
+.math-item { display: grid; grid-template-columns: minmax(0, var(--measure)) minmax(140px, 1fr); column-gap: 40px; align-items: start; margin: 28px 0; }
+.math-item > .statement { grid-column: 1; grid-row: 1; font-size: 19px; line-height: 1.6; }
+.math-item > .statement-meta { grid-column: 2; grid-row: 1 / span 2; }
+.math-item > .proof { grid-column: 1; grid-row: 2; }
+.statement-title { margin: 0 0 10px; font-size: 20px; font-weight: 400; line-height: 1.35; }
+.statement-label { font-weight: 600; }
+.statement-body > :last-child { margin-bottom: 10px; }
+.definition > .statement, .construction > .statement { padding: 14px 0 4px; border-top: 1px solid var(--text); border-bottom: 1px solid var(--rule); }
+.theorem > .statement, .proposition > .statement, .lemma > .statement, .corollary > .statement { --ground: var(--panel); margin: 0 -20px; padding: 16px 20px 6px; border-top: 2px solid var(--text); background: var(--panel); }
+.theorem .equation, .proposition .equation, .lemma .equation, .corollary .equation { --ground: var(--panel); }
+.statement-meta { padding-top: 16px; display: flex; flex-direction: column; gap: 10px; font: 14px/1.45 var(--sans); color: var(--muted); }
+.statement-meta p { margin: 0; }
+.statement-tag a { text-decoration-line: none; }
+.evidence { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.evidence li { position: relative; padding-left: 16px; }
+.evidence li::before { content: ""; position: absolute; left: 0; top: 0.5em; width: 7px; height: 7px; border-radius: 50%; border: 1px solid #8A8A8A; }
+.evidence li[data-state="yes"]::before { background: var(--link); border-color: var(--link); }
+
+/* Proofs */
+.proof { position: relative; margin-top: 18px; }
+.proof > summary { display: flex; align-items: center; min-height: 44px; padding-bottom: 6px; border-bottom: 1px solid var(--rule); list-style: none; cursor: pointer; }
+.proof > summary::-webkit-details-marker { display: none; }
+.proof-heading { font-style: italic; }
+.proof > summary::after { content: "Show proof"; margin-left: auto; font: 15px var(--sans); color: var(--link); }
+.proof[open] > summary::after { content: "Hide proof"; }
+.proof-body { padding-top: 12px; }
+.proof-body > :not(.proof-presentations):last-child::after, .proof-version > :last-child::after { content: "∎"; float: right; margin-left: 12px; }
+.proof-selector { position: absolute; top: 0; right: 7em; display: flex; align-items: center; gap: 0 14px; min-height: 44px; margin: 0; padding: 0; border: 0; font: 15px var(--sans); color: var(--muted); }
+.proof-selector legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.proof-selector label { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; cursor: pointer; }
+.proof-selector input { margin: 0; accent-color: var(--link); }
+
+/* Discussion and examples */
+.discussion { margin: 24px 0; }
+.discussion.example:has(> h3) { padding: 14px 0 4px; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+.discussion > h3 { margin: 0 0 10px; font-weight: 400; }
+.prose-label { margin-bottom: 6px; font: 13px var(--sans); letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); }
+
+/* Tables */
+.article-table { overflow-x: auto; margin: 0 0 16px; }
+.article-table table { border-collapse: collapse; font-size: 17px; }
+.article-table th, .article-table td { padding: 6px 12px 6px 0; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
+.article-table th { font: 600 15px var(--sans); color: var(--muted); }
+
+/* Reading order and footer */
+.adjacent { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 24px 48px; max-width: 824px; margin-top: 72px; padding-top: 20px; border-top: 1px solid var(--rule); }
+.adjacent a { display: flex; flex-direction: column; gap: 4px; font-size: 20px; line-height: 1.35; text-decoration-line: none; }
+.adjacent a:hover { text-decoration-line: underline; }
+.adjacent a[rel="next"] { grid-column: -2; }
+.adjacent small { font: 15px var(--sans); color: var(--muted); }
+.site-footer { max-width: 1120px; margin: 96px auto 0; padding: 20px var(--gutter) 48px; font: 15px var(--sans); color: var(--muted);
+  background: linear-gradient(var(--rule), var(--rule)) var(--gutter) 0 / calc(100% - 2 * var(--gutter)) 1px no-repeat; }
+
+/* Narrow screens: contents collapse to a disclosure, metadata drops beneath statements */
+@media (max-width: 860px) {
+  .search { flex: 1 1 100%; }
+  .toc { flex: 1 1 100%; position: static; max-height: none; border-bottom: 1px solid var(--rule); font-size: 16px; }
+  .toc summary { min-height: 44px; display: flex; align-items: center; margin: 0; color: var(--link); cursor: pointer; pointer-events: auto; }
+  .toc nav { padding-bottom: 14px; }
+  .wiki-body { margin-top: 0; }
+  .math-item { grid-template-columns: minmax(0, 1fr); }
+  .math-item > .statement-meta { grid-column: 1; grid-row: 2; padding-top: 10px; gap: 6px; }
+  .math-item > .proof { grid-row: 3; }
+}
+
+@media print {
+  .banner, .site-header, .wiki-strip, .toc, .reading-controls, .proof-selector, .adjacent, .site-footer { display: none !important; }
+  .proof > summary::after { content: none; }
+  .equation { overflow: visible; background: none; }
+}
