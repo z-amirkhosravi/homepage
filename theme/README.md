@@ -38,8 +38,11 @@ The article-kind label sits at the right end of a line above the title. The temp
 | Element | Markup | Position |
 | --- | --- | --- |
 | Article kind (since `theme-v4`) | `<div class="article-kind" data-article-kind="exposition">Expository</div>` or `data-article-kind="research"` with `Research`; nothing else | `{{notice}}` slot, not the article body |
-| Statement attribution | `<p class="statement-attribution" data-origin="…"><span class="statement-attribution-label">Attribution.</span> …</p>` | In `div.statement`, after `h3.statement-title`, before `div.statement-body` |
-| Proof source | `<p class="proof-source"><span class="proof-source-label">Proof source.</span> …</p>` | First child of `div.proof-body` |
+| Statement citation (since `theme-v5`) | `<span class="statement-citation" data-citation><a href="#ref-…">[1, p. 45]</a></span>` | Last child of `h3.statement-title`, after the title text and a space |
+| Proof citation (since `theme-v5`) | `<span class="proof-citation" data-proof-citation><a href="#ref-…">[1, §3]</a></span>` | In the proof's `summary`: after `span.proof-heading` and `span.visually-hidden` |
+| Bibliography (since `theme-v5`) | `<ol class="bibliography">` with one `li` per entry, each starting with its `<span id="ref-…"></span>` anchor | Under the article's References heading; the theme prints the `[n]` numbers |
+
+`theme-v3` placed attribution and proof-source paragraphs (`p.statement-attribution`, `p.proof-source`). They are no longer used and their styles are removed.
 
 ## Behaviour
 
