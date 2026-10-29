@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Leniascope</title>
-<meta name="description" content="An implementation of Bert Chan's Lenia, a continuous generalization of Conway's Game of Life, with an interactive 3D simulation.">
-<link rel="stylesheet" href="../../assets/site.css?v=2">
-<link rel="modulepreload" href="assets/leniascope.js?v=2.4.0">
-<script type="module" src="demo.js?v=1"></script>
+<meta name="description" content="An implementation of Bert Chan's Lenia, a continuous generalization of Conway's Game of Life, with interactive 2D and 3D simulations.">
+<link rel="stylesheet" href="../../assets/site.css?v=3">
+<link rel="modulepreload" href="assets/leniascope.js?v=3.0.1">
+<script type="module" src="demo.js?v=2"></script>
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -30,24 +30,36 @@
 <section class="demo" aria-label="Interactive demo">
 <div class="demo-stage">
 <canvas id="lenia" aria-label="Interactive 3D Lenia simulation"></canvas>
+<canvas id="lenia-2d" aria-label="Interactive 2D Lenia simulation" hidden></canvas>
 <div class="demo-fallback" hidden>
-<video muted playsinline loop preload="none" poster="assets/poster.png" aria-label="Recorded 3D Lenia seed developing into tubes">
-<source src="assets/fallback.webm" type="video/webm">
+<video muted playsinline loop preload="none" poster="assets/poster.png?v=3.0.1" aria-label="Recorded 3D Lenia seed developing into tubes" hidden>
+<source src="assets/fallback.webm?v=3.0.1" type="video/webm">
 </video>
+<img id="demo-still-2d" data-src="assets/poster-2d.png?v=3.0.1" alt="An Orbium, a moving creature of 2D Lenia" hidden>
 </div>
 </div>
+<!-- Icons from Tabler Icons (MIT licence), https://tabler.io/icons -->
 <div class="demo-controls" role="group" aria-label="Simulation controls">
-<button type="button" id="demo-play" disabled>Pause</button>
-<button type="button" id="demo-step" disabled>Step</button>
-<button type="button" id="demo-reset" disabled>Reset</button>
-<button type="button" id="demo-new-seed" disabled>New seed</button>
-<span class="gap" aria-hidden="true"></span>
+<span class="ctl-group">
+<button type="button" class="switch" id="demo-dimension" role="switch" aria-checked="true" aria-label="3D" disabled><span class="label-2d" aria-hidden="true">2D</span><span class="track" aria-hidden="true"><span class="knob"></span></span><span class="label-3d" aria-hidden="true">3D</span></button>
+</span>
+<span class="ctl-group">
+<button type="button" class="icon" id="demo-play" title="Pause" aria-label="Pause" data-playing="true" disabled><svg class="when-playing" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z"/><path d="M14 6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z"/></svg><svg class="when-paused" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4v16l13 -8z"/></svg></button>
+<button type="button" class="icon" id="demo-step" title="Step" aria-label="Step" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5v14l12 -7z"/><path d="M20 5l0 14"/></svg></button>
+<button type="button" class="icon" id="demo-reset" title="Reset" aria-label="Reset" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.95 11a8 8 0 1 0 -.5 4m.5 5v-5h-5"/></svg></button>
+<button type="button" class="icon" id="demo-new-seed" title="New seed" aria-label="New seed" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z"/><circle cx="8.5" cy="8.5" r=".5" fill="currentColor"/><circle cx="15.5" cy="8.5" r=".5" fill="currentColor"/><circle cx="15.5" cy="15.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="15.5" r=".5" fill="currentColor"/><circle cx="12" cy="12" r=".5" fill="currentColor"/></svg></button>
+</span>
+<span class="ctl-group">
+<button type="button" class="icon" id="demo-snapshot" title="Save image" aria-label="Save image" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h1a2 2 0 0 0 2 -2a1 1 0 0 1 1 -1h6a1 1 0 0 1 1 1a2 2 0 0 0 2 2h1a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2"/><path d="M9 13a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/></svg></button>
+<span class="swatch-wrap"><button type="button" class="swatch" id="demo-colormap" aria-haspopup="listbox" aria-expanded="false" aria-controls="demo-colormap-menu" disabled><span class="ramp" aria-hidden="true"></span></button><ul class="ramp-menu" id="demo-colormap-menu" role="listbox" aria-label="Colormap" tabindex="-1" hidden></ul></span>
+</span>
+<span class="ctl-group">
 <select id="demo-pattern" aria-label="Pattern" disabled></select>
 <select id="demo-view" aria-label="View" disabled>
 <option value="volume">Volume</option>
 <option value="surface">Surface</option>
 </select>
-<select id="demo-colormap" aria-label="Colormap" disabled></select>
+</span>
 <button type="button" id="demo-recording" hidden>Play recording</button>
 </div>
 <p class="demo-note" id="demo-note"><span class="placeholder">[One or two lines on how to use the demo]</span></p>

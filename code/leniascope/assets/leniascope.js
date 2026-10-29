@@ -1,8 +1,8 @@
-// Leniascope Web v2.4.0 — generated from web/src; no runtime dependencies.
+// Leniascope Web v3.0.1 — generated from web/src; no runtime dependencies.
 
 // core
 // Formula and random stream ported from src/simulation.cpp. No simulation approximations here.
-const WEB_VERSION = "2.4.0";
+const WEB_VERSION = "3.0.1";
 const RULES = Object.freeze({
   classic: 0,
   birthDeath: 1,
@@ -121,12 +121,14 @@ async function randomField(
   seed,
   recipe = DEFAULT_RECIPE,
   yieldWork = true,
+  dimensions = 3,
 ) {
   const r = checkedRecipe(recipe),
     random = splitmix64(seed),
-    a = new Float32Array(n ** 3);
+    depth = dimensions === 2 ? 1 : n,
+    a = new Float32Array(n * n * depth);
   const maxSide = Math.max(1, Math.min(n, Math.trunc(radius * r.sizeMax)));
-  if (r.patches * maxSide ** 3 > 16 * n ** 3)
+  if (r.patches * maxSide ** dimensions > 16 * n ** dimensions)
     throw new RangeError("Too many overlapping seed writes");
   for (let patch = 0; patch < r.patches; patch++) {
     const ux = random(),
@@ -134,7 +136,7 @@ async function randomField(
       uz = random();
     let bx = Math.trunc(ux * n),
       by = Math.trunc(uy * n),
-      bz = Math.trunc(uz * n);
+      bz = Math.trunc(uz * depth);
     const side = () =>
       Math.max(
         1,
@@ -145,19 +147,22 @@ async function randomField(
       );
     const w = side(),
       h = side(),
-      d = side();
+      d = dimensions === 2 ? 1 : side();
     if (r.layout !== "uniform") {
       let dx, dy, dz;
       if (r.layout === "pair") {
         const distance = (patch === 0 ? -0.5 : 0.5) * r.spread * radius,
           az = (r.angle * Math.PI) / 180,
-          el = (r.elevation * Math.PI) / 180;
+          el = dimensions === 2 ? 0 : (r.elevation * Math.PI) / 180;
         dx = distance * Math.cos(el) * Math.cos(az);
         dy = distance * Math.cos(el) * Math.sin(az);
         dz = distance * Math.sin(el);
       } else {
-        const distance = r.spread * radius * Math.cbrt(ux),
-          z = 2 * uz - 1,
+        const distance =
+            r.spread *
+            radius *
+            (dimensions === 2 ? Math.sqrt(ux) : Math.cbrt(ux)),
+          z = dimensions === 2 ? 0 : 2 * uz - 1,
           horizontal = distance * Math.sqrt(Math.max(0, 1 - z * z));
         dx = horizontal * Math.cos(2 * Math.PI * uy);
         dy = horizontal * Math.sin(2 * Math.PI * uy);
@@ -165,28 +170,34 @@ async function randomField(
       }
       bx = wrapCell(cRound((n - w) * 0.5 + dx), n);
       by = wrapCell(cRound((n - h) * 0.5 + dy), n);
-      bz = wrapCell(cRound((n - d) * 0.5 + dz), n);
+      bz = dimensions === 2 ? 0 : wrapCell(cRound((n - d) * 0.5 + dz), n);
     }
     let lastYield = performance.now();
     for (let z = 0; z < d; z++) {
-      for (let y = 0; y < h; y++)
+      for (let y = 0; y < h; y++) {
         for (let x = 0; x < w; x++)
-          a[(((bz + z) % n) * n + ((by + y) % n)) * n + ((bx + x) % n)] =
+          a[(((bz + z) % depth) * n + ((by + y) % n)) * n + ((bx + x) % n)] =
             r.valueMin + (r.valueMax - r.valueMin) * random();
-      if (yieldWork && performance.now() - lastYield > 8) {
-        await yieldMain();
-        lastYield = performance.now();
+        if (yieldWork && performance.now() - lastYield > 8) {
+          await yieldMain();
+          lastYield = performance.now();
+        }
       }
     }
     if (yieldWork) await yieldMain();
   }
   return a;
 }
-async function kernelField(n, radius, yieldWork = true) {
-  const k = new Float64Array(n ** 3);
-  let sum = 0;
-  for (let z = -radius + 1; z <= radius; z++) {
-    for (let y = -radius + 1; y <= radius; y++)
+async function kernelField(n, radius, yieldWork = true, dimensions = 3) {
+  const k = new Float64Array(n ** dimensions);
+  let sum = 0,
+    lastYield = performance.now();
+  for (
+    let z = dimensions === 2 ? 0 : -radius + 1;
+    z <= (dimensions === 2 ? 0 : radius);
+    z++
+  ) {
+    for (let y = -radius + 1; y <= radius; y++) {
       for (let x = -radius + 1; x <= radius; x++) {
         const rho = Math.sqrt(x * x + y * y + z * z) / radius;
         if (rho >= 1) continue;
@@ -195,6 +206,11 @@ async function kernelField(n, radius, yieldWork = true) {
         k[(wrapCell(z, n) * n + wrapCell(y, n)) * n + wrapCell(x, n)] += v;
         sum += v;
       }
+      if (yieldWork && dimensions === 2 && performance.now() - lastYield > 8) {
+        await yieldMain();
+        lastYield = performance.now();
+      }
+    }
     if (yieldWork && (z & 7) === 0) await yieldMain();
   }
   const result = new Float32Array(k.length);
@@ -236,8 +252,8 @@ function rampTable(colors) {
 function fftShader(n) {
   const m = n % 3 === 0 ? n / 3 : n,
     radix = n / m;
-  if (m & (m - 1) || ![1, 3].includes(radix) || n > 96)
-    throw new RangeError("FFT requires 2^k or 3*2^k, at most 96");
+  if (m & (m - 1) || ![1, 3].includes(radix) || n > 1024)
+    throw new RangeError("FFT requires 2^k or 3*2^k, at most 1024");
   return `
 const N: u32 = ${n}u;
 const M: u32 = ${m}u;
@@ -356,11 +372,12 @@ function bindResources(device, pipeline, resources) {
   });
 }
 class GpuEngine {
-  static async create(device, n, params) {
+  static async create(device, n, params, dimensions = 3) {
     const e = new GpuEngine();
     e.device = device;
     e.n = n;
-    e.count = n ** 3;
+    e.dimensions = dimensions;
+    e.count = n ** dimensions;
     e.params = params;
     e.resources = [];
     try {
@@ -379,7 +396,7 @@ class GpuEngine {
       e.kernel = buffer(e.count * 8, storage);
       e.uniform = buffer(32, GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST);
       e.texture = device.createTexture({
-        size: [n, n, n],
+        size: [n, n, dimensions === 2 ? 1 : n],
         dimension: "3d",
         format: "rgba16float",
         usage:
@@ -393,7 +410,7 @@ class GpuEngine {
         computePipeline(device, updateShader(n)),
         computePipeline(device, displayShader(n)),
         ...[false, true].flatMap((inverse) =>
-          [0, 1, 2].map((axis) =>
+          Array.from({ length: dimensions }, (_, axis) =>
             computePipeline(device, fftCode, { AXIS: axis, INVERSE: inverse }),
           ),
         ),
@@ -403,16 +420,23 @@ class GpuEngine {
         bufferBinding(e.state),
         bufferBinding(e.a),
       ]);
-      e.fftBinds = e.fft.map((p, i) =>
-        bindResources(device, p, [
-          bufferBinding(i % 3 === 1 ? e.b : e.a),
-          bufferBinding(i % 3 === 1 ? e.a : e.b),
-        ]),
-      );
+      e.transformed = dimensions % 2 ? e.b : e.a;
+      e.product = dimensions % 2 ? e.a : e.b;
+      // Forward transforms start in a; the inverse starts in the product.
+      // An even axis count returns to its source buffer, an odd count swaps it.
+      e.fftBinds = e.fft.map((p, i) => {
+        const axis = i % dimensions,
+          start = i >= dimensions ? e.product : e.a;
+        const other = start === e.a ? e.b : e.a;
+        return bindResources(device, p, [
+          bufferBinding(axis % 2 ? other : start),
+          bufferBinding(axis % 2 ? start : other),
+        ]);
+      });
       e.multiplyBind = bindResources(device, e.multiply, [
-        bufferBinding(e.b),
+        bufferBinding(e.transformed),
         bufferBinding(e.kernel),
-        bufferBinding(e.a),
+        bufferBinding(e.product),
       ]);
       e.updateBind = bindResources(device, e.update, [
         bufferBinding(e.b),
@@ -437,9 +461,14 @@ class GpuEngine {
     pass.dispatchWorkgroups(count);
   }
   transform(pass, inverse = false) {
-    for (let axis = 0; axis < 3; axis++) {
-      const i = (inverse ? 3 : 0) + axis;
-      this.dispatch(pass, this.fft[i], this.fftBinds[i], this.n * this.n);
+    for (let axis = 0; axis < this.dimensions; axis++) {
+      const i = (inverse ? this.dimensions : 0) + axis;
+      this.dispatch(
+        pass,
+        this.fft[i],
+        this.fftBinds[i],
+        this.n ** (this.dimensions - 1),
+      );
     }
   }
   async setParams(params) {
@@ -456,7 +485,12 @@ class GpuEngine {
     new Uint32Array(data)[4] = RULES[params.rule];
     d.queue.writeBuffer(this.uniform, 0, data);
     if (!this.kernelReady || old.radius !== params.radius) {
-      const values = await kernelField(this.n, params.radius);
+      const values = await kernelField(
+        this.n,
+        params.radius,
+        true,
+        this.dimensions,
+      );
       const source = d.createBuffer({
         size: values.byteLength,
         usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
@@ -476,7 +510,13 @@ class GpuEngine {
         );
         this.transform(pass);
         pass.end();
-        encoder.copyBufferToBuffer(this.b, 0, this.kernel, 0, this.count * 8);
+        encoder.copyBufferToBuffer(
+          this.transformed,
+          0,
+          this.kernel,
+          0,
+          this.count * 8,
+        );
         d.queue.submit([encoder.finish()]);
         await d.queue.onSubmittedWorkDone();
         this.kernelReady = true;
@@ -616,14 +656,16 @@ fn composite(color:vec4f)->vec4f { return color+(1-color.a)*background(); }
  return composite(color);
 }`;
 class VolumeRenderer {
+  static checkedView = checkedView;
+  static shaderCode = renderShader;
   static async create(device, canvas, texture, options, n) {
-    const r = new VolumeRenderer();
+    const r = new this();
     Object.assign(r, {
       device,
       canvas,
       n,
       resources: [],
-      view: checkedView(options.view ?? {}),
+      view: this.checkedView(options.view ?? {}),
       background: colorValue(options.background ?? [0, 0, 0, 0]),
       scale: 1,
     });
@@ -655,7 +697,7 @@ class VolumeRenderer {
       });
       r.resources.push(r.ramp);
       r.setColorRamp(options.colorRamp);
-      const shader = device.createShaderModule({ code: renderShader });
+      const shader = device.createShaderModule({ code: this.shaderCode });
       const info = await shader.getCompilationInfo();
       const errors = info.messages.filter((x) => x.type === "error");
       if (errors.length)
@@ -710,13 +752,33 @@ class VolumeRenderer {
     this.dpr = globalThis.devicePixelRatio || 1;
   }
   setView(partial) {
-    this.view = checkedView(partial, this.view);
+    this.view = this.constructor.checkedView(partial, this.view);
   }
   setColorRamp(colors) {
     this.device.queue.writeBuffer(this.ramp, 0, rampTable(colors));
   }
   encode(encoder, target = null) {
     if (this.dpr !== (globalThis.devicePixelRatio || 1)) this.resize();
+    const data = this.viewData();
+    this.device.queue.writeBuffer(this.uniform, 0, data);
+    const texture = target ?? this.context.getCurrentTexture();
+    const pass = encoder.beginRenderPass({
+      colorAttachments: [
+        {
+          view: texture.createView(),
+          loadOp: "clear",
+          clearValue: { r: 0, g: 0, b: 0, a: 0 },
+          storeOp: "store",
+        },
+      ],
+    });
+    pass.setPipeline(this.pipeline);
+    pass.setBindGroup(0, this.bind);
+    pass.draw(3);
+    pass.end();
+    return texture;
+  }
+  viewData() {
     const v = this.view,
       cy = Math.cos(v.yaw),
       sy = Math.sin(v.yaw),
@@ -747,23 +809,7 @@ class VolumeRenderer {
       ...v.offset,
       0,
     ]);
-    this.device.queue.writeBuffer(this.uniform, 0, data);
-    const texture = target ?? this.context.getCurrentTexture();
-    const pass = encoder.beginRenderPass({
-      colorAttachments: [
-        {
-          view: texture.createView(),
-          loadOp: "clear",
-          clearValue: { r: 0, g: 0, b: 0, a: 0 },
-          storeOp: "store",
-        },
-      ],
-    });
-    pass.setPipeline(this.pipeline);
-    pass.setBindGroup(0, this.bind);
-    pass.draw(3);
-    pass.end();
-    return texture;
+    return data;
   }
   async snapshot() {
     const width = this.canvas.width,
@@ -823,6 +869,58 @@ class VolumeRenderer {
     for (const r of this.resources ?? []) r.destroy();
     this.resources = [];
     this.context?.unconfigure();
+  }
+}
+
+// renderer2d
+
+function checkedView2D(partial, base = { zoom: 1, offset: [0, 0] }) {
+  for (const key of Object.keys(partial))
+    if (!["zoom", "offset"].includes(key))
+      throw new TypeError(`Unknown 2D view setting: ${key}`);
+  const v = { ...base, ...partial };
+  finiteNumber(v.zoom, "zoom", 1, 16);
+  if (!Array.isArray(v.offset) || v.offset.length !== 2)
+    throw new TypeError("2D offset must contain x, y");
+  v.offset = v.offset.map((x) => finiteNumber(x, "offset", -1e6, 1e6));
+  return v;
+}
+
+class FieldRenderer extends VolumeRenderer {
+  static checkedView = checkedView2D;
+  static shaderCode = `
+struct View { geometry: vec4f, offset: vec4f, background: vec4f }
+@group(0) @binding(0) var<uniform> v: View;
+@group(0) @binding(1) var field: texture_3d<f32>;
+@group(0) @binding(2) var linearSampler: sampler;
+@group(0) @binding(3) var<storage,read> ramp: array<vec4f>;
+struct VertexOut { @builtin(position) position: vec4f, @location(0) uv: vec2f }
+@vertex fn vertex(@builtin(vertex_index) i: u32) -> VertexOut {
+ let points=array<vec2f,3>(vec2f(-1,-1),vec2f(3,-1),vec2f(-1,3));
+ var o:VertexOut;o.position=vec4f(points[i],0,1);o.uv=points[i];return o;
+}
+@fragment fn fragment(o:VertexOut)->@location(0) vec4f {
+ let bg=vec4f(v.background.rgb*v.background.a,v.background.a);
+ // Fit a square domain into any canvas aspect, with square cells.
+ let p=vec2f(o.uv.x*max(1,v.geometry.x),-o.uv.y*max(1,1/v.geometry.x));
+ if(any(abs(p)>vec2f(1))){return bg;}
+ let uv=p/(2*v.geometry.y)+vec2f(.5)+v.offset.xy;
+ let a=clamp(textureSampleLevel(field,linearSampler,vec3f(uv,.5),0).x,0,1);
+ let x=a*255;let i=min(254u,u32(x));let c=mix(ramp[i],ramp[i+1u],x-f32(i));
+ let alpha=c.a*min(1,a*50);
+ return vec4f(c.rgb*alpha,alpha)+(1-alpha)*bg;
+}`;
+  viewData() {
+    return new Float32Array([
+      this.aspect,
+      this.view.zoom,
+      0,
+      0,
+      ...this.view.offset,
+      0,
+      0,
+      ...this.background,
+    ]);
   }
 }
 
@@ -890,6 +988,63 @@ async function presetField(name, n, seed, recipe, overrides = {}) {
   };
 }
 
+// presets2d
+
+const RANDOM_2D = Object.freeze({
+  name: "random",
+  label: "Random",
+  grid: 1024,
+  rule: "classic",
+});
+
+// Gallery payloads are an optional, separately imported asset. Decode original
+// float32 cells, without cropping, resampling, thresholding or warming them up.
+async function presetField2D(
+  name,
+  n,
+  seed,
+  recipe,
+  overrides = {},
+  patterns = [],
+) {
+  const pattern = patterns.find((p) => p.name === name);
+  if (name !== "random" && !pattern)
+    throw new TypeError(`Unknown 2D preset: ${name}`);
+  if (pattern && pattern.grid !== n)
+    throw new RangeError(
+      `This saved pattern requires its original ${pattern.grid}² grid`,
+    );
+  const params = checkedParams(
+    {
+      radius: Math.round((n * 103) / 1024),
+      mu: 0.15,
+      ...pattern?.params,
+      ...overrides,
+    },
+    n,
+  );
+  if (name === "random") {
+    recipe = checkedRecipe(recipe);
+    return {
+      params,
+      field: await randomField(n, params.radius, seed, recipe, true, 2),
+      recipe,
+      seed: seedValue(seed).toString(),
+    };
+  }
+  const bytes = Uint8Array.from(atob(pattern.data), (c) => c.charCodeAt(0));
+  const decoded = await new Response(
+    new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate")),
+  ).arrayBuffer();
+  if (decoded.byteLength !== n * n * 4)
+    throw new Error("Invalid saved pattern length");
+  const data = new DataView(decoded),
+    field = new Float32Array(n * n);
+  for (let i = 0; i < field.length; i++)
+    field[i] = data.getFloat32(i * 4, true);
+  return { params, field, seed: pattern.seed, recipe: null };
+}
+
 // interaction
 function attachInteraction(canvas, sim, wheelZoom) {
   const points = new Map(),
@@ -899,6 +1054,14 @@ function attachInteraction(canvas, sim, wheelZoom) {
   const on = (name, fn, options) => {
     canvas.addEventListener(name, fn, options);
     listeners.push(() => canvas.removeEventListener(name, fn, options));
+  };
+  const zoom = (factor) => {
+    if (sim.dimensions === 2)
+      sim.setView({ zoom: Math.max(1, Math.min(16, sim.view.zoom / factor)) });
+    else
+      sim.setView({
+        distance: Math.max(0.9, Math.min(8, sim.view.distance * factor)),
+      });
   };
   const gap = () => {
     const [a, b] = points.values();
@@ -915,7 +1078,15 @@ function attachInteraction(canvas, sim, wheelZoom) {
       before = points.size === 2 ? gap() : 0;
     points.set(e.pointerId, { x: e.clientX, y: e.clientY });
     const v = sim.view;
-    if (points.size === 1)
+    if (points.size === 1 && sim.dimensions === 2) {
+      const side = Math.min(canvas.clientWidth, canvas.clientHeight) * v.zoom;
+      sim.setView({
+        offset: [
+          v.offset[0] - (e.clientX - old.x) / side,
+          v.offset[1] - (e.clientY - old.y) / side,
+        ],
+      });
+    } else if (points.size === 1)
       sim.setView({
         yaw: v.yaw - (e.clientX - old.x) * 0.008,
         pitch: Math.max(
@@ -923,13 +1094,7 @@ function attachInteraction(canvas, sim, wheelZoom) {
           Math.min(1.5, v.pitch + (e.clientY - old.y) * 0.008),
         ),
       });
-    else if (points.size === 2 && before > 0)
-      sim.setView({
-        distance: Math.max(
-          0.9,
-          Math.min(8, (v.distance * before) / Math.max(1, gap())),
-        ),
-      });
+    else if (points.size === 2 && before > 0) zoom(before / Math.max(1, gap()));
   });
   const up = (e) => points.delete(e.pointerId);
   for (const name of ["pointerup", "pointercancel", "lostpointercapture"])
@@ -946,16 +1111,7 @@ function attachInteraction(canvas, sim, wheelZoom) {
             : e.deltaMode === 2
               ? canvas.clientHeight
               : 1);
-        sim.setView({
-          distance: Math.max(
-            0.9,
-            Math.min(
-              8,
-              sim.view.distance *
-                Math.exp(Math.max(-1, Math.min(1, delta * 0.001))),
-            ),
-          ),
-        });
+        zoom(Math.exp(Math.max(-1, Math.min(1, delta * 0.001))));
       },
       { passive: false },
     );
@@ -974,6 +1130,7 @@ class LeniaHandle {
     Object.assign(this, {
       canvas,
       options,
+      dimensions: options.dimensions,
       available: false,
       backend: null,
       grid: null,
@@ -1154,7 +1311,7 @@ class LeniaHandle {
     });
   }
   async _replaceRandomSeed(seed) {
-    const data = await presetField(
+    const data = await this._presetField(
       "random",
       this.grid[0],
       seed,
@@ -1178,19 +1335,32 @@ class LeniaHandle {
     return this._run(() => this._replaceRandomSeed(freshSeed(this._seed)));
   }
   setPreset(name) {
-    if (!PRESETS.some((p) => p.name === name))
+    if (!this._presets.some((p) => p.name === name))
       return Promise.reject(new TypeError(`Unknown preset: ${name}`));
     return this._run(async () => {
-      const data = await presetField(
+      const n =
+        this.dimensions === 2
+          ? name === "random"
+            ? this.grid[0]
+            : this._presets.find((p) => p.name === name).grid
+          : this.grid[0];
+      const data = await this._presetField(
         name,
-        this.grid[0],
+        n,
         name === "random" && !this.options.recording
           ? freshSeed(this._seed)
           : this.options.seed,
         this.options.seedRecipe,
       );
       this._alive();
-      await this._engine.setParams(data.params);
+      if (n !== this.grid[0]) {
+        try {
+          await this._initialize(n, data);
+        } catch (error) {
+          this._fail(error);
+          throw error;
+        }
+      } else await this._engine.setParams(data.params);
       this._alive();
       this._initial = data.field;
       this._seed = data.seed;
@@ -1221,6 +1391,7 @@ class LeniaHandle {
   setColorRamp(colors) {
     if (!this.available || this._destroyed) return;
     this._renderer.setColorRamp(colors);
+    this.options.colorRamp = colors.map((c) => (Array.isArray(c) ? [...c] : c));
     this._dirty = true;
     this._schedule();
   }
@@ -1394,36 +1565,72 @@ class LeniaHandle {
   }
 }
 
-async function createLenia3D(canvas, options = {}) {
+function createLenia3D(canvas, options = {}) {
+  return createLenia(canvas, options, 3);
+}
+function createLenia2D(canvas, options = {}) {
+  return createLenia(canvas, options, 2);
+}
+async function createLenia(canvas, options, dimensions) {
   if (
     !canvas ||
     typeof canvas.getContext !== "function" ||
     typeof canvas.getBoundingClientRect !== "function"
   )
     throw new TypeError("Pass an HTML canvas");
-  const opts = { grid: "auto", preset: "random", ...options };
+  const opts = { grid: "auto", preset: "random", ...options, dimensions };
+  const patterns = opts.patterns ?? [];
+  const presets = dimensions === 2 ? [RANDOM_2D, ...patterns] : PRESETS;
+  const makeField =
+    dimensions === 2
+      ? (name, n, seed, recipe, overrides) =>
+          presetField2D(name, n, seed, recipe, overrides, patterns)
+      : presetField;
+  const Renderer = dimensions === 2 ? FieldRenderer : VolumeRenderer;
+  const validGrids = dimensions === 2 ? [128, 256, 512, 1024] : [48, 64, 96];
   opts.seed ??= opts.recording ? 1 : freshSeed();
-  if (!["auto", 48, 64, 96].includes(opts.grid))
-    throw new TypeError("grid must be auto, 48, 64, or 96");
+  if (!["auto", ...validGrids].includes(opts.grid))
+    throw new TypeError(`grid must be auto or ${validGrids.join(", ")}`);
   if (opts.recording && opts.grid === "auto")
     throw new TypeError("Recording requires an explicit grid");
-  if (!PRESETS.some((p) => p.name === opts.preset))
+  if (!presets.some((p) => p.name === opts.preset))
     throw new TypeError("Unknown preset");
+  const nativeGrid =
+    dimensions === 2 ? presets.find((p) => p.name === opts.preset).grid : 48;
+  if (
+    dimensions === 2 &&
+    opts.preset !== "random" &&
+    opts.grid !== "auto" &&
+    opts.grid !== nativeGrid
+  )
+    throw new RangeError(
+      "Saved 2D patterns use their original grid; omit grid or pass its native size",
+    );
   seedValue(opts.seed);
   if (opts.seedRecipe !== undefined) {
-    checkedRandomRecipe(opts.seedRecipe, opts.grid === "auto" ? 48 : opts.grid);
+    if (dimensions === 2) checkedRecipe(opts.seedRecipe);
+    else
+      checkedRandomRecipe(
+        opts.seedRecipe,
+        opts.grid === "auto" ? 48 : opts.grid,
+      );
     // Preserve partial overrides: the default patch count depends on the grid
     // selected below, including when the timing probe changes that grid.
     opts.seedRecipe = { ...opts.seedRecipe };
   }
-  checkedParams(opts.params ?? {}, opts.grid === "auto" ? 48 : opts.grid);
-  checkedView(opts.view ?? {});
+  checkedParams(
+    opts.params ?? {},
+    opts.grid === "auto" ? nativeGrid : opts.grid,
+  );
+  (dimensions === 2 ? checkedView2D : checkedView)(opts.view ?? {});
   rampTable(opts.colorRamp);
   colorValue(opts.background ?? [0, 0, 0, 0]);
   finiteNumber(opts.maxDPR ?? 2, "maxDPR", 0.25, 4);
   finiteNumber(opts.maxFPS ?? 60, "maxFPS", 15, 240);
   finiteNumber(opts.maxPixels ?? 524288, "maxPixels", 16384, 4194304);
   const sim = new LeniaHandle(canvas, opts);
+  sim._presetField = makeField;
+  sim._presets = presets;
   try {
     if (!navigator.gpu)
       throw new Error(
@@ -1447,40 +1654,61 @@ async function createLenia3D(canvas, options = {}) {
     });
     const supports = (n) =>
       device.limits.maxTextureDimension3D >= n &&
-      device.limits.maxStorageBufferBindingSize >= n ** 3 * 8 &&
-      device.limits.maxBufferSize >= n ** 3 * 8 &&
-      device.limits.maxComputeWorkgroupsPerDimension >= n * n &&
+      device.limits.maxStorageBufferBindingSize >= n ** dimensions * 8 &&
+      device.limits.maxBufferSize >= n ** dimensions * 8 &&
+      device.limits.maxComputeWorkgroupsPerDimension >= n ** (dimensions - 1) &&
+      device.limits.maxComputeWorkgroupStorageSize >= n * 8 &&
       device.limits.maxComputeInvocationsPerWorkgroup >= 128;
-    const initialize = async (n) => {
+    const initialize = async (n, savedData) => {
       if (!supports(n))
-        throw new Error(`GPU limits cannot support a ${n}³ field.`);
+        throw new Error(
+          `GPU limits cannot support a ${n}${dimensions === 2 ? "²" : "³"} field.`,
+        );
+      const view = sim._renderer?.view ?? opts.view;
       sim._renderer?.destroy();
       sim._engine?.destroy();
       sim._renderer = null;
       sim._engine = null;
-      const data = await presetField(
-        opts.preset,
-        n,
-        opts.seed,
-        opts.seedRecipe,
-        opts.params,
-      );
-      sim._engine = await GpuEngine.create(device, n, data.params);
+      const data =
+        savedData ??
+        (await makeField(
+          opts.preset,
+          n,
+          opts.seed,
+          opts.seedRecipe,
+          opts.params,
+        ));
+      sim._engine = await GpuEngine.create(device, n, data.params, dimensions);
+      if (sim._destroyed) {
+        sim._engine.destroy();
+        throw new DOMException("Leniascope was destroyed", "AbortError");
+      }
       sim._engine.load(data.field);
       sim._initial = data.field;
       sim._seed = data.seed;
       sim._recipe = data.recipe;
-      sim.grid = Object.freeze([n, n, n]);
-      sim._renderer = await VolumeRenderer.create(
+      sim.grid = Object.freeze(dimensions === 2 ? [n, n] : [n, n, n]);
+      sim._renderer = await Renderer.create(
         device,
         canvas,
         sim._engine.texture,
-        opts,
+        { ...opts, view },
         n,
       );
+      if (sim._destroyed) {
+        sim._renderer.destroy();
+        throw new DOMException("Leniascope was destroyed", "AbortError");
+      }
     };
+    sim._initialize = initialize;
     await initialize(
-      opts.grid === "auto" ? (supports(64) ? 64 : 48) : opts.grid,
+      opts.grid === "auto"
+        ? dimensions === 2
+          ? nativeGrid
+          : supports(64)
+            ? 64
+            : 48
+        : opts.grid,
     );
     const probe = async () => {
       const timings = [];
@@ -1508,7 +1736,7 @@ async function createLenia3D(canvas, options = {}) {
     };
     let probeMs = await probe();
     const probes = [{ grid: sim.grid[0], milliseconds: probeMs }];
-    if (opts.grid === "auto") {
+    if (opts.grid === "auto" && dimensions === 3) {
       if (probeMs > 20 && sim.grid[0] > 48) {
         await initialize(48);
         probeMs = await probe();
@@ -1550,4 +1778,4 @@ async function createLenia3D(canvas, options = {}) {
   }
 }
 
-export {createLenia3D, PRESETS, WEB_VERSION};
+export {createLenia3D, createLenia2D, PRESETS, WEB_VERSION};
