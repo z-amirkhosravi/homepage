@@ -23,15 +23,14 @@
   --serif: "Libertinus Serif", Georgia, serif;
   --display: "Libertinus Serif Display", "Libertinus Serif", Georgia, serif;
   --sans: "Libertinus Sans", "Gill Sans", sans-serif;
-  /* Type grows from 19px at 1280px wide to 22px at 2000px; the layout scales with it,
-     so the reading line keeps the same number of characters on every desktop screen. */
-  --base: clamp(19px, 0.42vw + 13.6px, 22px);
-  --small: calc(var(--base) * 0.79);
-  --smaller: calc(var(--base) * 0.74);
-  --measure: calc(var(--base) * 33.7);
-  --col-gap: calc(var(--base) * 2.1);
-  --toc: calc(var(--base) * 8.4);
-  --frame: calc(var(--base) * 62 + 2 * var(--gutter));
+  /* Fixed size at every width: wide screens get margins, not larger type. */
+  --base: 19px;
+  --small: 15px;
+  --smaller: 14px;
+  --measure: 640px;
+  --col-gap: 40px;
+  --toc: 160px;
+  --frame: 1120px;
   --gutter: clamp(20px, 4vw, 48px);
 }
 
