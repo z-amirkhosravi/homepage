@@ -152,3 +152,9 @@ a.quiet:hover { text-decoration-line: underline; }
 .about h1 { font: 600 22px/1.3 var(--serif); }
 .about-text { margin: 12px 0 0; font-size: 19px; line-height: 1.6; }
 .about-contact { display: flex; flex-wrap: wrap; gap: 8px 32px; margin-top: 32px; font: 16px var(--sans); color: var(--muted); }
+
+/* Math: a section heading over an entry, like the dated lists. */
+h2 + .entries { margin-top: 0; }
+h2 + .entries .entry { padding: 20px 0 28px; }
+h2 + .entries .entry-desc { margin-top: 0; }
+.entries + h2 { margin-top: 72px; }
