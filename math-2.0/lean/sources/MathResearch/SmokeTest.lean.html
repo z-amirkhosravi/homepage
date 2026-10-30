@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the F1/v2 verification.">
+<title>MathResearch/SmokeTest.lean · Math 2.0</title>
+<link rel="preload" href="../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../assets/theme/temml.css?v=10">
+<link rel="stylesheet" href="../../../assets/theme/wiki.css?v=10">
+<script defer src="../../../assets/theme/wiki.js?v=10"></script>
+</head>
+<body data-root="../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/about/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the F1/v2 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/SmokeTest.lean</h1><p><a href="SmokeTest.lean" download>Download exact source</a>. SHA-256: <code>047a5fee4397e9bcdcea3d514e5a604f7322f309991a60f25b539ceec2d1a37c</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2"></span>
+<span id="L3">public import Mathlib.Algebra.BigOperators.Group.Finset.Basic</span>
+<span id="L4">public import Mathlib.Tactic.Ring</span>
+<span id="L5"></span>
+<span id="L6">/-!</span>
+<span id="L7">Infrastructure checks only. These declarations are not formalizations of wiki claims.</span>
+<span id="L8">They exercise mathlib imports, the ring tactic, and a finite-sum library theorem.</span>
+<span id="L9">-/</span>
+<span id="L10"></span>
+<span id="L11">public section</span>
+<span id="L12"></span>
+<span id="L13">open scoped BigOperators</span>
+<span id="L14"></span>
+<span id="L15">namespace MathResearch.SmokeTest</span>
+<span id="L16"></span>
+<span id="L17">theorem square_expansion (x y : ℚ) :</span>
+<span id="L18">    (x + y) ^ 2 = x ^ 2 + 2 * x * y + y ^ 2 := by</span>
+<span id="L19">  ring</span>
+<span id="L20"></span>
+<span id="L21">theorem sum_add {ι : Type*} (s : Finset ι) (f g : ι → ℚ) :</span>
+<span id="L22">    (∑ i ∈ s, (f i + g i)) = (∑ i ∈ s, f i) + ∑ i ∈ s, g i := by</span>
+<span id="L23">  exact Finset.sum_add_distrib</span>
+<span id="L24"></span>
+<span id="L25">end MathResearch.SmokeTest</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

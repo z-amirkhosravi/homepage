@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the F1/v2 verification.">
+<title>lake-manifest.json · Math 2.0</title>
+<link rel="preload" href="../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../assets/theme/temml.css?v=10">
+<link rel="stylesheet" href="../../assets/theme/wiki.css?v=10">
+<script defer src="../../assets/theme/wiki.js?v=10"></script>
+</head>
+<body data-root="../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/about/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the F1/v2 verification.</p>
+
+</div>
+<article>
+<h1>lake-manifest.json</h1><p><a href="lake-manifest.json" download>Download exact source</a>. SHA-256: <code>68bd235b4362a35ea6d2163322ebcdcdbff1e5c9f6af9f5c9cf7e473d0227b78</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">{&quot;version&quot;: &quot;1.3.0&quot;,</span>
+<span id="L2"> &quot;packagesDir&quot;: &quot;.lake/packages&quot;,</span>
+<span id="L3"> &quot;packages&quot;:</span>
+<span id="L4"> [{&quot;url&quot;: &quot;https://github.com/leanprover-community/mathlib4.git&quot;,</span>
+<span id="L5">   &quot;type&quot;: &quot;git&quot;,</span>
+<span id="L6">   &quot;subDir&quot;: null,</span>
+<span id="L7">   &quot;scope&quot;: &quot;&quot;,</span>
+<span id="L8">   &quot;rev&quot;: &quot;56a005855ea17e0b0958f73ec801ae140b0a1679&quot;,</span>
+<span id="L9">   &quot;name&quot;: &quot;mathlib&quot;,</span>
+<span id="L10">   &quot;manifestFile&quot;: &quot;lake-manifest.json&quot;,</span>
+<span id="L11">   &quot;inputRev&quot;: &quot;56a005855ea17e0b0958f73ec801ae140b0a1679&quot;,</span>
+<span id="L12">   &quot;inherited&quot;: false,</span>
+<span id="L13">   &quot;configFile&quot;: &quot;lakefile.lean&quot;},</span>
+<span id="L14">  {&quot;url&quot;: &quot;https://github.com/leanprover-community/plausible&quot;,</span>
+<span id="L15">   &quot;type&quot;: &quot;git&quot;,</span>
+<span id="L16">   &quot;subDir&quot;: null,</span>
+<span id="L17">   &quot;scope&quot;: &quot;leanprover-community&quot;,</span>
+<span id="L18">   &quot;rev&quot;: &quot;dfa4f38190d07c37e315953e08b90fe2d95b3c24&quot;,</span>
+<span id="L19">   &quot;name&quot;: &quot;plausible&quot;,</span>
+<span id="L20">   &quot;manifestFile&quot;: &quot;lake-manifest.json&quot;,</span>
+<span id="L21">   &quot;inputRev&quot;: &quot;main&quot;,</span>
+<span id="L22">   &quot;inherited&quot;: true,</span>
+<span id="L23">   &quot;configFile&quot;: &quot;lakefile.toml&quot;},</span>
+<span id="L24">  {&quot;url&quot;: &quot;https://github.com/leanprover-community/LeanSearchClient&quot;,</span>
+<span id="L25">   &quot;type&quot;: &quot;git&quot;,</span>
+<span id="L26">   &quot;subDir&quot;: null,</span>
+<span id="L27">   &quot;scope&quot;: &quot;leanprover-community&quot;,</span>
+<span id="L28">   &quot;rev&quot;: &quot;d6b4c7be5be75ec4917c873ac50c756dc1436372&quot;,</span>
+<span id="L29">   &quot;name&quot;: &quot;LeanSearchClient&quot;,</span>
+<span id="L30">   &quot;manifestFile&quot;: &quot;lake-manifest.json&quot;,</span>
+<span id="L31">   &quot;inputRev&quot;: &quot;main&quot;,</span>
+<span id="L32">   &quot;inherited&quot;: true,</span>
+<span id="L33">   &quot;configFile&quot;: &quot;lakefile.toml&quot;},</span>
+<span id="L34">  {&quot;url&quot;: &quot;https://github.com/leanprover-community/import-graph&quot;,</span>
+<span id="L35">   &quot;type&quot;: &quot;git&quot;,</span>
+<span id="L36">   &quot;subDir&quot;: null,</span>
+<span id="L37">   &quot;scope&quot;: &quot;leanprover-community&quot;,</span>
+<span id="L38">   &quot;rev&quot;: &quot;a41f0e9a4dea23188ea9cc1c41ac9f8bbafe0b93&quot;,</span>
+<span id="L39">   &quot;name&quot;: &quot;importGraph&quot;,</span>
+<span id="L40">   &quot;manifestFile&quot;: &quot;lake-manifest.json&quot;,</span>
+<span id="L41">   &quot;inputRev&quot;: &quot;main&quot;,</span>
+<span id="L42">   &quot;inherited&quot;: true,</span>
+<span id="L43">   &quot;configFile&quot;: &quot;lakefile.toml&quot;},</span>
+<span id="L44">  {&quot;url&quot;: &quot;https://github.com/leanprover-community/ProofWidgets4&quot;,</span>
+<span id="L45">   &quot;type&quot;: &quot;git&quot;,</span>
+<span id="L46">   &quot;subDir&quot;: null,</span>
+<span id="L47">   &quot;scope&quot;: &quot;leanprover-community&quot;,</span>
+<span id="L48">   &quot;rev&quot;: &quot;df72b022e558978a1c50264cfc4d7fec86fa8e04&quot;,</span>
+<span id="L49">   &quot;name&quot;: &quot;proofwidgets&quot;,</span>
+<span id="L50">   &quot;manifestFile&quot;: &quot;lake-manifest.json&quot;,</span>
+<span id="L51">   &quot;inputRev&quot;: &quot;main&quot;,</span>
+<span id="L52">   &quot;inherited&quot;: true,</span>
+<span id="L53">   &quot;configFile&quot;: &quot;lakefile.lean&quot;},</span>
+<span id="L54">  {&quot;url&quot;: &quot;https://github.com/leanprover-community/aesop&quot;,</span>
+<span id="L55">   &quot;type&quot;: &quot;git&quot;,</span>
+<span id="L56">   &quot;subDir&quot;: null,</span>
+<span id="L57">   &quot;scope&quot;: &quot;leanprover-community&quot;,</span>
+<span id="L58">   &quot;rev&quot;: &quot;4a174c490d8707121c4a9290800489f105d85e07&quot;,</span>
+<span id="L59">   &quot;name&quot;: &quot;aesop&quot;,</span>
+<span id="L60">   &quot;manifestFile&quot;: &quot;lake-manifest.json&quot;,</span>
+<span id="L61">   &quot;inputRev&quot;: &quot;master&quot;,</span>
+<span id="L62">   &quot;inherited&quot;: true,</span>
+<span id="L63">   &quot;configFile&quot;: &quot;lakefile.toml&quot;},</span>
+<span id="L64">  {&quot;url&quot;: &quot;https://github.com/leanprover-community/quote4&quot;,</span>
+<span id="L65">   &quot;type&quot;: &quot;git&quot;,</span>
+<span id="L66">   &quot;subDir&quot;: null,</span>
+<span id="L67">   &quot;scope&quot;: &quot;leanprover-community&quot;,</span>
+<span id="L68">   &quot;rev&quot;: &quot;dce0ad79c486cb1fb504af04f953c3466b0c6db8&quot;,</span>
+<span id="L69">   &quot;name&quot;: &quot;Qq&quot;,</span>
+<span id="L70">   &quot;manifestFile&quot;: &quot;lake-manifest.json&quot;,</span>
+<span id="L71">   &quot;inputRev&quot;: &quot;master&quot;,</span>
+<span id="L72">   &quot;inherited&quot;: true,</span>
+<span id="L73">   &quot;configFile&quot;: &quot;lakefile.toml&quot;},</span>
+<span id="L74">  {&quot;url&quot;: &quot;https://github.com/leanprover-community/batteries&quot;,</span>
+<span id="L75">   &quot;type&quot;: &quot;git&quot;,</span>
+<span id="L76">   &quot;subDir&quot;: null,</span>
+<span id="L77">   &quot;scope&quot;: &quot;leanprover-community&quot;,</span>
+<span id="L78">   &quot;rev&quot;: &quot;66e469188fe07963e5cf666c7d4433f45b8131c5&quot;,</span>
+<span id="L79">   &quot;name&quot;: &quot;batteries&quot;,</span>
+<span id="L80">   &quot;manifestFile&quot;: &quot;lake-manifest.json&quot;,</span>
+<span id="L81">   &quot;inputRev&quot;: &quot;main&quot;,</span>
+<span id="L82">   &quot;inherited&quot;: true,</span>
+<span id="L83">   &quot;configFile&quot;: &quot;lakefile.toml&quot;},</span>
+<span id="L84">  {&quot;url&quot;: &quot;https://github.com/leanprover/lean4-cli&quot;,</span>
+<span id="L85">   &quot;type&quot;: &quot;git&quot;,</span>
+<span id="L86">   &quot;subDir&quot;: null,</span>
+<span id="L87">   &quot;scope&quot;: &quot;leanprover&quot;,</span>
+<span id="L88">   &quot;rev&quot;: &quot;c24fe6078c630e89b489bffe59b3e20ac30d12c8&quot;,</span>
+<span id="L89">   &quot;name&quot;: &quot;Cli&quot;,</span>
+<span id="L90">   &quot;manifestFile&quot;: &quot;lake-manifest.json&quot;,</span>
+<span id="L91">   &quot;inputRev&quot;: &quot;v4.35.0&quot;,</span>
+<span id="L92">   &quot;inherited&quot;: true,</span>
+<span id="L93">   &quot;configFile&quot;: &quot;lakefile.toml&quot;}],</span>
+<span id="L94"> &quot;name&quot;: &quot;mathResearch&quot;,</span>
+<span id="L95"> &quot;lakeDir&quot;: &quot;.lake&quot;,</span>
+<span id="L96"> &quot;fixedToolchain&quot;: false}</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the F1/v2 verification.">
+<title>MathResearch/Fueter/Kernel.lean · Math 2.0</title>
+<link rel="preload" href="../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../assets/theme/temml.css?v=10">
+<link rel="stylesheet" href="../../../../assets/theme/wiki.css?v=10">
+<script defer src="../../../../assets/theme/wiki.js?v=10"></script>
+</head>
+<body data-root="../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/about/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the F1/v2 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Fueter/Kernel.lean</h1><p><a href="Kernel.lean" download>Download exact source</a>. SHA-256: <code>07b015c6e4bef604d3370eaef83edfa1328374a822d14aec44c7e4b4b037f5e5</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2"></span>
+<span id="L3">public import MathResearch.Fueter.Operators</span>
+<span id="L4">public import Mathlib.Analysis.InnerProductSpace.Calculus</span>
+<span id="L5">public import Mathlib.Analysis.Calculus.FDeriv.Star</span>
+<span id="L6">public import Mathlib.Analysis.Calculus.Deriv.Inv</span>
+<span id="L7">public import Mathlib.Tactic.Module</span>
+<span id="L8">public import Mathlib.Tactic.FieldSimp</span>
+<span id="L9">public import Mathlib.Tactic.Ring</span>
+<span id="L10"></span>
+<span id="L11">/-! F1, formulation version 2: two-sided regularity of the quaternionic Cauchy</span>
+<span id="L12">kernel and of every finite real coordinate derivative, away from zero. -/</span>
+<span id="L13"></span>
+<span id="L14">@[expose] public section</span>
+<span id="L15">noncomputable section</span>
+<span id="L16">open scoped Quaternion Topology BigOperators ContDiff</span>
+<span id="L17"></span>
+<span id="L18">namespace MathResearch.Fueter</span>
+<span id="L19"></span>
+<span id="L20">/-- Supply the standard compatibility law from mathlib’s quaternion conjugation theorem. -/</span>
+<span id="L21">local instance : StarModule ℝ ℍ where</span>
+<span id="L22">  star_smul r q := by simpa only [star_trivial] using Quaternion.star_smul r q</span>
+<span id="L23"></span>
+<span id="L24">/-- The domain in F1. No assertion of regularity at zero is made. -/</span>
+<span id="L25">def punctured : Set ℍ := {0}ᶜ</span>
+<span id="L26"></span>
+<span id="L27">theorem isOpen_punctured : IsOpen punctured := isClosed_singleton.isOpen_compl</span>
+<span id="L28"></span>
+<span id="L29">/-- The F-D3 kernel. Real scalar division is written as scalar multiplication.</span>
+<span id="L30">The total definition at zero is used only to supply an ambient function. -/</span>
+<span id="L31">def kernel (q : ℍ) : ℍ := (Quaternion.normSq q)⁻¹ ^ 2 • star q</span>
+<span id="L32"></span>
+<span id="L33">/-- Identification with the wiki&#39;s `conj(q) / |q|^4`. -/</span>
+<span id="L34">theorem kernel_eq (q : ℍ) : kernel q = (‖q‖ ^ 4)⁻¹ • star q := by</span>
+<span id="L35">  unfold kernel</span>
+<span id="L36">  rw [Quaternion.normSq_eq_norm_mul_self, ← pow_two, ← inv_pow, ← pow_mul]</span>
+<span id="L37">  rw [inv_pow]</span>
+<span id="L38"></span>
+<span id="L39">/-- The norm-square polynomial is mathlib&#39;s quaternion norm square. -/</span>
+<span id="L40">theorem contDiff_normSq : ContDiff ℝ ∞ (Quaternion.normSq : ℍ → ℝ) := by</span>
+<span id="L41">  simpa only [pow_two, ← Quaternion.normSq_eq_norm_mul_self] using</span>
+<span id="L42">    (contDiff_norm_sq ℝ : ContDiff ℝ ∞ fun q : ℍ =&gt; ‖q‖ ^ 2)</span>
+<span id="L43"></span>
+<span id="L44">theorem kernel_smooth : ContDiffOn ℝ ∞ kernel punctured := by</span>
+<span id="L45">  have hi := contDiff_normSq.contDiffOn.inv (s := punctured)</span>
+<span id="L46">    (fun q hq =&gt; Quaternion.normSq_ne_zero.mpr hq)</span>
+<span id="L47">  exact (hi.pow 2).smul (starL&#39; ℝ : ℍ ≃L[ℝ] ℍ).contDiff.contDiffOn</span>
+<span id="L48"></span>
+<span id="L49">theorem fderiv_kernel {q : ℍ} (hq : q ≠ 0) (v : ℍ) :</span>
+<span id="L50">    fderiv ℝ kernel q v =</span>
+<span id="L51">      (Quaternion.normSq q)⁻¹ ^ 2 • star v -</span>
+<span id="L52">        (4 * (Quaternion.normSq q)⁻¹ ^ 3 * inner ℝ q v) • star q := by</span>
+<span id="L53">  have hn : HasFDerivAt (Quaternion.normSq : ℍ → ℝ) (2 • innerSL ℝ q) q := by</span>
+<span id="L54">    simpa only [pow_two, ← Quaternion.normSq_eq_norm_mul_self] using</span>
+<span id="L55">      (hasStrictFDerivAt_norm_sq q).hasFDerivAt</span>
+<span id="L56">  have hi := (hasFDerivAt_inv (Quaternion.normSq_ne_zero.mpr hq)).comp q hn</span>
+<span id="L57">  have hk := (hi.pow 2).smul ((hasFDerivAt_id q).star)</span>
+<span id="L58">  change HasFDerivAt kernel _ q at hk</span>
+<span id="L59">  rw [hk.fderiv]</span>
+<span id="L60">  simp only [add_apply, smul_apply, ContinuousLinearMap.comp_apply,</span>
+<span id="L61">    ContinuousLinearMap.smulRight_apply, ContinuousLinearMap.id_apply,</span>
+<span id="L62">    ContinuousLinearEquiv.coe_coe, starL&#39;_apply,</span>
+<span id="L63">    ContinuousLinearMap.toSpanSingleton_apply, innerSL_apply_apply,</span>
+<span id="L64">    smul_eq_mul, nsmul_eq_mul, inv_pow, Function.comp_apply, id_eq,</span>
+<span id="L65">    Nat.cast_ofNat, Nat.reduceSub, pow_one]</span>
+<span id="L66">  module</span>
+<span id="L67"></span>
+<span id="L68">/-- The left quaternion contraction, before substituting the radial coefficients. -/</span>
+<span id="L69">theorem left_kernel_algebra (q : ℍ) (a b : ℝ) :</span>
+<span id="L70">    (∑ μ : Fin 4, coordinateBasis μ *</span>
+<span id="L71">      (a • star (coordinateBasis μ) - (b * inner ℝ q (coordinateBasis μ)) • star q)) =</span>
+<span id="L72">        (4 * a - b * Quaternion.normSq q) • (1 : ℍ) := by</span>
+<span id="L73">  ext &lt;;&gt; simp [Fin.sum_univ_succ, coordinateBasis_eq,</span>
+<span id="L74">    Quaternion.inner_def, Quaternion.normSq_def&#39;] &lt;;&gt; ring</span>
+<span id="L75"></span>
+<span id="L76">/-- The corresponding right contraction keeps every quaternion factor in its order. -/</span>
+<span id="L77">theorem right_kernel_algebra (q : ℍ) (a b : ℝ) :</span>
+<span id="L78">    (∑ μ : Fin 4,</span>
+<span id="L79">      (a • star (coordinateBasis μ) - (b * inner ℝ q (coordinateBasis μ)) • star q) *</span>
+<span id="L80">        coordinateBasis μ) = (4 * a - b * Quaternion.normSq q) • (1 : ℍ) := by</span>
+<span id="L81">  ext &lt;;&gt; simp [Fin.sum_univ_succ, coordinateBasis_eq,</span>
+<span id="L82">    Quaternion.inner_def, Quaternion.normSq_def&#39;] &lt;;&gt; ring</span>
+<span id="L83"></span>
+<span id="L84">theorem kernel_left {q : ℍ} (hq : q ≠ 0) : leftOperator kernel q = 0 := by</span>
+<span id="L85">  rw [leftOperator_eq]</span>
+<span id="L86">  simp_rw [coordPartial, directional, fderiv_kernel hq]</span>
+<span id="L87">  rw [left_kernel_algebra]</span>
+<span id="L88">  have hs : Quaternion.normSq q ≠ 0 := Quaternion.normSq_ne_zero.mpr hq</span>
+<span id="L89">  have hcoef : 4 * (Quaternion.normSq q)⁻¹ ^ 2 -</span>
+<span id="L90">      4 * (Quaternion.normSq q)⁻¹ ^ 3 * Quaternion.normSq q = 0 := by</span>
+<span id="L91">    field_simp</span>
+<span id="L92">    ring</span>
+<span id="L93">  rw [hcoef, zero_smul]</span>
+<span id="L94"></span>
+<span id="L95">theorem kernel_right {q : ℍ} (hq : q ≠ 0) : rightOperator kernel q = 0 := by</span>
+<span id="L96">  rw [rightOperator_eq]</span>
+<span id="L97">  simp_rw [coordPartial, directional, fderiv_kernel hq]</span>
+<span id="L98">  rw [right_kernel_algebra]</span>
+<span id="L99">  have hs : Quaternion.normSq q ≠ 0 := Quaternion.normSq_ne_zero.mpr hq</span>
+<span id="L100">  have hcoef : 4 * (Quaternion.normSq q)⁻¹ ^ 2 -</span>
+<span id="L101">      4 * (Quaternion.normSq q)⁻¹ ^ 3 * Quaternion.normSq q = 0 := by</span>
+<span id="L102">    field_simp</span>
+<span id="L103">    ring</span>
+<span id="L104">  rw [hcoef, zero_smul]</span>
+<span id="L105"></span>
+<span id="L106">/-- F1 v2, first sentence: the kernel is smooth and both left and right regular off zero. -/</span>
+<span id="L107">theorem kernel_regular : TwoSidedRegularOn kernel punctured :=</span>
+<span id="L108">  ⟨kernel_smooth, fun _ hq =&gt; kernel_left hq, fun _ hq =&gt; kernel_right hq⟩</span>
+<span id="L109"></span>
+<span id="L110">/-- A stronger ordered form: any finite string of real coordinate derivatives is regular. -/</span>
+<span id="L111">theorem kernel_iteratedPartial_regular (l : List (Fin 4)) :</span>
+<span id="L112">    TwoSidedRegularOn (iteratedPartial l kernel) punctured :=</span>
+<span id="L113">  kernel_regular.iteratedPartial isOpen_punctured l</span>
+<span id="L114"></span>
+<span id="L115">/-- F1, formulation version 2, including every real multi-index and both multiplication sides. -/</span>
+<span id="L116">theorem F1_v2 : TwoSidedRegularOn kernel punctured ∧</span>
+<span id="L117">    ∀ α : Fin 4 → ℕ, TwoSidedRegularOn (multiIndexPartial α kernel) punctured :=</span>
+<span id="L118">  ⟨kernel_regular, fun α =&gt; kernel_regular.multiIndexPartial isOpen_punctured α⟩</span>
+<span id="L119"></span>
+<span id="L120">end MathResearch.Fueter</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

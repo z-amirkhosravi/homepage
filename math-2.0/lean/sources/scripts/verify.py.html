@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the F1/v2 verification.">
+<title>scripts/verify.py · Math 2.0</title>
+<link rel="preload" href="../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../assets/theme/temml.css?v=10">
+<link rel="stylesheet" href="../../../assets/theme/wiki.css?v=10">
+<script defer src="../../../assets/theme/wiki.js?v=10"></script>
+</head>
+<body data-root="../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/about/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the F1/v2 verification.</p>
+
+</div>
+<article>
+<h1>scripts/verify.py</h1><p><a href="verify.py" download>Download exact source</a>. SHA-256: <code>b09ade22c97201d0e7212213a298c533ee1880788b7578aff1fe9ba99578bb1f</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">#!/usr/bin/env python3</span>
+<span id="L2">&quot;&quot;&quot;Build every local module, audit transitive axioms, and retain a replayable record.&quot;&quot;&quot;</span>
+<span id="L3"></span>
+<span id="L4">import argparse</span>
+<span id="L5">import hashlib</span>
+<span id="L6">import json</span>
+<span id="L7">import os</span>
+<span id="L8">from pathlib import Path</span>
+<span id="L9">import platform</span>
+<span id="L10">import shutil</span>
+<span id="L11">import subprocess</span>
+<span id="L12">import sys</span>
+<span id="L13">from datetime import datetime, timezone</span>
+<span id="L14"></span>
+<span id="L15">ROOT = Path(__file__).resolve().parents[1]</span>
+<span id="L16">PREFIX = &quot;MATH_RESEARCH_AUDIT &quot;</span>
+<span id="L17"></span>
+<span id="L18"></span>
+<span id="L19">def fingerprint(path):</span>
+<span id="L20">    return hashlib.sha256(path.read_bytes()).hexdigest()</span>
+<span id="L21"></span>
+<span id="L22"></span>
+<span id="L23">def main():</span>
+<span id="L24">    parser = argparse.ArgumentParser(description=__doc__)</span>
+<span id="L25">    parser.add_argument(&quot;--output&quot;, type=Path, help=&quot;JSON run record (relative to formal/)&quot;)</span>
+<span id="L26">    parser.add_argument(&quot;--clean-local&quot;, action=&quot;store_true&quot;,</span>
+<span id="L27">                        help=&quot;Remove only this project’s build outputs before compiling; keep dependencies&quot;)</span>
+<span id="L28">    parser.add_argument(&quot;--verbose-build&quot;, action=&quot;store_true&quot;,</span>
+<span id="L29">                        help=&quot;Record Lake’s complete trace output, including compiler commands&quot;)</span>
+<span id="L30">    args = parser.parse_args()</span>
+<span id="L31">    now = datetime.now(timezone.utc)</span>
+<span id="L32">    output = args.output or Path(&quot;runs&quot;) / (now.strftime(&quot;%Y%m%dT%H%M%S.%fZ&quot;) + &quot;.json&quot;)</span>
+<span id="L33">    if not output.is_absolute():</span>
+<span id="L34">        output = ROOT / output</span>
+<span id="L35">    if output.exists():</span>
+<span id="L36">        parser.error(f&quot;Refusing to overwrite an existing evidence record: {output}&quot;)</span>
+<span id="L37"></span>
+<span id="L38">    env = os.environ.copy()</span>
+<span id="L39">    env[&quot;ELAN_HOME&quot;] = str((ROOT / &quot;.elan&quot;).resolve())</span>
+<span id="L40">    env[&quot;XDG_CACHE_HOME&quot;] = str((ROOT / &quot;.cache&quot;).resolve())</span>
+<span id="L41">    env[&quot;PATH&quot;] = str((ROOT / &quot;.elan/bin&quot;).resolve()) + os.pathsep + env[&quot;PATH&quot;]</span>
+<span id="L42">    sources = [ROOT / &quot;MathResearch.lean&quot;, *sorted((ROOT / &quot;MathResearch&quot;).rglob(&quot;*.lean&quot;))]</span>
+<span id="L43">    inputs = sources + [ROOT / &quot;lean-toolchain&quot;, ROOT / &quot;lakefile.toml&quot;,</span>
+<span id="L44">                       ROOT / &quot;lake-manifest.json&quot;, *sorted((ROOT / &quot;scripts&quot;).glob(&quot;*.*&quot;))]</span>
+<span id="L45">    inputs = [p for p in inputs if p.is_file()]</span>
+<span id="L46">    before = {str(p.relative_to(ROOT)): fingerprint(p) for p in inputs}</span>
+<span id="L47">    record = {</span>
+<span id="L48">        &quot;schema_version&quot;: 1,</span>
+<span id="L49">        &quot;started_utc&quot;: now.isoformat(),</span>
+<span id="L50">        &quot;scope&quot;: &quot;Local Lean declarations; correspondence with written mathematics is explained separately.&quot;,</span>
+<span id="L51">        &quot;build_mode&quot;: &quot;clean-local&quot; if args.clean_local else &quot;incremental&quot;,</span>
+<span id="L52">        &quot;dependency_artifacts&quot;: &quot;Pinned upstream release caches retained; not rebuilt from source.&quot;,</span>
+<span id="L53">        &quot;source_sha256&quot;: before,</span>
+<span id="L54">        &quot;platform&quot;: platform.platform(),</span>
+<span id="L55">        &quot;python_version&quot;: platform.python_version(),</span>
+<span id="L56">        &quot;allowed_axioms&quot;: [&quot;propext&quot;, &quot;Classical.choice&quot;, &quot;Quot.sound&quot;],</span>
+<span id="L57">        &quot;commands&quot;: [],</span>
+<span id="L58">        &quot;declarations&quot;: [],</span>
+<span id="L59">        &quot;status&quot;: &quot;failed&quot;,</span>
+<span id="L60">    }</span>
+<span id="L61"></span>
+<span id="L62">    def run(command):</span>
+<span id="L63">        print(&quot;Running:&quot;, &quot; &quot;.join(command), flush=True)</span>
+<span id="L64">        result = subprocess.run(command, cwd=ROOT, env=env, text=True,</span>
+<span id="L65">                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT)</span>
+<span id="L66">        record[&quot;commands&quot;].append({&quot;argv&quot;: command, &quot;exit_code&quot;: result.returncode,</span>
+<span id="L67">                                   &quot;output&quot;: result.stdout})</span>
+<span id="L68">        print(result.stdout, end=&quot;&quot;, flush=True)</span>
+<span id="L69">        if result.returncode:</span>
+<span id="L70">            raise RuntimeError(f&quot;Command failed ({result.returncode}): {&#39; &#39;.join(command)}&quot;)</span>
+<span id="L71">        return result.stdout.strip()</span>
+<span id="L72"></span>
+<span id="L73">    try:</span>
+<span id="L74">        record[&quot;repository_head&quot;] = run([&quot;git&quot;, &quot;rev-parse&quot;, &quot;HEAD&quot;])</span>
+<span id="L75">        record[&quot;lean_version&quot;] = run([&quot;lean&quot;, &quot;--version&quot;])</span>
+<span id="L76">        record[&quot;lake_version&quot;] = run([&quot;lake&quot;, &quot;--version&quot;])</span>
+<span id="L77">        record[&quot;elan_version&quot;] = run([&quot;elan&quot;, &quot;--version&quot;])</span>
+<span id="L78">        if not (ROOT / &quot;lake-manifest.json&quot;).is_file():</span>
+<span id="L79">            raise RuntimeError(&quot;Missing dependency lockfile. Run scripts/setup.sh first.&quot;)</span>
+<span id="L80">        manifest = json.loads((ROOT / &quot;lake-manifest.json&quot;).read_text())</span>
+<span id="L81">        record[&quot;dependency_pins&quot;] = {p[&quot;name&quot;]: p.get(&quot;rev&quot;) for p in manifest[&quot;packages&quot;]}</span>
+<span id="L82">        record[&quot;dependency_heads&quot;] = {}</span>
+<span id="L83">        for name, pin in record[&quot;dependency_pins&quot;].items():</span>
+<span id="L84">            package_dir = f&quot;.lake/packages/{name}&quot;</span>
+<span id="L85">            actual = run([&quot;git&quot;, &quot;-C&quot;, package_dir, &quot;rev-parse&quot;, &quot;HEAD&quot;])</span>
+<span id="L86">            record[&quot;dependency_heads&quot;][name] = actual</span>
+<span id="L87">            if actual != pin:</span>
+<span id="L88">                raise RuntimeError(f&quot;Installed dependency {name} differs from the lockfile&quot;)</span>
+<span id="L89">            run([&quot;git&quot;, &quot;-C&quot;, package_dir, &quot;diff&quot;, &quot;--exit-code&quot;, &quot;HEAD&quot;, &quot;--&quot;])</span>
+<span id="L90">        # Explicit module targets avoid silently omitting a file not imported by the root.</span>
+<span id="L91">        modules = [&quot;.&quot;.join(p.relative_to(ROOT).with_suffix(&quot;&quot;).parts) for p in sources]</span>
+<span id="L92">        if args.clean_local:</span>
+<span id="L93">            build_dir = ROOT / &quot;.lake/build&quot;</span>
+<span id="L94">            if build_dir.is_symlink():</span>
+<span id="L95">                raise RuntimeError(&quot;Refusing to clean a symlinked local build directory&quot;)</span>
+<span id="L96">            if build_dir.exists():</span>
+<span id="L97">                shutil.rmtree(build_dir)</span>
+<span id="L98">            record[&quot;local_build_cleaned&quot;] = True</span>
+<span id="L99">            print(&quot;Removed local .lake/build; upstream dependency artifacts retained.&quot;, flush=True)</span>
+<span id="L100">        run([&quot;lake&quot;, *([&quot;--verbose&quot;] if args.verbose_build else []), &quot;build&quot;, *modules])</span>
+<span id="L101">        audit = ROOT / &quot;.lake&quot; / &quot;MathResearchAudit.lean&quot;</span>
+<span id="L102">        audit.write_text(&quot;module\n\n&quot; + &quot;&quot;.join(f&quot;import all {module}\n&quot; for module in modules)</span>
+<span id="L103">                         + (ROOT / &quot;scripts/Audit.lean&quot;).read_text())</span>
+<span id="L104">        record[&quot;audit_source_sha256&quot;] = fingerprint(audit)</span>
+<span id="L105">        audit_output = run([&quot;lake&quot;, &quot;env&quot;, &quot;lean&quot;, &quot;-DwarningAsError=true&quot;,</span>
+<span id="L106">                            str(audit.relative_to(ROOT))])</span>
+<span id="L107">        rows = [json.loads(line[len(PREFIX):]) for line in audit_output.splitlines()</span>
+<span id="L108">                if line.startswith(PREFIX)]</span>
+<span id="L109">        record[&quot;declarations&quot;] = sorted(rows, key=lambda row: row[&quot;declaration&quot;])</span>
+<span id="L110">        if not rows or not any(row[&quot;kind&quot;] == &quot;theorem&quot; for row in rows):</span>
+<span id="L111">            raise RuntimeError(&quot;Audit did not report any project theorems&quot;)</span>
+<span id="L112">        if any(row[&quot;unexpected_axioms&quot;] for row in rows):</span>
+<span id="L113">            raise RuntimeError(&quot;Audit reported additional axioms&quot;)</span>
+<span id="L114">        if before != {str(p.relative_to(ROOT)): fingerprint(p) for p in inputs}:</span>
+<span id="L115">            raise RuntimeError(&quot;Formal source or configuration changed during verification&quot;)</span>
+<span id="L116">        record[&quot;status&quot;] = &quot;passed&quot;</span>
+<span id="L117">    except (OSError, ValueError, KeyError, RuntimeError) as exc:</span>
+<span id="L118">        record[&quot;error&quot;] = str(exc)</span>
+<span id="L119">        print(str(exc), file=sys.stderr)</span>
+<span id="L120">    finally:</span>
+<span id="L121">        record[&quot;finished_utc&quot;] = datetime.now(timezone.utc).isoformat()</span>
+<span id="L122">        output.parent.mkdir(parents=True, exist_ok=True)</span>
+<span id="L123">        output.write_text(json.dumps(record, indent=2, ensure_ascii=False) + &quot;\n&quot;)</span>
+<span id="L124">        print(f&quot;Evidence: {output}&quot;)</span>
+<span id="L125">    return 0 if record[&quot;status&quot;] == &quot;passed&quot; else 1</span>
+<span id="L126"></span>
+<span id="L127"></span>
+<span id="L128">if __name__ == &quot;__main__&quot;:</span>
+<span id="L129">    sys.exit(main())</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

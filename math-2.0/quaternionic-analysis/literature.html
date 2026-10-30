@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Literature on Fueter regularity, quaternionic elliptic functions, lattice sums, and number-theoretic connections.">
+<title>Sources and further reading · Math 2.0</title>
+<link rel="preload" href="../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/theme/temml.css?v=10">
+<link rel="stylesheet" href="../assets/theme/wiki.css?v=10">
+<script defer src="../assets/theme/wiki.js?v=10"></script>
+</head>
+<body data-root="../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/about/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Quaternionic analysis</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"><li><a href="#attribution-of-the-construction">Attribution of the construction</a></li><li><a href="#foundations-and-periodic-functions">Foundations and periodic functions</a></li><li><a href="#automorphic-and-number-theoretic-directions">Automorphic and number-theoretic directions</a></li><li><a href="#discrete-series-and-the-hardy-limit">Discrete series and the Hardy limit</a></li><li><a href="#automorphic-differential-forms-and-cohomology">Automorphic differential forms and cohomology</a></li><li><a href="#harmonic-comparison-and-cusp-dimensions">Harmonic comparison and cusp dimensions</a></li><li><a href="#coefficient-fields-and-hecke-correspondences">Coefficient fields and Hecke correspondences</a></li><li><a href="#poincar-series-and-arakawa-lifting">Poincaré series and Arakawa lifting</a></li><li><a href="#harmonic-theta-series-newforms-and-l-values">Harmonic theta series, newforms, and L-values</a></li><li><a href="#additional-comparison">Additional comparison</a></li><li><a href="#further-comparisons">Further comparisons</a></li><li><a href="#langlands-and-galois-representations">Langlands and Galois representations</a></li><li><a href="#moduli-spaces-universal-families-and-motives">Moduli spaces, universal families, and motives</a></li><li><a href="#half-space-geometry-and-mellin-period-functions">Half-space geometry and Mellin period functions</a></li></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"><div class="article-kind" data-article-kind="exposition">Expository</div></div>
+<div class="page-intro">
+<p class="page-description">Literature on Fueter regularity, quaternionic elliptic functions, lattice sums, and number-theoretic connections.</p>
+
+</div>
+<article>
+<h1 id="sources-and-further-reading">Sources and further reading</h1>
+<p>This guide collects literature for the <a href="foundations.html">foundations</a>, <a href="elliptic-functions.html">elliptic functions</a>, <a href="fueter-discrete-series.html">representation constructions</a>, and <a href="harmonic-theta-values.html">special-value formulas</a>. It focuses on Fueter-regular and monogenic functions. Works using other analytic settings are identified separately where relevant.</p>
+<p>The notes record the scope of reading, not a verdict on correctness. “Metadata” means publication details were checked; “abstract” or “selected passages” identifies how much mathematical content was inspected. No entry here represents a completed proof audit. The initial selection dates from 17 October 2026. Article-local bibliographies, added on 29 October 2026, identify sources at the statements and proofs that use them; this reading guide supplements those citations.</p>
+<h2 id="attribution-of-the-construction">Attribution of the construction<a class="anchor" href="#attribution-of-the-construction" aria-label="Link to Attribution of the construction">#</a></h2>
+<p>The quaternionic Weierstrass construction is due to Fueter. A directly inspected reference is Kraußhar (2001), §4, p. 1019, equation (12): the regularized derivative lattice sum is displayed there, with its quaternionic case credited to Fueter (1939), reference [16]. <a href="https://ems.press/content/serial-article-files/35214#page=13">Read the passage</a>.</p>
+<p>A detailed comparison with Fueter&#39;s original formulas is still needed, especially for the zeta normalization and quasi-period conventions. The proofs in this wiki concern the exact formulations displayed here; a historical citation does not verify those proofs.</p>
+<h2 id="foundations-and-periodic-functions">Foundations and periodic functions<a class="anchor" href="#foundations-and-periodic-functions" aria-label="Link to Foundations and periodic functions">#</a></h2>
+<div class="bibliography-table" role="region" aria-label="Foundational literature" tabindex="0">
+
+<div class="article-table" role="region" aria-label="Table" tabindex="0"><table><thead><tr>
+<th>Work</th>
+<th>Relevance to the wiki</th>
+<th>Reading so far</th>
+</tr>
+</thead><tbody><tr>
+<td><span id="fueter-1935"></span> <strong>R. Fueter (1934–35)</strong>, <a href="https://doi.org/10.1007/BF01292723"><em>Die Funktionentheorie der Differentialgleichungen Δu = 0 und ΔΔu = 0 mit vier reellen Variablen</em></a>. <em>Commentarii Mathematici Helvetici</em> <strong>7</strong>, 307–330.</td>
+<td>Foundational work on quaternionic function theory and its differential equations.</td>
+<td>Publisher metadata inspected. The volume spans 1934–35; the publisher labels it 1934, while Sudbery cites 1935. Full text not reviewed.</td>
+</tr>
+<tr>
+<td><span id="fueter-1936"></span> <strong>R. Fueter (1935–36)</strong>, <a href="https://www.e-periodica.ch/cntmng?pid=com-001%3A1935%3A8%3A%3A22"><em>Über die analytische Darstellung der regulären Funktionen einer Quaternionenvariablen</em></a>. <em>Commentarii Mathematici Helvetici</em> <strong>8</strong>, 371–378.</td>
+<td>Regular polynomial expansions and the linear coordinates used in the Taylor theory.</td>
+<td>Indexed opening passage inspected; full scan not reviewed.</td>
+</tr>
+<tr>
+<td><span id="fueter-1937"></span> <strong>R. Fueter (1936–37)</strong>, <a href="https://doi.org/10.5169/seals-10189"><em>Die Singularitäten der eindeutigen regulären Funktionen einer Quaternionenvariablen. I</em></a>. <em>Commentarii Mathematici Helvetici</em> <strong>9</strong>, 320–334.</td>
+<td>Historical starting point for the singularity theory underlying lattice constructions.</td>
+<td>Archive metadata and indexed opening inspected; full scan not reviewed.</td>
+</tr>
+<tr>
+<td><span id="fueter-1939"></span> <strong>R. Fueter (1939)</strong>, <a href="https://doi.org/10.1007/BF01696174"><em>Über vierfachperiodische Funktionen</em></a>. <em>Monatshefte für Mathematik und Physik</em> <strong>48</strong>, 161–169.</td>
+<td>Original source credited for the quaternionic Weierstrass construction by Kraußhar (2001).</td>
+<td>DOI-registry metadata checked; attribution located in the later paper. Original formulas still to compare.</td>
+</tr>
+<tr>
+<td><span id="fueter-1945"></span> <strong>R. Fueter (1945)</strong>, <a href="https://doi.org/10.1007/BF02153625"><em>Über die Quaternionenmultiplikation regulärer vierfachperiodischer Funktionen</em></a>. <em>Experientia</em> <strong>1</strong>, 57.</td>
+<td>Early source to consult for quaternion multiplication in the periodic theory.</td>
+<td>Publisher metadata and bibliography inspected; the one-page communication itself not reviewed.</td>
+</tr>
+<tr>
+<td><span id="sudbery-1979"></span> <strong>A. Sudbery (1979)</strong>, <a href="https://doi.org/10.1017/S0305004100055638"><em>Quaternionic analysis</em></a>. <em>Mathematical Proceedings of the Cambridge Philosophical Society</em> <strong>85</strong> (2), 199–225.</td>
+<td>An entry point to the regular-function theory and its historical development.</td>
+<td>Publisher extract, bibliography, and selected regularity and differential-form passages inspected; full article not audited.</td>
+</tr>
+</tbody></table></div>
+</div>
+
+<h2 id="automorphic-and-number-theoretic-directions">Automorphic and number-theoretic directions<a class="anchor" href="#automorphic-and-number-theoretic-directions" aria-label="Link to Automorphic and number-theoretic directions">#</a></h2>
+<div class="bibliography-table" role="region" aria-label="Literature on further directions" tabindex="0">
+
+<div class="article-table" role="region" aria-label="Table" tabindex="0"><table><thead><tr>
+<th>Work</th>
+<th>Relevance to the wiki</th>
+<th>Reading so far</th>
+</tr>
+</thead><tbody><tr>
+<td><span id="krausshar-2001"></span> <strong>R. S. Kraußhar (2001)</strong>, <a href="https://doi.org/10.4171/ZAA/1057"><em>On a New Type of Eisenstein Series in Clifford Analysis</em></a>. <em>Zeitschrift für Analysis und ihre Anwendungen</em> <strong>20</strong> (4), 1007–1029. <a href="https://ems.press/content/serial-article-files/35214">Open text</a>.</td>
+<td>Kernel derivatives, regularized Weierstrass sums, Laurent coefficients, and Eisenstein series.</td>
+<td>Selected passages in §§3–5 and bibliography inspected, including equation (12) on p. 1019.</td>
+</tr>
+<tr>
+<td><span id="krausshar-2004"></span> <strong>R. S. Kraußhar (2004)</strong>, <a href="https://doi.org/10.1007/b95203"><em>Generalized Analytic Automorphic Forms in Hypercomplex Spaces</em></a>. Birkhäuser, Frontiers in Mathematics.</td>
+<td>A book-length route through translation-group Eisenstein series, modular forms, and multiplication of lattices.</td>
+<td>Publisher description and contents inspected. In particular, pp. 49–115 and 117–149 are relevant chapters to read.</td>
+</tr>
+<tr>
+<td><span id="krausshar-ryan-qiao-2004"></span> <strong>R. S. Kraußhar, J. Ryan, and Qiao Yuying (2004)</strong>, <a href="https://arxiv.org/abs/math/0404337"><em>Harmonic, Monogenic and Hypermonogenic Functions on Some Conformally Flat Manifolds…</em></a>. Author version, arXiv:math/0404337.</td>
+<td>Cylinders and tori; Mittag–Leffler and Laurent theory for monogenic functions.</td>
+<td>Abstract inspected. Hypermonogenic parts use a different differential equation; transfer to the wiki&#39;s setting needs care.</td>
+</tr>
+<tr>
+<td><span id="krieg-1988"></span> <strong>A. Krieg (1988)</strong>, <a href="https://www.sciencedirect.com/science/article/pii/0022314X88900169"><em>Eisenstein-series on the four-dimensional hyperbolic space</em></a>. <em>Journal of Number Theory</em> <strong>30</strong>, 177–197.</td>
+<td>A theta-series connection in a related hyperbolic automorphic setting. A lead for comparison with the harmonic-theta direction.</td>
+<td>Indexed publisher abstract inspected; full text not reviewed. It does not by itself establish the proposed theta relation for this wiki&#39;s lattice sums.</td>
+</tr>
+</tbody></table></div>
+</div>
+
+<h2 id="discrete-series-and-the-hardy-limit">Discrete series and the Hardy limit<a class="anchor" href="#discrete-series-and-the-hardy-limit" aria-label="Link to Discrete series and the Hardy limit">#</a></h2>
+<div class="bibliography-table" role="region" aria-label="Representation theory references" tabindex="0">
+
+<div class="article-table" role="region" aria-label="Table" tabindex="0"><table><thead><tr>
+<th>Work</th>
+<th>Role and precise use</th>
+<th>Reading so far</th>
+</tr>
+</thead><tbody><tr>
+<td><span id="liu-zhang-2012"></span> <strong>Heping Liu and Genkai Zhang (2012)</strong>, <a href="https://doi.org/10.1016/j.jfa.2011.12.019"><em>Realization of quaternionic discrete series on the unit ball in Hᵈ</em></a>. <em>Journal of Functional Analysis</em> <strong>262</strong>, 2979–3005.</td>
+<td>Ball/group lift (2.8), Lemma 3.5, Proposition 3.6, compact types in Theorem 3.9, and the endpoint after Theorem 3.11. The quaternionic-dimension-one family has parameter <math><mrow><mi>l</mi><mo>=</mo><mi>n</mi></mrow></math> in this wiki.</td>
+<td>Full text available; §§2.1–3.4 and the cited endpoint passage inspected. The wiki supplies the moving-frame computation and direct arguments for irreducibility and square-integrability.</td>
+</tr>
+<tr>
+<td><span id="camporesi-pedon-2001"></span> <strong>Roberto Camporesi and Emmanuel Pedon (2001)</strong>, <a href="https://doi.org/10.4064/cm87-2-10"><em>Harmonic analysis for spinors on real hyperbolic spaces</em></a>. <em>Colloquium Mathematicum</em> <strong>87</strong>, 245–286. <a href="https://www.impan.pl/shop/en/publication/transaction/download/product/87388">Publisher PDF</a>.</td>
+<td>Normalized spinor principal series and the half-spin limits of discrete series: printed pp. 250–252, Theorem 3.2 and its proof. Used for the classification in <a href="fueter-hardy-space.html#h3">H3</a>.</td>
+<td>Opening representation-theoretic sections and the cited classification argument inspected. Later transform and inversion formulas not audited.</td>
+</tr>
+<tr>
+<td><span id="gourevitch-2017"></span> <strong>Dmitry Gourevitch (2017)</strong>, <a href="https://mathreports.ca/article/composition-series-for-degenerate-principal-series-of-gln/"><em>Composition Series for Degenerate Principal Series of GL(n)</em></a>. <em>C. R. Math. Rep. Acad. Sci. Canada</em> <strong>39</strong> (1), 1–12. <a href="https://arxiv.org/abs/1510.05255">Author version</a>.</td>
+<td>Published comparison for the <a href="lattice-eisenstein-series.html">SL₄ module</a>; its exact parameters and irreducibility are proved directly in the wiki.</td>
+<td>Publisher bibliographic record and abstract inspected. Full composition-series theorem not imported as a checked identification.</td>
+</tr>
+</tbody></table></div>
+</div>
+
+<h2 id="automorphic-differential-forms-and-cohomology">Automorphic differential forms and cohomology<a class="anchor" href="#automorphic-differential-forms-and-cohomology" aria-label="Link to Automorphic differential forms and cohomology">#</a></h2>
+<div class="bibliography-table" role="region" aria-label="Automorphic cohomology references" tabindex="0">
+
+<div class="article-table" role="region" aria-label="Table" tabindex="0"><table><thead><tr>
+<th>Work</th>
+<th>Role and precise use</th>
+<th>Reading so far</th>
+</tr>
+</thead><tbody><tr>
+<td><span id="shimura-1959"></span> <strong>Goro Shimura (1959)</strong>, <a href="https://doi.org/10.2969/jmsj/01140291"><em>Sur les intégrales attachées aux formes automorphes</em></a>. <em>J. Math. Soc. Japan</em> <strong>11</strong>, 291–311.</td>
+<td>§§2–5: symmetric-power-valued closed one-forms, parabolic periods, and Theorem 1. The classical comparison for <a href="automorphic-cohomology.html">the two-form construction</a>.</td>
+<td>§§1–5 inspected in the full text. Later arithmetic and Hecke arguments not audited.</td>
+</tr>
+<tr>
+<td><span id="kuga-shimura-1960"></span> <strong>Michio Kuga and Goro Shimura (1960)</strong>, <a href="https://doi.org/10.2969/jmsj/01230258"><em>On vector differential forms attached to automorphic forms</em></a>. <em>J. Math. Soc. Japan</em> <strong>12</strong>, 258–270.</td>
+<td>A further comparison for vector-valued automorphic differentials.</td>
+<td>Publisher metadata inspected; full argument not yet read.</td>
+</tr>
+<tr>
+<td><span id="grobner-2010"></span> <strong>Harald Grobner (2010)</strong>, <a href="https://doi.org/10.1142/S0129167X10005969"><em>The Automorphic Cohomology and the Residual Spectrum of Hermitian Groups of Rank One</em></a>. <em>Int. J. Math.</em> <strong>21</strong>, 255–278. <a href="https://homepage.univie.ac.at/harald.grobner/papers/paperSp%2811%29nR.pdf">Author version</a>.</td>
+<td>§§1.1–1.2 and 7: automorphic cohomology of Sp(1,1); Theorem 7.1 locates the two cohomological discrete series in degree two.</td>
+<td>The author version’s §§1.1–1.2, 4.1, 5.1–5.3, 6.1–6.3 and 7.1–7.2 inspected. <a href="cuspidal-cohomology-background.html#cp5">CP5–CP6</a> match the coefficient family and unordered chirality pair, and import Proposition 7.1 with its exact level and weight restrictions. The classification and trace-formula proofs have not been independently audited.</td>
+</tr>
+<tr>
+<td><span id="grobner-growth"></span> <strong>Harald Grobner (2008)</strong>, <a href="https://www.esi.ac.at/preprints/esi2043.pdf"><em>A Growth Condition for Cuspidal Cohomology of Arithmetically Defined Quaternionic Hyperbolic n-Manifolds</em></a>, extended preprint, ESI <strong>2043</strong>.</td>
+<td>§1.2 states the finite-coefficient cuspidal-to-ordinary cohomology injection used in <a href="automorphic-cohomology.html#ac7">AC7</a>, citing Borel, <em>Stable real cohomology of arithmetic groups II</em> (1981), Corollary 5.5.</td>
+<td>Introduction, §§1.1–1.5 and 2.4–2.5 inspected, including the weight/coefficient dictionary and degree-<math><mrow><mn>2</mn><mi>r</mi></mrow></math> discrete-series cohomology in <a href="quaternionic-half-space.html#qh4">QH4</a>. Borel&#39;s original proof and the later growth computations were not audited.</td>
+</tr>
+</tbody></table></div>
+</div>
+
+<h2 id="harmonic-comparison-and-cusp-dimensions">Harmonic comparison and cusp dimensions<a class="anchor" href="#harmonic-comparison-and-cusp-dimensions" aria-label="Link to Harmonic comparison and cusp dimensions">#</a></h2>
+<div class="bibliography-table" role="region" aria-label="Cuspidal comparison references" tabindex="0">
+
+<div class="article-table" role="region" aria-label="Table" tabindex="0"><table><thead><tr>
+<th>Work</th>
+<th>Role and precise use</th>
+<th>Reading so far</th>
+</tr>
+</thead><tbody><tr>
+<td><span id="miller-schmid-2012"></span> <strong>Stephen D. Miller and Wilfried Schmid (2012)</strong>, <a href="https://arxiv.org/abs/1106.2149v1"><em>On the rapid decay of cuspidal automorphic forms</em></a>. <em>Advances in Mathematics</em> <strong>231</strong>, 940–964.</td>
+<td>§2, (2.9)–(2.10), defines moderate and uniform moderate growth. Theorem A gives the rapid decrease on Siegel sets used in <a href="cusp-forms-parabolic-cohomology.html#cp1">CP1</a>; Theorems 2.23–2.24 specify the smooth-vector version.</td>
+<td>Exact arXiv v1 retained; definitions and these theorem statements inspected. The full proof and its Averbuch input have not been independently audited. The cusp-frame conversion in CP0 and the integrability estimate in CP1 are supplied in the article.</td>
+</tr>
+<tr>
+<td><span id="wallach-1984"></span> <strong>Nolan R. Wallach (1984)</strong>, <a href="https://mathweb.ucsd.edu/~nwallach/tempered-cuspidal.pdf"><em>On the constant term of a square integrable automorphic form</em></a>, in <em>Operator Algebras and Group Representations</em>, Vol. II, Monographs and Studies in Mathematics <strong>18</strong>, Pitman, 227–237.</td>
+<td>Theorem 4.3: a tempered module realized by square-integrable automorphic forms has cuspidal image. Together with the degree-two classification, this excludes residual contributions in <a href="cuspidal-cohomology-background.html#cp5">CP5</a>.</td>
+<td>Original scan retained; introduction, setup, Theorem 4.3 and proof (printed pp. 233–234) inspected, including the rendered theorem page. Underlying Jacquet-module results not independently reconstructed.</td>
+</tr>
+<tr>
+<td><span id="borel-casselman-1983"></span> <strong>Armand Borel and William Casselman (1983)</strong>, <a href="https://doi.org/10.1215/S0012-7094-83-05029-9"><em>L²-cohomology of locally symmetric manifolds of finite volume</em></a>. <em>Duke Math. J.</em> <strong>50</strong>, 625–647.</td>
+<td>Proposition 4.4(i), due to Borel–Garland, identifies finite-coefficient square-integrable harmonic forms with discrete-spectrum cohomology; Proposition 5.4 gives the geometric comparison. External input in <a href="cuspidal-cohomology-background.html#cp5">CP5</a>.</td>
+<td>Original full text not retrieved. The precise finite-coefficient statement and these references were inspected in Nair–Rai, Appendix A, pp. 29–30. The use concerns harmonic forms; it does not identify arbitrary ordinary classes with square-integrable forms.</td>
+</tr>
+<tr>
+<td><span id="nair-rai"></span> <strong>Arvind Nair and Ankit Rai</strong>, <a href="https://mathweb.tifr.res.in/~arvind/preprints/orthogonal_short.pdf"><em>Automorphic Lefschetz properties for noncompact arithmetic manifolds</em></a>, author-hosted preprint.</td>
+<td>Appendix A explicitly recalls the general finite-coefficient harmonic/discrete-spectrum comparison used in CP5.</td>
+<td>35-page author PDF retained on 17 October 2026; title, abstract, and Appendix A, pp. 29–30, inspected. Its Lefschetz theorems are not used here.</td>
+</tr>
+<tr>
+<td><span id="arakawa-1982"></span> <strong>Tsuneo Arakawa (1982)</strong>, <em>On automorphic forms of a quaternion unitary group of degree two</em>. <em>J. Fac. Sci. Univ. Tokyo Sect. IA Math.</em> <strong>28</strong>, 547–566. <a href="https://homepage.univie.ac.at/harald.grobner/papers/paperSp%2811%29nR.pdf#page=18">Reference in Grobner</a>.</td>
+<td>Historical dimension-formula source. The extended growth paper points to Theorem 2; the directly inspected formula used in <a href="cuspidal-cohomology-background.html#cp6">CP6</a> is Grobner’s Proposition 7.1.</td>
+<td>Identified through Grobner’s primary papers; original full text not inspected. Some catalogues date volume 28/issue 3 to 1981; the cited publication year is 1982.</td>
+</tr>
+<tr>
+<td><span id="arakawa-1984"></span> <strong>Tsuneo Arakawa (1984)</strong>, <em>On certain automorphic forms of Sp(1,q)</em>, in <em>Automorphic Forms of Several Variables</em>, Katata 1983, Birkhäuser, 1–48. <a href="https://homepage.univie.ac.at/harald.grobner/papers/paperSp%2811%29nR.pdf#page=16">Reference and use in Grobner</a>.</td>
+<td>Proposition 5.4 supplies the unipotent correction in the dimension calculation; the real-place parameter is matched in CP6.</td>
+<td>Citation and use inspected in Grobner §7.2; original proof not audited.</td>
+</tr>
+</tbody></table></div>
+</div>
+
+<h2 id="coefficient-fields-and-hecke-correspondences">Coefficient fields and Hecke correspondences<a class="anchor" href="#coefficient-fields-and-hecke-correspondences" aria-label="Link to Coefficient fields and Hecke correspondences">#</a></h2>
+<div class="bibliography-table" role="region" aria-label="Coefficient-field and Hecke references" tabindex="0">
+
+<div class="article-table" role="region" aria-label="Table" tabindex="0"><table><thead><tr>
+<th>Work</th>
+<th>Role and precise use</th>
+<th>Reading so far</th>
+</tr>
+</thead><tbody><tr>
+<td><span id="milne-2018"></span> <strong>J. S. Milne (2018)</strong>, <a href="https://www.jmilne.org/math/CourseNotes/RG.pdf"><em>Reductive Groups</em></a>, version 2.00, 10 March 2018.</td>
+<td>§20, especially 20.7–20.9, gives descent of semisimple representations over a splitting field, used in <a href="cuspidal-cohomology-background.html#cp7">CP7</a>.</td>
+<td>Version metadata and §20, pp. 102–103, inspected. These are expository notes; their underlying classification proofs have not been independently audited. The explicit quaternion splitting and odd-weight obstruction are proved in CP7.</td>
+</tr>
+<tr>
+<td><span id="venkatesh-takagi"></span> <strong>Akshay Venkatesh</strong>, <a href="https://math.stanford.edu/~akshay/research/takagi.pdf"><em>Cohomology of arithmetic groups and periods of automorphic forms</em></a>, notes based on the Takagi lectures of 15 November 2014.</td>
+<td>§4.1, equation (4.1), describes Hecke operators by restriction, conjugation, and corestriction. <a href="cusp-forms-parabolic-cohomology.html#cp-d4">CP-D4–CP8</a> specify the coefficient transport, normalization, compact-support compatibility, and spinor covariance for the present setting.</td>
+<td>Author PDF retained; introduction and §4.1, printed p. 9, inspected. The later conjectures about periods and derived structures are not inputs to CP9.</td>
+</tr>
+</tbody></table></div>
+</div>
+
+<h2 id="poincar-series-and-arakawa-lifting">Poincaré series and Arakawa lifting<a class="anchor" href="#poincar-series-and-arakawa-lifting" aria-label="Link to Poincaré series and Arakawa lifting">#</a></h2>
+<div class="bibliography-table" role="region" aria-label="Automorphic construction references" tabindex="0">
+
+<div class="article-table" role="region" aria-label="Table" tabindex="0"><table><thead><tr>
+<th>Work</th>
+<th>Role and precise use</th>
+<th>Reading so far</th>
+</tr>
+</thead><tbody><tr>
+<td><span id="muic-2016"></span> <strong>Goran Muić (2016)</strong>, <a href="https://doi.org/10.1016/j.jfa.2016.03.009"><em>Fourier Coefficients of Automorphic Forms and Integrable Discrete Series</em></a>. <em>J. Funct. Anal.</em> <strong>270</strong>, 3639–3674. <a href="https://arxiv.org/abs/1505.02263v1">Author preprint v1</a>.</td>
+<td>§4, Lemma 4-2(i), gives the cusp Poincaré-series theorem used in <a href="automorphic-constructions.html#as1">AS1</a>; Lemma 4-1(e) gives square integrability.</td>
+<td>Exact arXiv v1 retained; §4 inspected. The concrete tail proof in AS2 is supplied separately. Later Fourier-coefficient theorems not audited.</td>
+</tr>
+<tr>
+<td><span id="murase-narita-2008"></span> <strong>Atsushi Murase and Hiro-aki Narita (2008)</strong>, <a href="https://doi.org/10.2748/tmj/1215442873"><em>Commutation relations of Hecke operators for Arakawa lifting</em></a>. <em>Tohoku Math. J.</em> <strong>60</strong>, 227–251. <a href="https://www.jstage.jst.go.jp/article/tmj/60/2/60_2_227/_pdf">Publisher PDF</a>.</td>
+<td>§2 supplies the kernel and reproducing condition matched in <a href="classical-automorphic-sources.html#as3">AS3</a>. Theorem 4.1 constructs lifts for even <math><mrow><mi>n</mi><mo>&gt;</mo><mn>6</mn></mrow></math>.</td>
+<td>Introduction, §2, the §4 lift theorem, and §§5.1–5.4 inspected; full PDF retained. Printed pp. 229 and 235 also viewed for the weight and Hecke conventions. The proofs of the lift and commutation formulas are not independently audited. <a href="similitude-hecke-operators.html#sh1">SH1–SH4</a> give a separate rational-correspondence normalization and integrality proof; no complete adelic generator dictionary is asserted.</td>
+</tr>
+<tr>
+<td><span id="murase-narita-2012"></span> <strong>Atsushi Murase and Hiro-aki Narita (2012)</strong>, <a href="https://doi.org/10.1007/s11856-011-0084-7"><em>Fourier expansion of Arakawa lifting I: An explicit formula and examples of non-vanishing lifts</em></a>. <em>Israel J. Math.</em> <strong>187</strong>, 317–369; online 2011.</td>
+<td>Reports Fourier coefficients through toral periods and proves existence of nonzero lifts.</td>
+<td>Publisher metadata and abstract inspected. Full text and the individual examples have not yet been reconstructed.</td>
+</tr>
+</tbody></table></div>
+</div>
+
+<h2 id="harmonic-theta-series-newforms-and-l-values">Harmonic theta series, newforms, and L-values<a class="anchor" href="#harmonic-theta-series-newforms-and-l-values" aria-label="Link to Harmonic theta series, newforms, and L-values">#</a></h2>
+<div class="bibliography-table" role="region" aria-label="Theta and modular-form references" tabindex="0">
+
+<div class="article-table" role="region" aria-label="Table" tabindex="0"><table><thead><tr>
+<th>Work</th>
+<th>Role and precise use</th>
+<th>Reading so far</th>
+</tr>
+</thead><tbody><tr>
+<td><span id="schoeneberg-1939"></span> <strong>Bruno Schoeneberg (1939)</strong>, <em>Das Verhalten von mehrfachen Thetareihen bei Modulsubstitutionen</em>. <em>Mathematische Annalen</em> <strong>116</strong>, 511–523. Historical attribution; the modern formulation used here is Cohen–Strömberg, Chapter 14.</td>
+<td>Classical harmonic theta transformation theory, the setting for <a href="harmonic-theta-modularity.html#th2">TH2</a>.</td>
+<td>Bibliographic entry in Cohen–Strömberg checked; original paper not audited. The rank-four Poisson calculation is supplied in TH2.</td>
+</tr>
+<tr>
+<td><span id="cohen-stromberg-2017"></span> <strong>Henri Cohen and Fredrik Strömberg (2017)</strong>, <a href="https://doi.org/10.1090/gsm/179/10"><em>Modular Forms: A Classical Approach</em></a>. Graduate Studies in Mathematics <strong>179</strong>, AMS.</td>
+<td>Chapters 5 and 7 for dimensions, Chapters 10–13 for Hecke theory, Dirichlet series, and newforms, Chapter 14 for theta functions. Standard scalar theta and dimension theorems are explicit external inputs in <a href="harmonic-theta-values.html#th4">TH4</a>.</td>
+<td>Publisher contents and bibliography inspected; full book not audited.</td>
+</tr>
+<tr>
+<td><span id="ono-2004"></span> <strong>Ken Ono (2004)</strong>, <a href="https://doi.org/10.1090/CBMS/102"><em>The Web of Modularity: Arithmetic of the Coefficients of Modular Forms and q-series</em></a>. CBMS Regional Conference Series <strong>102</strong>, AMS.</td>
+<td>Chapter 1 supplies the standard eta-quotient modularity and cusp-order criteria used explicitly in TH4.</td>
+<td>Publisher record and contents checked; the complete book proof was not audited. TH4 records the exact congruences, character, and cusp orders needed here.</td>
+</tr>
+<tr>
+<td><span id="gelbart-1975"></span> <strong>Stephen S. Gelbart (1975)</strong>, <a href="https://doi.org/10.1515/9781400881611"><em>Automorphic Forms on Adele Groups</em></a>. Annals of Mathematics Studies <strong>83</strong>, Princeton University Press; linked digital reissue 2016.</td>
+<td>§§3–6 develop adelization, local/global representations, cusp forms, and Hecke theory. The classical newform correspondence is the external input in <a href="harmonic-theta-modularity.html#th6">TH6</a>.</td>
+<td>Publisher description and contents inspected; no independent proof of that general correspondence is claimed here.</td>
+</tr>
+<tr>
+<td><span id="lmfdb-46a"></span> <strong>The LMFDB Collaboration</strong>, <a href="https://www.lmfdb.org/ModularForm/GL2/Q/holomorphic/4/6/a/">weight-six, level-four space 4.6.a</a>.</td>
+<td>Records the one-dimensional newspace, zero oldspace, coefficients, and unique newform <strong>4.6.a.a</strong>. Used as a data cross-check for TH4.</td>
+<td>Space record inspected on 17 October 2026. The individual form page presented a browser challenge. The eta identity is proved using modularity and dimension, rather than database agreement. This is a database reference, not a published proof.</td>
+</tr>
+</tbody></table></div>
+</div>
+
+<h2 id="additional-comparison">Additional comparison<a class="anchor" href="#additional-comparison" aria-label="Link to Additional comparison">#</a></h2>
+<p><span id="sands-2022"></span> <strong>Adrienne Sands</strong>, <a href="https://arxiv.org/abs/2208.02082v1"><em>Automorphic Hamiltonians, Epstein Zeta Functions, and Kronecker Limit Formulas</em></a>, arXiv:2208.02082v1 (2022). This is an author preprint. <a href="https://arxiv.org/html/2208.02082v1#S2.SS5">§§2.4–2.5, Lemma 2.9</a> were inspected for the primitive-vector/Epstein-to-Eisenstein comparison. The nonspherical summation identity in <a href="lattice-eisenstein-series.html#ei2">EI2</a> is proved directly. Later spectral arguments have not been reviewed.</p>
+<h2 id="further-comparisons">Further comparisons<a class="anchor" href="#further-comparisons" aria-label="Link to Further comparisons">#</a></h2>
+<p>A detailed historical comparison of <a href="elliptic-functions.html#e-c1">E-C1</a> and <a href="elliptic-functions.html#e-c2">E-C2</a> with Fueter&#39;s original definitions remains useful, especially for kernel normalization, left/right conventions, and the zeta subtraction. The 1945 multiplication note is a separate starting point for the arithmetic action.</p>
+<p>The convergent harmonic theta and critical-value formulas now appear in <a href="harmonic-theta-values.html#th1">TH1–TH5</a>. Order-one regularization, arithmetic multiplication, and a direct relation between the ball and lattice representations remain open. The references here distinguish the published inputs from those questions.</p>
+<h2 id="langlands-and-galois-representations">Langlands and Galois representations<a class="anchor" href="#langlands-and-galois-representations" aria-label="Link to Langlands and Galois representations">#</a></h2>
+<div class="bibliography-table" role="region" aria-label="Langlands and Galois references" tabindex="0">
+
+<div class="article-table" role="region" aria-label="Table" tabindex="0"><table><thead><tr>
+<th>Work</th>
+<th>Role and precise use</th>
+<th>Reading so far</th>
+</tr>
+</thead><tbody><tr>
+<td><span id="rosner-weissauer-2024"></span> <strong>Mirko Rösner and Rainer Weissauer (2024)</strong>, <a href="https://doi.org/10.1016/j.jnt.2024.04.010"><em>Global liftings between inner forms of GSp(4)</em></a>, <em>J. Number Theory</em> <strong>263</strong>, 79–138. <a href="https://arxiv.org/abs/2103.14715v2">Author version, arXiv v2</a>.</td>
+<td>Proposition 8.3 checks the quaternionic cohomological weight; Proposition 10.1 allows the split packet change; Theorem 11.5 gives the general-type transfer used in <a href="langlands-galois-representations.html#lg3">LG3</a>.</td>
+<td>Retained v2, 21 June 2023, 59 pages. §§1, 8–11 and selected §12 statements inspected; pp. 35 and 46–47 contain the crucial restrictions. Theorem 11.4 is for the compact real inner form and is not used for Sp(1,1). Full trace-formula proof not independently audited.</td>
+</tr>
+<tr>
+<td><span id="weiss-2022"></span> <strong>Ariel Weiss (2022)</strong>, <a href="https://doi.org/10.1112/jlms.12576"><em>On the images of Galois representations attached to low weight Siegel modular forms</em></a>, <em>J. London Math. Soc.</em> <strong>106</strong>, 358–387. <a href="https://arxiv.org/abs/1802.08537v5">Author version, arXiv v5</a>.</td>
+<td>§§2.1–2.2 give the archimedean parameter/weight convention; Theorem 3.1 and Remark 3.2 give cohomological Galois existence, normalization, Hodge–Tate weights, purity and irreducibility.</td>
+<td>Retained final author version, 9 December 2021, 25 pages; §§2–3 inspected and theorem page 6 visually checked. This is a primary research paper summarizing the earlier existence theorems; their complete proofs are not reverified here.</td>
+</tr>
+<tr>
+<td><strong>Taylor; Laumon; Rainer Weissauer.</strong> Richard Taylor, <em>On the ℓ-adic cohomology of Siegel threefolds</em>, <em>Invent. Math.</em> <strong>114</strong> (1993), 289–310; Gérard Laumon, <em>Fonctions zêtas des variétés de Siegel de dimension trois</em>, <em>Astérisque</em> <strong>302</strong> (2005), 1–66; Rainer Weissauer, <em>Four dimensional Galois representations</em>, <em>Astérisque</em> <strong>302</strong> (2005), 67–150.</td>
+<td>Original geometric construction underlying the cohomological case of <a href="https://arxiv.org/abs/1802.08537v5">Weiss Theorem 3.1</a>.</td>
+<td>Attribution and bibliography read in Weiss; original construction proofs not inspected in this investigation.</td>
+</tr>
+<tr>
+<td><strong>Pierre Deligne (1971)</strong>, <a href="https://www.numdam.org/item/SB_1968-1969__11__139_0/"><em>Formes modulaires et représentations ℓ-adiques</em></a>, <em>Séminaire Bourbaki</em> 1968/69, exposé 355, 139–172.</td>
+<td>Two-dimensional Galois representations of holomorphic cuspidal eigenforms, used as the external input in <a href="langlands-galois-representations.html#lg5">LG5</a>.</td>
+<td>Classical theorem imported as a named dependency; its original proof and modern p-adic Hodge-theoretic refinements have not been audited here.</td>
+</tr>
+</tbody></table></div>
+</div>
+
+
+<h2 id="moduli-spaces-universal-families-and-motives">Moduli spaces, universal families, and motives<a class="anchor" href="#moduli-spaces-universal-families-and-motives" aria-label="Link to Moduli spaces, universal families, and motives">#</a></h2>
+<div class="bibliography-table" role="region" aria-label="Geometric realization references" tabindex="0">
+
+<div class="article-table" role="region" aria-label="Table" tabindex="0"><table><thead><tr>
+<th>Work</th>
+<th>Role and precise use</th>
+<th>Reading so far</th>
+</tr>
+</thead><tbody><tr>
+<td><strong>Nicholas Katz and Barry Mazur (1985)</strong>, <a href="https://math.bu.edu/people/jsweinst/AWS/Files/KatzMazurArithmeticModuli.pdf"><em>Arithmetic Moduli of Elliptic Curves</em></a>, Annals of Mathematics Studies 108.</td>
+<td>Theorem 10.13.11 gives the logarithmic extension of the elliptic Kodaira–Spencer isomorphism used in GE1.</td>
+<td>The theorem and preceding construction on printed pp.334–335 inspected through the accessible scan; complete book proof not audited.</td>
+</tr>
+<tr>
+<td><strong>Kenneth Ribet (1992 preprint; 2004 publication)</strong>, <a href="https://arxiv.org/abs/alg-geom/9208002"><em>Abelian varieties over Q and modular forms</em></a>, in <em>Modular Curves and Abelian Varieties</em>, 241–261.</td>
+<td>Classical association of abelian varieties to weight-two newforms and the GL₂-type context for GE-J.</td>
+<td>Retained arXiv v1, 18 pages; §2, especially p.4, explicitly states the newform quotient construction, its dimension, and its source in Shimura Theorem 7.14. The original general proof has not been audited here.</td>
+</tr>
+<tr>
+<td><strong>A. J. Scholl (1990)</strong>, <a href="https://www.dpmms.cam.ac.uk/~ajs1005/preprints/mf.pdf"><em>Motives for modular forms</em></a>, <em>Invent. Math.</em> <strong>100</strong>, 419–430.</td>
+<td>§1.2, especially Theorem 1.2.1, places parabolic coefficient cohomology in a projector summand of Kuga–Sato cohomology.</td>
+<td>Author-hosted 10-page version retained; introduction and §§1.0–1.2 inspected. The desingularization and full projector proof have not been audited.</td>
+</tr>
+<tr>
+<td><strong>Damien Robert (2023 draft)</strong>, <a href="https://www.math.u-bordeaux.fr/~damienrobert/pro/publications/books/avtheory.pdf"><em>Theory of abelian varieties and their moduli spaces</em></a>, draft 7 March 2023.</td>
+<td>§5.10, especially Proposition 5.10.1, gives the polarized Kodaira–Spencer map and its Siegel analytic model; used in GE4.</td>
+<td>119-page author draft retained; printed pp.59–60 inspected. Underlying Faltings–Chai and Andreatta results are cited there rather than independently audited here.</td>
+</tr>
+<tr>
+<td><strong>Jörg Wildeshaus (2019)</strong>, <a href="https://doi.org/10.2140/akt.2019.4.525"><em>On the intersection motive of certain Shimura varieties: the case of Siegel threefolds</em></a>, <em>Annals of K-Theory</em> <strong>4</strong>, 525–558; <a href="https://arxiv.org/abs/1706.02743v3">arXiv v3</a>.</td>
+<td>Theorem 1.4 recalls Ancona&#39;s relative motivic construction from the universal abelian surface. Theorem 1.6 and its regularity restriction prevent an unjustified application of the absolute intersection-motive theorem to coefficients <math><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi>m</mi><mo separator="true">,</mo><mn>0</mn><mo fence="true" form="postfix" stretchy="false">)</mo></mrow></math>.</td>
+<td>36-page v3 retained; introduction and §1 through Theorem 1.6 inspected. Full boundary computation not audited.</td>
+</tr>
+</tbody></table></div>
+</div>
+
+
+<h2 id="half-space-geometry-and-mellin-period-functions">Half-space geometry and Mellin period functions<a class="anchor" href="#half-space-geometry-and-mellin-period-functions" aria-label="Link to Half-space geometry and Mellin period functions">#</a></h2>
+<div class="bibliography-table" role="region" aria-label="Half-space and Mellin references" tabindex="0">
+
+<div class="article-table" role="region" aria-label="Table" tabindex="0"><table><thead><tr>
+<th>Work</th>
+<th>Role and precise use</th>
+<th>Reading so far</th>
+</tr>
+</thead><tbody><tr>
+<td><span id="vogan-1981-center"></span> <strong>David A. Vogan, Jr. (1981)</strong>, <a href="https://math.mit.edu/~dav/vogan81chapter1.pdf"><em>Representations of Real Reductive Lie Groups</em>, introductory chapter</a>, §0.2.</td>
+<td>The Harish-Chandra isomorphism identifies the center of the enveloping algebra with Weyl-invariant polynomials. Used for the two central generators and <a href="cusp-forms-parabolic-cohomology.html#cp-z1">the finite differential test</a>.</td>
+<td>The map, isomorphism statement and infinitesimal-character convention in 0.2.7–0.2.9 inspected. The degree-two and degree-four generators follow from the signed-permutation Weyl group in type <math><msub><mi>C</mi><mn>2</mn></msub></math>; the finite-span criterion is proved in the article.</td>
+</tr>
+<tr>
+<td><span id="parkkonen-paulin-2019"></span> <strong>Jouni Parkkonen and Frédéric Paulin (2019)</strong>, <a href="https://arxiv.org/abs/1912.09690v1"><em>Counting and equidistribution in quaternionic Heisenberg groups</em></a>.</td>
+<td>§§3 and 6 give Siegel-domain, horospherical and Heisenberg conventions, compared with <a href="quaternionic-half-space.html#qh1">QH1–QH3</a>.</td>
+<td>The model, metric (8), coordinates (18) and Heisenberg law inspected. The arithmetic counting theorems are not used. The matrix and Cayley identities in QH1–QH3 are proved directly.</td>
+</tr>
+<tr>
+<td><span id="constales-krausshar-2002"></span> <strong>Denis Constales and Rolf Sören Kraußhar (2002)</strong>, <a href="https://ems.press/content/serial-article-files/35334"><em>Representation Formulas for the General Derivatives of the Fundamental Solution to the Cauchy–Riemann Operator in Clifford Analysis and Applications</em></a>. <em>Z. Anal. Anwendungen</em> <strong>21</strong>, 579–597.</td>
+<td>§3.1, Lemmas 1–3: Fourier plane waves and Clifford regularity. Related to the spinor Fourier calculation <a href="cusp-forms-parabolic-cohomology.html#cp-m1">CP-M1</a>.</td>
+<td>Introduction pp.580–581 and those lemmas inspected. The symmetric-spinor and cusp estimates used here are proved in CP-M1.</td>
+</tr>
+<tr>
+<td><span id="bruggeman-lewis-zagier-2013"></span> <strong>Roelof Bruggeman, John Lewis and Don Zagier (2013 author version)</strong>, <a href="https://people.mpim-bonn.mpg.de/zagier/files/tex/PeriodFunctions4MaassWaveForms/pfmw-coh130826.pdf"><em>Period functions for Maass wave forms and cohomology</em></a>.</td>
+<td>A comparison for function-valued parabolic cocycles and automorphic reconstruction.</td>
+<td>Introduction pp.3–6 and Theorem B inspected. Its group and coefficient modules differ from those of CP-M5; that quaternionic construction is proved separately.</td>
+</tr>
+<tr>
+<td><span id="ivansic-24cell"></span> <strong>Dubravko Ivanšić</strong>, <a href="https://campus.murraystate.edu/academic/faculty/divansic/papers/torusknots.pdf"><em>Hyperbolic structure on a complement of tori in the 4-sphere</em></a>, author version.</td>
+<td>§4 describes the ten-reflection level-two group and ideal 24-cell, used in <a href="cusp-forms-parabolic-cohomology.html#cp-e1">CP-E1</a>. It attributes the reflection-group identification to Ratcliffe–Tschantz, <em>The Volume Spectrum of Hyperbolic 4-Manifolds</em>, <em>Experimental Mathematics</em> <strong>9</strong> (2000), 101–125.</td>
+<td>PDF pp.9–10 inspected. The original Ratcliffe–Tschantz full proof was not independently audited. The particular color kernel, congruence condition and nonvanishing estimate are calculated in CP-E1–CP-E2.</td>
+</tr>
+</tbody></table></div>
+</div>
+
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+<nav class="adjacent" aria-label="Reading order"><a rel="prev" href="../quaternionic-analysis/classical-automorphic-geometry.html"><small>Previous</small> Classical Automorphic Geometry and Hodge Weights</a><a href="../index.html"><small>Return to</small> The collection</a></nav>
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Eisenstein sums and coefficient identities, separated from open research directions.">
+<title>From lattice sums to number theory · Math 2.0</title>
+<link rel="preload" href="../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/theme/temml.css?v=10">
+<link rel="stylesheet" href="../assets/theme/wiki.css?v=10">
+<script defer src="../assets/theme/wiki.js?v=10"></script>
+</head>
+<body data-root="../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/about/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Quaternionic analysis</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"><li><a href="#higher-derivatives-and-eisenstein-sums">Higher derivatives and Eisenstein sums</a><ol><li><a class="toc-statement" href="#n-d1">Definition N-D1</a></li><li><a class="toc-statement" href="#n-c1">Construction N-C1</a></li><li><a class="toc-statement" href="#n2">Proposition N2</a></li><li><a class="toc-statement" href="#n1">Proposition N1</a></li><li><a class="toc-statement" href="#n3">Corollary N3</a></li></ol></li><li><a href="#eisenstein-representations">Eisenstein representations</a></li><li><a href="#harmonic-theta-series">Harmonic theta series</a></li><li><a href="#multiplication-and-arithmetic-lattices">Multiplication and arithmetic lattices</a></li><li><a href="#period-relations">Period relations</a></li><li><a href="#references">References</a></li></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"><div class="article-kind" data-article-kind="exposition">Expository</div></div>
+<div class="page-intro">
+<p class="page-description">Eisenstein sums and coefficient identities, separated from open research directions.</p>
+<div class="reading-controls" aria-label="Reading options"><button type="button" class="discussion-toggle" aria-pressed="false">Hide discussion</button><button type="button" class="proof-toggle">Collapse proofs</button></div>
+</div>
+<article>
+<h1 id="from-lattice-sums-to-number-theory">From lattice sums to number theory</h1>
+<section class="discussion discussion"><div class="prose-label">Discussion</div><p>The elliptic construction starts from an arbitrary full-rank lattice. Its coefficients supply a first connection to lattice Eisenstein sums. The precise statements below lead to representations and special values, followed by questions about arithmetic multiplication and periods.</p>
+</section>
+<h2 id="higher-derivatives-and-eisenstein-sums">Higher derivatives and Eisenstein sums<a class="anchor" href="#higher-derivatives-and-eisenstein-sums" aria-label="Link to Higher derivatives and Eisenstein sums">#</a></h2>
+<section class="math-item definition" id="n-d1" data-kind="definition" data-claim-version="1" aria-labelledby="n-d1-title"><div class="statement"><h3 id="n-d1-title" class="statement-title"><span class="statement-label">Definition N-D1.</span> Spatial multi-indices</h3><div class="statement-body"><p>For <math><mrow><mi>ν</mi><mo>=</mo><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><msub><mi>n</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>n</mi><mn>2</mn></msub><mo separator="true">,</mo><msub><mi>n</mi><mn>3</mn></msub><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mo>∈</mo><msubsup><mi>ℕ</mi><mn>0</mn><mn>3</mn></msubsup></mrow></math>, set</p>
+<div class="equation"><math display="block" class="tml-display" style="display:block math;"><mrow><mi>|</mi><mi>ν</mi><mi>|</mi><mo>=</mo><msub><mi>n</mi><mn>1</mn></msub><mo>+</mo><msub><mi>n</mi><mn>2</mn></msub><mo>+</mo><msub><mi>n</mi><mn>3</mn></msub><mo separator="true">,</mo><mspace width="1em"></mspace><msup><mi>∂</mi><mi>ν</mi></msup><mo>=</mo><msubsup><mi>∂</mi><msub><mi>x</mi><mn>1</mn></msub><msub><mi>n</mi><mn>1</mn></msub></msubsup><msubsup><mi>∂</mi><msub><mi>x</mi><mn>2</mn></msub><msub><mi>n</mi><mn>2</mn></msub></msubsup><msubsup><mi>∂</mi><msub><mi>x</mi><mn>3</mn></msub><msub><mi>n</mi><mn>3</mn></msub></msubsup><mo separator="true">,</mo><mspace width="1em"></mspace><msub><mi>G</mi><mi>ν</mi></msub><mo>=</mo><msup><mi>∂</mi><mi>ν</mi></msup><mi>G</mi><mi>.</mi></mrow></math></div>
+<p>Write <math><msub><mi>ϵ</mi><mi>j</mi></msub></math> for the multi-index with a single <math><mn>1</mn></math> in position <math><mi>j</mi></math>, for <math><mrow><mi>j</mi><mo>∈</mo><mrow><mo fence="true" form="prefix" stretchy="false">{</mo><mn>1,2,3</mn><mo fence="true" form="postfix" stretchy="false">}</mo></mrow></mrow></math>.</p>
+</div></div><aside class="statement-meta" aria-label="About Definition N-D1"><p class="statement-tag"><a href="#n-d1">N-D1</a> · version 1</p></aside></section>
+<section class="math-item construction" id="n-c1" data-kind="construction" data-claim-version="1" aria-labelledby="n-c1-title"><div class="statement"><h3 id="n-c1-title" class="statement-title"><span class="statement-label">Construction N-C1.</span> Higher Eisenstein and elliptic sums <span class="statement-citation" data-citation><a href="#ref-krausshar-2001">[1, §§3–5]</a></span></h3><div class="statement-body"><p>Let <math><mrow><mi>L</mi><mo>⊂</mo><mi>ℍ</mi></mrow></math> be a full-rank lattice and let <math><mrow><mi>ν</mi><mo>∈</mo><msubsup><mi>ℕ</mi><mn>0</mn><mn>3</mn></msubsup></mrow></math> satisfy <math><mrow><mi>|</mi><mi>ν</mi><mi>|</mi><mo>≥</mo><mn>2</mn></mrow></math>. Form</p>
+<div class="equation"><math display="block" class="tml-display" style="display:block math;"><mrow><msub><mi>E</mi><mi>ν</mi></msub><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi>L</mi><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mo>=</mo><mrow><munder><mo movablelimits="false">∑</mo><mrow><mi>λ</mi><mo>∈</mo><msup><mi>L</mi><mo form="prefix" stretchy="false" class="tml-sml-pad">∗</mo></msup></mrow></munder></mrow><msub><mi>G</mi><mi>ν</mi></msub><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi>λ</mi><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mo separator="true">,</mo><mspace width="2em"></mspace><msub><mi>℘</mi><mrow><mi>L</mi><mo separator="true">,</mo><mi>ν</mi></mrow></msub><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi>q</mi><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mo>=</mo><mrow><munder><mo movablelimits="false">∑</mo><mrow><mi>λ</mi><mo>∈</mo><mi>L</mi></mrow></munder></mrow><msub><mi>G</mi><mi>ν</mi></msub><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi>q</mi><mo>+</mo><mi>λ</mi><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mo>−</mo><msub><mi>E</mi><mi>ν</mi></msub><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi>L</mi><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mspace width="1em"></mspace><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi>q</mi><mo>∉</mo><mi>L</mi><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mi>.</mi></mrow></math></div>
+</div></div><aside class="statement-meta" aria-label="About Construction N-C1"><p class="statement-tag"><a href="#n-c1">N-C1</a> · version 1</p><p class="statement-justification">Well-definedness: Absolute convergence and periodicity in <a href="#n2">N2</a>.</p></aside></section>
+<section class="math-item proposition" id="n2" data-kind="proposition" data-claim-version="1" data-proof-supplied="true" data-review="pending" data-formal="none" aria-labelledby="n2-title"><div class="statement"><h3 id="n2-title" class="statement-title"><span class="statement-label">Proposition N2.</span> Convergence and periodicity of the higher sums <span class="statement-citation" data-citation><a href="#ref-krausshar-2001">[1, §§3–5]</a></span></h3><div class="statement-body"><p>For every full-rank lattice <math><mrow><mi>L</mi><mo>⊂</mo><mi>ℍ</mi></mrow></math> and every <math><mrow><mi>ν</mi><mo>∈</mo><msubsup><mi>ℕ</mi><mn>0</mn><mn>3</mn></msubsup></mrow></math> with <math><mrow><mi>|</mi><mi>ν</mi><mi>|</mi><mo>≥</mo><mn>2</mn></mrow></math>, the Eisenstein series in N-C1 converges absolutely. The defining series for <math><msub><mi>℘</mi><mrow><mi>L</mi><mo separator="true">,</mo><mi>ν</mi></mrow></msub></math> converges absolutely and locally uniformly on <math><mrow><mi>ℍ</mi><mo>∖</mo><mi>L</mi></mrow></math>. For every <math><mrow><mi>ω</mi><mo>∈</mo><mi>L</mi></mrow></math> and <math><mrow><mi>q</mi><mo>∉</mo><mi>L</mi></mrow></math>,</p>
+<div class="equation"><math display="block" class="tml-display" style="display:block math;"><mrow><msub><mi>℘</mi><mrow><mi>L</mi><mo separator="true">,</mo><mi>ν</mi></mrow></msub><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi>q</mi><mo>+</mo><mi>ω</mi><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mo>=</mo><msub><mi>℘</mi><mrow><mi>L</mi><mo separator="true">,</mo><mi>ν</mi></mrow></msub><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi>q</mi><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mi>.</mi></mrow></math></div>
+</div></div><aside class="statement-meta" aria-label="About Proposition N2"><p class="statement-tag"><a href="#n2">N2</a> · version 1</p><p class="statement-uses">Uses <a href="#n-c1">N-C1</a>, <a href="foundations.html#f2">F2</a>, the lattice-count estimate in <a href="elliptic-functions.html#e1">E1</a>.</p></aside><details class="proof" data-proof-for="n2" open><summary><span class="proof-heading">Proof</span><span class="visually-hidden"> of Proposition N2</span><span class="proof-citation" data-proof-citation><a href="#ref-krausshar-2001">[1, §§3–5]</a></span></summary><div class="proof-body"><p>F2 gives decay <math><mrow><mi>|</mi><mi>q</mi><msup><mi>|</mi><mrow><mo form="prefix" stretchy="false" lspace="0em" rspace="0em">−</mo><mn>3</mn><mo>−</mo><mi>|</mi><mi>ν</mi><mi>|</mi></mrow></msup></mrow></math>, with exponent at least <math><mn>5</mn></math>. The lattice-count estimate from the proof of E1 therefore proves absolute convergence, uniformly on compact sets away from the lattice for the translated sum. Absolute convergence permits reindexing <math><mrow><mi>λ</mi><mo>↦</mo><mi>λ</mi><mo>+</mo><mi>ω</mi></mrow></math>, which proves periodicity.</p>
+</div></details>
+</section>
+<section class="math-item proposition" id="n1" data-kind="proposition" data-claim-version="2" data-proof-supplied="true" data-review="pending" data-formal="none" aria-labelledby="n1-title"><div class="statement"><h3 id="n1-title" class="statement-title"><span class="statement-label">Proposition N1.</span> Coefficients at the singularity <span class="statement-citation" data-citation><a href="#ref-krausshar-2001">[1, §§3–5]</a></span></h3><div class="statement-body"><p>Let <math><mrow><mi>L</mi><mo>⊂</mo><mi>ℍ</mi></mrow></math> be a full-rank lattice and <math><mrow><mi>j</mi><mo>∈</mo><mrow><mo fence="true" form="prefix" stretchy="false">{</mo><mn>1,2,3</mn><mo fence="true" form="postfix" stretchy="false">}</mo></mrow></mrow></math>. Let <math><msub><mi>h</mi><mi>j</mi></msub></math> be the smooth extension near <math><mn>0</mn></math> of <math><mrow><msub><mi>℘</mi><mrow><mi>L</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub><mo>−</mo><msub><mi>G</mi><mi>j</mi></msub></mrow></math> supplied by E1. For every <math><mrow><mi>μ</mi><mo>∈</mo><msubsup><mi>ℕ</mi><mn>0</mn><mn>3</mn></msubsup></mrow></math> with <math><mrow><mi>|</mi><mi>μ</mi><mi>|</mi><mo>≥</mo><mn>1</mn></mrow></math>,</p>
+<div class="equation"><math display="block" class="tml-display" style="display:block math;"><mrow><msup><mi>∂</mi><mi>μ</mi></msup><msub><mi>h</mi><mi>j</mi></msub><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mn>0</mn><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mo>=</mo><msub><mi>E</mi><mrow><mi>μ</mi><mo>+</mo><msub><mi>ϵ</mi><mi>j</mi></msub></mrow></msub><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi>L</mi><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mi>.</mi></mrow></math></div>
+</div></div><aside class="statement-meta" aria-label="About Proposition N1"><p class="statement-tag"><a href="#n1">N1</a> · version 2</p><p class="statement-uses">Uses <a href="#n-d1">N-D1</a>, <a href="#n-c1">N-C1</a>, <a href="#n2">N2</a>, <a href="elliptic-functions.html#e1">E1</a>.</p></aside><details class="proof" data-proof-for="n1" open><summary><span class="proof-heading">Proof</span><span class="visually-hidden"> of Proposition N1</span><span class="proof-citation" data-proof-citation><a href="#ref-krausshar-2001">[1, §§3–5]</a></span></summary><div class="proof-body"><p>Differentiate the convergent series for <math><msub><mi>h</mi><mi>j</mi></msub></math> from E1 and evaluate at <math><mrow><mi>q</mi><mo>=</mo><mn>0</mn></mrow></math>. The subtracted constants disappear, leaving <math><mrow><msub><mo movablelimits="false">∑</mo><mrow><mi>λ</mi><mo>∈</mo><msup><mi>L</mi><mo form="prefix" stretchy="false" class="tml-sml-pad">∗</mo></msup></mrow></msub><msub><mi>G</mi><mrow><mi>μ</mi><mo>+</mo><msub><mi>ϵ</mi><mi>j</mi></msub></mrow></msub><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi>λ</mi><mo fence="true" form="postfix" stretchy="false">)</mo></mrow></mrow></math>. This converges absolutely since <math><mrow><mi>|</mi><mi>μ</mi><mo>+</mo><msub><mi>ϵ</mi><mi>j</mi></msub><mi>|</mi><mo>≥</mo><mn>2</mn></mrow></math>.</p>
+</div></details>
+</section>
+<section class="math-item corollary" id="n3" data-kind="corollary" data-claim-version="1" data-proof-supplied="true" data-review="pending" data-formal="none" aria-labelledby="n3-title"><div class="statement"><h3 id="n3-title" class="statement-title"><span class="statement-label">Corollary N3.</span> Parity cancellation</h3><div class="statement-body"><p>For every full-rank lattice <math><mrow><mi>L</mi><mo>⊂</mo><mi>ℍ</mi></mrow></math> and every <math><mrow><mi>ν</mi><mo>∈</mo><msubsup><mi>ℕ</mi><mn>0</mn><mn>3</mn></msubsup></mrow></math> with even <math><mrow><mi>|</mi><mi>ν</mi><mi>|</mi><mo>≥</mo><mn>2</mn></mrow></math>,</p>
+<div class="equation"><math display="block" class="tml-display" style="display:block math;"><mrow><msub><mi>E</mi><mi>ν</mi></msub><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi>L</mi><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mo>=</mo><mn>0.</mn></mrow></math></div>
+</div></div><aside class="statement-meta" aria-label="About Corollary N3"><p class="statement-tag"><a href="#n3">N3</a> · version 1</p><p class="statement-uses">Uses <a href="#n-c1">N-C1</a>, <a href="#n2">N2</a>, <a href="foundations.html#f2">F2</a>.</p></aside><details class="proof" data-proof-for="n3" open><summary><span class="proof-heading">Proof</span><span class="visually-hidden"> of Corollary N3</span></summary><div class="proof-body"><p>By F2, <math><msub><mi>G</mi><mi>ν</mi></msub></math> is odd when <math><mrow><mi>|</mi><mi>ν</mi><mi>|</mi></mrow></math> is even. The terms at <math><mi>λ</mi></math> and <math><mrow><mo form="prefix" stretchy="false">−</mo><mi>λ</mi></mrow></math> cancel, and absolute convergence from N2 justifies pairing them.</p>
+</div></details>
+</section>
+<section class="discussion discussion"><div class="prose-label">Discussion</div><p>These are foundational identities, with no novelty claim. They explain how higher Eisenstein sums enter the regular part of the elliptic construction. Among the absolutely convergent sums, order <math><mn>2</mn></math> vanishes by N3, so order <math><mn>3</mn></math> is the first order not eliminated by this parity argument. For related lattice sums and Laurent coefficients, see <a href="#ref-krausshar-2001">[1]</a>, §§4–5.</p>
+</section>
+<h2 id="eisenstein-representations">Eisenstein representations<a class="anchor" href="#eisenstein-representations" aria-label="Link to Eisenstein representations">#</a></h2>
+<section class="discussion discussion"><div class="prose-label">Discussion</div><p>Varying the lattice produces <a href="lattice-eisenstein-series.html">Eisenstein functions on SL₄</a>. Their irreducible module, inducing parameter, and compact types are established there with proofs. This lattice action differs from the Möbius action on regular functions in <a href="fueter-discrete-series.html">the discrete-series</a> and <a href="fueter-hardy-space.html">Hardy</a> constructions.</p>
+</section>
+<h2 id="harmonic-theta-series">Harmonic theta series<a class="anchor" href="#harmonic-theta-series" aria-label="Link to Harmonic theta series">#</a></h2>
+<section class="discussion discussion"><div class="prose-label">Discussion</div><p>The kernel derivatives have <a href="lattice-eisenstein-series.html#ei1">harmonic polynomial numerators</a>. Their convergent lattice sums admit a <a href="harmonic-theta-values.html#th1">Mellin formula</a>; even integral lattices give <a href="harmonic-theta-modularity.html#th2">harmonic theta cusp forms</a> and <a href="harmonic-theta-values.html#th3">critical L-values</a>. The <a href="harmonic-theta-values.html#th5">cubic example</a> identifies a specific coefficient with the value at five of the weight-six newform η(2τ)¹².</p>
+<p>The order-one sum and its proposed connection to quasi-periods still need a regularization theorem. Other arithmetic lattices, Hecke decompositions, and algebraic period normalizations remain open directions.</p>
+</section>
+<section class="discussion discussion" aria-labelledby="discussion-open-directions-no-theorem-asserted"><h3 id="discussion-open-directions-no-theorem-asserted"><span class="statement-label">Discussion.</span> Open directions — no theorem asserted</h3><h2 id="multiplication-and-arithmetic-lattices">Multiplication and arithmetic lattices<a class="anchor" href="#multiplication-and-arithmetic-lattices" aria-label="Link to Multiplication and arithmetic lattices">#</a></h2>
+<p>Lattices with an action by elements of a quaternion algebra suggest transformation laws for the elliptic functions and quasi-periods. The action and its hypotheses need precise statements. A transformation identity and an independent arithmetic constraint are different conclusions.</p>
+<h2 id="period-relations">Period relations<a class="anchor" href="#period-relations" aria-label="Link to Period relations">#</a></h2>
+<p>The additivity of <math><msub><mi>η</mi><mi>L</mi></msub></math> is part of <a href="elliptic-functions.html#e3">E3</a>. Relating it to a residue or to integrals on <math><mrow><mi>ℍ</mi><mi>/</mi><mi>L</mi></mrow></math> requires further statements fixing normalization, orientation, and left/right regularity. The <a href="regular-differential-forms.html">closed pairings and pullback identities</a> supply local results; quotient cohomology remains open.</p>
+<p>The <a href="literature.html">literature guide</a> collects sources and further reading. These questions remain in the research notebook for investigation.</p>
+</section>
+<h2 id="references">References<a class="anchor" href="#references" aria-label="Link to References">#</a></h2>
+<ol class="bibliography">
+<li><span id="ref-krausshar-2001"></span> R. S. Kraußhar, <a href="https://doi.org/10.4171/ZAA/1057"><em>On a New Type of Eisenstein Series in Clifford Analysis</em></a>, Zeitschrift für Analysis und ihre Anwendungen <strong>20</strong> (2001), no. 4, 1007–1029. <a href="https://ems.press/content/serial-article-files/35214">Open text</a>.</li>
+</ol>
+
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+<nav class="adjacent" aria-label="Reading order"><a rel="prev" href="../quaternionic-analysis/elliptic-functions.html"><small>Previous</small> Quaternionic elliptic functions</a><a rel="next" href="../quaternionic-analysis/fueter-discrete-series.html"><small>Next</small> Fueter regularity and discrete series</a></nav>
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

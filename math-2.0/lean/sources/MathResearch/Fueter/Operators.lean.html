@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the F1/v2 verification.">
+<title>MathResearch/Fueter/Operators.lean · Math 2.0</title>
+<link rel="preload" href="../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../assets/theme/temml.css?v=10">
+<link rel="stylesheet" href="../../../../assets/theme/wiki.css?v=10">
+<script defer src="../../../../assets/theme/wiki.js?v=10"></script>
+</head>
+<body data-root="../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/about/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the F1/v2 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Fueter/Operators.lean</h1><p><a href="Operators.lean" download>Download exact source</a>. SHA-256: <code>1f353ad6c85f3827beadab970ea3853b99e94e3f45c7f41dba9301a858aa92b1</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2"></span>
+<span id="L3">public import Mathlib.Analysis.Quaternion</span>
+<span id="L4">public import Mathlib.Analysis.Calculus.FDeriv.Symmetric</span>
+<span id="L5">public import Mathlib.Analysis.Calculus.ContDiff.Operations</span>
+<span id="L6">public import Mathlib.Analysis.Normed.Operator.Mul</span>
+<span id="L7">public import Mathlib.Tactic.FinCases</span>
+<span id="L8"></span>
+<span id="L9">/-!</span>
+<span id="L10">Real coordinate derivatives and the two constant-coefficient Fueter operators.</span>
+<span id="L11">The quaternion algebra, normed structure, coordinate basis, Fréchet derivative,</span>
+<span id="L12">and all smoothness notions are those of mathlib.</span>
+<span id="L13">-/</span>
+<span id="L14"></span>
+<span id="L15">@[expose] public section</span>
+<span id="L16"></span>
+<span id="L17">noncomputable section</span>
+<span id="L18"></span>
+<span id="L19">open scoped Quaternion Topology BigOperators ContDiff</span>
+<span id="L20"></span>
+<span id="L21">namespace MathResearch.Fueter</span>
+<span id="L22"></span>
+<span id="L23">/-- Mathlib&#39;s ordered real quaternion basis `(1, i, j, k)`. -/</span>
+<span id="L24">def coordinateBasis : Module.Basis (Fin 4) ℝ ℍ :=</span>
+<span id="L25">  QuaternionAlgebra.basisOneIJK (-1) 0 (-1)</span>
+<span id="L26"></span>
+<span id="L27">/-- The basis has exactly the coordinate order and signs of F-D1. -/</span>
+<span id="L28">theorem coordinateBasis_eq (μ : Fin 4) :</span>
+<span id="L29">    coordinateBasis μ = ![(1 : ℍ), ⟨0, 1, 0, 0⟩, ⟨0, 0, 1, 0⟩, ⟨0, 0, 0, 1⟩] μ := by</span>
+<span id="L30">  apply coordinateBasis.repr.injective</span>
+<span id="L31">  ext ν</span>
+<span id="L32">  simp only [Module.Basis.repr_self]</span>
+<span id="L33">  fin_cases μ &lt;;&gt; fin_cases ν &lt;;&gt; simp [coordinateBasis,</span>
+<span id="L34">    QuaternionAlgebra.coe_basisOneIJK_repr]</span>
+<span id="L35"></span>
+<span id="L36">/-- Differentiation in a fixed real direction, expressed with mathlib&#39;s Fréchet derivative. -/</span>
+<span id="L37">def directional (v : ℍ) (f : ℍ → ℍ) (q : ℍ) : ℍ := fderiv ℝ f q v</span>
+<span id="L38"></span>
+<span id="L39">/-- The ordinary real coordinate partial derivative. Index zero is the real coordinate. -/</span>
+<span id="L40">def coordPartial (μ : Fin 4) : (ℍ → ℍ) → (ℍ → ℍ) := directional (coordinateBasis μ)</span>
+<span id="L41"></span>
+<span id="L42">/-- Left multiplication of each coordinate derivative by its basis quaternion. -/</span>
+<span id="L43">def leftContraction : (ℍ →L[ℝ] ℍ) →L[ℝ] ℍ :=</span>
+<span id="L44">  ∑ μ : Fin 4, (ContinuousLinearMap.mul ℝ ℍ (coordinateBasis μ)).comp</span>
+<span id="L45">    (ContinuousLinearMap.apply ℝ ℍ (coordinateBasis μ))</span>
+<span id="L46"></span>
+<span id="L47">/-- Right multiplication of each coordinate derivative by its basis quaternion. -/</span>
+<span id="L48">def rightContraction : (ℍ →L[ℝ] ℍ) →L[ℝ] ℍ :=</span>
+<span id="L49">  ∑ μ : Fin 4, ((ContinuousLinearMap.mul ℝ ℍ).flip (coordinateBasis μ)).comp</span>
+<span id="L50">    (ContinuousLinearMap.apply ℝ ℍ (coordinateBasis μ))</span>
+<span id="L51"></span>
+<span id="L52">def leftOperator (f : ℍ → ℍ) (q : ℍ) : ℍ := leftContraction (fderiv ℝ f q)</span>
+<span id="L53"></span>
+<span id="L54">def rightOperator (f : ℍ → ℍ) (q : ℍ) : ℍ := rightContraction (fderiv ℝ f q)</span>
+<span id="L55"></span>
+<span id="L56">theorem leftOperator_eq (f : ℍ → ℍ) (q : ℍ) :</span>
+<span id="L57">    leftOperator f q = ∑ μ : Fin 4, coordinateBasis μ * coordPartial μ f q := by</span>
+<span id="L58">  simp [leftOperator, leftContraction, coordPartial, directional]</span>
+<span id="L59"></span>
+<span id="L60">theorem rightOperator_eq (f : ℍ → ℍ) (q : ℍ) :</span>
+<span id="L61">    rightOperator f q = ∑ μ : Fin 4, coordPartial μ f q * coordinateBasis μ := by</span>
+<span id="L62">  simp [rightOperator, rightContraction, coordPartial, directional]</span>
+<span id="L63"></span>
+<span id="L64">/-- Smoothness is included so that the zero-by-convention value of `fderiv` at a</span>
+<span id="L65">nondifferentiable point cannot witness regularity. -/</span>
+<span id="L66">def TwoSidedRegularOn (f : ℍ → ℍ) (U : Set ℍ) : Prop :=</span>
+<span id="L67">  ContDiffOn ℝ ∞ f U ∧</span>
+<span id="L68">    (∀ q ∈ U, leftOperator f q = 0) ∧ (∀ q ∈ U, rightOperator f q = 0)</span>
+<span id="L69"></span>
+<span id="L70">theorem contDiffOn_directional {U : Set ℍ} (hU : IsOpen U) {f : ℍ → ℍ}</span>
+<span id="L71">    (hf : ContDiffOn ℝ ∞ f U) (v : ℍ) : ContDiffOn ℝ ∞ (directional v f) U := by</span>
+<span id="L72">  exact (hf.fderiv_of_isOpen hU (by simp)).clm_apply contDiffOn_const</span>
+<span id="L73"></span>
+<span id="L74">/-- Evaluation of the derivative of a directional derivative. -/</span>
+<span id="L75">theorem fderiv_directional {f : ℍ → ℍ} {q : ℍ}</span>
+<span id="L76">    (hf : DifferentiableAt ℝ (fderiv ℝ f) q) (v w : ℍ) :</span>
+<span id="L77">    fderiv ℝ (directional v f) q w = fderiv ℝ (fderiv ℝ f) q w v := by</span>
+<span id="L78">  unfold directional</span>
+<span id="L79">  rw [fderiv_clm_apply hf (differentiableAt_const v)]</span>
+<span id="L80">  simp</span>
+<span id="L81"></span>
+<span id="L82">/-- A constant-coefficient first-order operator commutes with a real directional derivative. -/</span>
+<span id="L83">theorem contraction_directional {U : Set ℍ} (hU : IsOpen U) {f : ℍ → ℍ}</span>
+<span id="L84">    (hf : ContDiffOn ℝ ∞ f U) {q : ℍ} (hq : q ∈ U)</span>
+<span id="L85">    (C : (ℍ →L[ℝ] ℍ) →L[ℝ] ℍ) (v : ℍ) :</span>
+<span id="L86">    C (fderiv ℝ (directional v f) q) =</span>
+<span id="L87">      fderiv ℝ (fun x =&gt; C (fderiv ℝ f x)) q v := by</span>
+<span id="L88">  have hdf : DifferentiableAt ℝ (fderiv ℝ f) q :=</span>
+<span id="L89">    ((hf.fderiv_of_isOpen (m := ∞) hU (by simp)).contDiffAt (hU.mem_nhds hq)).differentiableAt</span>
+<span id="L90">      (by simp)</span>
+<span id="L91">  have hsym := (hf.contDiffAt (hU.mem_nhds hq)).isSymmSndFDerivAt (by simp)</span>
+<span id="L92">  have heq : fderiv ℝ (directional v f) q = fderiv ℝ (fderiv ℝ f) q v := by</span>
+<span id="L93">    apply ContinuousLinearMap.ext</span>
+<span id="L94">    intro w</span>
+<span id="L95">    rw [fderiv_directional hdf]</span>
+<span id="L96">    exact hsym.eq w v</span>
+<span id="L97">  have hc := fderiv_clm_apply (𝕜 := ℝ) (c := fun _ : ℍ =&gt; C)</span>
+<span id="L98">    (u := fderiv ℝ f) (x := q) (differentiableAt_const C) hdf</span>
+<span id="L99">  rw [heq, hc]</span>
+<span id="L100">  simp</span>
+<span id="L101"></span>
+<span id="L102">theorem TwoSidedRegularOn.directional_regular {U : Set ℍ} (hU : IsOpen U) {f : ℍ → ℍ}</span>
+<span id="L103">    (hf : TwoSidedRegularOn f U) (v : ℍ) : TwoSidedRegularOn (directional v f) U := by</span>
+<span id="L104">  refine ⟨contDiffOn_directional hU hf.1 v, ?_, ?_⟩</span>
+<span id="L105">  · intro q hq</span>
+<span id="L106">    change leftContraction (fderiv ℝ (directional v f) q) = 0</span>
+<span id="L107">    rw [contraction_directional hU hf.1 hq]</span>
+<span id="L108">    have hz : (fun x =&gt; leftContraction (fderiv ℝ f x)) =ᶠ[𝓝 q] fun _ =&gt; (0 : ℍ) :=</span>
+<span id="L109">      Filter.eventually_of_mem (hU.mem_nhds hq) fun x hx =&gt; hf.2.1 x hx</span>
+<span id="L110">    rw [hz.fderiv_eq, fderiv_fun_const]</span>
+<span id="L111">    rfl</span>
+<span id="L112">  · intro q hq</span>
+<span id="L113">    change rightContraction (fderiv ℝ (directional v f) q) = 0</span>
+<span id="L114">    rw [contraction_directional hU hf.1 hq]</span>
+<span id="L115">    have hz : (fun x =&gt; rightContraction (fderiv ℝ f x)) =ᶠ[𝓝 q] fun _ =&gt; (0 : ℍ) :=</span>
+<span id="L116">      Filter.eventually_of_mem (hU.mem_nhds hq) fun x hx =&gt; hf.2.2 x hx</span>
+<span id="L117">    rw [hz.fderiv_eq, fderiv_fun_const]</span>
+<span id="L118">    rfl</span>
+<span id="L119"></span>
+<span id="L120">/-- Apply a finite ordered list of real coordinate partial derivatives. -/</span>
+<span id="L121">def iteratedPartial : List (Fin 4) → (ℍ → ℍ) → (ℍ → ℍ)</span>
+<span id="L122">  | [], f =&gt; f</span>
+<span id="L123">  | μ :: l, f =&gt; coordPartial μ (iteratedPartial l f)</span>
+<span id="L124"></span>
+<span id="L125">theorem TwoSidedRegularOn.iteratedPartial {U : Set ℍ} (hU : IsOpen U) {f : ℍ → ℍ}</span>
+<span id="L126">    (hf : TwoSidedRegularOn f U) (l : List (Fin 4)) :</span>
+<span id="L127">    TwoSidedRegularOn (iteratedPartial l f) U := by</span>
+<span id="L128">  induction l with</span>
+<span id="L129">  | nil =&gt; exact hf</span>
+<span id="L130">  | cons μ l ih =&gt; exact ih.directional_regular hU (coordinateBasis μ)</span>
+<span id="L131"></span>
+<span id="L132">/-- The multi-index convention `∂₀^α₀ ∂₁^α₁ ∂₂^α₂ ∂₃^α₃`. -/</span>
+<span id="L133">def multiIndexPartial (α : Fin 4 → ℕ) : (ℍ → ℍ) → (ℍ → ℍ) :=</span>
+<span id="L134">  iteratedPartial (List.replicate (α 0) 0 ++ List.replicate (α 1) 1 ++</span>
+<span id="L135">    List.replicate (α 2) 2 ++ List.replicate (α 3) 3)</span>
+<span id="L136"></span>
+<span id="L137">theorem TwoSidedRegularOn.multiIndexPartial {U : Set ℍ} (hU : IsOpen U) {f : ℍ → ℍ}</span>
+<span id="L138">    (hf : TwoSidedRegularOn f U) (α : Fin 4 → ℕ) :</span>
+<span id="L139">    TwoSidedRegularOn (multiIndexPartial α f) U :=</span>
+<span id="L140">  hf.iteratedPartial hU _</span>
+<span id="L141"></span>
+<span id="L142">end MathResearch.Fueter</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>
