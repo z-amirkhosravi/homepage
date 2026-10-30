@@ -153,11 +153,15 @@ math { font-family: "Libertinus Math", math; font-size: 1em; }
 .proof > summary::-webkit-details-marker { display: none; }
 .proof-heading { font-style: italic; }
 .proof > summary .proof-citation { margin-left: 0.35em; }
-.proof > summary::after { content: "Show proof"; margin-left: auto; padding-left: 12px; white-space: nowrap; font: var(--small) var(--sans); color: var(--link); }
-.proof[open] > summary::after { content: "Hide proof"; }
+/* A disclosure triangle, hung in the margin before "Proof", opens and closes it, so no UI words sit in the text. */
+.proof > summary::before { content: ""; flex: none; width: 0; height: 0; margin: 0 9px 0 -16px; border-style: solid; border-width: 4.5px 0 4.5px 7px; border-color: transparent transparent transparent var(--muted); transition: transform .15s; }
+.proof > summary:hover::before { border-left-color: var(--text); }
+.proof[open] > summary::before { transform: rotate(90deg); }
+/* Narrow screens have no margin to hang it in. */
+@media (max-width: 600px) { .proof > summary::before { margin-left: 0; } }
 .proof-body { padding-top: 8px; }
 .proof-body > :not(.proof-presentations):last-child::after, .proof-version > :last-child::after { content: "∎"; float: right; margin-left: 12px; }
-.proof-selector { position: absolute; top: 0; right: 7em; display: flex; align-items: center; gap: 0 14px; min-height: 36px; margin: 0; padding: 0; border: 0; font: var(--small) var(--sans); color: var(--muted); }
+.proof-selector { position: absolute; top: 0; right: 0; display: flex; align-items: center; gap: 0 14px; min-height: 36px; margin: 0; padding: 0; border: 0; font: var(--small) var(--sans); color: var(--muted); }
 /* When the summary line has no room (long citation, narrow screen), the selector moves to its own line. */
 .proof-selector.below { position: static; justify-content: flex-end; margin: 0 0 6px; }
 .proof-selector legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
@@ -220,6 +224,7 @@ ol.bibliography > li::before { content: "[" counter(bib) "]"; position: absolute
 @keyframes lean-mark { from { background: #FFF3C4; } to { background: transparent; } }
 @media (prefers-reduced-motion: reduce) {
   .lean-entry:target, .lean:target > summary { animation: none; outline: 2px solid #E8D48A; }
+  .proof > summary::before { transition: none; }
 }
 /* Desktop: an open panel extends from the margin column into the page's right-hand space, and a
    margin taller than the statement lengthens the proof's row, so the proof still follows the
