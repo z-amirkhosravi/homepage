@@ -9,6 +9,9 @@
 /* Recompressed from the 7.051 OTF: the release WOFF2 lacks the MATH table. */
 @font-face { font-family: "Libertinus Math"; src: url(fonts/LibertinusMath-Regular.woff2) format("woff2"); font-display: block; }
 @font-face { font-family: "Temml"; src: url(fonts/Temml.woff2) format("woff2"); }
+/* Subset of DejaVu Sans Mono 2.37: Latin, Greek, punctuation, arrows and mathematical symbols.
+   Glyphs it lacks, such as 𝕜 and 𝓝, fall back to Libertinus Math. */
+@font-face { font-family: "DejaVu Sans Mono"; src: url(fonts/DejaVuSansMono-subset.woff2) format("woff2"); font-display: swap; }
 
 :root {
   --text: #262626;
@@ -23,6 +26,8 @@
   --serif: "Libertinus Serif", Georgia, serif;
   --display: "Libertinus Serif Display", "Libertinus Serif", Georgia, serif;
   --sans: "Libertinus Sans", "Gill Sans", sans-serif;
+  --mono: "DejaVu Sans Mono", "Libertinus Math", monospace;
+  --code-ground: #F4F5F6;
   /* Fixed size at every width: wide screens get margins, not larger type.
      Sized for density, like a printed paper: about 40em per line. */
   --base: 16px;
@@ -42,6 +47,7 @@ a { color: var(--link); text-decoration-line: underline; text-decoration-thickne
 a:hover { color: var(--link-hover); text-decoration-color: currentColor; }
 a:focus-visible, button:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--link); outline-offset: 3px; border-radius: 2px; }
 strong, b { font-weight: 600; }
+code, kbd, pre { font-family: var(--mono); }
 [hidden] { display: none !important; }
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
 .skip-link { position: absolute; left: 12px; top: -48px; padding: 8px 12px; background: #ffffff; font-family: var(--sans); font-size: 15px; z-index: 10; }
@@ -83,6 +89,8 @@ strong, b { font-weight: 600; }
 .toc a { text-decoration-line: none; }
 .toc a:hover { text-decoration-line: underline; }
 .toc a[aria-current="true"] { color: var(--text); font-weight: 700; }
+/* A page without sections (a source file, for example) keeps the column but shows no contents. */
+.toc:not(:has(li)) { visibility: hidden; }
 main { flex: 999 1 560px; min-width: 0; }
 
 /* The section appears once, in the breadcrumb; the page head holds only the article-kind label. */
@@ -100,12 +108,14 @@ article h1 { margin: 0; max-width: calc(var(--base) * 36); font: 400 clamp(34px,
 /* Prose */
 article > :not(.math-item):not(h1) { max-width: var(--measure); }
 article p { margin: 0 0 10px; }
+article h1 { overflow-wrap: break-word; }
 article h2 { margin: 36px 0 10px; font-size: 1.3em; font-weight: 600; line-height: 1.2; }
 article h3 { margin: 22px 0 8px; font-size: 1.05em; font-weight: 600; line-height: 1.35; }
 article ul, article ol { padding-left: 1.2em; margin: 0 0 10px; }
 article li { margin-bottom: 4px; }
 article .anchor { display: none; }
 article code { overflow-wrap: anywhere; }
+article :not(pre) > code { font-size: 0.85em; }
 /* Set by wiki.js on inline formulas wider than their line, so they scroll instead of widening the page. */
 math.too-wide { display: inline-block; max-width: 100%; overflow-x: auto; overflow-y: hidden; vertical-align: middle; }
 .eyebrow { margin: 0 0 8px; font: var(--small) var(--sans); color: var(--muted); }
@@ -135,10 +145,6 @@ math { font-family: "Libertinus Math", math; font-size: 1em; }
 .statement-meta { padding-top: 12px; display: flex; flex-direction: column; gap: 10px; font: var(--smaller)/1.45 var(--sans); color: var(--muted); }
 .statement-meta p { margin: 0; }
 .statement-tag a { text-decoration-line: none; }
-.evidence { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
-.evidence li { position: relative; padding-left: 16px; }
-.evidence li::before { content: ""; position: absolute; left: 0; top: 0.5em; width: 7px; height: 7px; border-radius: 50%; border: 1px solid #8A8A8A; }
-.evidence li[data-state="yes"]::before { background: var(--link); border-color: var(--link); }
 
 /* Proofs */
 .proof { position: relative; margin-top: 10px; }
@@ -174,6 +180,83 @@ ol.bibliography > li::before { content: "[" counter(bib) "]"; position: absolute
 .article-table th, .article-table td { padding: 6px 12px 6px 0; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: top; }
 .article-table th { font: 600 var(--small) var(--sans); color: var(--muted); }
 
+/* Lean formalizations. A statement with formal content has a "Lean formalization" disclosure at
+   the end of its margin note; opened, it sits beside the statement, so the written statement and
+   the checked Lean text can be compared side by side. */
+.statement-meta .lean { margin: 0; color: var(--text); }
+.lean > summary, .lean-sub > summary { display: inline-flex; align-items: baseline; gap: 4px; min-height: 28px; list-style: none; cursor: pointer; color: var(--link); }
+.lean > summary { font: var(--smaller) var(--sans); }
+.lean > summary::-webkit-details-marker, .lean-sub > summary::-webkit-details-marker { display: none; }
+.lean > summary::before, .lean-sub > summary::before { content: "▸"; flex: none; width: 0.9em; font-family: var(--mono); font-size: 0.85em; }
+.lean[open] > summary::before, .lean-sub[open] > summary::before { content: "▾"; }
+.lean-body { margin: 2px 0 8px; padding: 2px 0 2px 12px; border-left: 2px solid var(--rule); font: 13.5px/1.45 var(--sans); }
+.lean-entry { scroll-margin-top: 16px; }
+.lean-entry + .lean-entry { margin-top: 14px; }
+.lean-decl { margin: 6px 0; }
+.lean-decl figcaption { margin-bottom: 3px; font: var(--smaller) var(--sans); color: var(--muted); }
+.lean-decl figcaption code { font-size: 0.95em; color: var(--text); }
+/* Each source line is a block; a line too long for the column wraps under a hanging indent.
+   Whitespace between the line elements is ignored, so the renderer may put newlines there. */
+.lean-code { margin: 0; padding: 7px 9px; background: var(--code-ground); font: 12px/1.55 var(--mono); white-space: normal; overflow-wrap: anywhere; }
+.lean-code code { font: inherit; }
+.lean-code .ln { display: block; padding-left: 6ch; text-indent: -6ch; white-space: pre-wrap; }
+.lean-code .k { color: #6B6B6B; }
+.lean-code a { color: var(--link); text-decoration: underline dotted; text-underline-offset: 3px; }
+.lean-code a:hover { text-decoration-style: solid; }
+.lean-names { margin-top: 10px; }
+.lean-names-head { margin: 0 0 2px; font: var(--smaller) var(--sans); color: var(--muted); }
+.lean-names ul { margin: 0; padding: 0; list-style: none; }
+.lean-names li { margin: 2px 0; }
+.lean-names code, .lean-sub > summary code { font-size: 0.88em; }
+.lean-names li > a { text-decoration-line: none; }
+.lean-sub > summary { color: var(--text); font: inherit; }
+.lean-sub > summary code { color: var(--link); }
+.lean-sub > .lean-sub-body { margin: 2px 0 10px; padding-left: 12px; border-left: 2px solid var(--rule); }
+.lean-deeper { margin-top: 4px; }
+.lean-evidence { margin: 10px 0 0; font: var(--smaller)/1.5 var(--sans); color: var(--muted); }
+/* A link to a counterpart opens it and marks it briefly. */
+.lean-entry:target, .lean:target > summary { animation: lean-mark 1.6s ease-out; }
+@keyframes lean-mark { from { background: #FFF3C4; } to { background: transparent; } }
+@media (prefers-reduced-motion: reduce) {
+  .lean-entry:target, .lean:target > summary { animation: none; outline: 2px solid #E8D48A; }
+}
+/* Desktop: an open panel extends from the margin column into the page's right-hand space, and a
+   margin taller than the statement lengthens the proof's row, so the proof still follows the
+   statement directly. */
+@media (min-width: 861px) {
+  .math-item { grid-template-rows: auto 1fr; }
+  .statement-meta .lean[open] { position: relative; z-index: 1; width: min(560px, calc(100% + (100vw - min(100vw, var(--frame))) / 2 + var(--gutter) - 40px)); background: #ffffff; }
+}
+/* Below 1680px there is too little room beside the text, so while a Lean panel is open the
+   contents column steps aside and the article moves left. */
+@media (min-width: 861px) and (max-width: 1679px) {
+  .wiki-body:has(.statement-meta .lean[open]) > .toc { display: none; }
+}
+
+/* Lean build logs, source files and conventions */
+.log-table { width: 100%; border-collapse: collapse; font: var(--small)/1.4 var(--sans); }
+.log-table th { text-align: left; font-weight: 400; color: var(--muted); border-bottom: 1px solid var(--rule); padding: 4px 8px 4px 0; }
+.log-table td { border-bottom: 1px solid #EEEEEE; padding: 4px 8px 4px 0; vertical-align: top; }
+.log-table code { font-size: 0.92em; overflow-wrap: anywhere; }
+.log-table tr:target { background: #FFF3C4; }
+.log-more { margin: 0 0 16px; }
+.log-more > summary { min-height: 32px; cursor: pointer; color: var(--link); font: var(--small) var(--sans); }
+.log-transcript { margin: 8px 0 16px; padding: 10px 12px; background: var(--code-ground); font: 12px/1.5 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+.log-transcript code { font: inherit; }
+.log-cmd { color: var(--muted); }
+.log-exit { color: #9B2C2C; }
+/* A source file: numbered lines, wrapping under a hanging indent; the linked line stays marked. */
+article > pre.lean-source { max-width: none; }
+.lean-source { margin: 8px 0 16px; padding: 10px 12px 10px 4px; background: var(--code-ground); font: 12px/1.55 var(--mono); white-space: normal; overflow-wrap: anywhere; }
+.lean-source code { font: inherit; counter-reset: line; }
+.lean-source code > span { display: block; position: relative; min-height: 1.55em; padding-left: 10ch; text-indent: -4ch; white-space: pre-wrap; counter-increment: line; scroll-margin-top: 30vh; }
+.lean-source code > span::before { content: counter(line); position: absolute; left: 0; width: 4ch; text-indent: 0; text-align: right; color: var(--faint); user-select: none; }
+.lean-source code > span:target { background: #FFF3C4; }
+dl.lean-conventions { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 24px; margin: 16px 0; }
+dl.lean-conventions dt { margin: 0; }
+dl.lean-conventions dd { margin: 0; }
+dl.lean-conventions :target { background: #FFF3C4; }
+
 /* Reading order and footer */
 .adjacent { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 24px 48px; max-width: calc(var(--base) * 43.4); margin-top: 72px; padding-top: 20px; border-top: 1px solid var(--rule); }
 .adjacent a { display: flex; flex-direction: column; gap: 4px; font-size: 1.05em; line-height: 1.35; text-decoration-line: none; }
@@ -190,10 +273,13 @@ ol.bibliography > li::before { content: "[" counter(bib) "]"; position: absolute
   .toc summary { min-height: 44px; display: flex; align-items: center; margin: 0; color: var(--link); cursor: pointer; pointer-events: auto; }
   .toc nav { padding-bottom: 14px; }
   .wiki-body { margin-top: 0; }
+  .toc:not(:has(li)) { display: none; }
   .math-item { grid-template-columns: minmax(0, 1fr); }
   .math-item > .statement-meta { grid-column: 1; grid-row: 2; padding-top: 10px; gap: 6px; }
   .math-item > .proof { grid-row: 3; }
   .proof-selector { position: static; justify-content: flex-start; margin: 0 0 6px; }
+  dl.lean-conventions { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  dl.lean-conventions dd { margin-bottom: 10px; }
 }
 
 @media print {
@@ -202,4 +288,6 @@ ol.bibliography > li::before { content: "[" counter(bib) "]"; position: absolute
   /* Print collapsed proofs too, including without scripting. */
   details.proof::details-content { content-visibility: visible; display: block; }
   .equation { overflow: visible; background: none; }
+  /* Only the Lean panels a reader opened are printed. */
+  .lean:not([open]) { display: none; }
 }
