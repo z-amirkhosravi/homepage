@@ -41,7 +41,7 @@
 }
 
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-padding-top: 24px; }
+html { -webkit-text-size-adjust: 100%; scroll-padding-top: 24px; scrollbar-gutter: stable; }
 body { margin: 0; background: #ffffff; color: var(--text); font: var(--base)/1.5 var(--serif); -webkit-font-smoothing: antialiased; }
 a { color: var(--link); text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: var(--link-line); }
 a:hover { color: var(--link-hover); text-decoration-color: currentColor; }
@@ -66,6 +66,7 @@ code, kbd, pre { font-family: var(--mono); }
 .wiki-strip { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 32px; margin-top: 28px; padding: 10px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); font-family: var(--sans); font-size: var(--small); color: var(--muted); }
 .wiki-strip ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 4px 10px; }
 .wiki-strip ol a { text-decoration-line: none; }
+.wiki-strip ol li:empty, .wiki-strip ol li[aria-hidden="true"]:has(+ li:empty) { display: none; }
 
 .search { position: relative; flex: 0 1 300px; min-width: 0; }
 .search input { width: 100%; height: calc(var(--base) * 2.1); padding: 0 12px; border: 1px solid #BDBDBD; border-radius: 2px; background: #ffffff; font: var(--small) var(--sans); color: var(--text); }

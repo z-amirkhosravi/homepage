@@ -14,32 +14,110 @@
   },
   "panel_label": "Lean formalization",
   "written_mathematics": {
-    "article": "wiki/content/quaternionic-analysis/foundations.md",
-    "snapshot_sha256": "a6a3df9e48d05da82854c93f9113027917a2a69f5ae2700931fc0425eb1bbbab",
+    "schema_version": 2,
+    "article": "quaternionic-analysis/foundations.md",
     "blocks": [
       {
         "id": "F-D1",
         "version": 1,
-        "statement_sha256": "6cb20f8a4380be128ab329f55e7ecb43dc225c93328582f1ee71a5d7a01ef305"
+        "kind": "anchored-setup",
+        "anchor": "f-d1",
+        "regions": [
+          "coordinates",
+          "conjugation-norm"
+        ],
+        "statement_sha256": "909adb366311c7c719e66cdb2f6c1e7a27507f7593d030765fe9563b48950ba1"
       },
       {
         "id": "F-D2",
         "version": 1,
-        "statement_sha256": "d6666e3087324ceceada4daa54f28706140427bee1e1eff627ab144087d50c11"
+        "kind": "definition",
+        "anchor": "f-d2",
+        "regions": [
+          "operators",
+          "regularity"
+        ],
+        "statement_sha256": "ae85125736831f2c312130f5802c5ac3c61985da83df9dd603ffde935704240a"
       },
       {
         "id": "F-D3",
         "version": 1,
-        "statement_sha256": "cfc70ffb66bd20c5ccbb3a37d567b1a32e962feba22f9ccbecd810d00b2ddbef"
+        "kind": "definition",
+        "anchor": "f-d3",
+        "regions": [
+          "kernel",
+          "spatial-notation"
+        ],
+        "statement_sha256": "32bca87b2fd5fa90c9ece1e3faadeee297e2bea4b83fee07b9b4d066ede3db7e"
       },
       {
         "id": "F1",
         "version": 2,
-        "statement_sha256": "c7f3586fa5c155379ad777441f6f31066ca19b16881345db804ab1b651f00564"
+        "kind": "proposition",
+        "anchor": "f1",
+        "regions": [
+          "F1-statement"
+        ],
+        "statement_sha256": "9e25bca219916f7ba180abd8bf50fa813bbbe547bffe11fd0c70f183e340b4fe"
       }
-    ]
+    ],
+    "regions": [
+      {
+        "id": "coordinates",
+        "section": "Quaternions and coordinates",
+        "section_index": 0,
+        "content_sha256": "f877c3896237f129721dda969c7ad3eeb30c7d521471a29a7b1bb6288158b6ba",
+        "section_prefix_sha256": "75a11da44c802486bc6f65640aa48a730f0f684c5c07a42ba3cd1735eb3fb070"
+      },
+      {
+        "id": "conjugation-norm",
+        "section": "Quaternions and coordinates",
+        "section_index": 0,
+        "content_sha256": "1d1bab17dc243f79ff6f5423bb7f62e3ba9f056ddbbbcb98bddd3ae21833a498",
+        "section_prefix_sha256": "b71e41d257df7217084f3469a0a83813ac9ed93ad0a24e9778e09bb380280887"
+      },
+      {
+        "id": "operators",
+        "section": "The regularity equation",
+        "section_index": 1,
+        "content_sha256": "32749223a78b4d1714e8d69329372db706869c87ed07aceab1755b3cfb055210",
+        "section_prefix_sha256": "75a11da44c802486bc6f65640aa48a730f0f684c5c07a42ba3cd1735eb3fb070"
+      },
+      {
+        "id": "regularity",
+        "section": "The regularity equation",
+        "section_index": 1,
+        "content_sha256": "b8d5cac0455c337d43be296f6d28c4ee703f240211a7a5214071bf119af72655",
+        "section_prefix_sha256": "b69c58134434e8ac1e3c558f22ea143e1808ecd95348730eed11714951498941"
+      },
+      {
+        "id": "kernel",
+        "section": "The Cauchy–Fueter kernel",
+        "section_index": 2,
+        "content_sha256": "36e9a2f2e99f4146533dab65c7fdc0f1c67fa138c5fc230176c88e383ddaa062",
+        "section_prefix_sha256": "75a11da44c802486bc6f65640aa48a730f0f684c5c07a42ba3cd1735eb3fb070"
+      },
+      {
+        "id": "spatial-notation",
+        "section": "The Cauchy–Fueter kernel",
+        "section_index": 2,
+        "content_sha256": "9f60c37298b1fce5478e195ddc1f3f43d8cadc28b13405c1088f0e12af241626",
+        "section_prefix_sha256": "ceb33b3c9de290511a600e9f6ebe647d24903f6940f44326356bd94939d9b4b4"
+      },
+      {
+        "id": "F1-statement",
+        "section": "The Cauchy–Fueter kernel",
+        "section_index": 2,
+        "content_sha256": "c7f3586fa5c155379ad777441f6f31066ca19b16881345db804ab1b651f00564",
+        "section_prefix_sha256": "39fcc695aa0fe42184ed237707b40996d7db61fb33a2122890b9fbb1011a8349"
+      }
+    ],
+    "record": {
+      "path": "evidence/foundations-written-homes-2026-10-30.json",
+      "sha256": "74773f76cd543b9e774d97cf4eb83fa5ac0fb37d8cedf903523f823b578110c3"
+    }
   },
-  "config_sha256": "a6ec6e912d8782120bfca82d7a17f095eabb592565f25fd147584dec5da760b2",
+  "config_sha256": "2cbf9e2b9de63af32077a7b34e533532c64a24a4ce18db4ae92729b79606c902",
   "generator_sha256": {
     "export_wiki.py": "88f968ed8ead888b68e76568e170491819f618295e54cc2abf0915c0c4562a27",
     "ExportDeclarations.lean": "ca8b1e7657e82d634b2ede3be2cbbc5fb961db277e8c7cb01b923021cd684187"
@@ -3099,5 +3177,10 @@
         "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/Data/List/Defs.lean"
       }
     }
-  ]
+  ],
+  "mapping_tools_sha256": {
+    "formal/presentation/written_mapping.py": "b570adf16a24664aa4633cce831928bd4e72f4ebeaa8f7a073b43474d8213e27",
+    "wiki/scripts/formal-written.mjs": "653eaff40edb0473631a14f21dfbec515c934cff6da111f80ea1ff45fcd0b8ca",
+    "formal/presentation/export_foundations.py": "dfb4be3736fbd3261fafbceec2750c7b809313fe0908b52c0fd7180860ab28c2"
+  }
 }

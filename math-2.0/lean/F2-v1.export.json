@@ -1,0 +1,2136 @@
+{
+  "schema_version": 1,
+  "target": {
+    "id": "F2",
+    "version": 1,
+    "article": "quaternionic-analysis/foundations.html",
+    "anchor": "f2",
+    "source_snapshot": "evidence/F2-v1-source.json",
+    "definition_ids": [
+      "F-D1",
+      "F-D3"
+    ]
+  },
+  "panel_label": "Lean formalization",
+  "written_mathematics": {
+    "schema_version": 2,
+    "article": "quaternionic-analysis/foundations.md",
+    "blocks": [
+      {
+        "id": "F-D1",
+        "version": 1,
+        "kind": "anchored-setup",
+        "anchor": "f-d1",
+        "regions": [
+          "coordinates",
+          "conjugation-norm"
+        ],
+        "statement_sha256": "909adb366311c7c719e66cdb2f6c1e7a27507f7593d030765fe9563b48950ba1"
+      },
+      {
+        "id": "F-D3",
+        "version": 1,
+        "kind": "definition",
+        "anchor": "f-d3",
+        "regions": [
+          "kernel",
+          "spatial-notation"
+        ],
+        "statement_sha256": "32bca87b2fd5fa90c9ece1e3faadeee297e2bea4b83fee07b9b4d066ede3db7e"
+      },
+      {
+        "id": "F2",
+        "version": 1,
+        "kind": "lemma",
+        "anchor": "f2",
+        "regions": [
+          "F2-statement"
+        ],
+        "statement_sha256": "36d29ed37d7cc7db2ebce62a8a66becfda8af6b9ed2b3767aaef7db8a3ef1ae2"
+      }
+    ],
+    "regions": [
+      {
+        "id": "coordinates",
+        "section": "Quaternions and coordinates",
+        "section_index": 0,
+        "content_sha256": "f877c3896237f129721dda969c7ad3eeb30c7d521471a29a7b1bb6288158b6ba",
+        "section_prefix_sha256": "75a11da44c802486bc6f65640aa48a730f0f684c5c07a42ba3cd1735eb3fb070"
+      },
+      {
+        "id": "conjugation-norm",
+        "section": "Quaternions and coordinates",
+        "section_index": 0,
+        "content_sha256": "1d1bab17dc243f79ff6f5423bb7f62e3ba9f056ddbbbcb98bddd3ae21833a498",
+        "section_prefix_sha256": "b71e41d257df7217084f3469a0a83813ac9ed93ad0a24e9778e09bb380280887"
+      },
+      {
+        "id": "kernel",
+        "section": "The Cauchy–Fueter kernel",
+        "section_index": 2,
+        "content_sha256": "36e9a2f2e99f4146533dab65c7fdc0f1c67fa138c5fc230176c88e383ddaa062",
+        "section_prefix_sha256": "75a11da44c802486bc6f65640aa48a730f0f684c5c07a42ba3cd1735eb3fb070"
+      },
+      {
+        "id": "spatial-notation",
+        "section": "The Cauchy–Fueter kernel",
+        "section_index": 2,
+        "content_sha256": "9f60c37298b1fce5478e195ddc1f3f43d8cadc28b13405c1088f0e12af241626",
+        "section_prefix_sha256": "ceb33b3c9de290511a600e9f6ebe647d24903f6940f44326356bd94939d9b4b4"
+      },
+      {
+        "id": "F2-statement",
+        "section": "Derivatives and decay",
+        "section_index": 3,
+        "content_sha256": "8387b68765e4e2f9b3ddcc9dfb9ad2f421a776195850731ae46b332235728eb2",
+        "section_prefix_sha256": "75a11da44c802486bc6f65640aa48a730f0f684c5c07a42ba3cd1735eb3fb070"
+      }
+    ],
+    "record": {
+      "path": "evidence/foundations-written-homes-2026-10-30.json",
+      "sha256": "74773f76cd543b9e774d97cf4eb83fa5ac0fb37d8cedf903523f823b578110c3"
+    }
+  },
+  "config_sha256": "8e302d43bcfe08c3195071515c886163e3d941e059ce77d84b266ee2938e48b7",
+  "mapping_tools_sha256": {
+    "formal/presentation/written_mapping.py": "b570adf16a24664aa4633cce831928bd4e72f4ebeaa8f7a073b43474d8213e27",
+    "wiki/scripts/formal-written.mjs": "653eaff40edb0473631a14f21dfbec515c934cff6da111f80ea1ff45fcd0b8ca"
+  },
+  "generator_sha256": {
+    "presentation/export_library.py": "3320456b71260f7e1207d6619a61691f9c335a63858ddd90f1a8d90f95c1c347",
+    "scripts/export_wiki.py": "88f968ed8ead888b68e76568e170491819f618295e54cc2abf0915c0c4562a27",
+    "scripts/ExportDeclarations.lean": "ca8b1e7657e82d634b2ede3be2cbbc5fb961db277e8c7cb01b923021cd684187"
+  },
+  "library": {
+    "schema_version": 1,
+    "repository": "https://github.com/z-amirkhosravi/quaternionic-analysis-lean.git",
+    "revision": "75ee4dd0f636de6e81e830010883220d78f6c216",
+    "verified_source_revision": "f66f0242c9d03498f09d66b3c070d7a9d6882988",
+    "checkout_path": "formal/quaternionic-analysis-lean",
+    "lean_toolchain": "leanprover/lean4:v4.35.0",
+    "mathlib_revision": "56a005855ea17e0b0958f73ec801ae140b0a1679",
+    "targets": {
+      "F1/v2": "MathResearch.Fueter.F1_v2",
+      "F2/v1": "MathResearch.Fueter.F2_v1"
+    },
+    "evidence_path": "evidence/F2-v1-2026-10-30.json",
+    "evidence_sha256": "de9f936174882584adc3af31f3df51c508a854ce899c3c52e9eeb8cc091c1bad",
+    "compatibility_note": "Original formal/MathResearch and wiki/formal F1 snapshots are preserved. New formal development belongs in the standalone repository."
+  },
+  "counterpart_exports": {
+    "F1-v2.export.json": "05db12373d1701888f5b509c5f298785f8862291fdbdbdd1eb69fd013a9603fd"
+  },
+  "evidence": {
+    "file": "F2-v1-2026-10-30.json",
+    "sha256": "de9f936174882584adc3af31f3df51c508a854ce899c3c52e9eeb8cc091c1bad",
+    "status": "passed",
+    "build_mode": "clean-local",
+    "dependency_artifacts": "Pinned upstream release caches retained; not rebuilt from source.",
+    "lean_version": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)",
+    "started_utc": "2026-10-30T20:11:12.701208+00:00",
+    "finished_utc": "2026-10-30T20:11:45.953585+00:00",
+    "allowed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "mathlib_commit": "56a005855ea17e0b0958f73ec801ae140b0a1679",
+    "declaration_count": 102,
+    "audit_scope": "All local declarations, including generated helpers and two smoke-test theorems."
+  },
+  "declarations": [
+    {
+      "name": "MathResearch.Fueter.F2_v1",
+      "module": "MathResearch.Fueter.KernelEstimates",
+      "role": "checked-statement",
+      "primary": true,
+      "home": {
+        "article": "quaternionic-analysis/foundations.html",
+        "item": "f2",
+        "anchor": "lean-MathResearch.Fueter.F2_v1"
+      },
+      "kind": "theorem",
+      "display_text": "theorem F2_v1 :\n    (∀ α : Fin 4 → ℕ, ∃ C : ℝ, 0 ≤ C ∧ ∀ q : ℍ, q ≠ 0 →\n        ∀ a : ℝ, 0 < a →\n      multiIndexPartial α kernel (a • q) =\n          (a ^ (3 + ∑ μ, α μ))⁻¹ • multiIndexPartial α\n              kernel q ∧\n      multiIndexPartial α kernel (-q) =\n          (-1 : ℝ) ^ ((∑ μ, α μ) + 1) •\n              multiIndexPartial α kernel q ∧\n      ‖multiIndexPartial α kernel q‖ ≤ C * (‖q‖ ^ (3 +\n          ∑ μ, α μ))⁻¹) ∧\n    Function.Odd kernel ∧\n    (∀ j : Fin 3, ∀ q : ℍ, q ≠ 0 →\n      kernelSpatialPartial j (-q) =\n          kernelSpatialPartial j q) ∧\n    (∀ j : Fin 3, ∀ q : ℍ, q ≠ 0 →\n      kernelSpatialPartial j q =\n        -(‖q‖ ^ 4)⁻¹ • coordinateBasis j.succ -\n          (4 * coordinateBasis.repr q j.succ * (‖q‖ ^\n              6)⁻¹) • star q)",
+      "display_sha256": "1a3ec6ad4503ac999355633248c5d70d744ec8173200318c92462a2e94c93570",
+      "source_text": "theorem F2_v1 :\n    (∀ α : Fin 4 → ℕ, ∃ C : ℝ, 0 ≤ C ∧ ∀ q : ℍ, q ≠ 0 → ∀ a : ℝ, 0 < a →\n      multiIndexPartial α kernel (a • q) =\n          (a ^ (3 + ∑ μ, α μ))⁻¹ • multiIndexPartial α kernel q ∧\n      multiIndexPartial α kernel (-q) =\n          (-1 : ℝ) ^ ((∑ μ, α μ) + 1) • multiIndexPartial α kernel q ∧\n      ‖multiIndexPartial α kernel q‖ ≤ C * (‖q‖ ^ (3 + ∑ μ, α μ))⁻¹) ∧\n    Function.Odd kernel ∧\n    (∀ j : Fin 3, ∀ q : ℍ, q ≠ 0 →\n      kernelSpatialPartial j (-q) = kernelSpatialPartial j q) ∧\n    (∀ j : Fin 3, ∀ q : ℍ, q ≠ 0 →\n      kernelSpatialPartial j q =\n        -(‖q‖ ^ 4)⁻¹ • coordinateBasis j.succ -\n          (4 * coordinateBasis.repr q j.succ * (‖q‖ ^ 6)⁻¹) • star q)",
+      "identifier_spans": [
+        {
+          "start": 8,
+          "end": 13,
+          "declaration": "MathResearch.Fueter.F2_v1",
+          "text": "F2_v1",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f2",
+            "anchor": "lean-MathResearch.Fueter.F2_v1"
+          }
+        },
+        {
+          "start": 27,
+          "end": 30,
+          "declaration": "Fin",
+          "text": "Fin",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "fin"
+          }
+        },
+        {
+          "start": 35,
+          "end": 36,
+          "declaration": "Nat",
+          "text": "ℕ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "naturals"
+          }
+        },
+        {
+          "start": 44,
+          "end": 45,
+          "declaration": "Real",
+          "text": "ℝ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "reals"
+          }
+        },
+        {
+          "start": 61,
+          "end": 62,
+          "declaration": "Quaternion",
+          "text": "ℍ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "quaternions"
+          }
+        },
+        {
+          "start": 86,
+          "end": 87,
+          "declaration": "Real",
+          "text": "ℝ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "reals"
+          }
+        },
+        {
+          "start": 103,
+          "end": 120,
+          "declaration": "MathResearch.Fueter.multiIndexPartial",
+          "text": "multiIndexPartial",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f1",
+            "anchor": "lean-MathResearch.Fueter.multiIndexPartial"
+          }
+        },
+        {
+          "start": 123,
+          "end": 129,
+          "declaration": "MathResearch.Fueter.kernel",
+          "text": "kernel",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernel"
+          }
+        },
+        {
+          "start": 175,
+          "end": 192,
+          "declaration": "MathResearch.Fueter.multiIndexPartial",
+          "text": "multiIndexPartial",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f1",
+            "anchor": "lean-MathResearch.Fueter.multiIndexPartial"
+          }
+        },
+        {
+          "start": 209,
+          "end": 215,
+          "declaration": "MathResearch.Fueter.kernel",
+          "text": "kernel",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernel"
+          }
+        },
+        {
+          "start": 226,
+          "end": 243,
+          "declaration": "MathResearch.Fueter.multiIndexPartial",
+          "text": "multiIndexPartial",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f1",
+            "anchor": "lean-MathResearch.Fueter.multiIndexPartial"
+          }
+        },
+        {
+          "start": 246,
+          "end": 252,
+          "declaration": "MathResearch.Fueter.kernel",
+          "text": "kernel",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernel"
+          }
+        },
+        {
+          "start": 276,
+          "end": 277,
+          "declaration": "Real",
+          "text": "ℝ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "reals"
+          }
+        },
+        {
+          "start": 314,
+          "end": 331,
+          "declaration": "MathResearch.Fueter.multiIndexPartial",
+          "text": "multiIndexPartial",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f1",
+            "anchor": "lean-MathResearch.Fueter.multiIndexPartial"
+          }
+        },
+        {
+          "start": 334,
+          "end": 340,
+          "declaration": "MathResearch.Fueter.kernel",
+          "text": "kernel",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernel"
+          }
+        },
+        {
+          "start": 352,
+          "end": 369,
+          "declaration": "MathResearch.Fueter.multiIndexPartial",
+          "text": "multiIndexPartial",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f1",
+            "anchor": "lean-MathResearch.Fueter.multiIndexPartial"
+          }
+        },
+        {
+          "start": 372,
+          "end": 378,
+          "declaration": "MathResearch.Fueter.kernel",
+          "text": "kernel",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernel"
+          }
+        },
+        {
+          "start": 430,
+          "end": 442,
+          "declaration": "Function.Odd",
+          "text": "Function.Odd",
+          "target": {
+            "kind": "library",
+            "module": "Mathlib.Algebra.Group.EvenFunction",
+            "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/Algebra/Group/EvenFunction.lean"
+          }
+        },
+        {
+          "start": 443,
+          "end": 449,
+          "declaration": "MathResearch.Fueter.kernel",
+          "text": "kernel",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernel"
+          }
+        },
+        {
+          "start": 463,
+          "end": 466,
+          "declaration": "Fin",
+          "text": "Fin",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "fin"
+          }
+        },
+        {
+          "start": 476,
+          "end": 477,
+          "declaration": "Quaternion",
+          "text": "ℍ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "quaternions"
+          }
+        },
+        {
+          "start": 493,
+          "end": 513,
+          "declaration": "MathResearch.Fueter.kernelSpatialPartial",
+          "text": "kernelSpatialPartial",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernelSpatialPartial"
+          }
+        },
+        {
+          "start": 533,
+          "end": 553,
+          "declaration": "MathResearch.Fueter.kernelSpatialPartial",
+          "text": "kernelSpatialPartial",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernelSpatialPartial"
+          }
+        },
+        {
+          "start": 572,
+          "end": 575,
+          "declaration": "Fin",
+          "text": "Fin",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "fin"
+          }
+        },
+        {
+          "start": 585,
+          "end": 586,
+          "declaration": "Quaternion",
+          "text": "ℍ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "quaternions"
+          }
+        },
+        {
+          "start": 602,
+          "end": 622,
+          "declaration": "MathResearch.Fueter.kernelSpatialPartial",
+          "text": "kernelSpatialPartial",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernelSpatialPartial"
+          }
+        },
+        {
+          "start": 652,
+          "end": 667,
+          "declaration": "MathResearch.Fueter.coordinateBasis",
+          "text": "coordinateBasis",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d2",
+            "anchor": "lean-MathResearch.Fueter.coordinateBasis"
+          }
+        },
+        {
+          "start": 670,
+          "end": 674,
+          "declaration": "Fin.succ",
+          "text": "succ",
+          "target": {
+            "kind": "library",
+            "module": "Init.Data.Fin.Basic",
+            "url": "https://github.com/leanprover/lean4/blob/eb6cafb7290e8bd5f2937522d8d804f58f02bafc/src/lean/Init/Data/Fin/Basic.lean"
+          }
+        },
+        {
+          "start": 692,
+          "end": 707,
+          "declaration": "MathResearch.Fueter.coordinateBasis",
+          "text": "coordinateBasis",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d2",
+            "anchor": "lean-MathResearch.Fueter.coordinateBasis"
+          }
+        },
+        {
+          "start": 708,
+          "end": 712,
+          "declaration": "Module.Basis.repr",
+          "text": "repr",
+          "target": {
+            "kind": "library",
+            "module": "Mathlib.LinearAlgebra.Basis.Defs",
+            "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/LinearAlgebra/Basis/Defs.lean"
+          }
+        },
+        {
+          "start": 717,
+          "end": 721,
+          "declaration": "Fin.succ",
+          "text": "succ",
+          "target": {
+            "kind": "library",
+            "module": "Init.Data.Fin.Basic",
+            "url": "https://github.com/leanprover/lean4/blob/eb6cafb7290e8bd5f2937522d8d804f58f02bafc/src/lean/Init/Data/Fin/Basic.lean"
+          }
+        },
+        {
+          "start": 753,
+          "end": 757,
+          "declaration": "Star.star",
+          "text": "star",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "star"
+          }
+        }
+      ],
+      "offset_encoding": "Unicode code points, zero-based, end exclusive",
+      "keyword_spans": [
+        {
+          "start": 0,
+          "end": 7
+        }
+      ],
+      "elaborated_type": "(∀ (α : Fin 4 → ℕ),\n    ∃ C,\n      0 ≤ C ∧\n        ∀ (q : ℍ),\n          q ≠ 0 →\n            ∀ (a : ℝ),\n              0 < a →\n                MathResearch.Fueter.multiIndexPartial α\n                      MathResearch.Fueter.kernel (a • q) =\n                    (a ^ (3 + ∑ μ, α μ))⁻¹ •\n                      MathResearch.Fueter.multiIndexPartial\n                        α MathResearch.Fueter.kernel q ∧\n                  MathResearch.Fueter.multiIndexPartial α\n                        MathResearch.Fueter.kernel (-q) =\n                      (-1) ^ (∑ μ, α μ + 1) •\n                        MathResearch.Fueter.multiIndexPartial\n                          α MathResearch.Fueter.kernel q ∧\n                    ‖MathResearch.Fueter.multiIndexPartial α\n                          MathResearch.Fueter.kernel q‖ ≤\n                      C * (‖q‖ ^ (3 + ∑ μ, α μ))⁻¹) ∧\n  Function.Odd MathResearch.Fueter.kernel ∧\n    (∀ (j : Fin 3) (q : ℍ),\n        q ≠ 0 →\n          MathResearch.Fueter.kernelSpatialPartial j (-q) =\n            MathResearch.Fueter.kernelSpatialPartial j q) ∧\n      ∀ (j : Fin 3) (q : ℍ),\n        q ≠ 0 →\n          MathResearch.Fueter.kernelSpatialPartial j q =\n            -(‖q‖ ^ 4)⁻¹ •\n                MathResearch.Fueter.coordinateBasis j.succ -\n              (4 *\n                    (MathResearch.Fueter.coordinateBasis.repr\n                        q)\n                      j.succ *\n                  (‖q‖ ^ 6)⁻¹) •\n                star q",
+      "explicit_type": "And\n  (∀\n    (α :\n      Fin\n          (@OfNat.ofNat.{0} Nat (nat_lit 4)\n            (instOfNatNat (nat_lit 4))) →\n        Nat),\n    @Exists.{1} Real fun (C : Real) =>\n      And\n        (@LE.le.{0} Real Real.instLE\n          (@OfNat.ofNat.{0} Real (nat_lit 0)\n            (@Zero.toOfNat0.{0} Real Real.instZero))\n          C)\n        (∀\n          (q :\n            @Quaternion.{0} Real Real.instZero Real.instOne\n              Real.instNeg),\n          @Ne.{1}\n              (@Quaternion.{0} Real Real.instZero\n                Real.instOne Real.instNeg)\n              q\n              (@OfNat.ofNat.{0}\n                (@Quaternion.{0} Real Real.instZero\n                  Real.instOne Real.instNeg)\n                (nat_lit 0)\n                (@Zero.toOfNat0.{0}\n                  (@Quaternion.{0} Real Real.instZero\n                    Real.instOne Real.instNeg)\n                  (@QuaternionAlgebra.instZero.{0} Real\n                    (@Neg.neg.{0} Real Real.instNeg\n                      (@OfNat.ofNat.{0} Real (nat_lit 1)\n                        (@One.toOfNat1.{0} Real\n                          Real.instOne)))\n                    (@OfNat.ofNat.{0} Real (nat_lit 0)\n                      (@Zero.toOfNat0.{0} Real\n                        Real.instZero))\n                    (@Neg.neg.{0} Real Real.instNeg\n                      (@OfNat.ofNat.{0} Real (nat_lit 1)\n                        (@One.toOfNat1.{0} Real\n                          Real.instOne)))\n                    Real.instZero))) →\n            ∀ (a : Real),\n              @LT.lt.{0} Real Real.instLT\n                  (@OfNat.ofNat.{0} Real (nat_lit 0)\n                    (@Zero.toOfNat0.{0} Real Real.instZero))\n                  a →\n                And\n                  (@Eq.{1}\n                    (@Quaternion.{0} Real Real.instZero\n                      Real.instOne Real.instNeg)\n                    (MathResearch.Fueter.multiIndexPartial α\n                      MathResearch.Fueter.kernel\n                      (@HSMul.hSMul.{0, 0, 0} Real\n                        (@Quaternion.{0} Real Real.instZero\n                          Real.instOne Real.instNeg)\n                        (@Quaternion.{0} Real Real.instZero\n                          Real.instOne Real.instNeg)\n                        (@instHSMul.{0, 0} Real\n                          (@Quaternion.{0} Real\n                            Real.instZero Real.instOne\n                            Real.instNeg)\n                          (@QuaternionAlgebra.instSMul.{0,\n                                0}\n                            Real Real\n                            (@Neg.neg.{0} Real Real.instNeg\n                              (@OfNat.ofNat.{0} Real\n                                (nat_lit 1)\n                                (@One.toOfNat1.{0} Real\n                                  Real.instOne)))\n                            (@OfNat.ofNat.{0} Real\n                              (nat_lit 0)\n                              (@Zero.toOfNat0.{0} Real\n                                Real.instZero))\n                            (@Neg.neg.{0} Real Real.instNeg\n                              (@OfNat.ofNat.{0} Real\n                                (nat_lit 1)\n                                (@One.toOfNat1.{0} Real\n                                  Real.instOne)))\n                            (@instSMulOfMul.{0} Real\n                              Real.instMul)))\n                        a q))\n                    (@HSMul.hSMul.{0, 0, 0} Real\n                      (@Quaternion.{0} Real Real.instZero\n                        Real.instOne Real.instNeg)\n                      (@Quaternion.{0} Real Real.instZero\n                        Real.instOne Real.instNeg)\n                      (@instHSMul.{0, 0} Real\n                        (@Quaternion.{0} Real Real.instZero\n                          Real.instOne Real.instNeg)\n                        (@QuaternionAlgebra.instSMul.{0, 0}\n                          Real Real\n                          (@Neg.neg.{0} Real Real.instNeg\n                            (@OfNat.ofNat.{0} Real\n                              (nat_lit 1)\n                              (@One.toOfNat1.{0} Real\n                                Real.instOne)))\n                          (@OfNat.ofNat.{0} Real (nat_lit 0)\n                            (@Zero.toOfNat0.{0} Real\n                              Real.instZero))\n                          (@Neg.neg.{0} Real Real.instNeg\n                            (@OfNat.ofNat.{0} Real\n                              (nat_lit 1)\n                              (@One.toOfNat1.{0} Real\n                                Real.instOne)))\n                          (@instSMulOfMul.{0} Real\n                            Real.instMul)))\n                      (@Inv.inv.{0} Real Real.instInv\n                        (@HPow.hPow.{0, 0, 0} Real Nat Real\n                          (@instHPow.{0, 0} Real Nat\n                            (@NPow.toPow.{0} Real\n                              (@Monoid.toNPow.{0} Real\n                                Real.instMonoid)))\n                          a\n                          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat\n                            (@instHAdd.{0} Nat instAddNat)\n                            (@OfNat.ofNat.{0} Nat\n                              (nat_lit 3)\n                              (instOfNatNat (nat_lit 3)))\n                            (@Finset.sum.{0, 0}\n                              (Fin\n                                (@OfNat.ofNat.{0} Nat\n                                  (nat_lit 4)\n                                  (instOfNatNat\n                                    (nat_lit 4))))\n                              Nat Nat.instAddCommMonoid\n                              (@Finset.univ.{0}\n                                (Fin\n                                  (@OfNat.ofNat.{0} Nat\n                                    (nat_lit 4)\n                                    (instOfNatNat\n                                      (nat_lit 4))))\n                                (Fin.fintype\n                                  (@OfNat.ofNat.{0} Nat\n                                    (nat_lit 4)\n                                    (instOfNatNat\n                                      (nat_lit 4)))))\n                              fun\n                                (μ :\n                                  Fin\n                                    (@OfNat.ofNat.{0} Nat\n                                      (nat_lit 4)\n                                      (instOfNatNat\n                                        (nat_lit 4)))) =>\n                              α μ))))\n                      (MathResearch.Fueter.multiIndexPartial\n                        α MathResearch.Fueter.kernel q)))\n                  (And\n                    (@Eq.{1}\n                      (@Quaternion.{0} Real Real.instZero\n                        Real.instOne Real.instNeg)\n                      (MathResearch.Fueter.multiIndexPartial\n                        α MathResearch.Fueter.kernel\n                        (@Neg.neg.{0}\n                          (@Quaternion.{0} Real\n                            Real.instZero Real.instOne\n                            Real.instNeg)\n                          (@QuaternionAlgebra.instNeg.{0}\n                            Real\n                            (@Neg.neg.{0} Real Real.instNeg\n                              (@OfNat.ofNat.{0} Real\n                                (nat_lit 1)\n                                (@One.toOfNat1.{0} Real\n                                  Real.instOne)))\n                            (@OfNat.ofNat.{0} Real\n                              (nat_lit 0)\n                              (@Zero.toOfNat0.{0} Real\n                                Real.instZero))\n                            (@Neg.neg.{0} Real Real.instNeg\n                              (@OfNat.ofNat.{0} Real\n                                (nat_lit 1)\n                                (@One.toOfNat1.{0} Real\n                                  Real.instOne)))\n                            Real.instNeg)\n                          q))\n                      (@HSMul.hSMul.{0, 0, 0} Real\n                        (@Quaternion.{0} Real Real.instZero\n                          Real.instOne Real.instNeg)\n                        (@Quaternion.{0} Real Real.instZero\n                          Real.instOne Real.instNeg)\n                        (@instHSMul.{0, 0} Real\n                          (@Quaternion.{0} Real\n                            Real.instZero Real.instOne\n                            Real.instNeg)\n                          (@QuaternionAlgebra.instSMul.{0,\n                                0}\n                            Real Real\n                            (@Neg.neg.{0} Real Real.instNeg\n                              (@OfNat.ofNat.{0} Real\n                                (nat_lit 1)\n                                (@One.toOfNat1.{0} Real\n                                  Real.instOne)))\n                            (@OfNat.ofNat.{0} Real\n                              (nat_lit 0)\n                              (@Zero.toOfNat0.{0} Real\n                                Real.instZero))\n                            (@Neg.neg.{0} Real Real.instNeg\n                              (@OfNat.ofNat.{0} Real\n                                (nat_lit 1)\n                                (@One.toOfNat1.{0} Real\n                                  Real.instOne)))\n                            (@instSMulOfMul.{0} Real\n                              Real.instMul)))\n                        (@HPow.hPow.{0, 0, 0} Real Nat Real\n                          (@instHPow.{0, 0} Real Nat\n                            (@NPow.toPow.{0} Real\n                              (@Monoid.toNPow.{0} Real\n                                Real.instMonoid)))\n                          (@Neg.neg.{0} Real Real.instNeg\n                            (@OfNat.ofNat.{0} Real\n                              (nat_lit 1)\n                              (@One.toOfNat1.{0} Real\n                                Real.instOne)))\n                          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat\n                            (@instHAdd.{0} Nat instAddNat)\n                            (@Finset.sum.{0, 0}\n                              (Fin\n                                (@OfNat.ofNat.{0} Nat\n                                  (nat_lit 4)\n                                  (instOfNatNat\n                                    (nat_lit 4))))\n                              Nat Nat.instAddCommMonoid\n                              (@Finset.univ.{0}\n                                (Fin\n                                  (@OfNat.ofNat.{0} Nat\n                                    (nat_lit 4)\n                                    (instOfNatNat\n                                      (nat_lit 4))))\n                                (Fin.fintype\n                                  (@OfNat.ofNat.{0} Nat\n                                    (nat_lit 4)\n                                    (instOfNatNat\n                                      (nat_lit 4)))))\n                              fun\n                                (μ :\n                                  Fin\n                                    (@OfNat.ofNat.{0} Nat\n                                      (nat_lit 4)\n                                      (instOfNatNat\n                                        (nat_lit 4)))) =>\n                              α μ)\n                            (@OfNat.ofNat.{0} Nat\n                              (nat_lit 1)\n                              (instOfNatNat (nat_lit 1)))))\n                        (MathResearch.Fueter.multiIndexPartial\n                          α MathResearch.Fueter.kernel q)))\n                    (@LE.le.{0} Real Real.instLE\n                      (@Norm.norm.{0}\n                        (@Quaternion.{0} Real Real.instZero\n                          Real.instOne Real.instNeg)\n                        (@NormedDivisionRing.toNorm.{0}\n                          (@Quaternion.{0} Real\n                            Real.instZero Real.instOne\n                            Real.instNeg)\n                          Quaternion.instNormedDivisionRingReal)\n                        (MathResearch.Fueter.multiIndexPartial\n                          α MathResearch.Fueter.kernel q))\n                      (@HMul.hMul.{0, 0, 0} Real Real Real\n                        (@instHMul.{0} Real Real.instMul) C\n                        (@Inv.inv.{0} Real Real.instInv\n                          (@HPow.hPow.{0, 0, 0} Real Nat\n                            Real\n                            (@instHPow.{0, 0} Real Nat\n                              (@NPow.toPow.{0} Real\n                                (@Monoid.toNPow.{0} Real\n                                  Real.instMonoid)))\n                            (@Norm.norm.{0}\n                              (@Quaternion.{0} Real\n                                Real.instZero Real.instOne\n                                Real.instNeg)\n                              (@NormedDivisionRing.toNorm.{0}\n                                (@Quaternion.{0} Real\n                                  Real.instZero Real.instOne\n                                  Real.instNeg)\n                                Quaternion.instNormedDivisionRingReal)\n                              q)\n                            (@HAdd.hAdd.{0, 0, 0} Nat Nat\n                              Nat\n                              (@instHAdd.{0} Nat instAddNat)\n                              (@OfNat.ofNat.{0} Nat\n                                (nat_lit 3)\n                                (instOfNatNat (nat_lit 3)))\n                              (@Finset.sum.{0, 0}\n                                (Fin\n                                  (@OfNat.ofNat.{0} Nat\n                                    (nat_lit 4)\n                                    (instOfNatNat\n                                      (nat_lit 4))))\n                                Nat Nat.instAddCommMonoid\n                                (@Finset.univ.{0}\n                                  (Fin\n                                    (@OfNat.ofNat.{0} Nat\n                                      (nat_lit 4)\n                                      (instOfNatNat\n                                        (nat_lit 4))))\n                                  (Fin.fintype\n                                    (@OfNat.ofNat.{0} Nat\n                                      (nat_lit 4)\n                                      (instOfNatNat\n                                        (nat_lit 4)))))\n                                fun\n                                  (μ :\n                                    Fin\n                                      (@OfNat.ofNat.{0} Nat\n                                        (nat_lit 4)\n                                        (instOfNatNat\n                                          (nat_lit 4)))) =>\n                                α μ)))))))))\n  (And\n    (@Function.Odd.{0, 0}\n      (@Quaternion.{0} Real Real.instZero Real.instOne\n        Real.instNeg)\n      (@Quaternion.{0} Real Real.instZero Real.instOne\n        Real.instNeg)\n      (@QuaternionAlgebra.instNeg.{0} Real\n        (@Neg.neg.{0} Real Real.instNeg\n          (@OfNat.ofNat.{0} Real (nat_lit 1)\n            (@One.toOfNat1.{0} Real Real.instOne)))\n        (@OfNat.ofNat.{0} Real (nat_lit 0)\n          (@Zero.toOfNat0.{0} Real Real.instZero))\n        (@Neg.neg.{0} Real Real.instNeg\n          (@OfNat.ofNat.{0} Real (nat_lit 1)\n            (@One.toOfNat1.{0} Real Real.instOne)))\n        Real.instNeg)\n      (@QuaternionAlgebra.instNeg.{0} Real\n        (@Neg.neg.{0} Real Real.instNeg\n          (@OfNat.ofNat.{0} Real (nat_lit 1)\n            (@One.toOfNat1.{0} Real Real.instOne)))\n        (@OfNat.ofNat.{0} Real (nat_lit 0)\n          (@Zero.toOfNat0.{0} Real Real.instZero))\n        (@Neg.neg.{0} Real Real.instNeg\n          (@OfNat.ofNat.{0} Real (nat_lit 1)\n            (@One.toOfNat1.{0} Real Real.instOne)))\n        Real.instNeg)\n      MathResearch.Fueter.kernel)\n    (And\n      (∀\n        (j :\n          Fin\n            (@OfNat.ofNat.{0} Nat (nat_lit 3)\n              (instOfNatNat (nat_lit 3))))\n        (q :\n          @Quaternion.{0} Real Real.instZero Real.instOne\n            Real.instNeg),\n        @Ne.{1}\n            (@Quaternion.{0} Real Real.instZero Real.instOne\n              Real.instNeg)\n            q\n            (@OfNat.ofNat.{0}\n              (@Quaternion.{0} Real Real.instZero\n                Real.instOne Real.instNeg)\n              (nat_lit 0)\n              (@Zero.toOfNat0.{0}\n                (@Quaternion.{0} Real Real.instZero\n                  Real.instOne Real.instNeg)\n                (@QuaternionAlgebra.instZero.{0} Real\n                  (@Neg.neg.{0} Real Real.instNeg\n                    (@OfNat.ofNat.{0} Real (nat_lit 1)\n                      (@One.toOfNat1.{0} Real\n                        Real.instOne)))\n                  (@OfNat.ofNat.{0} Real (nat_lit 0)\n                    (@Zero.toOfNat0.{0} Real Real.instZero))\n                  (@Neg.neg.{0} Real Real.instNeg\n                    (@OfNat.ofNat.{0} Real (nat_lit 1)\n                      (@One.toOfNat1.{0} Real\n                        Real.instOne)))\n                  Real.instZero))) →\n          @Eq.{1}\n            (@Quaternion.{0} Real Real.instZero Real.instOne\n              Real.instNeg)\n            (MathResearch.Fueter.kernelSpatialPartial j\n              (@Neg.neg.{0}\n                (@Quaternion.{0} Real Real.instZero\n                  Real.instOne Real.instNeg)\n                (@QuaternionAlgebra.instNeg.{0} Real\n                  (@Neg.neg.{0} Real Real.instNeg\n                    (@OfNat.ofNat.{0} Real (nat_lit 1)\n                      (@One.toOfNat1.{0} Real\n                        Real.instOne)))\n                  (@OfNat.ofNat.{0} Real (nat_lit 0)\n                    (@Zero.toOfNat0.{0} Real Real.instZero))\n                  (@Neg.neg.{0} Real Real.instNeg\n                    (@OfNat.ofNat.{0} Real (nat_lit 1)\n                      (@One.toOfNat1.{0} Real\n                        Real.instOne)))\n                  Real.instNeg)\n                q))\n            (MathResearch.Fueter.kernelSpatialPartial j q))\n      (∀\n        (j :\n          Fin\n            (@OfNat.ofNat.{0} Nat (nat_lit 3)\n              (instOfNatNat (nat_lit 3))))\n        (q :\n          @Quaternion.{0} Real Real.instZero Real.instOne\n            Real.instNeg),\n        @Ne.{1}\n            (@Quaternion.{0} Real Real.instZero Real.instOne\n              Real.instNeg)\n            q\n            (@OfNat.ofNat.{0}\n              (@Quaternion.{0} Real Real.instZero\n                Real.instOne Real.instNeg)\n              (nat_lit 0)\n              (@Zero.toOfNat0.{0}\n                (@Quaternion.{0} Real Real.instZero\n                  Real.instOne Real.instNeg)\n                (@QuaternionAlgebra.instZero.{0} Real\n                  (@Neg.neg.{0} Real Real.instNeg\n                    (@OfNat.ofNat.{0} Real (nat_lit 1)\n                      (@One.toOfNat1.{0} Real\n                        Real.instOne)))\n                  (@OfNat.ofNat.{0} Real (nat_lit 0)\n                    (@Zero.toOfNat0.{0} Real Real.instZero))\n                  (@Neg.neg.{0} Real Real.instNeg\n                    (@OfNat.ofNat.{0} Real (nat_lit 1)\n                      (@One.toOfNat1.{0} Real\n                        Real.instOne)))\n                  Real.instZero))) →\n          @Eq.{1}\n            (@Quaternion.{0} Real Real.instZero Real.instOne\n              Real.instNeg)\n            (MathResearch.Fueter.kernelSpatialPartial j q)\n            (@HSub.hSub.{0, 0, 0}\n              (@Quaternion.{0} Real Real.instZero\n                Real.instOne Real.instNeg)\n              (@Quaternion.{0} Real Real.instZero\n                Real.instOne Real.instNeg)\n              (@Quaternion.{0} Real Real.instZero\n                Real.instOne Real.instNeg)\n              (@instHSub.{0}\n                (@Quaternion.{0} Real Real.instZero\n                  Real.instOne Real.instNeg)\n                (@QuaternionAlgebra.instSub.{0} Real\n                  (@Neg.neg.{0} Real Real.instNeg\n                    (@OfNat.ofNat.{0} Real (nat_lit 1)\n                      (@One.toOfNat1.{0} Real\n                        Real.instOne)))\n                  (@OfNat.ofNat.{0} Real (nat_lit 0)\n                    (@Zero.toOfNat0.{0} Real Real.instZero))\n                  (@Neg.neg.{0} Real Real.instNeg\n                    (@OfNat.ofNat.{0} Real (nat_lit 1)\n                      (@One.toOfNat1.{0} Real\n                        Real.instOne)))\n                  Real.instAddGroup))\n              (@HSMul.hSMul.{0, 0, 0} Real\n                (@Quaternion.{0} Real Real.instZero\n                  Real.instOne Real.instNeg)\n                (@Quaternion.{0} Real Real.instZero\n                  Real.instOne Real.instNeg)\n                (@instHSMul.{0, 0} Real\n                  (@Quaternion.{0} Real Real.instZero\n                    Real.instOne Real.instNeg)\n                  (@QuaternionAlgebra.instSMul.{0, 0} Real\n                    Real\n                    (@Neg.neg.{0} Real Real.instNeg\n                      (@OfNat.ofNat.{0} Real (nat_lit 1)\n                        (@One.toOfNat1.{0} Real\n                          Real.instOne)))\n                    (@OfNat.ofNat.{0} Real (nat_lit 0)\n                      (@Zero.toOfNat0.{0} Real\n                        Real.instZero))\n                    (@Neg.neg.{0} Real Real.instNeg\n                      (@OfNat.ofNat.{0} Real (nat_lit 1)\n                        (@One.toOfNat1.{0} Real\n                          Real.instOne)))\n                    (@instSMulOfMul.{0} Real Real.instMul)))\n                (@Neg.neg.{0} Real Real.instNeg\n                  (@Inv.inv.{0} Real Real.instInv\n                    (@HPow.hPow.{0, 0, 0} Real Nat Real\n                      (@instHPow.{0, 0} Real Nat\n                        (@NPow.toPow.{0} Real\n                          (@Monoid.toNPow.{0} Real\n                            Real.instMonoid)))\n                      (@Norm.norm.{0}\n                        (@Quaternion.{0} Real Real.instZero\n                          Real.instOne Real.instNeg)\n                        (@NormedDivisionRing.toNorm.{0}\n                          (@Quaternion.{0} Real\n                            Real.instZero Real.instOne\n                            Real.instNeg)\n                          Quaternion.instNormedDivisionRingReal)\n                        q)\n                      (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                        (instOfNatNat (nat_lit 4))))))\n                (@DFunLike.coe.{1, 1, 1}\n                  (@Module.Basis.{0, 0, 0}\n                    (Fin\n                      (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                        (instOfNatNat (nat_lit 4))))\n                    Real\n                    (@Quaternion.{0} Real Real.instZero\n                      Real.instOne Real.instNeg)\n                    Real.semiring\n                    (@Semiring.toAddCommMonoid.{0}\n                      (@Quaternion.{0} Real Real.instZero\n                        Real.instOne Real.instNeg)\n                      (@Ring.toSemiring.{0}\n                        (@Quaternion.{0} Real Real.instZero\n                          Real.instOne Real.instNeg)\n                        (@QuaternionAlgebra.instRing.{0}\n                          Real\n                          (@Neg.neg.{0} Real Real.instNeg\n                            (@OfNat.ofNat.{0} Real\n                              (nat_lit 1)\n                              (@One.toOfNat1.{0} Real\n                                Real.instOne)))\n                          (@OfNat.ofNat.{0} Real (nat_lit 0)\n                            (@Zero.toOfNat0.{0} Real\n                              Real.instZero))\n                          (@Neg.neg.{0} Real Real.instNeg\n                            (@OfNat.ofNat.{0} Real\n                              (nat_lit 1)\n                              (@One.toOfNat1.{0} Real\n                                Real.instOne)))\n                          Real.commRing)))\n                    (@QuaternionAlgebra.instModule.{0, 0}\n                      Real Real\n                      (@Neg.neg.{0} Real Real.instNeg\n                        (@OfNat.ofNat.{0} Real (nat_lit 1)\n                          (@One.toOfNat1.{0} Real\n                            Real.instOne)))\n                      (@OfNat.ofNat.{0} Real (nat_lit 0)\n                        (@Zero.toOfNat0.{0} Real\n                          Real.instZero))\n                      (@Neg.neg.{0} Real Real.instNeg\n                        (@OfNat.ofNat.{0} Real (nat_lit 1)\n                          (@One.toOfNat1.{0} Real\n                            Real.instOne)))\n                      Real.semiring\n                      (@Ring.toAddCommGroup.{0} Real\n                        (@CommRing.toRing.{0} Real\n                          Real.commRing))\n                      (@Semiring.toModule.{0} Real\n                        Real.semiring)))\n                  (Fin\n                    (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                      (instOfNatNat (nat_lit 4))))\n                  (fun\n                      (x :\n                        Fin\n                          (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                            (instOfNatNat (nat_lit 4)))) =>\n                    @Quaternion.{0} Real Real.instZero\n                      Real.instOne Real.instNeg)\n                  (@Module.Basis.instFunLike.{0, 0, 0}\n                    (Fin\n                      (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                        (instOfNatNat (nat_lit 4))))\n                    Real\n                    (@Quaternion.{0} Real Real.instZero\n                      Real.instOne Real.instNeg)\n                    Real.semiring\n                    (@Semiring.toAddCommMonoid.{0}\n                      (@Quaternion.{0} Real Real.instZero\n                        Real.instOne Real.instNeg)\n                      (@Ring.toSemiring.{0}\n                        (@Quaternion.{0} Real Real.instZero\n                          Real.instOne Real.instNeg)\n                        (@QuaternionAlgebra.instRing.{0}\n                          Real\n                          (@Neg.neg.{0} Real Real.instNeg\n                            (@OfNat.ofNat.{0} Real\n                              (nat_lit 1)\n                              (@One.toOfNat1.{0} Real\n                                Real.instOne)))\n                          (@OfNat.ofNat.{0} Real (nat_lit 0)\n                            (@Zero.toOfNat0.{0} Real\n                              Real.instZero))\n                          (@Neg.neg.{0} Real Real.instNeg\n                            (@OfNat.ofNat.{0} Real\n                              (nat_lit 1)\n                              (@One.toOfNat1.{0} Real\n                                Real.instOne)))\n                          Real.commRing)))\n                    (@QuaternionAlgebra.instModule.{0, 0}\n                      Real Real\n                      (@Neg.neg.{0} Real Real.instNeg\n                        (@OfNat.ofNat.{0} Real (nat_lit 1)\n                          (@One.toOfNat1.{0} Real\n                            Real.instOne)))\n                      (@OfNat.ofNat.{0} Real (nat_lit 0)\n                        (@Zero.toOfNat0.{0} Real\n                          Real.instZero))\n                      (@Neg.neg.{0} Real Real.instNeg\n                        (@OfNat.ofNat.{0} Real (nat_lit 1)\n                          (@One.toOfNat1.{0} Real\n                            Real.instOne)))\n                      Real.semiring\n                      (@Ring.toAddCommGroup.{0} Real\n                        (@CommRing.toRing.{0} Real\n                          Real.commRing))\n                      (@Semiring.toModule.{0} Real\n                        Real.semiring)))\n                  MathResearch.Fueter.coordinateBasis\n                  (@Fin.succ\n                    (@OfNat.ofNat.{0} Nat (nat_lit 3)\n                      (instOfNatNat (nat_lit 3)))\n                    j)))\n              (@HSMul.hSMul.{0, 0, 0} Real\n                (@Quaternion.{0} Real Real.instZero\n                  Real.instOne Real.instNeg)\n                (@Quaternion.{0} Real Real.instZero\n                  Real.instOne Real.instNeg)\n                (@instHSMul.{0, 0} Real\n                  (@Quaternion.{0} Real Real.instZero\n                    Real.instOne Real.instNeg)\n                  (@QuaternionAlgebra.instSMul.{0, 0} Real\n                    Real\n                    (@Neg.neg.{0} Real Real.instNeg\n                      (@OfNat.ofNat.{0} Real (nat_lit 1)\n                        (@One.toOfNat1.{0} Real\n                          Real.instOne)))\n                    (@OfNat.ofNat.{0} Real (nat_lit 0)\n                      (@Zero.toOfNat0.{0} Real\n                        Real.instZero))\n                    (@Neg.neg.{0} Real Real.instNeg\n                      (@OfNat.ofNat.{0} Real (nat_lit 1)\n                        (@One.toOfNat1.{0} Real\n                          Real.instOne)))\n                    (@instSMulOfMul.{0} Real Real.instMul)))\n                (@HMul.hMul.{0, 0, 0} Real Real Real\n                  (@instHMul.{0} Real Real.instMul)\n                  (@HMul.hMul.{0, 0, 0} Real Real Real\n                    (@instHMul.{0} Real Real.instMul)\n                    (@OfNat.ofNat.{0} Real (nat_lit 4)\n                      (@instOfNatAtLeastTwo.{0} Real\n                        (nat_lit 4) Real.instNatCast\n                        (@Nat.instAtLeastTwoHAddOfNat\n                          (@OfNat.ofNat.{0} Nat (nat_lit 3)\n                            (instOfNatNat (nat_lit 3)))\n                          (@Nat.instNeZeroSucc\n                            (@OfNat.ofNat.{0} Nat\n                              (nat_lit 2)\n                              (instOfNatNat\n                                (nat_lit 2)))))))\n                    (@DFunLike.coe.{1, 1, 1}\n                      (@Finsupp.{0, 0}\n                        (Fin\n                          (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                            (instOfNatNat (nat_lit 4))))\n                        Real\n                        (@MulZeroClass.toZero.{0} Real\n                          (@instMulZeroClassOfSemiring.{0}\n                            Real Real.semiring)))\n                      (Fin\n                        (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                          (instOfNatNat (nat_lit 4))))\n                      (fun\n                          (x :\n                            Fin\n                              (@OfNat.ofNat.{0} Nat\n                                (nat_lit 4)\n                                (instOfNatNat\n                                  (nat_lit 4)))) =>\n                        Real)\n                      (@Finsupp.instFunLike.{0, 0}\n                        (Fin\n                          (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                            (instOfNatNat (nat_lit 4))))\n                        Real\n                        (@MulZeroClass.toZero.{0} Real\n                          (@instMulZeroClassOfSemiring.{0}\n                            Real Real.semiring)))\n                      (@DFunLike.coe.{1, 1, 1}\n                        (@LinearEquiv.{0, 0, 0, 0} Real Real\n                          Real.semiring Real.semiring\n                          (@RingHom.id.{0} Real\n                            (@Semiring.toNonAssocSemiring.{0}\n                              Real Real.semiring))\n                          (@RingHom.id.{0} Real\n                            (@Semiring.toNonAssocSemiring.{0}\n                              Real Real.semiring))\n                          (@RingHomInvPair.ids.{0} Real\n                            Real.semiring)\n                          (@RingHomInvPair.ids.{0} Real\n                            Real.semiring)\n                          (@Quaternion.{0} Real\n                            Real.instZero Real.instOne\n                            Real.instNeg)\n                          (@Finsupp.{0, 0}\n                            (Fin\n                              (@OfNat.ofNat.{0} Nat\n                                (nat_lit 4)\n                                (instOfNatNat (nat_lit 4))))\n                            Real\n                            (@MulZeroClass.toZero.{0} Real\n                              (@instMulZeroClassOfSemiring.{0}\n                                Real Real.semiring)))\n                          (@Semiring.toAddCommMonoid.{0}\n                            (@Quaternion.{0} Real\n                              Real.instZero Real.instOne\n                              Real.instNeg)\n                            (@Ring.toSemiring.{0}\n                              (@Quaternion.{0} Real\n                                Real.instZero Real.instOne\n                                Real.instNeg)\n                              (@QuaternionAlgebra.instRing.{0}\n                                Real\n                                (@Neg.neg.{0} Real\n                                  Real.instNeg\n                                  (@OfNat.ofNat.{0} Real\n                                    (nat_lit 1)\n                                    (@One.toOfNat1.{0} Real\n                                      Real.instOne)))\n                                (@OfNat.ofNat.{0} Real\n                                  (nat_lit 0)\n                                  (@Zero.toOfNat0.{0} Real\n                                    Real.instZero))\n                                (@Neg.neg.{0} Real\n                                  Real.instNeg\n                                  (@OfNat.ofNat.{0} Real\n                                    (nat_lit 1)\n                                    (@One.toOfNat1.{0} Real\n                                      Real.instOne)))\n                                Real.commRing)))\n                          (@Finsupp.instAddCommMonoid.{0, 0}\n                            (Fin\n                              (@OfNat.ofNat.{0} Nat\n                                (nat_lit 4)\n                                (instOfNatNat (nat_lit 4))))\n                            Real\n                            (@Semiring.toAddCommMonoid.{0}\n                              Real Real.semiring))\n                          (@QuaternionAlgebra.instModule.{0,\n                                0}\n                            Real Real\n                            (@Neg.neg.{0} Real Real.instNeg\n                              (@OfNat.ofNat.{0} Real\n                                (nat_lit 1)\n                                (@One.toOfNat1.{0} Real\n                                  Real.instOne)))\n                            (@OfNat.ofNat.{0} Real\n                              (nat_lit 0)\n                              (@Zero.toOfNat0.{0} Real\n                                Real.instZero))\n                            (@Neg.neg.{0} Real Real.instNeg\n                              (@OfNat.ofNat.{0} Real\n                                (nat_lit 1)\n                                (@One.toOfNat1.{0} Real\n                                  Real.instOne)))\n                            Real.semiring\n                            (@Ring.toAddCommGroup.{0} Real\n                              (@CommRing.toRing.{0} Real\n                                Real.commRing))\n                            (@Semiring.toModule.{0} Real\n                              Real.semiring))\n                          (@Finsupp.module.{0, 0, 0}\n                            (Fin\n                              (@OfNat.ofNat.{0} Nat\n                                (nat_lit 4)\n                                (instOfNatNat (nat_lit 4))))\n                            Real Real Real.semiring\n                            (@Semiring.toAddCommMonoid.{0}\n                              Real Real.semiring)\n                            (@Semiring.toModule.{0} Real\n                              Real.semiring)))\n                        (@Quaternion.{0} Real Real.instZero\n                          Real.instOne Real.instNeg)\n                        (fun\n                            (x :\n                              @Quaternion.{0} Real\n                                Real.instZero Real.instOne\n                                Real.instNeg) =>\n                          @Finsupp.{0, 0}\n                            (Fin\n                              (@OfNat.ofNat.{0} Nat\n                                (nat_lit 4)\n                                (instOfNatNat (nat_lit 4))))\n                            Real\n                            (@MulZeroClass.toZero.{0} Real\n                              (@instMulZeroClassOfSemiring.{0}\n                                Real Real.semiring)))\n                        (@EquivLike.toFunLike.{1, 1, 1}\n                          (@LinearEquiv.{0, 0, 0, 0} Real\n                            Real Real.semiring Real.semiring\n                            (@RingHom.id.{0} Real\n                              (@Semiring.toNonAssocSemiring.{0}\n                                Real Real.semiring))\n                            (@RingHom.id.{0} Real\n                              (@Semiring.toNonAssocSemiring.{0}\n                                Real Real.semiring))\n                            (@RingHomInvPair.ids.{0} Real\n                              Real.semiring)\n                            (@RingHomInvPair.ids.{0} Real\n                              Real.semiring)\n                            (@Quaternion.{0} Real\n                              Real.instZero Real.instOne\n                              Real.instNeg)\n                            (@Finsupp.{0, 0}\n                              (Fin\n                                (@OfNat.ofNat.{0} Nat\n                                  (nat_lit 4)\n                                  (instOfNatNat\n                                    (nat_lit 4))))\n                              Real\n                              (@MulZeroClass.toZero.{0} Real\n                                (@instMulZeroClassOfSemiring.{0}\n                                  Real Real.semiring)))\n                            (@Semiring.toAddCommMonoid.{0}\n                              (@Quaternion.{0} Real\n                                Real.instZero Real.instOne\n                                Real.instNeg)\n                              (@Ring.toSemiring.{0}\n                                (@Quaternion.{0} Real\n                                  Real.instZero Real.instOne\n                                  Real.instNeg)\n                                (@QuaternionAlgebra.instRing.{0}\n                                  Real\n                                  (@Neg.neg.{0} Real\n                                    Real.instNeg\n                                    (@OfNat.ofNat.{0} Real\n                                      (nat_lit 1)\n                                      (@One.toOfNat1.{0}\n                                        Real Real.instOne)))\n                                  (@OfNat.ofNat.{0} Real\n                                    (nat_lit 0)\n                                    (@Zero.toOfNat0.{0} Real\n                                      Real.instZero))\n                                  (@Neg.neg.{0} Real\n                                    Real.instNeg\n                                    (@OfNat.ofNat.{0} Real\n                                      (nat_lit 1)\n                                      (@One.toOfNat1.{0}\n                                        Real Real.instOne)))\n                                  Real.commRing)))\n                            (@Finsupp.instAddCommMonoid.{0,\n                                  0}\n                              (Fin\n                                (@OfNat.ofNat.{0} Nat\n                                  (nat_lit 4)\n                                  (instOfNatNat\n                                    (nat_lit 4))))\n                              Real\n                              (@Semiring.toAddCommMonoid.{0}\n                                Real Real.semiring))\n                            (@QuaternionAlgebra.instModule.{0,\n                                  0}\n                              Real Real\n                              (@Neg.neg.{0} Real\n                                Real.instNeg\n                                (@OfNat.ofNat.{0} Real\n                                  (nat_lit 1)\n                                  (@One.toOfNat1.{0} Real\n                                    Real.instOne)))\n                              (@OfNat.ofNat.{0} Real\n                                (nat_lit 0)\n                                (@Zero.toOfNat0.{0} Real\n                                  Real.instZero))\n                              (@Neg.neg.{0} Real\n                                Real.instNeg\n                                (@OfNat.ofNat.{0} Real\n                                  (nat_lit 1)\n                                  (@One.toOfNat1.{0} Real\n                                    Real.instOne)))\n                              Real.semiring\n                              (@Ring.toAddCommGroup.{0} Real\n                                (@CommRing.toRing.{0} Real\n                                  Real.commRing))\n                              (@Semiring.toModule.{0} Real\n                                Real.semiring))\n                            (@Finsupp.module.{0, 0, 0}\n                              (Fin\n                                (@OfNat.ofNat.{0} Nat\n                                  (nat_lit 4)\n                                  (instOfNatNat\n                                    (nat_lit 4))))\n                              Real Real Real.semiring\n                              (@Semiring.toAddCommMonoid.{0}\n                                Real Real.semiring)\n                              (@Semiring.toModule.{0} Real\n                                Real.semiring)))\n                          (@Quaternion.{0} Real\n                            Real.instZero Real.instOne\n                            Real.instNeg)\n                          (@Finsupp.{0, 0}\n                            (Fin\n                              (@OfNat.ofNat.{0} Nat\n                                (nat_lit 4)\n                                (instOfNatNat (nat_lit 4))))\n                            Real\n                            (@MulZeroClass.toZero.{0} Real\n                              (@instMulZeroClassOfSemiring.{0}\n                                Real Real.semiring)))\n                          (@DFinsupp.instEquivLikeLinearEquiv.{0,\n                                0, 0, 0}\n                            Real Real Real.semiring\n                            Real.semiring\n                            (@RingHom.id.{0} Real\n                              (@Semiring.toNonAssocSemiring.{0}\n                                Real Real.semiring))\n                            (@RingHom.id.{0} Real\n                              (@Semiring.toNonAssocSemiring.{0}\n                                Real Real.semiring))\n                            (@RingHomInvPair.ids.{0} Real\n                              Real.semiring)\n                            (@RingHomInvPair.ids.{0} Real\n                              Real.semiring)\n                            (@Quaternion.{0} Real\n                              Real.instZero Real.instOne\n                              Real.instNeg)\n                            (@Finsupp.{0, 0}\n                              (Fin\n                                (@OfNat.ofNat.{0} Nat\n                                  (nat_lit 4)\n                                  (instOfNatNat\n                                    (nat_lit 4))))\n                              Real\n                              (@MulZeroClass.toZero.{0} Real\n                                (@instMulZeroClassOfSemiring.{0}\n                                  Real Real.semiring)))\n                            (@Semiring.toAddCommMonoid.{0}\n                              (@Quaternion.{0} Real\n                                Real.instZero Real.instOne\n                                Real.instNeg)\n                              (@Ring.toSemiring.{0}\n                                (@Quaternion.{0} Real\n                                  Real.instZero Real.instOne\n                                  Real.instNeg)\n                                (@QuaternionAlgebra.instRing.{0}\n                                  Real\n                                  (@Neg.neg.{0} Real\n                                    Real.instNeg\n                                    (@OfNat.ofNat.{0} Real\n                                      (nat_lit 1)\n                                      (@One.toOfNat1.{0}\n                                        Real Real.instOne)))\n                                  (@OfNat.ofNat.{0} Real\n                                    (nat_lit 0)\n                                    (@Zero.toOfNat0.{0} Real\n                                      Real.instZero))\n                                  (@Neg.neg.{0} Real\n                                    Real.instNeg\n                                    (@OfNat.ofNat.{0} Real\n                                      (nat_lit 1)\n                                      (@One.toOfNat1.{0}\n                                        Real Real.instOne)))\n                                  Real.commRing)))\n                            (@Finsupp.instAddCommMonoid.{0,\n                                  0}\n                              (Fin\n                                (@OfNat.ofNat.{0} Nat\n                                  (nat_lit 4)\n                                  (instOfNatNat\n                                    (nat_lit 4))))\n                              Real\n                              (@Semiring.toAddCommMonoid.{0}\n                                Real Real.semiring))\n                            (@QuaternionAlgebra.instModule.{0,\n                                  0}\n                              Real Real\n                              (@Neg.neg.{0} Real\n                                Real.instNeg\n                                (@OfNat.ofNat.{0} Real\n                                  (nat_lit 1)\n                                  (@One.toOfNat1.{0} Real\n                                    Real.instOne)))\n                              (@OfNat.ofNat.{0} Real\n                                (nat_lit 0)\n                                (@Zero.toOfNat0.{0} Real\n                                  Real.instZero))\n                              (@Neg.neg.{0} Real\n                                Real.instNeg\n                                (@OfNat.ofNat.{0} Real\n                                  (nat_lit 1)\n                                  (@One.toOfNat1.{0} Real\n                                    Real.instOne)))\n                              Real.semiring\n                              (@Ring.toAddCommGroup.{0} Real\n                                (@CommRing.toRing.{0} Real\n                                  Real.commRing))\n                              (@Semiring.toModule.{0} Real\n                                Real.semiring))\n                            (@Finsupp.module.{0, 0, 0}\n                              (Fin\n                                (@OfNat.ofNat.{0} Nat\n                                  (nat_lit 4)\n                                  (instOfNatNat\n                                    (nat_lit 4))))\n                              Real Real Real.semiring\n                              (@Semiring.toAddCommMonoid.{0}\n                                Real Real.semiring)\n                              (@Semiring.toModule.{0} Real\n                                Real.semiring))))\n                        (@Module.Basis.repr.{0, 0, 0}\n                          (Fin\n                            (@OfNat.ofNat.{0} Nat\n                              (nat_lit 4)\n                              (instOfNatNat (nat_lit 4))))\n                          Real\n                          (@Quaternion.{0} Real\n                            Real.instZero Real.instOne\n                            Real.instNeg)\n                          Real.semiring\n                          (@Semiring.toAddCommMonoid.{0}\n                            (@Quaternion.{0} Real\n                              Real.instZero Real.instOne\n                              Real.instNeg)\n                            (@Ring.toSemiring.{0}\n                              (@Quaternion.{0} Real\n                                Real.instZero Real.instOne\n                                Real.instNeg)\n                              (@QuaternionAlgebra.instRing.{0}\n                                Real\n                                (@Neg.neg.{0} Real\n                                  Real.instNeg\n                                  (@OfNat.ofNat.{0} Real\n                                    (nat_lit 1)\n                                    (@One.toOfNat1.{0} Real\n                                      Real.instOne)))\n                                (@OfNat.ofNat.{0} Real\n                                  (nat_lit 0)\n                                  (@Zero.toOfNat0.{0} Real\n                                    Real.instZero))\n                                (@Neg.neg.{0} Real\n                                  Real.instNeg\n                                  (@OfNat.ofNat.{0} Real\n                                    (nat_lit 1)\n                                    (@One.toOfNat1.{0} Real\n                                      Real.instOne)))\n                                Real.commRing)))\n                          (@QuaternionAlgebra.instModule.{0,\n                                0}\n                            Real Real\n                            (@Neg.neg.{0} Real Real.instNeg\n                              (@OfNat.ofNat.{0} Real\n                                (nat_lit 1)\n                                (@One.toOfNat1.{0} Real\n                                  Real.instOne)))\n                            (@OfNat.ofNat.{0} Real\n                              (nat_lit 0)\n                              (@Zero.toOfNat0.{0} Real\n                                Real.instZero))\n                            (@Neg.neg.{0} Real Real.instNeg\n                              (@OfNat.ofNat.{0} Real\n                                (nat_lit 1)\n                                (@One.toOfNat1.{0} Real\n                                  Real.instOne)))\n                            Real.semiring\n                            (@Ring.toAddCommGroup.{0} Real\n                              (@CommRing.toRing.{0} Real\n                                Real.commRing))\n                            (@Semiring.toModule.{0} Real\n                              Real.semiring))\n                          MathResearch.Fueter.coordinateBasis)\n                        q)\n                      (@Fin.succ\n                        (@OfNat.ofNat.{0} Nat (nat_lit 3)\n                          (instOfNatNat (nat_lit 3)))\n                        j)))\n                  (@Inv.inv.{0} Real Real.instInv\n                    (@HPow.hPow.{0, 0, 0} Real Nat Real\n                      (@instHPow.{0, 0} Real Nat\n                        (@NPow.toPow.{0} Real\n                          (@Monoid.toNPow.{0} Real\n                            Real.instMonoid)))\n                      (@Norm.norm.{0}\n                        (@Quaternion.{0} Real Real.instZero\n                          Real.instOne Real.instNeg)\n                        (@NormedDivisionRing.toNorm.{0}\n                          (@Quaternion.{0} Real\n                            Real.instZero Real.instOne\n                            Real.instNeg)\n                          Quaternion.instNormedDivisionRingReal)\n                        q)\n                      (@OfNat.ofNat.{0} Nat (nat_lit 6)\n                        (instOfNatNat (nat_lit 6))))))\n                (@Star.star.{0}\n                  (@Quaternion.{0} Real Real.instZero\n                    Real.instOne Real.instNeg)\n                  (@QuaternionAlgebra.instStarQuaternionAlgebra.{0}\n                    Real\n                    (@Neg.neg.{0} Real Real.instNeg\n                      (@OfNat.ofNat.{0} Real (nat_lit 1)\n                        (@One.toOfNat1.{0} Real\n                          Real.instOne)))\n                    (@OfNat.ofNat.{0} Real (nat_lit 0)\n                      (@Zero.toOfNat0.{0} Real\n                        Real.instZero))\n                    (@Neg.neg.{0} Real Real.instNeg\n                      (@OfNat.ofNat.{0} Real (nat_lit 1)\n                        (@One.toOfNat1.{0} Real\n                          Real.instOne)))\n                    Real.commRing)\n                  q))))))",
+      "type_constants": [
+        "And",
+        "Fin",
+        "OfNat.ofNat",
+        "Nat",
+        "instOfNatNat",
+        "Exists",
+        "Real",
+        "LE.le",
+        "Real.instLE",
+        "Zero.toOfNat0",
+        "Real.instZero",
+        "Quaternion",
+        "Real.instOne",
+        "Real.instNeg",
+        "Ne",
+        "QuaternionAlgebra.instZero",
+        "Neg.neg",
+        "One.toOfNat1",
+        "LT.lt",
+        "Real.instLT",
+        "Eq",
+        "MathResearch.Fueter.multiIndexPartial",
+        "MathResearch.Fueter.kernel",
+        "HSMul.hSMul",
+        "instHSMul",
+        "QuaternionAlgebra.instSMul",
+        "instSMulOfMul",
+        "Real.instMul",
+        "Inv.inv",
+        "Real.instInv",
+        "HPow.hPow",
+        "instHPow",
+        "NPow.toPow",
+        "Monoid.toNPow",
+        "Real.instMonoid",
+        "HAdd.hAdd",
+        "instHAdd",
+        "instAddNat",
+        "Finset.sum",
+        "Nat.instAddCommMonoid",
+        "Finset.univ",
+        "Fin.fintype",
+        "QuaternionAlgebra.instNeg",
+        "Norm.norm",
+        "NormedDivisionRing.toNorm",
+        "Quaternion.instNormedDivisionRingReal",
+        "HMul.hMul",
+        "instHMul",
+        "Function.Odd",
+        "MathResearch.Fueter.kernelSpatialPartial",
+        "HSub.hSub",
+        "instHSub",
+        "QuaternionAlgebra.instSub",
+        "Real.instAddGroup",
+        "DFunLike.coe",
+        "Module.Basis",
+        "Real.semiring",
+        "Semiring.toAddCommMonoid",
+        "Ring.toSemiring",
+        "QuaternionAlgebra.instRing",
+        "Real.commRing",
+        "QuaternionAlgebra.instModule",
+        "Ring.toAddCommGroup",
+        "CommRing.toRing",
+        "Semiring.toModule",
+        "Module.Basis.instFunLike",
+        "MathResearch.Fueter.coordinateBasis",
+        "Fin.succ",
+        "instOfNatAtLeastTwo",
+        "Real.instNatCast",
+        "Nat.instAtLeastTwoHAddOfNat",
+        "Nat.instNeZeroSucc",
+        "Finsupp",
+        "MulZeroClass.toZero",
+        "instMulZeroClassOfSemiring",
+        "Finsupp.instFunLike",
+        "LinearEquiv",
+        "RingHom.id",
+        "Semiring.toNonAssocSemiring",
+        "RingHomInvPair.ids",
+        "Finsupp.instAddCommMonoid",
+        "Finsupp.module",
+        "EquivLike.toFunLike",
+        "DFinsupp.instEquivLikeLinearEquiv",
+        "Module.Basis.repr",
+        "Star.star",
+        "QuaternionAlgebra.instStarQuaternionAlgebra"
+      ],
+      "names_used": [
+        "Fin",
+        "Fin.succ",
+        "Function.Odd",
+        "MathResearch.Fueter.coordinateBasis",
+        "MathResearch.Fueter.kernel",
+        "MathResearch.Fueter.kernelSpatialPartial",
+        "MathResearch.Fueter.multiIndexPartial",
+        "Module.Basis.repr",
+        "Nat",
+        "Quaternion",
+        "Real",
+        "Star.star"
+      ],
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "source": {
+        "path": "MathResearch/Fueter/KernelEstimates.lean",
+        "line": 177,
+        "sha256": "43731d1faabf750888dfccf359a4d917e83a5f31916bc34749655d5fbfee103c",
+        "article": "lean/sources/F2-v1/MathResearch/Fueter/KernelEstimates.lean.html",
+        "anchor": "L177"
+      }
+    },
+    {
+      "name": "MathResearch.Fueter.kernel_multiIndexPartial_smul",
+      "module": "MathResearch.Fueter.KernelEstimates",
+      "role": "checked-statement",
+      "primary": false,
+      "home": {
+        "article": "quaternionic-analysis/foundations.html",
+        "item": "f2",
+        "anchor": "lean-MathResearch.Fueter.kernel_multiIndexPartial_smul"
+      },
+      "kind": "theorem",
+      "display_text": "theorem kernel_multiIndexPartial_smul (α : Fin 4 → ℕ)\n    (a : ℝ) (ha : a ≠ 0)\n    (q : ℍ) (hq : q ≠ 0) :\n    multiIndexPartial α kernel (a • q) =\n      (a ^ (3 + ∑ μ, α μ))⁻¹ • multiIndexPartial α\n          kernel q",
+      "display_sha256": "d1fdd9eb4f3abcc8ef16a5252de7a2cae95920ba6b8c79cfe9e8e167f266a0ff",
+      "source_text": "theorem kernel_multiIndexPartial_smul (α : Fin 4 → ℕ) (a : ℝ) (ha : a ≠ 0)\n    (q : ℍ) (hq : q ≠ 0) :\n    multiIndexPartial α kernel (a • q) =\n      (a ^ (3 + ∑ μ, α μ))⁻¹ • multiIndexPartial α kernel q",
+      "identifier_spans": [
+        {
+          "start": 8,
+          "end": 37,
+          "declaration": "MathResearch.Fueter.kernel_multiIndexPartial_smul",
+          "text": "kernel_multiIndexPartial_smul",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f2",
+            "anchor": "lean-MathResearch.Fueter.kernel_multiIndexPartial_smul"
+          }
+        },
+        {
+          "start": 43,
+          "end": 46,
+          "declaration": "Fin",
+          "text": "Fin",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "fin"
+          }
+        },
+        {
+          "start": 51,
+          "end": 52,
+          "declaration": "Nat",
+          "text": "ℕ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "naturals"
+          }
+        },
+        {
+          "start": 63,
+          "end": 64,
+          "declaration": "Real",
+          "text": "ℝ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "reals"
+          }
+        },
+        {
+          "start": 88,
+          "end": 89,
+          "declaration": "Quaternion",
+          "text": "ℍ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "quaternions"
+          }
+        },
+        {
+          "start": 110,
+          "end": 127,
+          "declaration": "MathResearch.Fueter.multiIndexPartial",
+          "text": "multiIndexPartial",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f1",
+            "anchor": "lean-MathResearch.Fueter.multiIndexPartial"
+          }
+        },
+        {
+          "start": 130,
+          "end": 136,
+          "declaration": "MathResearch.Fueter.kernel",
+          "text": "kernel",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernel"
+          }
+        },
+        {
+          "start": 178,
+          "end": 195,
+          "declaration": "MathResearch.Fueter.multiIndexPartial",
+          "text": "multiIndexPartial",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f1",
+            "anchor": "lean-MathResearch.Fueter.multiIndexPartial"
+          }
+        },
+        {
+          "start": 208,
+          "end": 214,
+          "declaration": "MathResearch.Fueter.kernel",
+          "text": "kernel",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernel"
+          }
+        }
+      ],
+      "offset_encoding": "Unicode code points, zero-based, end exclusive",
+      "keyword_spans": [
+        {
+          "start": 0,
+          "end": 7
+        }
+      ],
+      "elaborated_type": "∀ (α : Fin 4 → ℕ) (a : ℝ),\n  a ≠ 0 →\n    ∀ (q : ℍ),\n      q ≠ 0 →\n        MathResearch.Fueter.multiIndexPartial α\n            MathResearch.Fueter.kernel (a • q) =\n          (a ^ (3 + ∑ μ, α μ))⁻¹ •\n            MathResearch.Fueter.multiIndexPartial α\n              MathResearch.Fueter.kernel q",
+      "explicit_type": "∀\n  (α :\n    Fin\n        (@OfNat.ofNat.{0} Nat (nat_lit 4)\n          (instOfNatNat (nat_lit 4))) →\n      Nat)\n  (a : Real)\n  (ha :\n    @Ne.{1} Real a\n      (@OfNat.ofNat.{0} Real (nat_lit 0)\n        (@Zero.toOfNat0.{0} Real Real.instZero)))\n  (q :\n    @Quaternion.{0} Real Real.instZero Real.instOne\n      Real.instNeg)\n  (hq :\n    @Ne.{1}\n      (@Quaternion.{0} Real Real.instZero Real.instOne\n        Real.instNeg)\n      q\n      (@OfNat.ofNat.{0}\n        (@Quaternion.{0} Real Real.instZero Real.instOne\n          Real.instNeg)\n        (nat_lit 0)\n        (@Zero.toOfNat0.{0}\n          (@Quaternion.{0} Real Real.instZero Real.instOne\n            Real.instNeg)\n          (@QuaternionAlgebra.instZero.{0} Real\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            (@OfNat.ofNat.{0} Real (nat_lit 0)\n              (@Zero.toOfNat0.{0} Real Real.instZero))\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            Real.instZero)))),\n  @Eq.{1}\n    (@Quaternion.{0} Real Real.instZero Real.instOne\n      Real.instNeg)\n    (MathResearch.Fueter.multiIndexPartial α\n      MathResearch.Fueter.kernel\n      (@HSMul.hSMul.{0, 0, 0} Real\n        (@Quaternion.{0} Real Real.instZero Real.instOne\n          Real.instNeg)\n        (@Quaternion.{0} Real Real.instZero Real.instOne\n          Real.instNeg)\n        (@instHSMul.{0, 0} Real\n          (@Quaternion.{0} Real Real.instZero Real.instOne\n            Real.instNeg)\n          (@QuaternionAlgebra.instSMul.{0, 0} Real Real\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            (@OfNat.ofNat.{0} Real (nat_lit 0)\n              (@Zero.toOfNat0.{0} Real Real.instZero))\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            (@instSMulOfMul.{0} Real Real.instMul)))\n        a q))\n    (@HSMul.hSMul.{0, 0, 0} Real\n      (@Quaternion.{0} Real Real.instZero Real.instOne\n        Real.instNeg)\n      (@Quaternion.{0} Real Real.instZero Real.instOne\n        Real.instNeg)\n      (@instHSMul.{0, 0} Real\n        (@Quaternion.{0} Real Real.instZero Real.instOne\n          Real.instNeg)\n        (@QuaternionAlgebra.instSMul.{0, 0} Real Real\n          (@Neg.neg.{0} Real Real.instNeg\n            (@OfNat.ofNat.{0} Real (nat_lit 1)\n              (@One.toOfNat1.{0} Real Real.instOne)))\n          (@OfNat.ofNat.{0} Real (nat_lit 0)\n            (@Zero.toOfNat0.{0} Real Real.instZero))\n          (@Neg.neg.{0} Real Real.instNeg\n            (@OfNat.ofNat.{0} Real (nat_lit 1)\n              (@One.toOfNat1.{0} Real Real.instOne)))\n          (@instSMulOfMul.{0} Real Real.instMul)))\n      (@Inv.inv.{0} Real Real.instInv\n        (@HPow.hPow.{0, 0, 0} Real Nat Real\n          (@instHPow.{0, 0} Real Nat\n            (@NPow.toPow.{0} Real\n              (@Monoid.toNPow.{0} Real Real.instMonoid)))\n          a\n          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat\n            (@instHAdd.{0} Nat instAddNat)\n            (@OfNat.ofNat.{0} Nat (nat_lit 3)\n              (instOfNatNat (nat_lit 3)))\n            (@Finset.sum.{0, 0}\n              (Fin\n                (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                  (instOfNatNat (nat_lit 4))))\n              Nat Nat.instAddCommMonoid\n              (@Finset.univ.{0}\n                (Fin\n                  (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                    (instOfNatNat (nat_lit 4))))\n                (Fin.fintype\n                  (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                    (instOfNatNat (nat_lit 4)))))\n              fun\n                (μ :\n                  Fin\n                    (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                      (instOfNatNat (nat_lit 4)))) =>\n              α μ))))\n      (MathResearch.Fueter.multiIndexPartial α\n        MathResearch.Fueter.kernel q))",
+      "type_constants": [
+        "Fin",
+        "OfNat.ofNat",
+        "Nat",
+        "instOfNatNat",
+        "Real",
+        "Ne",
+        "Zero.toOfNat0",
+        "Real.instZero",
+        "Quaternion",
+        "Real.instOne",
+        "Real.instNeg",
+        "QuaternionAlgebra.instZero",
+        "Neg.neg",
+        "One.toOfNat1",
+        "Eq",
+        "MathResearch.Fueter.multiIndexPartial",
+        "MathResearch.Fueter.kernel",
+        "HSMul.hSMul",
+        "instHSMul",
+        "QuaternionAlgebra.instSMul",
+        "instSMulOfMul",
+        "Real.instMul",
+        "Inv.inv",
+        "Real.instInv",
+        "HPow.hPow",
+        "instHPow",
+        "NPow.toPow",
+        "Monoid.toNPow",
+        "Real.instMonoid",
+        "HAdd.hAdd",
+        "instHAdd",
+        "instAddNat",
+        "Finset.sum",
+        "Nat.instAddCommMonoid",
+        "Finset.univ",
+        "Fin.fintype"
+      ],
+      "names_used": [
+        "Fin",
+        "MathResearch.Fueter.kernel",
+        "MathResearch.Fueter.multiIndexPartial",
+        "Nat",
+        "Quaternion",
+        "Real"
+      ],
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "source": {
+        "path": "MathResearch/Fueter/KernelEstimates.lean",
+        "line": 76,
+        "sha256": "43731d1faabf750888dfccf359a4d917e83a5f31916bc34749655d5fbfee103c",
+        "article": "lean/sources/F2-v1/MathResearch/Fueter/KernelEstimates.lean.html",
+        "anchor": "L76"
+      }
+    },
+    {
+      "name": "MathResearch.Fueter.kernel_multiIndexPartial_neg",
+      "module": "MathResearch.Fueter.KernelEstimates",
+      "role": "checked-statement",
+      "primary": false,
+      "home": {
+        "article": "quaternionic-analysis/foundations.html",
+        "item": "f2",
+        "anchor": "lean-MathResearch.Fueter.kernel_multiIndexPartial_neg"
+      },
+      "kind": "theorem",
+      "display_text": "theorem kernel_multiIndexPartial_neg (α : Fin 4 → ℕ) (q\n    : ℍ) (hq : q ≠ 0) :\n    multiIndexPartial α kernel (-q) =\n      (-1 : ℝ) ^ ((∑ μ, α μ) + 1) • multiIndexPartial α\n          kernel q",
+      "display_sha256": "6b346bdde81c895f57b247ca2b71e9ac46cb26387b79d7d337057935904a63c7",
+      "source_text": "theorem kernel_multiIndexPartial_neg (α : Fin 4 → ℕ) (q : ℍ) (hq : q ≠ 0) :\n    multiIndexPartial α kernel (-q) =\n      (-1 : ℝ) ^ ((∑ μ, α μ) + 1) • multiIndexPartial α kernel q",
+      "identifier_spans": [
+        {
+          "start": 8,
+          "end": 36,
+          "declaration": "MathResearch.Fueter.kernel_multiIndexPartial_neg",
+          "text": "kernel_multiIndexPartial_neg",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f2",
+            "anchor": "lean-MathResearch.Fueter.kernel_multiIndexPartial_neg"
+          }
+        },
+        {
+          "start": 42,
+          "end": 45,
+          "declaration": "Fin",
+          "text": "Fin",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "fin"
+          }
+        },
+        {
+          "start": 50,
+          "end": 51,
+          "declaration": "Nat",
+          "text": "ℕ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "naturals"
+          }
+        },
+        {
+          "start": 62,
+          "end": 63,
+          "declaration": "Quaternion",
+          "text": "ℍ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "quaternions"
+          }
+        },
+        {
+          "start": 84,
+          "end": 101,
+          "declaration": "MathResearch.Fueter.multiIndexPartial",
+          "text": "multiIndexPartial",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f1",
+            "anchor": "lean-MathResearch.Fueter.multiIndexPartial"
+          }
+        },
+        {
+          "start": 104,
+          "end": 110,
+          "declaration": "MathResearch.Fueter.kernel",
+          "text": "kernel",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernel"
+          }
+        },
+        {
+          "start": 130,
+          "end": 131,
+          "declaration": "Real",
+          "text": "ℝ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "reals"
+          }
+        },
+        {
+          "start": 154,
+          "end": 171,
+          "declaration": "MathResearch.Fueter.multiIndexPartial",
+          "text": "multiIndexPartial",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f1",
+            "anchor": "lean-MathResearch.Fueter.multiIndexPartial"
+          }
+        },
+        {
+          "start": 184,
+          "end": 190,
+          "declaration": "MathResearch.Fueter.kernel",
+          "text": "kernel",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernel"
+          }
+        }
+      ],
+      "offset_encoding": "Unicode code points, zero-based, end exclusive",
+      "keyword_spans": [
+        {
+          "start": 0,
+          "end": 7
+        }
+      ],
+      "elaborated_type": "∀ (α : Fin 4 → ℕ) (q : ℍ),\n  q ≠ 0 →\n    MathResearch.Fueter.multiIndexPartial α\n        MathResearch.Fueter.kernel (-q) =\n      (-1) ^ (∑ μ, α μ + 1) •\n        MathResearch.Fueter.multiIndexPartial α\n          MathResearch.Fueter.kernel q",
+      "explicit_type": "∀\n  (α :\n    Fin\n        (@OfNat.ofNat.{0} Nat (nat_lit 4)\n          (instOfNatNat (nat_lit 4))) →\n      Nat)\n  (q :\n    @Quaternion.{0} Real Real.instZero Real.instOne\n      Real.instNeg)\n  (hq :\n    @Ne.{1}\n      (@Quaternion.{0} Real Real.instZero Real.instOne\n        Real.instNeg)\n      q\n      (@OfNat.ofNat.{0}\n        (@Quaternion.{0} Real Real.instZero Real.instOne\n          Real.instNeg)\n        (nat_lit 0)\n        (@Zero.toOfNat0.{0}\n          (@Quaternion.{0} Real Real.instZero Real.instOne\n            Real.instNeg)\n          (@QuaternionAlgebra.instZero.{0} Real\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            (@OfNat.ofNat.{0} Real (nat_lit 0)\n              (@Zero.toOfNat0.{0} Real Real.instZero))\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            Real.instZero)))),\n  @Eq.{1}\n    (@Quaternion.{0} Real Real.instZero Real.instOne\n      Real.instNeg)\n    (MathResearch.Fueter.multiIndexPartial α\n      MathResearch.Fueter.kernel\n      (@Neg.neg.{0}\n        (@Quaternion.{0} Real Real.instZero Real.instOne\n          Real.instNeg)\n        (@QuaternionAlgebra.instNeg.{0} Real\n          (@Neg.neg.{0} Real Real.instNeg\n            (@OfNat.ofNat.{0} Real (nat_lit 1)\n              (@One.toOfNat1.{0} Real Real.instOne)))\n          (@OfNat.ofNat.{0} Real (nat_lit 0)\n            (@Zero.toOfNat0.{0} Real Real.instZero))\n          (@Neg.neg.{0} Real Real.instNeg\n            (@OfNat.ofNat.{0} Real (nat_lit 1)\n              (@One.toOfNat1.{0} Real Real.instOne)))\n          Real.instNeg)\n        q))\n    (@HSMul.hSMul.{0, 0, 0} Real\n      (@Quaternion.{0} Real Real.instZero Real.instOne\n        Real.instNeg)\n      (@Quaternion.{0} Real Real.instZero Real.instOne\n        Real.instNeg)\n      (@instHSMul.{0, 0} Real\n        (@Quaternion.{0} Real Real.instZero Real.instOne\n          Real.instNeg)\n        (@QuaternionAlgebra.instSMul.{0, 0} Real Real\n          (@Neg.neg.{0} Real Real.instNeg\n            (@OfNat.ofNat.{0} Real (nat_lit 1)\n              (@One.toOfNat1.{0} Real Real.instOne)))\n          (@OfNat.ofNat.{0} Real (nat_lit 0)\n            (@Zero.toOfNat0.{0} Real Real.instZero))\n          (@Neg.neg.{0} Real Real.instNeg\n            (@OfNat.ofNat.{0} Real (nat_lit 1)\n              (@One.toOfNat1.{0} Real Real.instOne)))\n          (@instSMulOfMul.{0} Real Real.instMul)))\n      (@HPow.hPow.{0, 0, 0} Real Nat Real\n        (@instHPow.{0, 0} Real Nat\n          (@NPow.toPow.{0} Real\n            (@Monoid.toNPow.{0} Real Real.instMonoid)))\n        (@Neg.neg.{0} Real Real.instNeg\n          (@OfNat.ofNat.{0} Real (nat_lit 1)\n            (@One.toOfNat1.{0} Real Real.instOne)))\n        (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat\n          (@instHAdd.{0} Nat instAddNat)\n          (@Finset.sum.{0, 0}\n            (Fin\n              (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                (instOfNatNat (nat_lit 4))))\n            Nat Nat.instAddCommMonoid\n            (@Finset.univ.{0}\n              (Fin\n                (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                  (instOfNatNat (nat_lit 4))))\n              (Fin.fintype\n                (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                  (instOfNatNat (nat_lit 4)))))\n            fun\n              (μ :\n                Fin\n                  (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                    (instOfNatNat (nat_lit 4)))) =>\n            α μ)\n          (@OfNat.ofNat.{0} Nat (nat_lit 1)\n            (instOfNatNat (nat_lit 1)))))\n      (MathResearch.Fueter.multiIndexPartial α\n        MathResearch.Fueter.kernel q))",
+      "type_constants": [
+        "Fin",
+        "OfNat.ofNat",
+        "Nat",
+        "instOfNatNat",
+        "Quaternion",
+        "Real",
+        "Real.instZero",
+        "Real.instOne",
+        "Real.instNeg",
+        "Ne",
+        "Zero.toOfNat0",
+        "QuaternionAlgebra.instZero",
+        "Neg.neg",
+        "One.toOfNat1",
+        "Eq",
+        "MathResearch.Fueter.multiIndexPartial",
+        "MathResearch.Fueter.kernel",
+        "QuaternionAlgebra.instNeg",
+        "HSMul.hSMul",
+        "instHSMul",
+        "QuaternionAlgebra.instSMul",
+        "instSMulOfMul",
+        "Real.instMul",
+        "HPow.hPow",
+        "instHPow",
+        "NPow.toPow",
+        "Monoid.toNPow",
+        "Real.instMonoid",
+        "HAdd.hAdd",
+        "instHAdd",
+        "instAddNat",
+        "Finset.sum",
+        "Nat.instAddCommMonoid",
+        "Finset.univ",
+        "Fin.fintype"
+      ],
+      "names_used": [
+        "Fin",
+        "MathResearch.Fueter.kernel",
+        "MathResearch.Fueter.multiIndexPartial",
+        "Nat",
+        "Quaternion",
+        "Real"
+      ],
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "source": {
+        "path": "MathResearch/Fueter/KernelEstimates.lean",
+        "line": 87,
+        "sha256": "43731d1faabf750888dfccf359a4d917e83a5f31916bc34749655d5fbfee103c",
+        "article": "lean/sources/F2-v1/MathResearch/Fueter/KernelEstimates.lean.html",
+        "anchor": "L87"
+      }
+    },
+    {
+      "name": "MathResearch.Fueter.kernel_multiIndexPartial_norm_le",
+      "module": "MathResearch.Fueter.KernelEstimates",
+      "role": "checked-statement",
+      "primary": false,
+      "home": {
+        "article": "quaternionic-analysis/foundations.html",
+        "item": "f2",
+        "anchor": "lean-MathResearch.Fueter.kernel_multiIndexPartial_norm_le"
+      },
+      "kind": "theorem",
+      "display_text": "theorem kernel_multiIndexPartial_norm_le (α : Fin 4 →\n    ℕ) :\n    ∃ C : ℝ, 0 ≤ C ∧ ∀ q : ℍ, q ≠ 0 →\n      ‖multiIndexPartial α kernel q‖ ≤ C * (‖q‖ ^ (3 +\n          ∑ μ, α μ))⁻¹",
+      "display_sha256": "315b4f6fda921bcbb47cec594744dbe8a509509d9b5a1d414bf415edb283ad9c",
+      "source_text": "theorem kernel_multiIndexPartial_norm_le (α : Fin 4 → ℕ) :\n    ∃ C : ℝ, 0 ≤ C ∧ ∀ q : ℍ, q ≠ 0 →\n      ‖multiIndexPartial α kernel q‖ ≤ C * (‖q‖ ^ (3 + ∑ μ, α μ))⁻¹",
+      "identifier_spans": [
+        {
+          "start": 8,
+          "end": 40,
+          "declaration": "MathResearch.Fueter.kernel_multiIndexPartial_norm_le",
+          "text": "kernel_multiIndexPartial_norm_le",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f2",
+            "anchor": "lean-MathResearch.Fueter.kernel_multiIndexPartial_norm_le"
+          }
+        },
+        {
+          "start": 46,
+          "end": 49,
+          "declaration": "Fin",
+          "text": "Fin",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "fin"
+          }
+        },
+        {
+          "start": 58,
+          "end": 59,
+          "declaration": "Nat",
+          "text": "ℕ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "naturals"
+          }
+        },
+        {
+          "start": 73,
+          "end": 74,
+          "declaration": "Real",
+          "text": "ℝ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "reals"
+          }
+        },
+        {
+          "start": 90,
+          "end": 91,
+          "declaration": "Quaternion",
+          "text": "ℍ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "quaternions"
+          }
+        },
+        {
+          "start": 108,
+          "end": 125,
+          "declaration": "MathResearch.Fueter.multiIndexPartial",
+          "text": "multiIndexPartial",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f1",
+            "anchor": "lean-MathResearch.Fueter.multiIndexPartial"
+          }
+        },
+        {
+          "start": 128,
+          "end": 134,
+          "declaration": "MathResearch.Fueter.kernel",
+          "text": "kernel",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernel"
+          }
+        }
+      ],
+      "offset_encoding": "Unicode code points, zero-based, end exclusive",
+      "keyword_spans": [
+        {
+          "start": 0,
+          "end": 7
+        }
+      ],
+      "elaborated_type": "∀ (α : Fin 4 → ℕ),\n  ∃ C,\n    0 ≤ C ∧\n      ∀ (q : ℍ),\n        q ≠ 0 →\n          ‖MathResearch.Fueter.multiIndexPartial α\n                MathResearch.Fueter.kernel q‖ ≤\n            C * (‖q‖ ^ (3 + ∑ μ, α μ))⁻¹",
+      "explicit_type": "∀\n  (α :\n    Fin\n        (@OfNat.ofNat.{0} Nat (nat_lit 4)\n          (instOfNatNat (nat_lit 4))) →\n      Nat),\n  @Exists.{1} Real fun (C : Real) =>\n    And\n      (@LE.le.{0} Real Real.instLE\n        (@OfNat.ofNat.{0} Real (nat_lit 0)\n          (@Zero.toOfNat0.{0} Real Real.instZero))\n        C)\n      (∀\n        (q :\n          @Quaternion.{0} Real Real.instZero Real.instOne\n            Real.instNeg),\n        @Ne.{1}\n            (@Quaternion.{0} Real Real.instZero Real.instOne\n              Real.instNeg)\n            q\n            (@OfNat.ofNat.{0}\n              (@Quaternion.{0} Real Real.instZero\n                Real.instOne Real.instNeg)\n              (nat_lit 0)\n              (@Zero.toOfNat0.{0}\n                (@Quaternion.{0} Real Real.instZero\n                  Real.instOne Real.instNeg)\n                (@QuaternionAlgebra.instZero.{0} Real\n                  (@Neg.neg.{0} Real Real.instNeg\n                    (@OfNat.ofNat.{0} Real (nat_lit 1)\n                      (@One.toOfNat1.{0} Real\n                        Real.instOne)))\n                  (@OfNat.ofNat.{0} Real (nat_lit 0)\n                    (@Zero.toOfNat0.{0} Real Real.instZero))\n                  (@Neg.neg.{0} Real Real.instNeg\n                    (@OfNat.ofNat.{0} Real (nat_lit 1)\n                      (@One.toOfNat1.{0} Real\n                        Real.instOne)))\n                  Real.instZero))) →\n          @LE.le.{0} Real Real.instLE\n            (@Norm.norm.{0}\n              (@Quaternion.{0} Real Real.instZero\n                Real.instOne Real.instNeg)\n              (@NormedDivisionRing.toNorm.{0}\n                (@Quaternion.{0} Real Real.instZero\n                  Real.instOne Real.instNeg)\n                Quaternion.instNormedDivisionRingReal)\n              (MathResearch.Fueter.multiIndexPartial α\n                MathResearch.Fueter.kernel q))\n            (@HMul.hMul.{0, 0, 0} Real Real Real\n              (@instHMul.{0} Real Real.instMul) C\n              (@Inv.inv.{0} Real Real.instInv\n                (@HPow.hPow.{0, 0, 0} Real Nat Real\n                  (@instHPow.{0, 0} Real Nat\n                    (@NPow.toPow.{0} Real\n                      (@Monoid.toNPow.{0} Real\n                        Real.instMonoid)))\n                  (@Norm.norm.{0}\n                    (@Quaternion.{0} Real Real.instZero\n                      Real.instOne Real.instNeg)\n                    (@NormedDivisionRing.toNorm.{0}\n                      (@Quaternion.{0} Real Real.instZero\n                        Real.instOne Real.instNeg)\n                      Quaternion.instNormedDivisionRingReal)\n                    q)\n                  (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat\n                    (@instHAdd.{0} Nat instAddNat)\n                    (@OfNat.ofNat.{0} Nat (nat_lit 3)\n                      (instOfNatNat (nat_lit 3)))\n                    (@Finset.sum.{0, 0}\n                      (Fin\n                        (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                          (instOfNatNat (nat_lit 4))))\n                      Nat Nat.instAddCommMonoid\n                      (@Finset.univ.{0}\n                        (Fin\n                          (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                            (instOfNatNat (nat_lit 4))))\n                        (Fin.fintype\n                          (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                            (instOfNatNat (nat_lit 4)))))\n                      fun\n                        (μ :\n                          Fin\n                            (@OfNat.ofNat.{0} Nat\n                              (nat_lit 4)\n                              (instOfNatNat\n                                (nat_lit 4)))) =>\n                      α μ))))))",
+      "type_constants": [
+        "Fin",
+        "OfNat.ofNat",
+        "Nat",
+        "instOfNatNat",
+        "Exists",
+        "Real",
+        "And",
+        "LE.le",
+        "Real.instLE",
+        "Zero.toOfNat0",
+        "Real.instZero",
+        "Quaternion",
+        "Real.instOne",
+        "Real.instNeg",
+        "Ne",
+        "QuaternionAlgebra.instZero",
+        "Neg.neg",
+        "One.toOfNat1",
+        "Norm.norm",
+        "NormedDivisionRing.toNorm",
+        "Quaternion.instNormedDivisionRingReal",
+        "MathResearch.Fueter.multiIndexPartial",
+        "MathResearch.Fueter.kernel",
+        "HMul.hMul",
+        "instHMul",
+        "Real.instMul",
+        "Inv.inv",
+        "Real.instInv",
+        "HPow.hPow",
+        "instHPow",
+        "NPow.toPow",
+        "Monoid.toNPow",
+        "Real.instMonoid",
+        "HAdd.hAdd",
+        "instHAdd",
+        "instAddNat",
+        "Finset.sum",
+        "Nat.instAddCommMonoid",
+        "Finset.univ",
+        "Fin.fintype"
+      ],
+      "names_used": [
+        "Fin",
+        "MathResearch.Fueter.kernel",
+        "MathResearch.Fueter.multiIndexPartial",
+        "Nat",
+        "Quaternion",
+        "Real"
+      ],
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "source": {
+        "path": "MathResearch/Fueter/KernelEstimates.lean",
+        "line": 124,
+        "sha256": "43731d1faabf750888dfccf359a4d917e83a5f31916bc34749655d5fbfee103c",
+        "article": "lean/sources/F2-v1/MathResearch/Fueter/KernelEstimates.lean.html",
+        "anchor": "L124"
+      }
+    },
+    {
+      "name": "MathResearch.Fueter.kernel_odd",
+      "module": "MathResearch.Fueter.KernelEstimates",
+      "role": "checked-statement",
+      "primary": false,
+      "home": {
+        "article": "quaternionic-analysis/foundations.html",
+        "item": "f2",
+        "anchor": "lean-MathResearch.Fueter.kernel_odd"
+      },
+      "kind": "theorem",
+      "display_text": "theorem kernel_odd : Function.Odd kernel",
+      "display_sha256": "94308c2c492866c583367e78287347c212c24688ffc611bf61640c90bdf59657",
+      "source_text": "theorem kernel_odd : Function.Odd kernel",
+      "identifier_spans": [
+        {
+          "start": 8,
+          "end": 18,
+          "declaration": "MathResearch.Fueter.kernel_odd",
+          "text": "kernel_odd",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f2",
+            "anchor": "lean-MathResearch.Fueter.kernel_odd"
+          }
+        },
+        {
+          "start": 21,
+          "end": 33,
+          "declaration": "Function.Odd",
+          "text": "Function.Odd",
+          "target": {
+            "kind": "library",
+            "module": "Mathlib.Algebra.Group.EvenFunction",
+            "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/Algebra/Group/EvenFunction.lean"
+          }
+        },
+        {
+          "start": 34,
+          "end": 40,
+          "declaration": "MathResearch.Fueter.kernel",
+          "text": "kernel",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernel"
+          }
+        }
+      ],
+      "offset_encoding": "Unicode code points, zero-based, end exclusive",
+      "keyword_spans": [
+        {
+          "start": 0,
+          "end": 7
+        }
+      ],
+      "elaborated_type": "Function.Odd MathResearch.Fueter.kernel",
+      "explicit_type": "@Function.Odd.{0, 0}\n  (@Quaternion.{0} Real Real.instZero Real.instOne\n    Real.instNeg)\n  (@Quaternion.{0} Real Real.instZero Real.instOne\n    Real.instNeg)\n  (@QuaternionAlgebra.instNeg.{0} Real\n    (@Neg.neg.{0} Real Real.instNeg\n      (@OfNat.ofNat.{0} Real (nat_lit 1)\n        (@One.toOfNat1.{0} Real Real.instOne)))\n    (@OfNat.ofNat.{0} Real (nat_lit 0)\n      (@Zero.toOfNat0.{0} Real Real.instZero))\n    (@Neg.neg.{0} Real Real.instNeg\n      (@OfNat.ofNat.{0} Real (nat_lit 1)\n        (@One.toOfNat1.{0} Real Real.instOne)))\n    Real.instNeg)\n  (@QuaternionAlgebra.instNeg.{0} Real\n    (@Neg.neg.{0} Real Real.instNeg\n      (@OfNat.ofNat.{0} Real (nat_lit 1)\n        (@One.toOfNat1.{0} Real Real.instOne)))\n    (@OfNat.ofNat.{0} Real (nat_lit 0)\n      (@Zero.toOfNat0.{0} Real Real.instZero))\n    (@Neg.neg.{0} Real Real.instNeg\n      (@OfNat.ofNat.{0} Real (nat_lit 1)\n        (@One.toOfNat1.{0} Real Real.instOne)))\n    Real.instNeg)\n  MathResearch.Fueter.kernel",
+      "type_constants": [
+        "Function.Odd",
+        "Quaternion",
+        "Real",
+        "Real.instZero",
+        "Real.instOne",
+        "Real.instNeg",
+        "QuaternionAlgebra.instNeg",
+        "Neg.neg",
+        "OfNat.ofNat",
+        "One.toOfNat1",
+        "Zero.toOfNat0",
+        "MathResearch.Fueter.kernel"
+      ],
+      "names_used": [
+        "Function.Odd",
+        "MathResearch.Fueter.kernel"
+      ],
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "source": {
+        "path": "MathResearch/Fueter/KernelEstimates.lean",
+        "line": 162,
+        "sha256": "43731d1faabf750888dfccf359a4d917e83a5f31916bc34749655d5fbfee103c",
+        "article": "lean/sources/F2-v1/MathResearch/Fueter/KernelEstimates.lean.html",
+        "anchor": "L162"
+      }
+    },
+    {
+      "name": "MathResearch.Fueter.kernelSpatialPartial_even",
+      "module": "MathResearch.Fueter.KernelEstimates",
+      "role": "checked-statement",
+      "primary": false,
+      "home": {
+        "article": "quaternionic-analysis/foundations.html",
+        "item": "f2",
+        "anchor": "lean-MathResearch.Fueter.kernelSpatialPartial_even"
+      },
+      "kind": "theorem",
+      "display_text": "theorem kernelSpatialPartial_even (j : Fin 3) (q : ℍ)\n    (hq : q ≠ 0) :\n    kernelSpatialPartial j (-q) = kernelSpatialPartial\n        j q",
+      "display_sha256": "883d0b307b7818175e5a983cd4438b322c864c28354bfd9a9bbeab5fe7c70840",
+      "source_text": "theorem kernelSpatialPartial_even (j : Fin 3) (q : ℍ) (hq : q ≠ 0) :\n    kernelSpatialPartial j (-q) = kernelSpatialPartial j q",
+      "identifier_spans": [
+        {
+          "start": 8,
+          "end": 33,
+          "declaration": "MathResearch.Fueter.kernelSpatialPartial_even",
+          "text": "kernelSpatialPartial_even",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f2",
+            "anchor": "lean-MathResearch.Fueter.kernelSpatialPartial_even"
+          }
+        },
+        {
+          "start": 39,
+          "end": 42,
+          "declaration": "Fin",
+          "text": "Fin",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "fin"
+          }
+        },
+        {
+          "start": 51,
+          "end": 52,
+          "declaration": "Quaternion",
+          "text": "ℍ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "quaternions"
+          }
+        },
+        {
+          "start": 77,
+          "end": 97,
+          "declaration": "MathResearch.Fueter.kernelSpatialPartial",
+          "text": "kernelSpatialPartial",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernelSpatialPartial"
+          }
+        },
+        {
+          "start": 107,
+          "end": 127,
+          "declaration": "MathResearch.Fueter.kernelSpatialPartial",
+          "text": "kernelSpatialPartial",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernelSpatialPartial"
+          }
+        }
+      ],
+      "offset_encoding": "Unicode code points, zero-based, end exclusive",
+      "keyword_spans": [
+        {
+          "start": 0,
+          "end": 7
+        }
+      ],
+      "elaborated_type": "∀ (j : Fin 3) (q : ℍ),\n  q ≠ 0 →\n    MathResearch.Fueter.kernelSpatialPartial j (-q) =\n      MathResearch.Fueter.kernelSpatialPartial j q",
+      "explicit_type": "∀\n  (j :\n    Fin\n      (@OfNat.ofNat.{0} Nat (nat_lit 3)\n        (instOfNatNat (nat_lit 3))))\n  (q :\n    @Quaternion.{0} Real Real.instZero Real.instOne\n      Real.instNeg)\n  (hq :\n    @Ne.{1}\n      (@Quaternion.{0} Real Real.instZero Real.instOne\n        Real.instNeg)\n      q\n      (@OfNat.ofNat.{0}\n        (@Quaternion.{0} Real Real.instZero Real.instOne\n          Real.instNeg)\n        (nat_lit 0)\n        (@Zero.toOfNat0.{0}\n          (@Quaternion.{0} Real Real.instZero Real.instOne\n            Real.instNeg)\n          (@QuaternionAlgebra.instZero.{0} Real\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            (@OfNat.ofNat.{0} Real (nat_lit 0)\n              (@Zero.toOfNat0.{0} Real Real.instZero))\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            Real.instZero)))),\n  @Eq.{1}\n    (@Quaternion.{0} Real Real.instZero Real.instOne\n      Real.instNeg)\n    (MathResearch.Fueter.kernelSpatialPartial j\n      (@Neg.neg.{0}\n        (@Quaternion.{0} Real Real.instZero Real.instOne\n          Real.instNeg)\n        (@QuaternionAlgebra.instNeg.{0} Real\n          (@Neg.neg.{0} Real Real.instNeg\n            (@OfNat.ofNat.{0} Real (nat_lit 1)\n              (@One.toOfNat1.{0} Real Real.instOne)))\n          (@OfNat.ofNat.{0} Real (nat_lit 0)\n            (@Zero.toOfNat0.{0} Real Real.instZero))\n          (@Neg.neg.{0} Real Real.instNeg\n            (@OfNat.ofNat.{0} Real (nat_lit 1)\n              (@One.toOfNat1.{0} Real Real.instOne)))\n          Real.instNeg)\n        q))\n    (MathResearch.Fueter.kernelSpatialPartial j q)",
+      "type_constants": [
+        "Fin",
+        "OfNat.ofNat",
+        "Nat",
+        "instOfNatNat",
+        "Quaternion",
+        "Real",
+        "Real.instZero",
+        "Real.instOne",
+        "Real.instNeg",
+        "Ne",
+        "Zero.toOfNat0",
+        "QuaternionAlgebra.instZero",
+        "Neg.neg",
+        "One.toOfNat1",
+        "Eq",
+        "MathResearch.Fueter.kernelSpatialPartial",
+        "QuaternionAlgebra.instNeg"
+      ],
+      "names_used": [
+        "Fin",
+        "MathResearch.Fueter.kernelSpatialPartial",
+        "Quaternion"
+      ],
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "source": {
+        "path": "MathResearch/Fueter/KernelEstimates.lean",
+        "line": 169,
+        "sha256": "43731d1faabf750888dfccf359a4d917e83a5f31916bc34749655d5fbfee103c",
+        "article": "lean/sources/F2-v1/MathResearch/Fueter/KernelEstimates.lean.html",
+        "anchor": "L169"
+      }
+    },
+    {
+      "name": "MathResearch.Fueter.kernelSpatialPartial_eq",
+      "module": "MathResearch.Fueter.KernelEstimates",
+      "role": "checked-equation",
+      "primary": false,
+      "home": {
+        "article": "quaternionic-analysis/foundations.html",
+        "item": "f2",
+        "anchor": "lean-MathResearch.Fueter.kernelSpatialPartial_eq"
+      },
+      "kind": "theorem",
+      "display_text": "theorem kernelSpatialPartial_eq (j : Fin 3) (q : ℍ) (hq\n    : q ≠ 0) :\n    kernelSpatialPartial j q =\n      -(‖q‖ ^ 4)⁻¹ • coordinateBasis j.succ -\n        (4 * coordinateBasis.repr q j.succ * (‖q‖ ^\n            6)⁻¹) • star q",
+      "display_sha256": "dbdafba07a7a0701f7df1fe0d223c04958cc2e76941951d16ae4d52c67c102c9",
+      "source_text": "theorem kernelSpatialPartial_eq (j : Fin 3) (q : ℍ) (hq : q ≠ 0) :\n    kernelSpatialPartial j q =\n      -(‖q‖ ^ 4)⁻¹ • coordinateBasis j.succ -\n        (4 * coordinateBasis.repr q j.succ * (‖q‖ ^ 6)⁻¹) • star q",
+      "identifier_spans": [
+        {
+          "start": 8,
+          "end": 31,
+          "declaration": "MathResearch.Fueter.kernelSpatialPartial_eq",
+          "text": "kernelSpatialPartial_eq",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f2",
+            "anchor": "lean-MathResearch.Fueter.kernelSpatialPartial_eq"
+          }
+        },
+        {
+          "start": 37,
+          "end": 40,
+          "declaration": "Fin",
+          "text": "Fin",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "fin"
+          }
+        },
+        {
+          "start": 49,
+          "end": 50,
+          "declaration": "Quaternion",
+          "text": "ℍ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "quaternions"
+          }
+        },
+        {
+          "start": 75,
+          "end": 95,
+          "declaration": "MathResearch.Fueter.kernelSpatialPartial",
+          "text": "kernelSpatialPartial",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernelSpatialPartial"
+          }
+        },
+        {
+          "start": 123,
+          "end": 138,
+          "declaration": "MathResearch.Fueter.coordinateBasis",
+          "text": "coordinateBasis",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d2",
+            "anchor": "lean-MathResearch.Fueter.coordinateBasis"
+          }
+        },
+        {
+          "start": 141,
+          "end": 145,
+          "declaration": "Fin.succ",
+          "text": "succ",
+          "target": {
+            "kind": "library",
+            "module": "Init.Data.Fin.Basic",
+            "url": "https://github.com/leanprover/lean4/blob/eb6cafb7290e8bd5f2937522d8d804f58f02bafc/src/lean/Init/Data/Fin/Basic.lean"
+          }
+        },
+        {
+          "start": 161,
+          "end": 176,
+          "declaration": "MathResearch.Fueter.coordinateBasis",
+          "text": "coordinateBasis",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d2",
+            "anchor": "lean-MathResearch.Fueter.coordinateBasis"
+          }
+        },
+        {
+          "start": 177,
+          "end": 181,
+          "declaration": "Module.Basis.repr",
+          "text": "repr",
+          "target": {
+            "kind": "library",
+            "module": "Mathlib.LinearAlgebra.Basis.Defs",
+            "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/LinearAlgebra/Basis/Defs.lean"
+          }
+        },
+        {
+          "start": 186,
+          "end": 190,
+          "declaration": "Fin.succ",
+          "text": "succ",
+          "target": {
+            "kind": "library",
+            "module": "Init.Data.Fin.Basic",
+            "url": "https://github.com/leanprover/lean4/blob/eb6cafb7290e8bd5f2937522d8d804f58f02bafc/src/lean/Init/Data/Fin/Basic.lean"
+          }
+        },
+        {
+          "start": 220,
+          "end": 224,
+          "declaration": "Star.star",
+          "text": "star",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "star"
+          }
+        }
+      ],
+      "offset_encoding": "Unicode code points, zero-based, end exclusive",
+      "keyword_spans": [
+        {
+          "start": 0,
+          "end": 7
+        }
+      ],
+      "elaborated_type": "∀ (j : Fin 3) (q : ℍ),\n  q ≠ 0 →\n    MathResearch.Fueter.kernelSpatialPartial j q =\n      -(‖q‖ ^ 4)⁻¹ •\n          MathResearch.Fueter.coordinateBasis j.succ -\n        (4 *\n              (MathResearch.Fueter.coordinateBasis.repr q)\n                j.succ *\n            (‖q‖ ^ 6)⁻¹) •\n          star q",
+      "explicit_type": "∀\n  (j :\n    Fin\n      (@OfNat.ofNat.{0} Nat (nat_lit 3)\n        (instOfNatNat (nat_lit 3))))\n  (q :\n    @Quaternion.{0} Real Real.instZero Real.instOne\n      Real.instNeg)\n  (hq :\n    @Ne.{1}\n      (@Quaternion.{0} Real Real.instZero Real.instOne\n        Real.instNeg)\n      q\n      (@OfNat.ofNat.{0}\n        (@Quaternion.{0} Real Real.instZero Real.instOne\n          Real.instNeg)\n        (nat_lit 0)\n        (@Zero.toOfNat0.{0}\n          (@Quaternion.{0} Real Real.instZero Real.instOne\n            Real.instNeg)\n          (@QuaternionAlgebra.instZero.{0} Real\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            (@OfNat.ofNat.{0} Real (nat_lit 0)\n              (@Zero.toOfNat0.{0} Real Real.instZero))\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            Real.instZero)))),\n  @Eq.{1}\n    (@Quaternion.{0} Real Real.instZero Real.instOne\n      Real.instNeg)\n    (MathResearch.Fueter.kernelSpatialPartial j q)\n    (@HSub.hSub.{0, 0, 0}\n      (@Quaternion.{0} Real Real.instZero Real.instOne\n        Real.instNeg)\n      (@Quaternion.{0} Real Real.instZero Real.instOne\n        Real.instNeg)\n      (@Quaternion.{0} Real Real.instZero Real.instOne\n        Real.instNeg)\n      (@instHSub.{0}\n        (@Quaternion.{0} Real Real.instZero Real.instOne\n          Real.instNeg)\n        (@QuaternionAlgebra.instSub.{0} Real\n          (@Neg.neg.{0} Real Real.instNeg\n            (@OfNat.ofNat.{0} Real (nat_lit 1)\n              (@One.toOfNat1.{0} Real Real.instOne)))\n          (@OfNat.ofNat.{0} Real (nat_lit 0)\n            (@Zero.toOfNat0.{0} Real Real.instZero))\n          (@Neg.neg.{0} Real Real.instNeg\n            (@OfNat.ofNat.{0} Real (nat_lit 1)\n              (@One.toOfNat1.{0} Real Real.instOne)))\n          Real.instAddGroup))\n      (@HSMul.hSMul.{0, 0, 0} Real\n        (@Quaternion.{0} Real Real.instZero Real.instOne\n          Real.instNeg)\n        (@Quaternion.{0} Real Real.instZero Real.instOne\n          Real.instNeg)\n        (@instHSMul.{0, 0} Real\n          (@Quaternion.{0} Real Real.instZero Real.instOne\n            Real.instNeg)\n          (@QuaternionAlgebra.instSMul.{0, 0} Real Real\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            (@OfNat.ofNat.{0} Real (nat_lit 0)\n              (@Zero.toOfNat0.{0} Real Real.instZero))\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            (@instSMulOfMul.{0} Real Real.instMul)))\n        (@Neg.neg.{0} Real Real.instNeg\n          (@Inv.inv.{0} Real Real.instInv\n            (@HPow.hPow.{0, 0, 0} Real Nat Real\n              (@instHPow.{0, 0} Real Nat\n                (@NPow.toPow.{0} Real\n                  (@Monoid.toNPow.{0} Real\n                    Real.instMonoid)))\n              (@Norm.norm.{0}\n                (@Quaternion.{0} Real Real.instZero\n                  Real.instOne Real.instNeg)\n                (@NormedDivisionRing.toNorm.{0}\n                  (@Quaternion.{0} Real Real.instZero\n                    Real.instOne Real.instNeg)\n                  Quaternion.instNormedDivisionRingReal)\n                q)\n              (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                (instOfNatNat (nat_lit 4))))))\n        (@DFunLike.coe.{1, 1, 1}\n          (@Module.Basis.{0, 0, 0}\n            (Fin\n              (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                (instOfNatNat (nat_lit 4))))\n            Real\n            (@Quaternion.{0} Real Real.instZero Real.instOne\n              Real.instNeg)\n            Real.semiring\n            (@Semiring.toAddCommMonoid.{0}\n              (@Quaternion.{0} Real Real.instZero\n                Real.instOne Real.instNeg)\n              (@Ring.toSemiring.{0}\n                (@Quaternion.{0} Real Real.instZero\n                  Real.instOne Real.instNeg)\n                (@QuaternionAlgebra.instRing.{0} Real\n                  (@Neg.neg.{0} Real Real.instNeg\n                    (@OfNat.ofNat.{0} Real (nat_lit 1)\n                      (@One.toOfNat1.{0} Real\n                        Real.instOne)))\n                  (@OfNat.ofNat.{0} Real (nat_lit 0)\n                    (@Zero.toOfNat0.{0} Real Real.instZero))\n                  (@Neg.neg.{0} Real Real.instNeg\n                    (@OfNat.ofNat.{0} Real (nat_lit 1)\n                      (@One.toOfNat1.{0} Real\n                        Real.instOne)))\n                  Real.commRing)))\n            (@QuaternionAlgebra.instModule.{0, 0} Real Real\n              (@Neg.neg.{0} Real Real.instNeg\n                (@OfNat.ofNat.{0} Real (nat_lit 1)\n                  (@One.toOfNat1.{0} Real Real.instOne)))\n              (@OfNat.ofNat.{0} Real (nat_lit 0)\n                (@Zero.toOfNat0.{0} Real Real.instZero))\n              (@Neg.neg.{0} Real Real.instNeg\n                (@OfNat.ofNat.{0} Real (nat_lit 1)\n                  (@One.toOfNat1.{0} Real Real.instOne)))\n              Real.semiring\n              (@Ring.toAddCommGroup.{0} Real\n                (@CommRing.toRing.{0} Real Real.commRing))\n              (@Semiring.toModule.{0} Real Real.semiring)))\n          (Fin\n            (@OfNat.ofNat.{0} Nat (nat_lit 4)\n              (instOfNatNat (nat_lit 4))))\n          (fun\n              (x :\n                Fin\n                  (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                    (instOfNatNat (nat_lit 4)))) =>\n            @Quaternion.{0} Real Real.instZero Real.instOne\n              Real.instNeg)\n          (@Module.Basis.instFunLike.{0, 0, 0}\n            (Fin\n              (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                (instOfNatNat (nat_lit 4))))\n            Real\n            (@Quaternion.{0} Real Real.instZero Real.instOne\n              Real.instNeg)\n            Real.semiring\n            (@Semiring.toAddCommMonoid.{0}\n              (@Quaternion.{0} Real Real.instZero\n                Real.instOne Real.instNeg)\n              (@Ring.toSemiring.{0}\n                (@Quaternion.{0} Real Real.instZero\n                  Real.instOne Real.instNeg)\n                (@QuaternionAlgebra.instRing.{0} Real\n                  (@Neg.neg.{0} Real Real.instNeg\n                    (@OfNat.ofNat.{0} Real (nat_lit 1)\n                      (@One.toOfNat1.{0} Real\n                        Real.instOne)))\n                  (@OfNat.ofNat.{0} Real (nat_lit 0)\n                    (@Zero.toOfNat0.{0} Real Real.instZero))\n                  (@Neg.neg.{0} Real Real.instNeg\n                    (@OfNat.ofNat.{0} Real (nat_lit 1)\n                      (@One.toOfNat1.{0} Real\n                        Real.instOne)))\n                  Real.commRing)))\n            (@QuaternionAlgebra.instModule.{0, 0} Real Real\n              (@Neg.neg.{0} Real Real.instNeg\n                (@OfNat.ofNat.{0} Real (nat_lit 1)\n                  (@One.toOfNat1.{0} Real Real.instOne)))\n              (@OfNat.ofNat.{0} Real (nat_lit 0)\n                (@Zero.toOfNat0.{0} Real Real.instZero))\n              (@Neg.neg.{0} Real Real.instNeg\n                (@OfNat.ofNat.{0} Real (nat_lit 1)\n                  (@One.toOfNat1.{0} Real Real.instOne)))\n              Real.semiring\n              (@Ring.toAddCommGroup.{0} Real\n                (@CommRing.toRing.{0} Real Real.commRing))\n              (@Semiring.toModule.{0} Real Real.semiring)))\n          MathResearch.Fueter.coordinateBasis\n          (@Fin.succ\n            (@OfNat.ofNat.{0} Nat (nat_lit 3)\n              (instOfNatNat (nat_lit 3)))\n            j)))\n      (@HSMul.hSMul.{0, 0, 0} Real\n        (@Quaternion.{0} Real Real.instZero Real.instOne\n          Real.instNeg)\n        (@Quaternion.{0} Real Real.instZero Real.instOne\n          Real.instNeg)\n        (@instHSMul.{0, 0} Real\n          (@Quaternion.{0} Real Real.instZero Real.instOne\n            Real.instNeg)\n          (@QuaternionAlgebra.instSMul.{0, 0} Real Real\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            (@OfNat.ofNat.{0} Real (nat_lit 0)\n              (@Zero.toOfNat0.{0} Real Real.instZero))\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            (@instSMulOfMul.{0} Real Real.instMul)))\n        (@HMul.hMul.{0, 0, 0} Real Real Real\n          (@instHMul.{0} Real Real.instMul)\n          (@HMul.hMul.{0, 0, 0} Real Real Real\n            (@instHMul.{0} Real Real.instMul)\n            (@OfNat.ofNat.{0} Real (nat_lit 4)\n              (@instOfNatAtLeastTwo.{0} Real (nat_lit 4)\n                Real.instNatCast\n                (@Nat.instAtLeastTwoHAddOfNat\n                  (@OfNat.ofNat.{0} Nat (nat_lit 3)\n                    (instOfNatNat (nat_lit 3)))\n                  (@Nat.instNeZeroSucc\n                    (@OfNat.ofNat.{0} Nat (nat_lit 2)\n                      (instOfNatNat (nat_lit 2)))))))\n            (@DFunLike.coe.{1, 1, 1}\n              (@Finsupp.{0, 0}\n                (Fin\n                  (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                    (instOfNatNat (nat_lit 4))))\n                Real\n                (@MulZeroClass.toZero.{0} Real\n                  (@instMulZeroClassOfSemiring.{0} Real\n                    Real.semiring)))\n              (Fin\n                (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                  (instOfNatNat (nat_lit 4))))\n              (fun\n                  (x :\n                    Fin\n                      (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                        (instOfNatNat (nat_lit 4)))) =>\n                Real)\n              (@Finsupp.instFunLike.{0, 0}\n                (Fin\n                  (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                    (instOfNatNat (nat_lit 4))))\n                Real\n                (@MulZeroClass.toZero.{0} Real\n                  (@instMulZeroClassOfSemiring.{0} Real\n                    Real.semiring)))\n              (@DFunLike.coe.{1, 1, 1}\n                (@LinearEquiv.{0, 0, 0, 0} Real Real\n                  Real.semiring Real.semiring\n                  (@RingHom.id.{0} Real\n                    (@Semiring.toNonAssocSemiring.{0} Real\n                      Real.semiring))\n                  (@RingHom.id.{0} Real\n                    (@Semiring.toNonAssocSemiring.{0} Real\n                      Real.semiring))\n                  (@RingHomInvPair.ids.{0} Real\n                    Real.semiring)\n                  (@RingHomInvPair.ids.{0} Real\n                    Real.semiring)\n                  (@Quaternion.{0} Real Real.instZero\n                    Real.instOne Real.instNeg)\n                  (@Finsupp.{0, 0}\n                    (Fin\n                      (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                        (instOfNatNat (nat_lit 4))))\n                    Real\n                    (@MulZeroClass.toZero.{0} Real\n                      (@instMulZeroClassOfSemiring.{0} Real\n                        Real.semiring)))\n                  (@Semiring.toAddCommMonoid.{0}\n                    (@Quaternion.{0} Real Real.instZero\n                      Real.instOne Real.instNeg)\n                    (@Ring.toSemiring.{0}\n                      (@Quaternion.{0} Real Real.instZero\n                        Real.instOne Real.instNeg)\n                      (@QuaternionAlgebra.instRing.{0} Real\n                        (@Neg.neg.{0} Real Real.instNeg\n                          (@OfNat.ofNat.{0} Real (nat_lit 1)\n                            (@One.toOfNat1.{0} Real\n                              Real.instOne)))\n                        (@OfNat.ofNat.{0} Real (nat_lit 0)\n                          (@Zero.toOfNat0.{0} Real\n                            Real.instZero))\n                        (@Neg.neg.{0} Real Real.instNeg\n                          (@OfNat.ofNat.{0} Real (nat_lit 1)\n                            (@One.toOfNat1.{0} Real\n                              Real.instOne)))\n                        Real.commRing)))\n                  (@Finsupp.instAddCommMonoid.{0, 0}\n                    (Fin\n                      (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                        (instOfNatNat (nat_lit 4))))\n                    Real\n                    (@Semiring.toAddCommMonoid.{0} Real\n                      Real.semiring))\n                  (@QuaternionAlgebra.instModule.{0, 0} Real\n                    Real\n                    (@Neg.neg.{0} Real Real.instNeg\n                      (@OfNat.ofNat.{0} Real (nat_lit 1)\n                        (@One.toOfNat1.{0} Real\n                          Real.instOne)))\n                    (@OfNat.ofNat.{0} Real (nat_lit 0)\n                      (@Zero.toOfNat0.{0} Real\n                        Real.instZero))\n                    (@Neg.neg.{0} Real Real.instNeg\n                      (@OfNat.ofNat.{0} Real (nat_lit 1)\n                        (@One.toOfNat1.{0} Real\n                          Real.instOne)))\n                    Real.semiring\n                    (@Ring.toAddCommGroup.{0} Real\n                      (@CommRing.toRing.{0} Real\n                        Real.commRing))\n                    (@Semiring.toModule.{0} Real\n                      Real.semiring))\n                  (@Finsupp.module.{0, 0, 0}\n                    (Fin\n                      (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                        (instOfNatNat (nat_lit 4))))\n                    Real Real Real.semiring\n                    (@Semiring.toAddCommMonoid.{0} Real\n                      Real.semiring)\n                    (@Semiring.toModule.{0} Real\n                      Real.semiring)))\n                (@Quaternion.{0} Real Real.instZero\n                  Real.instOne Real.instNeg)\n                (fun\n                    (x :\n                      @Quaternion.{0} Real Real.instZero\n                        Real.instOne Real.instNeg) =>\n                  @Finsupp.{0, 0}\n                    (Fin\n                      (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                        (instOfNatNat (nat_lit 4))))\n                    Real\n                    (@MulZeroClass.toZero.{0} Real\n                      (@instMulZeroClassOfSemiring.{0} Real\n                        Real.semiring)))\n                (@EquivLike.toFunLike.{1, 1, 1}\n                  (@LinearEquiv.{0, 0, 0, 0} Real Real\n                    Real.semiring Real.semiring\n                    (@RingHom.id.{0} Real\n                      (@Semiring.toNonAssocSemiring.{0} Real\n                        Real.semiring))\n                    (@RingHom.id.{0} Real\n                      (@Semiring.toNonAssocSemiring.{0} Real\n                        Real.semiring))\n                    (@RingHomInvPair.ids.{0} Real\n                      Real.semiring)\n                    (@RingHomInvPair.ids.{0} Real\n                      Real.semiring)\n                    (@Quaternion.{0} Real Real.instZero\n                      Real.instOne Real.instNeg)\n                    (@Finsupp.{0, 0}\n                      (Fin\n                        (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                          (instOfNatNat (nat_lit 4))))\n                      Real\n                      (@MulZeroClass.toZero.{0} Real\n                        (@instMulZeroClassOfSemiring.{0}\n                          Real Real.semiring)))\n                    (@Semiring.toAddCommMonoid.{0}\n                      (@Quaternion.{0} Real Real.instZero\n                        Real.instOne Real.instNeg)\n                      (@Ring.toSemiring.{0}\n                        (@Quaternion.{0} Real Real.instZero\n                          Real.instOne Real.instNeg)\n                        (@QuaternionAlgebra.instRing.{0}\n                          Real\n                          (@Neg.neg.{0} Real Real.instNeg\n                            (@OfNat.ofNat.{0} Real\n                              (nat_lit 1)\n                              (@One.toOfNat1.{0} Real\n                                Real.instOne)))\n                          (@OfNat.ofNat.{0} Real (nat_lit 0)\n                            (@Zero.toOfNat0.{0} Real\n                              Real.instZero))\n                          (@Neg.neg.{0} Real Real.instNeg\n                            (@OfNat.ofNat.{0} Real\n                              (nat_lit 1)\n                              (@One.toOfNat1.{0} Real\n                                Real.instOne)))\n                          Real.commRing)))\n                    (@Finsupp.instAddCommMonoid.{0, 0}\n                      (Fin\n                        (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                          (instOfNatNat (nat_lit 4))))\n                      Real\n                      (@Semiring.toAddCommMonoid.{0} Real\n                        Real.semiring))\n                    (@QuaternionAlgebra.instModule.{0, 0}\n                      Real Real\n                      (@Neg.neg.{0} Real Real.instNeg\n                        (@OfNat.ofNat.{0} Real (nat_lit 1)\n                          (@One.toOfNat1.{0} Real\n                            Real.instOne)))\n                      (@OfNat.ofNat.{0} Real (nat_lit 0)\n                        (@Zero.toOfNat0.{0} Real\n                          Real.instZero))\n                      (@Neg.neg.{0} Real Real.instNeg\n                        (@OfNat.ofNat.{0} Real (nat_lit 1)\n                          (@One.toOfNat1.{0} Real\n                            Real.instOne)))\n                      Real.semiring\n                      (@Ring.toAddCommGroup.{0} Real\n                        (@CommRing.toRing.{0} Real\n                          Real.commRing))\n                      (@Semiring.toModule.{0} Real\n                        Real.semiring))\n                    (@Finsupp.module.{0, 0, 0}\n                      (Fin\n                        (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                          (instOfNatNat (nat_lit 4))))\n                      Real Real Real.semiring\n                      (@Semiring.toAddCommMonoid.{0} Real\n                        Real.semiring)\n                      (@Semiring.toModule.{0} Real\n                        Real.semiring)))\n                  (@Quaternion.{0} Real Real.instZero\n                    Real.instOne Real.instNeg)\n                  (@Finsupp.{0, 0}\n                    (Fin\n                      (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                        (instOfNatNat (nat_lit 4))))\n                    Real\n                    (@MulZeroClass.toZero.{0} Real\n                      (@instMulZeroClassOfSemiring.{0} Real\n                        Real.semiring)))\n                  (@DFinsupp.instEquivLikeLinearEquiv.{0, 0,\n                        0, 0}\n                    Real Real Real.semiring Real.semiring\n                    (@RingHom.id.{0} Real\n                      (@Semiring.toNonAssocSemiring.{0} Real\n                        Real.semiring))\n                    (@RingHom.id.{0} Real\n                      (@Semiring.toNonAssocSemiring.{0} Real\n                        Real.semiring))\n                    (@RingHomInvPair.ids.{0} Real\n                      Real.semiring)\n                    (@RingHomInvPair.ids.{0} Real\n                      Real.semiring)\n                    (@Quaternion.{0} Real Real.instZero\n                      Real.instOne Real.instNeg)\n                    (@Finsupp.{0, 0}\n                      (Fin\n                        (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                          (instOfNatNat (nat_lit 4))))\n                      Real\n                      (@MulZeroClass.toZero.{0} Real\n                        (@instMulZeroClassOfSemiring.{0}\n                          Real Real.semiring)))\n                    (@Semiring.toAddCommMonoid.{0}\n                      (@Quaternion.{0} Real Real.instZero\n                        Real.instOne Real.instNeg)\n                      (@Ring.toSemiring.{0}\n                        (@Quaternion.{0} Real Real.instZero\n                          Real.instOne Real.instNeg)\n                        (@QuaternionAlgebra.instRing.{0}\n                          Real\n                          (@Neg.neg.{0} Real Real.instNeg\n                            (@OfNat.ofNat.{0} Real\n                              (nat_lit 1)\n                              (@One.toOfNat1.{0} Real\n                                Real.instOne)))\n                          (@OfNat.ofNat.{0} Real (nat_lit 0)\n                            (@Zero.toOfNat0.{0} Real\n                              Real.instZero))\n                          (@Neg.neg.{0} Real Real.instNeg\n                            (@OfNat.ofNat.{0} Real\n                              (nat_lit 1)\n                              (@One.toOfNat1.{0} Real\n                                Real.instOne)))\n                          Real.commRing)))\n                    (@Finsupp.instAddCommMonoid.{0, 0}\n                      (Fin\n                        (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                          (instOfNatNat (nat_lit 4))))\n                      Real\n                      (@Semiring.toAddCommMonoid.{0} Real\n                        Real.semiring))\n                    (@QuaternionAlgebra.instModule.{0, 0}\n                      Real Real\n                      (@Neg.neg.{0} Real Real.instNeg\n                        (@OfNat.ofNat.{0} Real (nat_lit 1)\n                          (@One.toOfNat1.{0} Real\n                            Real.instOne)))\n                      (@OfNat.ofNat.{0} Real (nat_lit 0)\n                        (@Zero.toOfNat0.{0} Real\n                          Real.instZero))\n                      (@Neg.neg.{0} Real Real.instNeg\n                        (@OfNat.ofNat.{0} Real (nat_lit 1)\n                          (@One.toOfNat1.{0} Real\n                            Real.instOne)))\n                      Real.semiring\n                      (@Ring.toAddCommGroup.{0} Real\n                        (@CommRing.toRing.{0} Real\n                          Real.commRing))\n                      (@Semiring.toModule.{0} Real\n                        Real.semiring))\n                    (@Finsupp.module.{0, 0, 0}\n                      (Fin\n                        (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                          (instOfNatNat (nat_lit 4))))\n                      Real Real Real.semiring\n                      (@Semiring.toAddCommMonoid.{0} Real\n                        Real.semiring)\n                      (@Semiring.toModule.{0} Real\n                        Real.semiring))))\n                (@Module.Basis.repr.{0, 0, 0}\n                  (Fin\n                    (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                      (instOfNatNat (nat_lit 4))))\n                  Real\n                  (@Quaternion.{0} Real Real.instZero\n                    Real.instOne Real.instNeg)\n                  Real.semiring\n                  (@Semiring.toAddCommMonoid.{0}\n                    (@Quaternion.{0} Real Real.instZero\n                      Real.instOne Real.instNeg)\n                    (@Ring.toSemiring.{0}\n                      (@Quaternion.{0} Real Real.instZero\n                        Real.instOne Real.instNeg)\n                      (@QuaternionAlgebra.instRing.{0} Real\n                        (@Neg.neg.{0} Real Real.instNeg\n                          (@OfNat.ofNat.{0} Real (nat_lit 1)\n                            (@One.toOfNat1.{0} Real\n                              Real.instOne)))\n                        (@OfNat.ofNat.{0} Real (nat_lit 0)\n                          (@Zero.toOfNat0.{0} Real\n                            Real.instZero))\n                        (@Neg.neg.{0} Real Real.instNeg\n                          (@OfNat.ofNat.{0} Real (nat_lit 1)\n                            (@One.toOfNat1.{0} Real\n                              Real.instOne)))\n                        Real.commRing)))\n                  (@QuaternionAlgebra.instModule.{0, 0} Real\n                    Real\n                    (@Neg.neg.{0} Real Real.instNeg\n                      (@OfNat.ofNat.{0} Real (nat_lit 1)\n                        (@One.toOfNat1.{0} Real\n                          Real.instOne)))\n                    (@OfNat.ofNat.{0} Real (nat_lit 0)\n                      (@Zero.toOfNat0.{0} Real\n                        Real.instZero))\n                    (@Neg.neg.{0} Real Real.instNeg\n                      (@OfNat.ofNat.{0} Real (nat_lit 1)\n                        (@One.toOfNat1.{0} Real\n                          Real.instOne)))\n                    Real.semiring\n                    (@Ring.toAddCommGroup.{0} Real\n                      (@CommRing.toRing.{0} Real\n                        Real.commRing))\n                    (@Semiring.toModule.{0} Real\n                      Real.semiring))\n                  MathResearch.Fueter.coordinateBasis)\n                q)\n              (@Fin.succ\n                (@OfNat.ofNat.{0} Nat (nat_lit 3)\n                  (instOfNatNat (nat_lit 3)))\n                j)))\n          (@Inv.inv.{0} Real Real.instInv\n            (@HPow.hPow.{0, 0, 0} Real Nat Real\n              (@instHPow.{0, 0} Real Nat\n                (@NPow.toPow.{0} Real\n                  (@Monoid.toNPow.{0} Real\n                    Real.instMonoid)))\n              (@Norm.norm.{0}\n                (@Quaternion.{0} Real Real.instZero\n                  Real.instOne Real.instNeg)\n                (@NormedDivisionRing.toNorm.{0}\n                  (@Quaternion.{0} Real Real.instZero\n                    Real.instOne Real.instNeg)\n                  Quaternion.instNormedDivisionRingReal)\n                q)\n              (@OfNat.ofNat.{0} Nat (nat_lit 6)\n                (instOfNatNat (nat_lit 6))))))\n        (@Star.star.{0}\n          (@Quaternion.{0} Real Real.instZero Real.instOne\n            Real.instNeg)\n          (@QuaternionAlgebra.instStarQuaternionAlgebra.{0}\n            Real\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            (@OfNat.ofNat.{0} Real (nat_lit 0)\n              (@Zero.toOfNat0.{0} Real Real.instZero))\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            Real.commRing)\n          q)))",
+      "type_constants": [
+        "Fin",
+        "OfNat.ofNat",
+        "Nat",
+        "instOfNatNat",
+        "Quaternion",
+        "Real",
+        "Real.instZero",
+        "Real.instOne",
+        "Real.instNeg",
+        "Ne",
+        "Zero.toOfNat0",
+        "QuaternionAlgebra.instZero",
+        "Neg.neg",
+        "One.toOfNat1",
+        "Eq",
+        "MathResearch.Fueter.kernelSpatialPartial",
+        "HSub.hSub",
+        "instHSub",
+        "QuaternionAlgebra.instSub",
+        "Real.instAddGroup",
+        "HSMul.hSMul",
+        "instHSMul",
+        "QuaternionAlgebra.instSMul",
+        "instSMulOfMul",
+        "Real.instMul",
+        "Inv.inv",
+        "Real.instInv",
+        "HPow.hPow",
+        "instHPow",
+        "NPow.toPow",
+        "Monoid.toNPow",
+        "Real.instMonoid",
+        "Norm.norm",
+        "NormedDivisionRing.toNorm",
+        "Quaternion.instNormedDivisionRingReal",
+        "DFunLike.coe",
+        "Module.Basis",
+        "Real.semiring",
+        "Semiring.toAddCommMonoid",
+        "Ring.toSemiring",
+        "QuaternionAlgebra.instRing",
+        "Real.commRing",
+        "QuaternionAlgebra.instModule",
+        "Ring.toAddCommGroup",
+        "CommRing.toRing",
+        "Semiring.toModule",
+        "Module.Basis.instFunLike",
+        "MathResearch.Fueter.coordinateBasis",
+        "Fin.succ",
+        "HMul.hMul",
+        "instHMul",
+        "instOfNatAtLeastTwo",
+        "Real.instNatCast",
+        "Nat.instAtLeastTwoHAddOfNat",
+        "Nat.instNeZeroSucc",
+        "Finsupp",
+        "MulZeroClass.toZero",
+        "instMulZeroClassOfSemiring",
+        "Finsupp.instFunLike",
+        "LinearEquiv",
+        "RingHom.id",
+        "Semiring.toNonAssocSemiring",
+        "RingHomInvPair.ids",
+        "Finsupp.instAddCommMonoid",
+        "Finsupp.module",
+        "EquivLike.toFunLike",
+        "DFinsupp.instEquivLikeLinearEquiv",
+        "Module.Basis.repr",
+        "Star.star",
+        "QuaternionAlgebra.instStarQuaternionAlgebra"
+      ],
+      "names_used": [
+        "Fin",
+        "Fin.succ",
+        "MathResearch.Fueter.coordinateBasis",
+        "MathResearch.Fueter.kernelSpatialPartial",
+        "Module.Basis.repr",
+        "Quaternion",
+        "Star.star"
+      ],
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "source": {
+        "path": "MathResearch/Fueter/KernelEstimates.lean",
+        "line": 149,
+        "sha256": "43731d1faabf750888dfccf359a4d917e83a5f31916bc34749655d5fbfee103c",
+        "article": "lean/sources/F2-v1/MathResearch/Fueter/KernelEstimates.lean.html",
+        "anchor": "L149"
+      }
+    },
+    {
+      "name": "MathResearch.Fueter.kernelSpatialPartial",
+      "module": "MathResearch.Fueter.KernelEstimates",
+      "role": "definition",
+      "primary": true,
+      "home": {
+        "article": "quaternionic-analysis/foundations.html",
+        "item": "f-d3",
+        "anchor": "lean-MathResearch.Fueter.kernelSpatialPartial"
+      },
+      "kind": "definition",
+      "display_text": "def kernelSpatialPartial (j : Fin 3) : ℍ → ℍ :=\n    coordPartial j.succ kernel",
+      "display_sha256": "a62267b08ba936bcb3a32f1e213f4385de35cb5af895bd246816444727c4df38",
+      "source_text": "def kernelSpatialPartial (j : Fin 3) : ℍ → ℍ := coordPartial j.succ kernel",
+      "identifier_spans": [
+        {
+          "start": 4,
+          "end": 24,
+          "declaration": "MathResearch.Fueter.kernelSpatialPartial",
+          "text": "kernelSpatialPartial",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernelSpatialPartial"
+          }
+        },
+        {
+          "start": 30,
+          "end": 33,
+          "declaration": "Fin",
+          "text": "Fin",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "fin"
+          }
+        },
+        {
+          "start": 39,
+          "end": 40,
+          "declaration": "Quaternion",
+          "text": "ℍ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "quaternions"
+          }
+        },
+        {
+          "start": 43,
+          "end": 44,
+          "declaration": "Quaternion",
+          "text": "ℍ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "quaternions"
+          }
+        },
+        {
+          "start": 52,
+          "end": 64,
+          "declaration": "MathResearch.Fueter.coordPartial",
+          "text": "coordPartial",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d2",
+            "anchor": "lean-MathResearch.Fueter.coordPartial"
+          }
+        },
+        {
+          "start": 67,
+          "end": 71,
+          "declaration": "Fin.succ",
+          "text": "succ",
+          "target": {
+            "kind": "library",
+            "module": "Init.Data.Fin.Basic",
+            "url": "https://github.com/leanprover/lean4/blob/eb6cafb7290e8bd5f2937522d8d804f58f02bafc/src/lean/Init/Data/Fin/Basic.lean"
+          }
+        },
+        {
+          "start": 72,
+          "end": 78,
+          "declaration": "MathResearch.Fueter.kernel",
+          "text": "kernel",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.kernel"
+          }
+        }
+      ],
+      "offset_encoding": "Unicode code points, zero-based, end exclusive",
+      "keyword_spans": [
+        {
+          "start": 0,
+          "end": 3
+        }
+      ],
+      "elaborated_type": "Fin 3 → ℍ → ℍ",
+      "explicit_type": "(j :\n    Fin\n      (@OfNat.ofNat.{0} Nat (nat_lit 3)\n        (instOfNatNat (nat_lit 3)))) →\n  @Quaternion.{0} Real Real.instZero Real.instOne\n      Real.instNeg →\n    @Quaternion.{0} Real Real.instZero Real.instOne\n      Real.instNeg",
+      "type_constants": [
+        "Fin",
+        "OfNat.ofNat",
+        "Nat",
+        "instOfNatNat",
+        "Quaternion",
+        "Real",
+        "Real.instZero",
+        "Real.instOne",
+        "Real.instNeg"
+      ],
+      "names_used": [
+        "Fin",
+        "Fin.succ",
+        "MathResearch.Fueter.coordPartial",
+        "MathResearch.Fueter.kernel",
+        "Quaternion"
+      ],
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "source": {
+        "path": "MathResearch/Fueter/KernelEstimates.lean",
+        "line": 146,
+        "sha256": "43731d1faabf750888dfccf359a4d917e83a5f31916bc34749655d5fbfee103c",
+        "article": "lean/sources/F2-v1/MathResearch/Fueter/KernelEstimates.lean.html",
+        "anchor": "L146"
+      }
+    },
+    {
+      "name": "MathResearch.Fueter.inner_coordinateBasis",
+      "module": "MathResearch.Fueter.KernelEstimates",
+      "role": "checked-equation",
+      "primary": false,
+      "home": {
+        "article": "quaternionic-analysis/foundations.html",
+        "item": "f-d3",
+        "anchor": "lean-MathResearch.Fueter.inner_coordinateBasis"
+      },
+      "kind": "theorem",
+      "display_text": "theorem inner_coordinateBasis (q : ℍ) (μ : Fin 4) :\n    inner ℝ q (coordinateBasis μ) =\n        coordinateBasis.repr q μ",
+      "display_sha256": "e15bdcaf95879566f2b09c8ab98938fa37c661606a499a27aeaefae3d3a928ba",
+      "source_text": "theorem inner_coordinateBasis (q : ℍ) (μ : Fin 4) :\n    inner ℝ q (coordinateBasis μ) = coordinateBasis.repr q μ",
+      "identifier_spans": [
+        {
+          "start": 8,
+          "end": 29,
+          "declaration": "MathResearch.Fueter.inner_coordinateBasis",
+          "text": "inner_coordinateBasis",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d3",
+            "anchor": "lean-MathResearch.Fueter.inner_coordinateBasis"
+          }
+        },
+        {
+          "start": 35,
+          "end": 36,
+          "declaration": "Quaternion",
+          "text": "ℍ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "quaternions"
+          }
+        },
+        {
+          "start": 43,
+          "end": 46,
+          "declaration": "Fin",
+          "text": "Fin",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "fin"
+          }
+        },
+        {
+          "start": 56,
+          "end": 61,
+          "declaration": "Inner.inner",
+          "text": "inner",
+          "target": {
+            "kind": "library",
+            "module": "Mathlib.Analysis.InnerProductSpace.Defs",
+            "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/Analysis/InnerProductSpace/Defs.lean"
+          }
+        },
+        {
+          "start": 62,
+          "end": 63,
+          "declaration": "Real",
+          "text": "ℝ",
+          "target": {
+            "kind": "convention",
+            "article": "lean.html",
+            "anchor": "reals"
+          }
+        },
+        {
+          "start": 67,
+          "end": 82,
+          "declaration": "MathResearch.Fueter.coordinateBasis",
+          "text": "coordinateBasis",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d2",
+            "anchor": "lean-MathResearch.Fueter.coordinateBasis"
+          }
+        },
+        {
+          "start": 96,
+          "end": 111,
+          "declaration": "MathResearch.Fueter.coordinateBasis",
+          "text": "coordinateBasis",
+          "target": {
+            "kind": "counterpart",
+            "article": "quaternionic-analysis/foundations.html",
+            "item": "f-d2",
+            "anchor": "lean-MathResearch.Fueter.coordinateBasis"
+          }
+        },
+        {
+          "start": 112,
+          "end": 116,
+          "declaration": "Module.Basis.repr",
+          "text": "repr",
+          "target": {
+            "kind": "library",
+            "module": "Mathlib.LinearAlgebra.Basis.Defs",
+            "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/LinearAlgebra/Basis/Defs.lean"
+          }
+        }
+      ],
+      "offset_encoding": "Unicode code points, zero-based, end exclusive",
+      "keyword_spans": [
+        {
+          "start": 0,
+          "end": 7
+        }
+      ],
+      "elaborated_type": "∀ (q : ℍ) (μ : Fin 4),\n  inner ℝ q (MathResearch.Fueter.coordinateBasis μ) =\n    (MathResearch.Fueter.coordinateBasis.repr q) μ",
+      "explicit_type": "∀\n  (q :\n    @Quaternion.{0} Real Real.instZero Real.instOne\n      Real.instNeg)\n  (μ :\n    Fin\n      (@OfNat.ofNat.{0} Nat (nat_lit 4)\n        (instOfNatNat (nat_lit 4)))),\n  @Eq.{1} Real\n    (@Inner.inner.{0, 0} Real\n      (@Quaternion.{0} Real Real.instZero Real.instOne\n        Real.instNeg)\n      Quaternion.instInnerReal q\n      (@DFunLike.coe.{1, 1, 1}\n        (@Module.Basis.{0, 0, 0}\n          (Fin\n            (@OfNat.ofNat.{0} Nat (nat_lit 4)\n              (instOfNatNat (nat_lit 4))))\n          Real\n          (@Quaternion.{0} Real Real.instZero Real.instOne\n            Real.instNeg)\n          Real.semiring\n          (@Semiring.toAddCommMonoid.{0}\n            (@Quaternion.{0} Real Real.instZero Real.instOne\n              Real.instNeg)\n            (@Ring.toSemiring.{0}\n              (@Quaternion.{0} Real Real.instZero\n                Real.instOne Real.instNeg)\n              (@QuaternionAlgebra.instRing.{0} Real\n                (@Neg.neg.{0} Real Real.instNeg\n                  (@OfNat.ofNat.{0} Real (nat_lit 1)\n                    (@One.toOfNat1.{0} Real Real.instOne)))\n                (@OfNat.ofNat.{0} Real (nat_lit 0)\n                  (@Zero.toOfNat0.{0} Real Real.instZero))\n                (@Neg.neg.{0} Real Real.instNeg\n                  (@OfNat.ofNat.{0} Real (nat_lit 1)\n                    (@One.toOfNat1.{0} Real Real.instOne)))\n                Real.commRing)))\n          (@QuaternionAlgebra.instModule.{0, 0} Real Real\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            (@OfNat.ofNat.{0} Real (nat_lit 0)\n              (@Zero.toOfNat0.{0} Real Real.instZero))\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            Real.semiring\n            (@Ring.toAddCommGroup.{0} Real\n              (@CommRing.toRing.{0} Real Real.commRing))\n            (@Semiring.toModule.{0} Real Real.semiring)))\n        (Fin\n          (@OfNat.ofNat.{0} Nat (nat_lit 4)\n            (instOfNatNat (nat_lit 4))))\n        (fun\n            (x :\n              Fin\n                (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                  (instOfNatNat (nat_lit 4)))) =>\n          @Quaternion.{0} Real Real.instZero Real.instOne\n            Real.instNeg)\n        (@Module.Basis.instFunLike.{0, 0, 0}\n          (Fin\n            (@OfNat.ofNat.{0} Nat (nat_lit 4)\n              (instOfNatNat (nat_lit 4))))\n          Real\n          (@Quaternion.{0} Real Real.instZero Real.instOne\n            Real.instNeg)\n          Real.semiring\n          (@Semiring.toAddCommMonoid.{0}\n            (@Quaternion.{0} Real Real.instZero Real.instOne\n              Real.instNeg)\n            (@Ring.toSemiring.{0}\n              (@Quaternion.{0} Real Real.instZero\n                Real.instOne Real.instNeg)\n              (@QuaternionAlgebra.instRing.{0} Real\n                (@Neg.neg.{0} Real Real.instNeg\n                  (@OfNat.ofNat.{0} Real (nat_lit 1)\n                    (@One.toOfNat1.{0} Real Real.instOne)))\n                (@OfNat.ofNat.{0} Real (nat_lit 0)\n                  (@Zero.toOfNat0.{0} Real Real.instZero))\n                (@Neg.neg.{0} Real Real.instNeg\n                  (@OfNat.ofNat.{0} Real (nat_lit 1)\n                    (@One.toOfNat1.{0} Real Real.instOne)))\n                Real.commRing)))\n          (@QuaternionAlgebra.instModule.{0, 0} Real Real\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            (@OfNat.ofNat.{0} Real (nat_lit 0)\n              (@Zero.toOfNat0.{0} Real Real.instZero))\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            Real.semiring\n            (@Ring.toAddCommGroup.{0} Real\n              (@CommRing.toRing.{0} Real Real.commRing))\n            (@Semiring.toModule.{0} Real Real.semiring)))\n        MathResearch.Fueter.coordinateBasis μ))\n    (@DFunLike.coe.{1, 1, 1}\n      (@Finsupp.{0, 0}\n        (Fin\n          (@OfNat.ofNat.{0} Nat (nat_lit 4)\n            (instOfNatNat (nat_lit 4))))\n        Real\n        (@MulZeroClass.toZero.{0} Real\n          (@instMulZeroClassOfSemiring.{0} Real\n            Real.semiring)))\n      (Fin\n        (@OfNat.ofNat.{0} Nat (nat_lit 4)\n          (instOfNatNat (nat_lit 4))))\n      (fun\n          (x :\n            Fin\n              (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                (instOfNatNat (nat_lit 4)))) =>\n        Real)\n      (@Finsupp.instFunLike.{0, 0}\n        (Fin\n          (@OfNat.ofNat.{0} Nat (nat_lit 4)\n            (instOfNatNat (nat_lit 4))))\n        Real\n        (@MulZeroClass.toZero.{0} Real\n          (@instMulZeroClassOfSemiring.{0} Real\n            Real.semiring)))\n      (@DFunLike.coe.{1, 1, 1}\n        (@LinearEquiv.{0, 0, 0, 0} Real Real Real.semiring\n          Real.semiring\n          (@RingHom.id.{0} Real\n            (@Semiring.toNonAssocSemiring.{0} Real\n              Real.semiring))\n          (@RingHom.id.{0} Real\n            (@Semiring.toNonAssocSemiring.{0} Real\n              Real.semiring))\n          (@RingHomInvPair.ids.{0} Real Real.semiring)\n          (@RingHomInvPair.ids.{0} Real Real.semiring)\n          (@Quaternion.{0} Real Real.instZero Real.instOne\n            Real.instNeg)\n          (@Finsupp.{0, 0}\n            (Fin\n              (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                (instOfNatNat (nat_lit 4))))\n            Real\n            (@MulZeroClass.toZero.{0} Real\n              (@instMulZeroClassOfSemiring.{0} Real\n                Real.semiring)))\n          (@Semiring.toAddCommMonoid.{0}\n            (@Quaternion.{0} Real Real.instZero Real.instOne\n              Real.instNeg)\n            (@Ring.toSemiring.{0}\n              (@Quaternion.{0} Real Real.instZero\n                Real.instOne Real.instNeg)\n              (@QuaternionAlgebra.instRing.{0} Real\n                (@Neg.neg.{0} Real Real.instNeg\n                  (@OfNat.ofNat.{0} Real (nat_lit 1)\n                    (@One.toOfNat1.{0} Real Real.instOne)))\n                (@OfNat.ofNat.{0} Real (nat_lit 0)\n                  (@Zero.toOfNat0.{0} Real Real.instZero))\n                (@Neg.neg.{0} Real Real.instNeg\n                  (@OfNat.ofNat.{0} Real (nat_lit 1)\n                    (@One.toOfNat1.{0} Real Real.instOne)))\n                Real.commRing)))\n          (@Finsupp.instAddCommMonoid.{0, 0}\n            (Fin\n              (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                (instOfNatNat (nat_lit 4))))\n            Real\n            (@Semiring.toAddCommMonoid.{0} Real\n              Real.semiring))\n          (@QuaternionAlgebra.instModule.{0, 0} Real Real\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            (@OfNat.ofNat.{0} Real (nat_lit 0)\n              (@Zero.toOfNat0.{0} Real Real.instZero))\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            Real.semiring\n            (@Ring.toAddCommGroup.{0} Real\n              (@CommRing.toRing.{0} Real Real.commRing))\n            (@Semiring.toModule.{0} Real Real.semiring))\n          (@Finsupp.module.{0, 0, 0}\n            (Fin\n              (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                (instOfNatNat (nat_lit 4))))\n            Real Real Real.semiring\n            (@Semiring.toAddCommMonoid.{0} Real\n              Real.semiring)\n            (@Semiring.toModule.{0} Real Real.semiring)))\n        (@Quaternion.{0} Real Real.instZero Real.instOne\n          Real.instNeg)\n        (fun\n            (x :\n              @Quaternion.{0} Real Real.instZero\n                Real.instOne Real.instNeg) =>\n          @Finsupp.{0, 0}\n            (Fin\n              (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                (instOfNatNat (nat_lit 4))))\n            Real\n            (@MulZeroClass.toZero.{0} Real\n              (@instMulZeroClassOfSemiring.{0} Real\n                Real.semiring)))\n        (@EquivLike.toFunLike.{1, 1, 1}\n          (@LinearEquiv.{0, 0, 0, 0} Real Real Real.semiring\n            Real.semiring\n            (@RingHom.id.{0} Real\n              (@Semiring.toNonAssocSemiring.{0} Real\n                Real.semiring))\n            (@RingHom.id.{0} Real\n              (@Semiring.toNonAssocSemiring.{0} Real\n                Real.semiring))\n            (@RingHomInvPair.ids.{0} Real Real.semiring)\n            (@RingHomInvPair.ids.{0} Real Real.semiring)\n            (@Quaternion.{0} Real Real.instZero Real.instOne\n              Real.instNeg)\n            (@Finsupp.{0, 0}\n              (Fin\n                (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                  (instOfNatNat (nat_lit 4))))\n              Real\n              (@MulZeroClass.toZero.{0} Real\n                (@instMulZeroClassOfSemiring.{0} Real\n                  Real.semiring)))\n            (@Semiring.toAddCommMonoid.{0}\n              (@Quaternion.{0} Real Real.instZero\n                Real.instOne Real.instNeg)\n              (@Ring.toSemiring.{0}\n                (@Quaternion.{0} Real Real.instZero\n                  Real.instOne Real.instNeg)\n                (@QuaternionAlgebra.instRing.{0} Real\n                  (@Neg.neg.{0} Real Real.instNeg\n                    (@OfNat.ofNat.{0} Real (nat_lit 1)\n                      (@One.toOfNat1.{0} Real\n                        Real.instOne)))\n                  (@OfNat.ofNat.{0} Real (nat_lit 0)\n                    (@Zero.toOfNat0.{0} Real Real.instZero))\n                  (@Neg.neg.{0} Real Real.instNeg\n                    (@OfNat.ofNat.{0} Real (nat_lit 1)\n                      (@One.toOfNat1.{0} Real\n                        Real.instOne)))\n                  Real.commRing)))\n            (@Finsupp.instAddCommMonoid.{0, 0}\n              (Fin\n                (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                  (instOfNatNat (nat_lit 4))))\n              Real\n              (@Semiring.toAddCommMonoid.{0} Real\n                Real.semiring))\n            (@QuaternionAlgebra.instModule.{0, 0} Real Real\n              (@Neg.neg.{0} Real Real.instNeg\n                (@OfNat.ofNat.{0} Real (nat_lit 1)\n                  (@One.toOfNat1.{0} Real Real.instOne)))\n              (@OfNat.ofNat.{0} Real (nat_lit 0)\n                (@Zero.toOfNat0.{0} Real Real.instZero))\n              (@Neg.neg.{0} Real Real.instNeg\n                (@OfNat.ofNat.{0} Real (nat_lit 1)\n                  (@One.toOfNat1.{0} Real Real.instOne)))\n              Real.semiring\n              (@Ring.toAddCommGroup.{0} Real\n                (@CommRing.toRing.{0} Real Real.commRing))\n              (@Semiring.toModule.{0} Real Real.semiring))\n            (@Finsupp.module.{0, 0, 0}\n              (Fin\n                (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                  (instOfNatNat (nat_lit 4))))\n              Real Real Real.semiring\n              (@Semiring.toAddCommMonoid.{0} Real\n                Real.semiring)\n              (@Semiring.toModule.{0} Real Real.semiring)))\n          (@Quaternion.{0} Real Real.instZero Real.instOne\n            Real.instNeg)\n          (@Finsupp.{0, 0}\n            (Fin\n              (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                (instOfNatNat (nat_lit 4))))\n            Real\n            (@MulZeroClass.toZero.{0} Real\n              (@instMulZeroClassOfSemiring.{0} Real\n                Real.semiring)))\n          (@DFinsupp.instEquivLikeLinearEquiv.{0, 0, 0, 0}\n            Real Real Real.semiring Real.semiring\n            (@RingHom.id.{0} Real\n              (@Semiring.toNonAssocSemiring.{0} Real\n                Real.semiring))\n            (@RingHom.id.{0} Real\n              (@Semiring.toNonAssocSemiring.{0} Real\n                Real.semiring))\n            (@RingHomInvPair.ids.{0} Real Real.semiring)\n            (@RingHomInvPair.ids.{0} Real Real.semiring)\n            (@Quaternion.{0} Real Real.instZero Real.instOne\n              Real.instNeg)\n            (@Finsupp.{0, 0}\n              (Fin\n                (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                  (instOfNatNat (nat_lit 4))))\n              Real\n              (@MulZeroClass.toZero.{0} Real\n                (@instMulZeroClassOfSemiring.{0} Real\n                  Real.semiring)))\n            (@Semiring.toAddCommMonoid.{0}\n              (@Quaternion.{0} Real Real.instZero\n                Real.instOne Real.instNeg)\n              (@Ring.toSemiring.{0}\n                (@Quaternion.{0} Real Real.instZero\n                  Real.instOne Real.instNeg)\n                (@QuaternionAlgebra.instRing.{0} Real\n                  (@Neg.neg.{0} Real Real.instNeg\n                    (@OfNat.ofNat.{0} Real (nat_lit 1)\n                      (@One.toOfNat1.{0} Real\n                        Real.instOne)))\n                  (@OfNat.ofNat.{0} Real (nat_lit 0)\n                    (@Zero.toOfNat0.{0} Real Real.instZero))\n                  (@Neg.neg.{0} Real Real.instNeg\n                    (@OfNat.ofNat.{0} Real (nat_lit 1)\n                      (@One.toOfNat1.{0} Real\n                        Real.instOne)))\n                  Real.commRing)))\n            (@Finsupp.instAddCommMonoid.{0, 0}\n              (Fin\n                (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                  (instOfNatNat (nat_lit 4))))\n              Real\n              (@Semiring.toAddCommMonoid.{0} Real\n                Real.semiring))\n            (@QuaternionAlgebra.instModule.{0, 0} Real Real\n              (@Neg.neg.{0} Real Real.instNeg\n                (@OfNat.ofNat.{0} Real (nat_lit 1)\n                  (@One.toOfNat1.{0} Real Real.instOne)))\n              (@OfNat.ofNat.{0} Real (nat_lit 0)\n                (@Zero.toOfNat0.{0} Real Real.instZero))\n              (@Neg.neg.{0} Real Real.instNeg\n                (@OfNat.ofNat.{0} Real (nat_lit 1)\n                  (@One.toOfNat1.{0} Real Real.instOne)))\n              Real.semiring\n              (@Ring.toAddCommGroup.{0} Real\n                (@CommRing.toRing.{0} Real Real.commRing))\n              (@Semiring.toModule.{0} Real Real.semiring))\n            (@Finsupp.module.{0, 0, 0}\n              (Fin\n                (@OfNat.ofNat.{0} Nat (nat_lit 4)\n                  (instOfNatNat (nat_lit 4))))\n              Real Real Real.semiring\n              (@Semiring.toAddCommMonoid.{0} Real\n                Real.semiring)\n              (@Semiring.toModule.{0} Real Real.semiring))))\n        (@Module.Basis.repr.{0, 0, 0}\n          (Fin\n            (@OfNat.ofNat.{0} Nat (nat_lit 4)\n              (instOfNatNat (nat_lit 4))))\n          Real\n          (@Quaternion.{0} Real Real.instZero Real.instOne\n            Real.instNeg)\n          Real.semiring\n          (@Semiring.toAddCommMonoid.{0}\n            (@Quaternion.{0} Real Real.instZero Real.instOne\n              Real.instNeg)\n            (@Ring.toSemiring.{0}\n              (@Quaternion.{0} Real Real.instZero\n                Real.instOne Real.instNeg)\n              (@QuaternionAlgebra.instRing.{0} Real\n                (@Neg.neg.{0} Real Real.instNeg\n                  (@OfNat.ofNat.{0} Real (nat_lit 1)\n                    (@One.toOfNat1.{0} Real Real.instOne)))\n                (@OfNat.ofNat.{0} Real (nat_lit 0)\n                  (@Zero.toOfNat0.{0} Real Real.instZero))\n                (@Neg.neg.{0} Real Real.instNeg\n                  (@OfNat.ofNat.{0} Real (nat_lit 1)\n                    (@One.toOfNat1.{0} Real Real.instOne)))\n                Real.commRing)))\n          (@QuaternionAlgebra.instModule.{0, 0} Real Real\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            (@OfNat.ofNat.{0} Real (nat_lit 0)\n              (@Zero.toOfNat0.{0} Real Real.instZero))\n            (@Neg.neg.{0} Real Real.instNeg\n              (@OfNat.ofNat.{0} Real (nat_lit 1)\n                (@One.toOfNat1.{0} Real Real.instOne)))\n            Real.semiring\n            (@Ring.toAddCommGroup.{0} Real\n              (@CommRing.toRing.{0} Real Real.commRing))\n            (@Semiring.toModule.{0} Real Real.semiring))\n          MathResearch.Fueter.coordinateBasis)\n        q)\n      μ)",
+      "type_constants": [
+        "Quaternion",
+        "Real",
+        "Real.instZero",
+        "Real.instOne",
+        "Real.instNeg",
+        "Fin",
+        "OfNat.ofNat",
+        "Nat",
+        "instOfNatNat",
+        "Eq",
+        "Inner.inner",
+        "Quaternion.instInnerReal",
+        "DFunLike.coe",
+        "Module.Basis",
+        "Real.semiring",
+        "Semiring.toAddCommMonoid",
+        "Ring.toSemiring",
+        "QuaternionAlgebra.instRing",
+        "Neg.neg",
+        "One.toOfNat1",
+        "Zero.toOfNat0",
+        "Real.commRing",
+        "QuaternionAlgebra.instModule",
+        "Ring.toAddCommGroup",
+        "CommRing.toRing",
+        "Semiring.toModule",
+        "Module.Basis.instFunLike",
+        "MathResearch.Fueter.coordinateBasis",
+        "Finsupp",
+        "MulZeroClass.toZero",
+        "instMulZeroClassOfSemiring",
+        "Finsupp.instFunLike",
+        "LinearEquiv",
+        "RingHom.id",
+        "Semiring.toNonAssocSemiring",
+        "RingHomInvPair.ids",
+        "Finsupp.instAddCommMonoid",
+        "Finsupp.module",
+        "EquivLike.toFunLike",
+        "DFinsupp.instEquivLikeLinearEquiv",
+        "Module.Basis.repr"
+      ],
+      "names_used": [
+        "Fin",
+        "Inner.inner",
+        "MathResearch.Fueter.coordinateBasis",
+        "Module.Basis.repr",
+        "Quaternion",
+        "Real"
+      ],
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "source": {
+        "path": "MathResearch/Fueter/KernelEstimates.lean",
+        "line": 134,
+        "sha256": "43731d1faabf750888dfccf359a4d917e83a5f31916bc34749655d5fbfee103c",
+        "article": "lean/sources/F2-v1/MathResearch/Fueter/KernelEstimates.lean.html",
+        "anchor": "L134"
+      }
+    }
+  ],
+  "conventions": [
+    {
+      "anchor": "quaternions",
+      "label": "ℍ",
+      "declarations": [
+        "Quaternion"
+      ],
+      "source": {
+        "package": "mathlib",
+        "path": "Mathlib/Analysis/Quaternion.lean",
+        "line": 36,
+        "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/Analysis/Quaternion.lean#L36"
+      }
+    },
+    {
+      "anchor": "reals",
+      "label": "ℝ",
+      "declarations": [
+        "Real"
+      ],
+      "source": {
+        "package": "mathlib",
+        "path": "Mathlib/Data/Real/Basic.lean",
+        "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/Data/Real/Basic.lean"
+      }
+    },
+    {
+      "anchor": "naturals",
+      "label": "ℕ",
+      "declarations": [
+        "Nat"
+      ],
+      "source": {
+        "package": "mathlib",
+        "path": "Mathlib/Data/Nat/Basic.lean",
+        "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/Data/Nat/Basic.lean"
+      }
+    },
+    {
+      "anchor": "star",
+      "label": "star q",
+      "declarations": [
+        "Star.star"
+      ],
+      "source": {
+        "package": "mathlib",
+        "path": "Mathlib/Algebra/Quaternion.lean",
+        "line": 934,
+        "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/Algebra/Quaternion.lean#L934"
+      }
+    },
+    {
+      "anchor": "norm",
+      "label": "‖q‖",
+      "declarations": [
+        "Norm.norm"
+      ],
+      "source": {
+        "package": "mathlib",
+        "path": "Mathlib/Analysis/Quaternion.lean",
+        "line": 51,
+        "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/Analysis/Quaternion.lean#L51"
+      }
+    },
+    {
+      "anchor": "normsq",
+      "label": "Quaternion.normSq q",
+      "declarations": [
+        "Quaternion.normSq"
+      ],
+      "source": {
+        "package": "mathlib",
+        "path": "Mathlib/Algebra/Quaternion.lean",
+        "line": 1018,
+        "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/Algebra/Quaternion.lean#L1018"
+      }
+    },
+    {
+      "anchor": "smul",
+      "label": "r • q",
+      "declarations": [
+        "HSMul.hSMul",
+        "SMul.smul"
+      ],
+      "source": {
+        "package": "mathlib",
+        "path": "Mathlib/Algebra/Quaternion.lean",
+        "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/Algebra/Quaternion.lean"
+      }
+    },
+    {
+      "anchor": "fin",
+      "label": "Fin 4",
+      "declarations": [
+        "Fin"
+      ],
+      "source": {
+        "package": "mathlib",
+        "path": "Mathlib/Data/Fin/Basic.lean",
+        "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/Data/Fin/Basic.lean"
+      }
+    },
+    {
+      "anchor": "set",
+      "label": "Set ℍ",
+      "declarations": [
+        "Set",
+        "Compl.compl"
+      ],
+      "source": {
+        "package": "mathlib",
+        "path": "Mathlib/Data/Set/Defs.lean",
+        "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/Data/Set/Defs.lean"
+      }
+    },
+    {
+      "anchor": "fderiv",
+      "label": "fderiv ℝ f q",
+      "declarations": [
+        "fderiv"
+      ],
+      "source": {
+        "package": "mathlib",
+        "path": "Mathlib/Analysis/Calculus/FDeriv/Defs.lean",
+        "line": 160,
+        "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/Analysis/Calculus/FDeriv/Defs.lean#L160"
+      }
+    },
+    {
+      "anchor": "contdiffon",
+      "label": "ContDiffOn ℝ ∞ f U",
+      "declarations": [
+        "ContDiffOn"
+      ],
+      "source": {
+        "package": "mathlib",
+        "path": "Mathlib/Analysis/Calculus/ContDiff/Defs.lean",
+        "line": 471,
+        "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/Analysis/Calculus/ContDiff/Defs.lean#L471"
+      }
+    },
+    {
+      "anchor": "basis",
+      "label": "Module.Basis",
+      "declarations": [
+        "Module.Basis"
+      ],
+      "source": {
+        "package": "mathlib",
+        "path": "Mathlib/LinearAlgebra/Basis/Defs.lean",
+        "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/LinearAlgebra/Basis/Defs.lean"
+      }
+    },
+    {
+      "anchor": "clm",
+      "label": "E →L[ℝ] F",
+      "declarations": [
+        "ContinuousLinearMap"
+      ],
+      "source": {
+        "package": "mathlib",
+        "path": "Mathlib/Topology/Algebra/Module/ContinuousLinearMap/Basic.lean",
+        "line": 60,
+        "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/Topology/Algebra/Module/ContinuousLinearMap/Basic.lean#L60"
+      }
+    },
+    {
+      "anchor": "list",
+      "label": "List",
+      "declarations": [
+        "List",
+        "List.replicate"
+      ],
+      "source": {
+        "package": "mathlib",
+        "path": "Mathlib/Data/List/Defs.lean",
+        "url": "https://github.com/leanprover-community/mathlib4/blob/56a005855ea17e0b0958f73ec801ae140b0a1679/Mathlib/Data/List/Defs.lean"
+      }
+    }
+  ]
+}

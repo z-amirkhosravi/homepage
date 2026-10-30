@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the F2/v1 verification.">
+<title>MathResearch/Fueter/KernelEstimates.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=12">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=12">
+<script defer src="../../../../../assets/theme/wiki.js?v=12"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the F2/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Fueter/KernelEstimates.lean</h1><p><a href="KernelEstimates.lean" download>Download exact source</a>. SHA-256: <code>43731d1faabf750888dfccf359a4d917e83a5f31916bc34749655d5fbfee103c</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2"></span>
+<span id="L3">public import MathResearch.Fueter.Kernel</span>
+<span id="L4">public import Mathlib.Analysis.Normed.Group.Bounded</span>
+<span id="L5">public import Mathlib.Analysis.Normed.Module.FiniteDimension</span>
+<span id="L6">public import Mathlib.Topology.MetricSpace.ProperSpace</span>
+<span id="L7"></span>
+<span id="L8">/-! F2: homogeneity, parity and derivative bounds for the Cauchy–Fueter kernel. -/</span>
+<span id="L9"></span>
+<span id="L10">@[expose] public section</span>
+<span id="L11">noncomputable section</span>
+<span id="L12">open scoped Quaternion Topology BigOperators ContDiff</span>
+<span id="L13"></span>
+<span id="L14">namespace MathResearch.Fueter</span>
+<span id="L15"></span>
+<span id="L16">/-- The kernel has degree `-3` under every nonzero real dilation. -/</span>
+<span id="L17">theorem kernel_smul (a : ℝ) (ha : a ≠ 0) (q : ℍ) :</span>
+<span id="L18">    kernel (a • q) = (a ^ 3)⁻¹ • kernel q := by</span>
+<span id="L19">  simp only [kernel, Quaternion.normSq_smul, Quaternion.star_smul, smul_smul]</span>
+<span id="L20">  congr 1</span>
+<span id="L21">  field_simp</span>
+<span id="L22"></span>
+<span id="L23">/-- Differentiating a dilation identity reduces the degree by one. The identity</span>
+<span id="L24">is required only off zero, and differentiability is explicit on that open set. -/</span>
+<span id="L25">theorem directional_smul_of_eq {f : ℍ → ℍ} (hf : ContDiffOn ℝ ∞ f punctured)</span>
+<span id="L26">    {a c : ℝ} (ha : a ≠ 0) (h : ∀ q ≠ 0, f (a • q) = c • f q)</span>
+<span id="L27">    {q : ℍ} (hq : q ≠ 0) (v : ℍ) :</span>
+<span id="L28">    directional v f (a • q) = (a⁻¹ * c) • directional v f q := by</span>
+<span id="L29">  have hd (x : ℍ) (hx : x ≠ 0) : DifferentiableAt ℝ f x :=</span>
+<span id="L30">    (hf.contDiffAt (isOpen_punctured.mem_nhds hx)).differentiableAt (by simp)</span>
+<span id="L31">  have heq : (fun x =&gt; f (a • x)) =ᶠ[𝓝 q] fun x =&gt; c • f x :=</span>
+<span id="L32">    Filter.eventually_of_mem (isOpen_punctured.mem_nhds hq) fun x hx =&gt; h x hx</span>
+<span id="L33">  have hl := (hd (a • q) (smul_ne_zero ha hq)).hasFDerivAt.comp q</span>
+<span id="L34">    ((hasFDerivAt_id q).const_smul a)</span>
+<span id="L35">  have hr := (hd q hq).hasFDerivAt.const_smul c</span>
+<span id="L36">  have he := congrArg (fun L : ℍ →L[ℝ] ℍ =&gt; L v)</span>
+<span id="L37">    (hl.fderiv.symm.trans (heq.fderiv_eq.trans hr.fderiv))</span>
+<span id="L38">  have he&#39; : a • directional v f (a • q) = c • directional v f q := by</span>
+<span id="L39">    simpa [directional] using he</span>
+<span id="L40">  have := congrArg (fun z : ℍ =&gt; a⁻¹ • z) he&#39;</span>
+<span id="L41">  simpa [smul_smul, ha] using this</span>
+<span id="L42"></span>
+<span id="L43">/-- All ordered real derivatives have the expected negative degree. -/</span>
+<span id="L44">theorem kernel_iteratedPartial_smul (l : List (Fin 4)) (a : ℝ) (ha : a ≠ 0)</span>
+<span id="L45">    (q : ℍ) (hq : q ≠ 0) :</span>
+<span id="L46">    iteratedPartial l kernel (a • q) =</span>
+<span id="L47">      (a ^ (3 + l.length))⁻¹ • iteratedPartial l kernel q := by</span>
+<span id="L48">  induction l generalizing q with</span>
+<span id="L49">  | nil =&gt; exact kernel_smul a ha q</span>
+<span id="L50">  | cons μ l ih =&gt;</span>
+<span id="L51">    change directional (coordinateBasis μ) (iteratedPartial l kernel) (a • q) = _</span>
+<span id="L52">    rw [directional_smul_of_eq (kernel_iteratedPartial_regular l).1 ha ih hq]</span>
+<span id="L53">    change (a⁻¹ * (a ^ (3 + l.length))⁻¹) •</span>
+<span id="L54">        directional (coordinateBasis μ) (iteratedPartial l kernel) q =</span>
+<span id="L55">      (a ^ (3 + (l.length + 1)))⁻¹ •</span>
+<span id="L56">        directional (coordinateBasis μ) (iteratedPartial l kernel) q</span>
+<span id="L57">    rw [← Nat.add_assoc, pow_succ, mul_inv_rev]</span>
+<span id="L58"></span>
+<span id="L59">/-- Parity holds for every ordering of real coordinate derivatives. -/</span>
+<span id="L60">theorem kernel_iteratedPartial_neg (l : List (Fin 4)) (q : ℍ) (hq : q ≠ 0) :</span>
+<span id="L61">    iteratedPartial l kernel (-q) =</span>
+<span id="L62">      (-1 : ℝ) ^ (l.length + 1) • iteratedPartial l kernel q := by</span>
+<span id="L63">  have hc : ((-1 : ℝ) ^ (3 + l.length))⁻¹ = (-1 : ℝ) ^ (l.length + 1) := by</span>
+<span id="L64">    rw [← inv_pow]</span>
+<span id="L65">    norm_num [pow_add, mul_comm]</span>
+<span id="L66">  have h := kernel_iteratedPartial_smul l (-1) (by norm_num) q hq</span>
+<span id="L67">  rw [neg_one_smul, hc] at h</span>
+<span id="L68">  exact h</span>
+<span id="L69"></span>
+<span id="L70">private theorem partial_list_length (α : Fin 4 → ℕ) :</span>
+<span id="L71">    (List.replicate (α 0) (0 : Fin 4) ++ List.replicate (α 1) 1 ++</span>
+<span id="L72">      List.replicate (α 2) 2 ++ List.replicate (α 3) 3).length = ∑ μ, α μ := by</span>
+<span id="L73">  simp [List.length_append, List.length_replicate, Fin.sum_univ_succ]</span>
+<span id="L74"></span>
+<span id="L75">/-- The multi-index homogeneity formula in F2. -/</span>
+<span id="L76">theorem kernel_multiIndexPartial_smul (α : Fin 4 → ℕ) (a : ℝ) (ha : a ≠ 0)</span>
+<span id="L77">    (q : ℍ) (hq : q ≠ 0) :</span>
+<span id="L78">    multiIndexPartial α kernel (a • q) =</span>
+<span id="L79">      (a ^ (3 + ∑ μ, α μ))⁻¹ • multiIndexPartial α kernel q := by</span>
+<span id="L80">  unfold multiIndexPartial</span>
+<span id="L81">  rw [← partial_list_length α]</span>
+<span id="L82">  exact kernel_iteratedPartial_smul</span>
+<span id="L83">      (List.replicate (α 0) 0 ++ List.replicate (α 1) 1 ++</span>
+<span id="L84">        List.replicate (α 2) 2 ++ List.replicate (α 3) 3) a ha q hq</span>
+<span id="L85"></span>
+<span id="L86">/-- The multi-index parity formula in F2. -/</span>
+<span id="L87">theorem kernel_multiIndexPartial_neg (α : Fin 4 → ℕ) (q : ℍ) (hq : q ≠ 0) :</span>
+<span id="L88">    multiIndexPartial α kernel (-q) =</span>
+<span id="L89">      (-1 : ℝ) ^ ((∑ μ, α μ) + 1) • multiIndexPartial α kernel q := by</span>
+<span id="L90">  unfold multiIndexPartial</span>
+<span id="L91">  rw [← partial_list_length α]</span>
+<span id="L92">  exact kernel_iteratedPartial_neg</span>
+<span id="L93">      (List.replicate (α 0) 0 ++ List.replicate (α 1) 1 ++</span>
+<span id="L94">        List.replicate (α 2) 2 ++ List.replicate (α 3) 3) q hq</span>
+<span id="L95"></span>
+<span id="L96">/-- Compactness of the unit sphere turns homogeneity into the global decay bound. -/</span>
+<span id="L97">theorem kernel_iteratedPartial_norm_le (l : List (Fin 4)) :</span>
+<span id="L98">    ∃ C : ℝ, 0 ≤ C ∧ ∀ q : ℍ, q ≠ 0 →</span>
+<span id="L99">      ‖iteratedPartial l kernel q‖ ≤ C * (‖q‖ ^ (3 + l.length))⁻¹ := by</span>
+<span id="L100">  have hs : Metric.sphere (0 : ℍ) 1 ⊆ punctured := by</span>
+<span id="L101">    intro q hq</span>
+<span id="L102">    have hn : ‖q‖ = 1 := by simpa using hq</span>
+<span id="L103">    exact norm_ne_zero_iff.mp (by rw [hn]; norm_num)</span>
+<span id="L104">  obtain ⟨C, hC⟩ := (isCompact_sphere (0 : ℍ) 1).exists_bound_of_continuousOn</span>
+<span id="L105">    ((kernel_iteratedPartial_regular l).1.continuousOn.mono hs)</span>
+<span id="L106">  refine ⟨max C 0, le_max_right _ _, ?_⟩</span>
+<span id="L107">  intro q hq</span>
+<span id="L108">  let u : ℍ := ‖q‖⁻¹ • q</span>
+<span id="L109">  have hn : 0 &lt; ‖q‖ := norm_pos_iff.mpr hq</span>
+<span id="L110">  have hu : ‖u‖ = 1 := by simp [u, norm_smul, ne_of_gt hn]</span>
+<span id="L111">  have hu0 : u ≠ 0 := norm_ne_zero_iff.mp (by rw [hu]; norm_num)</span>
+<span id="L112">  have hqu : ‖q‖ • u = q := by simp [u, smul_smul, ne_of_gt hn]</span>
+<span id="L113">  have hscale := kernel_iteratedPartial_smul l ‖q‖ (ne_of_gt hn) u hu0</span>
+<span id="L114">  rw [hqu] at hscale</span>
+<span id="L115">  rw [hscale, norm_smul, Real.norm_eq_abs, abs_of_nonneg (by positivity)]</span>
+<span id="L116">  have hbound : ‖iteratedPartial l kernel u‖ ≤ max C 0 :=</span>
+<span id="L117">    (hC u (by simpa using hu)).trans (le_max_left _ _)</span>
+<span id="L118">  calc</span>
+<span id="L119">    (‖q‖ ^ (3 + l.length))⁻¹ * ‖iteratedPartial l kernel u‖ ≤</span>
+<span id="L120">        (‖q‖ ^ (3 + l.length))⁻¹ * max C 0 := mul_le_mul_of_nonneg_left hbound (by positivity)</span>
+<span id="L121">    _ = max C 0 * (‖q‖ ^ (3 + l.length))⁻¹ := mul_comm _ _</span>
+<span id="L122"></span>
+<span id="L123">/-- The derivative bound in F2, with a nonnegative constant depending only on `α`. -/</span>
+<span id="L124">theorem kernel_multiIndexPartial_norm_le (α : Fin 4 → ℕ) :</span>
+<span id="L125">    ∃ C : ℝ, 0 ≤ C ∧ ∀ q : ℍ, q ≠ 0 →</span>
+<span id="L126">      ‖multiIndexPartial α kernel q‖ ≤ C * (‖q‖ ^ (3 + ∑ μ, α μ))⁻¹ := by</span>
+<span id="L127">  unfold multiIndexPartial</span>
+<span id="L128">  rw [← partial_list_length α]</span>
+<span id="L129">  exact kernel_iteratedPartial_norm_le</span>
+<span id="L130">      (List.replicate (α 0) 0 ++ List.replicate (α 1) 1 ++</span>
+<span id="L131">        List.replicate (α 2) 2 ++ List.replicate (α 3) 3)</span>
+<span id="L132"></span>
+<span id="L133">/-- The coordinate of `q` in F-D1 is its real inner product with that basis vector. -/</span>
+<span id="L134">theorem inner_coordinateBasis (q : ℍ) (μ : Fin 4) :</span>
+<span id="L135">    inner ℝ q (coordinateBasis μ) = coordinateBasis.repr q μ := by</span>
+<span id="L136">  rw [coordinateBasis_eq]</span>
+<span id="L137">  simp only [coordinateBasis, QuaternionAlgebra.coe_basisOneIJK_repr]</span>
+<span id="L138">  fin_cases μ &lt;;&gt; simp [Quaternion.inner_def]</span>
+<span id="L139"></span>
+<span id="L140">/-- Conjugation negates each of the three spatial basis vectors. -/</span>
+<span id="L141">theorem star_spatial_basis (j : Fin 3) :</span>
+<span id="L142">    star (coordinateBasis j.succ) = -coordinateBasis j.succ := by</span>
+<span id="L143">  fin_cases j &lt;;&gt; ext &lt;;&gt; simp [coordinateBasis_eq]</span>
+<span id="L144"></span>
+<span id="L145">/-- The three functions `G_j` in F-D3; Lean indices `0,1,2` mean `x₁,x₂,x₃`. -/</span>
+<span id="L146">def kernelSpatialPartial (j : Fin 3) : ℍ → ℍ := coordPartial j.succ kernel</span>
+<span id="L147"></span>
+<span id="L148">/-- F2&#39;s explicit first spatial derivative, with the coordinate and order fixed. -/</span>
+<span id="L149">theorem kernelSpatialPartial_eq (j : Fin 3) (q : ℍ) (hq : q ≠ 0) :</span>
+<span id="L150">    kernelSpatialPartial j q =</span>
+<span id="L151">      -(‖q‖ ^ 4)⁻¹ • coordinateBasis j.succ -</span>
+<span id="L152">        (4 * coordinateBasis.repr q j.succ * (‖q‖ ^ 6)⁻¹) • star q := by</span>
+<span id="L153">  unfold kernelSpatialPartial coordPartial directional</span>
+<span id="L154">  rw [fderiv_kernel hq, inner_coordinateBasis, star_spatial_basis]</span>
+<span id="L155">  simp only [Quaternion.normSq_eq_norm_mul_self, ← pow_two, ← inv_pow, ← pow_mul]</span>
+<span id="L156">  simp only [smul_neg, neg_smul]</span>
+<span id="L157">  congr 1</span>
+<span id="L158">  congr 1</span>
+<span id="L159">  ring</span>
+<span id="L160"></span>
+<span id="L161">/-- Oddness of the ambient total kernel, including its zero value at zero. -/</span>
+<span id="L162">theorem kernel_odd : Function.Odd kernel := by</span>
+<span id="L163">  intro q</span>
+<span id="L164">  have h := kernel_smul (-1) (by norm_num) q</span>
+<span id="L165">  norm_num at h</span>
+<span id="L166">  exact h</span>
+<span id="L167"></span>
+<span id="L168">/-- Each first spatial derivative is even off its pole. -/</span>
+<span id="L169">theorem kernelSpatialPartial_even (j : Fin 3) (q : ℍ) (hq : q ≠ 0) :</span>
+<span id="L170">    kernelSpatialPartial j (-q) = kernelSpatialPartial j q := by</span>
+<span id="L171">  have h := kernel_iteratedPartial_neg [j.succ] q hq</span>
+<span id="L172">  simpa [kernelSpatialPartial, iteratedPartial] using h</span>
+<span id="L173"></span>
+<span id="L174">/-- F2 version 1: all real multi-indices, a constant independent of `q` and `a`,</span>
+<span id="L175">and the three stated consequences. Reciprocal natural powers express the</span>
+<span id="L176">negative integral exponents in the written statement. -/</span>
+<span id="L177">theorem F2_v1 :</span>
+<span id="L178">    (∀ α : Fin 4 → ℕ, ∃ C : ℝ, 0 ≤ C ∧ ∀ q : ℍ, q ≠ 0 → ∀ a : ℝ, 0 &lt; a →</span>
+<span id="L179">      multiIndexPartial α kernel (a • q) =</span>
+<span id="L180">          (a ^ (3 + ∑ μ, α μ))⁻¹ • multiIndexPartial α kernel q ∧</span>
+<span id="L181">      multiIndexPartial α kernel (-q) =</span>
+<span id="L182">          (-1 : ℝ) ^ ((∑ μ, α μ) + 1) • multiIndexPartial α kernel q ∧</span>
+<span id="L183">      ‖multiIndexPartial α kernel q‖ ≤ C * (‖q‖ ^ (3 + ∑ μ, α μ))⁻¹) ∧</span>
+<span id="L184">    Function.Odd kernel ∧</span>
+<span id="L185">    (∀ j : Fin 3, ∀ q : ℍ, q ≠ 0 →</span>
+<span id="L186">      kernelSpatialPartial j (-q) = kernelSpatialPartial j q) ∧</span>
+<span id="L187">    (∀ j : Fin 3, ∀ q : ℍ, q ≠ 0 →</span>
+<span id="L188">      kernelSpatialPartial j q =</span>
+<span id="L189">        -(‖q‖ ^ 4)⁻¹ • coordinateBasis j.succ -</span>
+<span id="L190">          (4 * coordinateBasis.repr q j.succ * (‖q‖ ^ 6)⁻¹) • star q) := by</span>
+<span id="L191">  refine ⟨?_, kernel_odd, kernelSpatialPartial_even, kernelSpatialPartial_eq⟩</span>
+<span id="L192">  intro α</span>
+<span id="L193">  obtain ⟨C, hC, hbound⟩ := kernel_multiIndexPartial_norm_le α</span>
+<span id="L194">  exact ⟨C, hC, fun q hq a ha =&gt;</span>
+<span id="L195">    ⟨kernel_multiIndexPartial_smul α a (ne_of_gt ha) q hq,</span>
+<span id="L196">      kernel_multiIndexPartial_neg α q hq, hbound q hq⟩⟩</span>
+<span id="L197"></span>
+<span id="L198">end MathResearch.Fueter</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="A growing reference for mathematical constructions, results, and connections.">
-<title>Math Research · Math 2.0</title>
+<meta name="description" content="An experimental project using an agentic workflow to combine AI-assisted math research with formal verification and curated human readable exposition.">
+<title>Math 2.0</title>
 <link rel="preload" href="assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/theme/temml.css?v=10">
-<link rel="stylesheet" href="assets/theme/wiki.css?v=10">
-<script defer src="assets/theme/wiki.js?v=10"></script>
+<link rel="stylesheet" href="assets/theme/temml.css?v=12">
+<link rel="stylesheet" href="assets/theme/wiki.css?v=12">
+<script defer src="assets/theme/wiki.js?v=12"></script>
 </head>
 <body data-root="">
 <a class="skip-link" href="#main">Skip to content</a>
@@ -18,7 +18,7 @@
 <header class="site-header">
 <nav aria-label="Sections">
 <ul>
-<li><a href="https://z-amirkhosravi.github.io/homepage/about/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
 <li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
 <li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
 </ul>
@@ -29,7 +29,7 @@
 <ol>
 <li><a href="index.html">Wiki</a></li>
 <li aria-hidden="true">/</li>
-<li>Library</li>
+<li></li>
 </ol>
 </nav>
 <div class="search" role="search">
@@ -45,49 +45,21 @@
 <details class="toc" open>
 <summary>On this page</summary>
 <nav aria-label="On this page">
-<ol class="toc-list"><li><a href="#research">Research</a></li><li><a href="#expository-articles">Expository Articles</a></li><li><a href="#how-to-read-this-wiki">How to read this wiki</a></li></ol>
+
 </nav>
 </details>
 <main id="main">
 <div class="page-head"></div>
 <div class="page-intro">
-<p class="page-description">A growing reference for mathematical constructions, results, and connections.</p>
+<p class="page-description">An experimental project using an agentic workflow to combine AI-assisted math research with formal verification and curated human readable exposition.</p>
 
 </div>
 <article>
-<h1 id="math-research">Math Research</h1>
-<h2 id="research">Research<a class="anchor" href="#research" aria-label="Link to Research">#</a></h2>
+<h1 id="math-2-0">Math 2.0</h1>
+<h2 id="topics">Topics<a class="anchor" href="#topics" aria-label="Link to Topics">#</a></h2>
 <ul>
-<li><a href="quaternionic-analysis/lattice-eisenstein-series.html">Lattice Eisenstein series and representations</a>: The nonspherical realization of quaternionic lattice coefficients and harmonic transitions.</li>
-<li><a href="quaternionic-analysis/harmonic-theta-values.html">Harmonic theta series and special L-values</a>: Mellin normalization and an explicit quaternionic coefficient expressed through a weight-six modular L-value.</li>
-<li><a href="quaternionic-analysis/automorphic-cohomology.html">Regular automorphic forms and cohomology</a>: The flat-coefficient two-form, positive pairing and period map.</li>
-<li><a href="quaternionic-analysis/automorphic-constructions.html">Constructing regular automorphic forms</a>: The constant-spinor Poincaré construction and explicit nonvanishing estimates.</li>
-<li><a href="quaternionic-analysis/cusp-forms-parabolic-cohomology.html">Cusp Forms, Mellin Transforms and Parabolic Cohomology</a>: The incomplete-Mellin primitive, function-valued period cocycle and surface periods.</li>
-<li><a href="quaternionic-analysis/similitude-hecke-operators.html">Similitude Hecke operators and integral eigenvalues</a>: Compatible normalizations and an integral coefficient lattice.</li>
-<li><a href="quaternionic-analysis/geometric-realization.html">Automorphic cohomology and geometric realization</a>: The explicit real family of polarized abelian fourfolds and its Hecke isogenies.</li>
+<li><a href="quaternionic-analysis/index.html">Quaternionic Analysis</a></li>
 </ul>
-<h2 id="expository-articles">Expository Articles<a class="anchor" href="#expository-articles" aria-label="Link to Expository Articles">#</a></h2>
-<ul>
-<li><a href="quaternionic-analysis/foundations.html">Quaternions and Fueter regularity</a></li>
-<li><a href="quaternionic-analysis/elliptic-functions.html">Quaternionic elliptic functions</a></li>
-<li><a href="quaternionic-analysis/directions.html">From lattice sums to number theory</a></li>
-<li><a href="quaternionic-analysis/fueter-discrete-series.html">Fueter regularity and discrete series</a></li>
-<li><a href="quaternionic-analysis/spinor-connection.html">The spinor connection</a></li>
-<li><a href="quaternionic-analysis/fueter-hardy-space.html">The Fueter Hardy space</a></li>
-<li><a href="quaternionic-analysis/regular-differential-forms.html">Regular functions and differential forms</a></li>
-<li><a href="quaternionic-analysis/quaternionic-half-space.html">Quaternionic Half-Space and Siegel Domains</a></li>
-<li><a href="quaternionic-analysis/parabolic-cohomology.html">Parabolic Cohomology and Compact Support</a></li>
-<li><a href="quaternionic-analysis/cuspidal-cohomology-background.html">Classical Cuspidal and Parabolic Cohomology</a></li>
-<li><a href="quaternionic-analysis/harmonic-theta-modularity.html">Classical Harmonic Theta Modularity</a></li>
-<li><a href="quaternionic-analysis/classical-automorphic-sources.html">Theta Lifts and the Classical Weight-Two Dimension</a></li>
-<li><a href="quaternionic-analysis/langlands-galois-representations.html">From quaternionic cusp forms to Galois representations</a></li>
-<li><a href="quaternionic-analysis/classical-automorphic-geometry.html">Classical Automorphic Geometry and Hodge Weights</a></li>
-</ul>
-<p><a href="quaternionic-analysis/literature.html">Sources and further reading</a></p>
-<h2 id="how-to-read-this-wiki">How to read this wiki<a class="anchor" href="#how-to-read-this-wiki" aria-label="Link to How to read this wiki">#</a></h2>
-<p>Start with the foundations, or go directly to the construction if you know quaternions and real differentiation. Each article states its conventions and links to the mathematics it uses.</p>
-<p>A supplied proof, an independent review, and a formal verification are different kinds of evidence. The articles contain explicit arguments and identify published theorems used as inputs; review status and supporting evidence are attached to individual results. The <a href="quaternionic-analysis/parabolic-cohomology.html#m000003">cusp restriction exact sequence</a> has received a separate AI review. No result in this published collection is labeled Lean-verified. See <a href="about.html">About this wiki</a>.</p>
-<p>Follow the links between constructions and results to move through the subject. Open questions remain visibly separate from the statements with supplied proofs.</p>
 
 </article>
 <script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
