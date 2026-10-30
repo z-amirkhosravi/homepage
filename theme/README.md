@@ -80,4 +80,4 @@ Since `theme-v9` the margin status list `ul.evidence` is no longer styled and mu
 
 ## Site Links
 
-The navigation links to `https://z-amirkhosravi.github.io/homepage/` with the paths `code/`, `math/`, `math-2/` and `about/`. These are provisional until the redesigned homepage is built.
+The navigation is About, Code, Math, linking to `https://z-amirkhosravi.github.io/homepage/` with the paths `about/`, `code/` and `math/`. Since `theme-v10` there is no separate Math 2.0 tab: the wiki belongs to Math, which is marked as the current section on every wiki page. The homepage's Math page links to the wiki at `https://z-amirkhosravi.github.io/homepage/math-2.0/`. The banner links to the homepage.
