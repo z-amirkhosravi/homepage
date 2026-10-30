@@ -122,23 +122,21 @@ a.quiet:hover { text-decoration-line: underline; }
 .entry-picture { flex: 0 1 280px; min-width: 0; display: block; line-height: 0; }
 .entry-picture img { display: block; width: 100%; max-width: 280px; aspect-ratio: 1 / 1; object-fit: cover; }
 
-/* Math: dated lists of papers and notes. A paper's abstract opens below its arXiv line. */
+/* Math: dated lists of papers and notes. A paper's abstract opens below its title. */
 .first-head { margin-top: clamp(40px, 6vw, 72px); }
 .dated { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--rule); }
 .dated + h2 { margin-top: 72px; }
 .dated > li { display: grid; grid-template-columns: 64px minmax(0, 1fr); column-gap: 20px; padding: 20px 0 14px; border-top: 1px solid var(--rule); scroll-margin-top: 16px; }
 .dated .year { font: 15px/1.9 var(--sans); color: var(--muted); white-space: nowrap; }
 .dated .item { max-width: 700px; min-width: 0; }
-.dated .title { font-size: 21px; line-height: 1.35; }
+.dated .title { font-size: 17px; line-height: 1.5; }
 .dated .meta { margin: 2px 0 0; font: 15px var(--sans); color: var(--muted); }
-.dated .meta::after { content: ""; display: block; clear: left; }
-.dated .arxiv { float: left; margin-right: 24px; line-height: 44px; }
 .abstract > summary { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; list-style: none; cursor: pointer; color: var(--link); }
 .abstract > summary::-webkit-details-marker { display: none; }
 .abstract > summary:hover { color: var(--link-hover); }
 .abstract > summary::before { content: ""; width: 5px; height: 5px; border: solid currentColor; border-width: 0 1.4px 1.4px 0; transform: rotate(-45deg); transition: transform .15s; }
 .abstract[open] > summary::before { transform: rotate(45deg); }
-.abstract > p { clear: left; margin: 4px 0 10px; max-width: 680px; font: 17px/1.6 var(--serif); color: #3A3A3A; }
+.abstract > p { margin: 4px 0 10px; max-width: 680px; font: 17px/1.6 var(--serif); color: #3A3A3A; }
 @media (max-width: 480px) {
   .dated > li { grid-template-columns: minmax(0, 1fr); }
   .dated .year { line-height: 1.5; }
