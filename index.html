@@ -1,136 +1,47 @@
 <!doctype html>
-<html>
-  <head>
-    <!-- Page setup -->
-    <meta charset="utf-8">
-    <title>Z. Amir-Khosravi</title>
-    <meta name="description" content="A brief description of your site for search engines">
-    <meta name="author" content="Information about the author here">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
-    <link rel="icon" type="image/png" href="favicon.png">
-  
-    <!-- Stylesheets -->
-    <!-- Reset default styles and add support for google fonts -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet" type="text/css" />
-    <link href="http://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css" />
-   
-    <!-- Custom styles -->
-    <link href="style.css" rel="stylesheet" type="text/css" />
-
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>    
-
-    <!-- Want to add Bootstrap? -->
-    <!-- Visit: https://getbootstrap.com/docs/4.3/getting-started/introduction/ -->
-    
-  </head>
-  
-  <body>
-
-    <header id="header">
-      <img src="logo4.jpg" height="99">
-      <h1>Zavosh Amir-Khosravi</h1>
-      
-      <!-- Menu link fragment #id should match a div id. Example: <a href="#home"> links to <div id="home"></div>  -->
-      <ul class="main-menu">
-        <li><a href="#home">home</a></li>
-        <li><a href="#about">about</a></li>
-        <li><a href="#code">code</a></li>
-        <li><a href="#papers">papers</a></li>
-      </ul>                 
-    </header>
-   
-    <div id="container">
-      <div class="inner">
-        <div id="content"> 
-          
-          <div id="home" class="content-region hide">
-            <h2>Home</h2>
-            <p>This is the website of Zavosh Amir-Khosravi.</p>
-
-            <p> You can find some samples of my C++ and Python <a href="#code">code</a> here. </p>
-
-            <p> You can also check out some of my research <a href="#papers">papers</a> and lecture notes. </p>
-          </div>
-          
-          <div id="about" class="content-region hide">
-            <h2>About</h2>
-            <p>
-              My name is Zavosh. I'm an Iranian-born Canadian citizen living in Toronto. Here are some random facts about me:
-
-            <p>
-              <li>I have a PhD in math from the University of Toronto. My advisor was <a href=https://en.wikipedia.org/wiki/Stephen_S._Kudla> Stephen S. Kudla. </a> My areas of expertise is the intersection of number theory, algebraic geometry, and representation theory.
-              </li>
-            </p>
-
-            <p>
-              <li>
-              I've been programming since the 1990s. I started with BASIC, Pascal, C, and Java, but now mostly use C++ and Python.  
-            </li>
-            </p>
-
-            <p><li>
-              I'm interested in languages. Besides English I'm fluent in Persian, and know French and German at an intermediate level (B1). I also studied Latin and Ancient Greek at university. One day I hope to learn Italian.
-            </li>
-          </p>
-          <p><li> Two parts of my name have Greek equivalents: <i>Zavosh</i> is <i>Zeus</i> (Ζεὐς) borrowed into Persian, and is a name of the planet Jupiter. <i>Khosrow</i> is Persian cognate to <i>Euclid</i> (Εὐκλείδης) and is two morphemes <i>Kho</i> + <i>srau</i>, meaning "good fame". The word <i>srau</i> is cognate to <i>slav</i> in Slavic languages.
-          </li></p>
-          </div>
-          
-          <div id="code" class="content-region hide">
-            <h2>Code</h2>
-            <p>
-              The links below are to github repositories, where there's a detailed description for each project.
-              <p>
-              <li><a href="https://github.com/z-amirkhosravi/leniascope">Leniascope</a></li>
-
-              A Windows application implementing Lenia (<a href=https://en.wikipedia.org/wiki/Lenia>wiki</a>), a continuous generalization of 
-              Conway's Game of Life created by Bert Chan. Here's a <a href="https://chakazul.github.io/">link</a> to his website. 
-              </p>
-              <p>
-              <li><a href="https://github.com/z-amirkhosravi/Quaternions">Quaternions</a></li>
-
-              A C++ library for computing some transcendental functions in quaternionic analysis. This is a current project related to my math resarch. 
-              </p>
-
-              <p>
-              <li><a href="https://github.com/z-amirkhosravi/qtools">Quant tools</a></li>
-
-              A Python package written in C++ for computing the price of financial derivatives using binomial tree models.
-              </p>
-
-            </p>
-          </div>
-
-          <div id="papers" class="content-region hide">
-            <h2>Papers</h2>
-            <p>
-              <h4>Research</h4>
-              <li> Serre's Tensor Construction and Moduli of Abelian Schemes (<a href="papers/serretensor.pdf">pdf</a>)</li>
-              <li> Generating Series of Intersection Volumes of Special Cycles on Unitary Shimura Varieties (<a href="papers/unitary_cycles.pdf">pdf</a>)</li>
-              <li> Theta Functions and Reciprocity Laws (<a href="papers/theta.pdf">pdf</a>) </li>
-              <li> Fueter-Regular Discrete Series for Sp(1,1) (<a href="papers/fueter_discrete.pdf">pdf</a>)</li>
-              <li> Period Relations for Quaternionic Elliptic Functions (<a href="papers/qperiods.pdf">pdf</a>)</li>
-            </p>
-
-            <h4> Lecture Notes </h4>
-            <p>
-              <li> Number Theory for Beginners (<a href="notes/ma7notes.pfd">pdf</a>)</li>
-              <li> Algebra, Fields, Galoiss Theory (<a href="notes/ma5cnotes.pdf">pdf</a>)</li>
-              <li> Intersection Theory on Shimura Varieties (<a href="notes/intersec_notes.pdf">pdf</a>)</li>
-            </p>
-          </div>
-          
-        </div>
-      </div>
-    </div>
-
-    <footer>  
-      e-mail: (my first name) at gmail dot com
-    </footer>
-    
-    <!-- Load additional JS scripts here -->
-    <script type="text/javascript" src="script.js"></script>
-    
-  </body>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zavosh Amir-Khosravi</title>
+<link rel="stylesheet" href="assets/site.css?v=6">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<div class="banner"><img src="theme/assets/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></div>
+<div class="frame">
+<main id="main">
+<h1 class="visually-hidden">Zavosh Amir-Khosravi</h1>
+<div class="home-grid">
+<section>
+<h2><a class="quiet" href="code/">Code</a></h2>
+<ul class="home-list">
+<li><a class="quiet" href="code/leniascope/">Leniascope</a><p>An implementation of Bert Chan’s Lenia, a continuous generalization of Conway’s Game of Life.</p></li>
+<li><a class="quiet" href="code/#marketlab">Marketlab</a><p>A Python package for quantitative analysis of markets, including tools to find and backtest trading strategies.</p></li>
+</ul>
+</section>
+<section>
+<h2><a class="quiet" href="math/">Math</a></h2>
+<ul class="home-list home-papers">
+<li><a class="quiet" href="math/#qperiods">Period Relations for Quaternionic Elliptic Functions</a></li>
+<li><a class="quiet" href="math/#fueter">Fueter-Regular Discrete Series for Sp(1,1)</a></li>
+<li><a class="quiet" href="math/#theta">Theta Functions and Reciprocity Laws</a></li>
+<li><a class="quiet" href="math/#unitary">Generating Series of Intersection Volumes of Special Cycles on Unitary Shimura Varieties</a></li>
+<li><a class="quiet" href="math/#serre">Serre’s Tensor Construction and Moduli of Abelian Schemes</a></li>
+</ul>
+<p><a href="math/#notes">Lecture notes</a> for three courses at Caltech</p>
+</section>
+<section>
+<h2><a class="quiet" href="math-2/">Math 2.0</a></h2>
+<p class="placeholder">[Two or three sentences describing Math 2.0, supplied by the Math Research project]</p>
+<p><a href="math-2/">Open the wiki</a></p>
+</section>
+</div>
+</main>
+</div>
+<footer class="site-footer">
+<a href="about/">About</a>
+<a href="https://github.com/z-amirkhosravi">GitHub</a>
+</footer>
+</body>
 </html>
