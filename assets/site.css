@@ -22,7 +22,7 @@
 }
 
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; scrollbar-gutter: stable; }
 body { margin: 0; background: #ffffff; color: var(--text); font: 16px/1.5 var(--serif); -webkit-font-smoothing: antialiased; }
 a { color: var(--link); text-decoration-line: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; text-decoration-color: var(--link-line); }
 a:hover { color: var(--link-hover); text-decoration-color: currentColor; }
