@@ -85,3 +85,5 @@ The navigation is About, Code, Math. About links to the homepage itself, `https:
 Since `theme-v11` the page always reserves the scrollbar's width (`scrollbar-gutter: stable`), as the homepage does, so the banner and navigation stay in place between short and long pages.
 
 Since `theme-v12` an empty section crumb is hidden together with the separator before it, so a page whose `section` is empty (the wiki's front page) shows only "Wiki" in the breadcrumb.
+
+Since `theme-v13` a proof opens and closes with a disclosure triangle before "Proof" (hung in the margin on wide screens) instead of "Show proof" and "Hide proof" labels, so no interface words sit in the mathematical text.
