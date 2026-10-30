@@ -1,8 +1,8 @@
-// Leniascope Web v3.0.1 — generated from web/src; no runtime dependencies.
+// Leniascope Web v3.0.2 — generated from web/src; no runtime dependencies.
 
 // core
 // Formula and random stream ported from src/simulation.cpp. No simulation approximations here.
-const WEB_VERSION = "3.0.1";
+const WEB_VERSION = "3.0.2";
 const RULES = Object.freeze({
   classic: 0,
   birthDeath: 1,
@@ -1103,6 +1103,7 @@ function attachInteraction(canvas, sim, wheelZoom) {
     on(
       "wheel",
       (e) => {
+        if (wheelZoom === "modifier" && !e.ctrlKey && !e.metaKey) return;
         e.preventDefault();
         const delta =
           e.deltaY *
@@ -1538,7 +1539,7 @@ class LeniaHandle {
     this._cleanups.push(() => reduced.removeEventListener("change", motion));
     if (this.options.interactive !== false)
       this._cleanups.push(
-        attachInteraction(this.canvas, this, this.options.wheelZoom === true),
+        attachInteraction(this.canvas, this, this.options.wheelZoom),
       );
     if (
       this.options.autoplay !== false &&
@@ -1588,6 +1589,9 @@ async function createLenia(canvas, options, dimensions) {
       : presetField;
   const Renderer = dimensions === 2 ? FieldRenderer : VolumeRenderer;
   const validGrids = dimensions === 2 ? [128, 256, 512, 1024] : [48, 64, 96];
+  opts.wheelZoom ??= false;
+  if (![false, true, "modifier"].includes(opts.wheelZoom))
+    throw new TypeError('wheelZoom must be false, true or "modifier"');
   opts.seed ??= opts.recording ? 1 : freshSeed();
   if (!["auto", ...validGrids].includes(opts.grid))
     throw new TypeError(`grid must be auto or ${validGrids.join(", ")}`);

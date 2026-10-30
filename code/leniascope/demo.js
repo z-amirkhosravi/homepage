@@ -1,16 +1,8 @@
-// Leniascope page: mounts the Leniascope web engine (web-v3.0.1) and wires the page's controls.
+// Leniascope page: mounts the Leniascope web engine (web-v3.0.2) and wires the page's controls.
 // 3D starts on load; 2D is created on first use, in its own canvas, and both handles are kept.
 // Behaviour follows the engine's INTEGRATION.md; the engine, gallery and palettes are in assets/.
-import { createLenia3D, createLenia2D, PRESETS } from './assets/leniascope.js?v=3.0.1';
-import { colormaps, defaultColormap } from './assets/colormaps.mjs?v=3.0.1';
-
-// The site's names for the 2D gallery; the unstable conjoined example is left out of the menu.
-const labels2D = {
-  'paraptera-gliding': 'Paraptera (glide)',
-  'paraptera-jumping': 'Paraptera (jump)',
-  'paraptera-walking': 'Paraptera (walk)',
-};
-const omitted2D = new Set(['conjoined-orbiums']);
+import { createLenia3D, createLenia2D, PRESETS } from './assets/leniascope.js?v=3.0.2';
+import { colormaps, defaultColormap } from './assets/colormaps.mjs?v=3.0.2';
 
 const stage = document.querySelector('.demo-stage');
 const canvases = {3: document.querySelector('#lenia'), 2: document.querySelector('#lenia-2d')};
@@ -71,8 +63,8 @@ function refresh() {
 }
 
 function fillPatterns() {
-  const list = current === 3 ? PRESETS : gallery.PRESETS_2D.filter(p => !omitted2D.has(p.name));
-  pattern.replaceChildren(...list.map(p => new Option(labels2D[p.name] ?? p.label, p.name)));
+  const list = current === 3 ? PRESETS : gallery.PRESETS_2D;
+  pattern.replaceChildren(...list.map(p => new Option(p.label, p.name)));
   pattern.value = active()?.preset ?? (current === 3 ? 'random' : 'orbium');
 }
 
@@ -97,9 +89,9 @@ function action(run, lock = false) {
 }
 
 async function create(d) {
-  if (d === 2) gallery ??= await import('./assets/gallery2d.js?v=3.0.1');
+  if (d === 2) gallery ??= await import('./assets/gallery2d.js?v=3.0.2');
   if (disposed) return null;
-  const options = {colorRamp: colormaps[colormap], background: '#13171b', wheelZoom: false};
+  const options = {colorRamp: colormaps[colormap], background: '#13171b', wheelZoom: 'modifier'};
   const sim = d === 3
     ? await createLenia3D(canvases[3], {
         ...options,

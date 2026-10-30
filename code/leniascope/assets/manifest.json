@@ -1,9 +1,9 @@
 {
-  "version": "3.0.1",
+  "version": "3.0.2",
   "entry": "leniascope.js",
-  "bytes": 58131,
-  "gzipBytes": 16538,
-  "sha256": "19d62ee5b02fd44c582089c3c9a521ea12393534d7bf86d6607ffc98f40e187d",
+  "bytes": 58355,
+  "gzipBytes": 16604,
+  "sha256": "b4a9708831672c0e23ce55c7428f021516e9e9996f2a663c3b504b997117759c",
   "backends": [
     "webgpu"
   ],
@@ -18,9 +18,9 @@
   ],
   "gallery2D": {
     "entry": "gallery2d.js",
-    "bytes": 435108,
-    "gzipBytes": 310381,
-    "sha256": "8cf1a46b8130e20cb75bea959bffc8b3d294c0060b0e138a0c5dd04eac7a829e",
+    "bytes": 302149,
+    "gzipBytes": 214066,
+    "sha256": "1e9121956d4661aa65b4317476ecd802017c13e267e0e38f6e6024e94b6b6657",
     "license": "PATTERNS-LICENSE.md"
   }
 }
