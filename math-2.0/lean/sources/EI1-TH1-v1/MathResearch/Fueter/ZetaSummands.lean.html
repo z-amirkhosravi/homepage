@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the EI1/v1 verification.">
+<title>MathResearch/Fueter/ZetaSummands.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the EI1/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Fueter/ZetaSummands.lean</h1><p><a href="ZetaSummands.lean" download>Download exact source</a>. SHA-256: <code>19ff1be2a3abaa56508a6b2574ac44481ef994b01f9889f0686ca38ca72ede44</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2"></span>
+<span id="L3">public import MathResearch.Fueter.EllipticPeriodicity</span>
+<span id="L4"></span>
+<span id="L5">/-! The intact first-order Taylor remainders in E-C2 and their real derivatives. -/</span>
+<span id="L6">@[expose] public section</span>
+<span id="L7">noncomputable section</span>
+<span id="L8">open scoped Quaternion Topology BigOperators ContDiff</span>
+<span id="L9">open Filter</span>
+<span id="L10">namespace MathResearch.Fueter</span>
+<span id="L11">attribute [local instance] Classical.propDecidable</span>
+<span id="L12"></span>
+<span id="L13">/-- The differentiated E-C2 summand. The zero lattice index is the leading kernel.</span>
+<span id="L14">At order zero subtract the affine Taylor polynomial; at order one subtract its</span>
+<span id="L15">constant derivative; at higher orders the subtraction vanishes. -/</span>
+<span id="L16">def zetaJet (l : List (Fin 4)) (a q : ℍ) : ℍ := by</span>
+<span id="L17">  classical</span>
+<span id="L18">  exact iteratedPartial l kernel (q + a) - if a = 0 then 0 else</span>
+<span id="L19">    match l with</span>
+<span id="L20">    | [] =&gt; kernel a + fderiv ℝ kernel a q</span>
+<span id="L21">    | [μ] =&gt; coordPartial μ kernel a</span>
+<span id="L22">    | _ :: _ :: _ =&gt; 0</span>
+<span id="L23"></span>
+<span id="L24">@[simp] theorem zetaJet_zero (l : List (Fin 4)) (q : ℍ) :</span>
+<span id="L25">    zetaJet l 0 q = iteratedPartial l kernel q := by simp [zetaJet]</span>
+<span id="L26"></span>
+<span id="L27">theorem zetaJet_nil (a q : ℍ) (ha : a ≠ 0) :</span>
+<span id="L28">    zetaJet [] a q = kernel (q + a) - kernel a - fderiv ℝ kernel a q := by</span>
+<span id="L29">  simp only [zetaJet, ite_eq_right ha, iteratedPartial]</span>
+<span id="L30">  abel</span>
+<span id="L31"></span>
+<span id="L32">@[simp] theorem zetaJet_cons_cons (μ ν : Fin 4) (l : List (Fin 4)) (a q : ℍ) :</span>
+<span id="L33">    zetaJet (μ :: ν :: l) a q = iteratedPartial (μ :: ν :: l) kernel (q + a) := by</span>
+<span id="L34">  simp [zetaJet]</span>
+<span id="L35"></span>
+<span id="L36">theorem zetaJet_hasFDerivAt (l : List (Fin 4)) (a q : ℍ) (hq : q + a ≠ 0) :</span>
+<span id="L37">    HasFDerivAt (zetaJet l a)</span>
+<span id="L38">      (fderiv ℝ (iteratedPartial l kernel) (q + a) -</span>
+<span id="L39">        if l = [] ∧ a ≠ 0 then fderiv ℝ kernel a else 0) q := by</span>
+<span id="L40">  classical</span>
+<span id="L41">  have h := (((kernel_iteratedPartial_regular l).1.contDiffAt</span>
+<span id="L42">    (isOpen_punctured.mem_nhds hq)).differentiableAt (by simp)).hasFDerivAt.comp q</span>
+<span id="L43">      ((hasFDerivAt_id q).add_const a)</span>
+<span id="L44">  unfold zetaJet</span>
+<span id="L45">  by_cases ha : a = 0</span>
+<span id="L46">  · simpa [ha, Function.comp_def] using h</span>
+<span id="L47">  · cases l with</span>
+<span id="L48">    | nil =&gt;</span>
+<span id="L49">      simp only [ha, ite_false, iteratedPartial, ne_eq, not_false_eq_true, and_self, ite_true]</span>
+<span id="L50">      convert! h.sub (((fderiv ℝ kernel a).hasFDerivAt).const_add (kernel a)) using 1</span>
+<span id="L51">    | cons μ l =&gt;</span>
+<span id="L52">      cases l with</span>
+<span id="L53">      | nil =&gt; simpa [ha, Function.comp_def] using h.sub_const (coordPartial μ kernel a)</span>
+<span id="L54">      | cons ν l =&gt; simpa [ha, Function.comp_def] using h</span>
+<span id="L55"></span>
+<span id="L56">theorem zetaJet_partial (l : List (Fin 4)) (μ : Fin 4) (a q : ℍ)</span>
+<span id="L57">    (hq : q + a ≠ 0) :</span>
+<span id="L58">    coordPartial μ (zetaJet l a) q = zetaJet (μ :: l) a q := by</span>
+<span id="L59">  classical</span>
+<span id="L60">  simp only [coordPartial, directional, (zetaJet_hasFDerivAt l a q hq).fderiv]</span>
+<span id="L61">  cases l with</span>
+<span id="L62">  | nil =&gt; by_cases ha : a = 0 &lt;;&gt; simp [zetaJet, ha, iteratedPartial, coordPartial, directional]</span>
+<span id="L63">  | cons ν l =&gt; cases l &lt;;&gt; simp [zetaJet, iteratedPartial, coordPartial, directional]</span>
+<span id="L64"></span>
+<span id="L65">theorem zetaJet_spatial (j : Fin 3) (a q : ℍ) :</span>
+<span id="L66">    zetaJet [j.succ] a q = regularizedJet j [] a q := by</span>
+<span id="L67">  classical</span>
+<span id="L68">  by_cases ha : a = 0 &lt;;&gt; simp [zetaJet, regularizedJet, kernelJet, kernelSpatialPartial, ha, iteratedPartial]</span>
+<span id="L69"></span>
+<span id="L70">/-- The coordinate presentation of the real differential used in E-C2. -/</span>
+<span id="L71">theorem kernel_differential_coordinates (a q : ℍ) :</span>
+<span id="L72">    fderiv ℝ kernel a q = ∑ μ : Fin 4, coordinateBasis.repr q μ • coordPartial μ kernel a := by</span>
+<span id="L73">  conv_lhs =&gt; rw [← coordinateBasis.sum_repr q, map_sum]</span>
+<span id="L74">  simp only [map_smul, coordPartial, directional]</span>
+<span id="L75"></span>
+<span id="L76">/-- F2 also controls the operator norm of every differentiated kernel. -/</span>
+<span id="L77">theorem kernel_iteratedPartial_fderiv_norm_le (l : List (Fin 4)) :</span>
+<span id="L78">    ∃ C : ℝ, 0 ≤ C ∧ ∀ q ≠ 0,</span>
+<span id="L79">      ‖fderiv ℝ (iteratedPartial l kernel) q‖ ≤ C * ‖q‖⁻¹ ^ (4 + l.length) := by</span>
+<span id="L80">  choose C hC hb using fun μ =&gt; kernel_iteratedPartial_norm_le (μ :: l)</span>
+<span id="L81">  have hsum : 0 ≤ ∑ μ, C μ := Finset.sum_nonneg fun μ _ =&gt; hC μ</span>
+<span id="L82">  let B : ℝ := Fintype.card (Fin 4) • ‖coordinateBasis.equivFunL.toContinuousLinearMap‖</span>
+<span id="L83">  refine ⟨B * ∑ μ, C μ, by dsimp [B]; positivity, ?_⟩</span>
+<span id="L84">  intro q hq</span>
+<span id="L85">  have h := coordinateBasis.opNorm_le</span>
+<span id="L86">    (u := fderiv ℝ (iteratedPartial l kernel) q)</span>
+<span id="L87">    (M := (∑ μ, C μ) * ‖q‖⁻¹ ^ (4 + l.length)) (by positivity) ?_</span>
+<span id="L88">  · simpa [B, mul_assoc] using h</span>
+<span id="L89">  intro μ</span>
+<span id="L90">  calc</span>
+<span id="L91">    _ ≤ C μ * ‖q‖⁻¹ ^ (4 + l.length) := by</span>
+<span id="L92">      simpa [iteratedPartial, coordPartial, directional, inv_pow,</span>
+<span id="L93">        show 3 + (l.length + 1) = 4 + l.length by omega] using hb μ q hq</span>
+<span id="L94">    _ ≤ _ := mul_le_mul_of_nonneg_right</span>
+<span id="L95">      (Finset.single_le_sum (fun ν _ =&gt; hC ν) (Finset.mem_univ μ)) (by positivity)</span>
+<span id="L96"></span>
+<span id="L97">end MathResearch.Fueter</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

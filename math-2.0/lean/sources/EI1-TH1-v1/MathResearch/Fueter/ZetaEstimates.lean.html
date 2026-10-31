@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the EI1/v1 verification.">
+<title>MathResearch/Fueter/ZetaEstimates.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the EI1/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Fueter/ZetaEstimates.lean</h1><p><a href="ZetaEstimates.lean" download>Download exact source</a>. SHA-256: <code>9ea9dabb3e652963d36c67d885023c837700d717fddf6922f78eae4e4a0eddb1</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Fueter.ZetaSummands</span>
+<span id="L3">@[expose] public section</span>
+<span id="L4">noncomputable section</span>
+<span id="L5">open scoped Quaternion Topology BigOperators ContDiff</span>
+<span id="L6">open Filter</span>
+<span id="L7">namespace MathResearch.Fueter</span>
+<span id="L8"></span>
+<span id="L9">/-- The first derivative of the Taylor remainder gains one power of decay. -/</span>
+<span id="L10">theorem zetaJet_one_majorant (L : Submodule ℤ ℍ)</span>
+<span id="L11">    [DiscreteTopology L] [IsZLattice ℝ L] (μ : Fin 4)</span>
+<span id="L12">    {K : Set ℍ} (hK : Bornology.IsBounded K) :</span>
+<span id="L13">    ∃ u : L → ℝ, Summable u ∧</span>
+<span id="L14">      ∀ᶠ a : L in cofinite, ∀ q ∈ K, ‖zetaJet [μ] (a : ℍ) q‖ ≤ u a := by</span>
+<span id="L15">  obtain ⟨R, hR, hRK⟩ := hK.exists_pos_norm_le</span>
+<span id="L16">  obtain ⟨C, hC, hb⟩ := kernel_iteratedPartial_fderiv_norm_le [μ]</span>
+<span id="L17">  refine ⟨fun a =&gt; (C * 2 ^ 5 * R) * ‖(a : ℍ)‖⁻¹ ^ 5,</span>
+<span id="L18">    (summable_lattice_inv_pow L 5 (by omega)).mul_left _, ?_⟩</span>
+<span id="L19">  filter_upwards [lattice_eventually_norm_gt L (2 * R + 1)] with a ha</span>
+<span id="L20">  intro q hq</span>
+<span id="L21">  have hapos : 0 &lt; ‖(a : ℍ)‖ := by linarith</span>
+<span id="L22">  have hane : (a : ℍ) ≠ 0 := norm_pos_iff.mp hapos</span>
+<span id="L23">  have hx (x : ℍ) (hx : x ∈ Metric.closedBall (a : ℍ) R) :</span>
+<span id="L24">      ‖(a : ℍ)‖ / 2 ≤ ‖x‖ ∧ x ≠ 0 := by</span>
+<span id="L25">    have hxR : ‖x - (a : ℍ)‖ ≤ R := by simpa [dist_eq_norm] using hx</span>
+<span id="L26">    have ht := norm_sub_norm_le (a : ℍ) x</span>
+<span id="L27">    rw [norm_sub_rev] at ht</span>
+<span id="L28">    constructor</span>
+<span id="L29">    · linarith</span>
+<span id="L30">    · apply norm_pos_iff.mp; linarith</span>
+<span id="L31">  have hm := (convex_closedBall (a : ℍ) R).norm_image_sub_le_of_norm_fderiv_le</span>
+<span id="L32">    (𝕜 := ℝ) (f := coordPartial μ kernel)</span>
+<span id="L33">    (fun x hx&#39; =&gt; ((kernel_iteratedPartial_regular [μ]).1.contDiffAt</span>
+<span id="L34">      (isOpen_punctured.mem_nhds (hx x hx&#39;).2)).differentiableAt (by simp))</span>
+<span id="L35">    (C := C * (‖(a : ℍ)‖ / 2)⁻¹ ^ 5)</span>
+<span id="L36">    (fun x hx&#39; =&gt; (by</span>
+<span id="L37">      have hh := hb x (hx x hx&#39;).2</span>
+<span id="L38">      simp only [iteratedPartial, List.length_cons, List.length_nil, Nat.reduceAdd] at hh</span>
+<span id="L39">      exact hh.trans (by gcongr; exact (hx x hx&#39;).1)))</span>
+<span id="L40">    (x := (a : ℍ)) (y := q + (a : ℍ))</span>
+<span id="L41">    (by simp [le_of_lt hR]) (by simpa [dist_eq_norm] using hRK q hq)</span>
+<span id="L42">  simp only [add_sub_cancel_right] at hm</span>
+<span id="L43">  simp only [zetaJet, ite_eq_right hane, iteratedPartial]</span>
+<span id="L44">  calc</span>
+<span id="L45">    _ ≤ (C * (‖(a : ℍ)‖ / 2)⁻¹ ^ 5) * ‖q‖ := hm</span>
+<span id="L46">    _ ≤ (C * (‖(a : ℍ)‖ / 2)⁻¹ ^ 5) * R := by gcongr; exact hRK q hq</span>
+<span id="L47">    _ = (C * 2 ^ 5 * R) * ‖(a : ℍ)‖⁻¹ ^ 5 := by</span>
+<span id="L48">      rw [inv_div, div_eq_mul_inv, mul_pow]</span>
+<span id="L49">      ring</span>
+<span id="L50"></span>
+<span id="L51"></span>
+<span id="L52">/-- A second application of the mean value theorem controls the intact E-C2 bracket. -/</span>
+<span id="L53">theorem zetaJet_zero_majorant (L : Submodule ℤ ℍ)</span>
+<span id="L54">    [DiscreteTopology L] [IsZLattice ℝ L]</span>
+<span id="L55">    {K : Set ℍ} (hK : Bornology.IsBounded K) :</span>
+<span id="L56">    ∃ u : L → ℝ, Summable u ∧</span>
+<span id="L57">      ∀ᶠ a : L in cofinite, ∀ q ∈ K, ‖zetaJet [] (a : ℍ) q‖ ≤ u a := by</span>
+<span id="L58">  obtain ⟨R, hR, hRK⟩ := hK.exists_pos_norm_le</span>
+<span id="L59">  choose u hu hb using fun μ =&gt; zetaJet_one_majorant L μ (Metric.isBounded_closedBall (x := (0 : ℍ)) (r := R))</span>
+<span id="L60">  let B : ℝ := Fintype.card (Fin 4) • ‖coordinateBasis.equivFunL.toContinuousLinearMap‖</span>
+<span id="L61">  let M : L → ℝ := fun a =&gt; B * ∑ μ, |u μ a|</span>
+<span id="L62">  have hM (a : L) : 0 ≤ M a := by dsimp [M, B]; positivity</span>
+<span id="L63">  refine ⟨fun a =&gt; M a * R, ((summable_sum (fun μ _ =&gt; (hu μ).abs)).mul_left B).mul_right R, ?_⟩</span>
+<span id="L64">  have hall : ∀ᶠ a : L in cofinite, ∀ μ, ∀ q ∈ Metric.closedBall (0 : ℍ) R,</span>
+<span id="L65">      ‖zetaJet [μ] (a : ℍ) q‖ ≤ u μ a := Filter.eventually_all.mpr hb</span>
+<span id="L66">  filter_upwards [hall, lattice_eventually_norm_gt L (R + 1)] with a ha hn</span>
+<span id="L67">  have hane : (a : ℍ) ≠ 0 := norm_pos_iff.mp (by linarith)</span>
+<span id="L68">  have hx (x : ℍ) (hx : x ∈ Metric.closedBall (0 : ℍ) R) : x + (a : ℍ) ≠ 0 := by</span>
+<span id="L69">    have hxn : ‖x‖ ≤ R := by simpa using hx</span>
+<span id="L70">    intro hz</span>
+<span id="L71">    have he : (a : ℍ) = -x := eq_neg_of_add_eq_zero_right hz</span>
+<span id="L72">    rw [he, norm_neg] at hn</span>
+<span id="L73">    linarith</span>
+<span id="L74">  have hd (x : ℍ) (hx&#39; : x ∈ Metric.closedBall (0 : ℍ) R) :</span>
+<span id="L75">      ‖fderiv ℝ (zetaJet [] (a : ℍ)) x‖ ≤ M a := by</span>
+<span id="L76">    apply coordinateBasis.opNorm_le (by positivity)</span>
+<span id="L77">    intro μ</span>
+<span id="L78">    change ‖coordPartial μ (zetaJet [] (a : ℍ)) x‖ ≤ _</span>
+<span id="L79">    rw [zetaJet_partial [] μ _ x (hx x hx&#39;)]</span>
+<span id="L80">    exact (ha μ x hx&#39;).trans ((le_abs_self _).trans</span>
+<span id="L81">      (Finset.single_le_sum (fun ν _ =&gt; abs_nonneg (u ν a)) (Finset.mem_univ μ)))</span>
+<span id="L82">  intro q hq</span>
+<span id="L83">  have hm := (convex_closedBall (0 : ℍ) R).norm_image_sub_le_of_norm_fderiv_le</span>
+<span id="L84">    (𝕜 := ℝ) (f := zetaJet [] (a : ℍ))</span>
+<span id="L85">    (fun x hx&#39; =&gt; (zetaJet_hasFDerivAt [] _ x (hx x hx&#39;)).differentiableAt)</span>
+<span id="L86">    (C := M a) hd (x := 0) (y := q) (by simp [le_of_lt hR])</span>
+<span id="L87">    (by simpa using hRK q hq)</span>
+<span id="L88">  have hz : zetaJet [] (a : ℍ) 0 = 0 := by simp [zetaJet, hane, iteratedPartial]</span>
+<span id="L89">  simpa [hz] using hm.trans (mul_le_mul_of_nonneg_left (by simpa using hRK q hq) (hM a))</span>
+<span id="L90"></span>
+<span id="L91">/-- All ordered real partial derivatives admit summable majorants on bounded sets. -/</span>
+<span id="L92">theorem zetaJet_majorant (L : Submodule ℤ ℍ)</span>
+<span id="L93">    [DiscreteTopology L] [IsZLattice ℝ L] (l : List (Fin 4))</span>
+<span id="L94">    {K : Set ℍ} (hK : Bornology.IsBounded K) :</span>
+<span id="L95">    ∃ u : L → ℝ, Summable u ∧</span>
+<span id="L96">      ∀ᶠ a : L in cofinite, ∀ q ∈ K, ‖zetaJet l (a : ℍ) q‖ ≤ u a := by</span>
+<span id="L97">  cases l with</span>
+<span id="L98">  | nil =&gt; exact zetaJet_zero_majorant L hK</span>
+<span id="L99">  | cons μ l =&gt;</span>
+<span id="L100">    cases l with</span>
+<span id="L101">    | nil =&gt; exact zetaJet_one_majorant L μ hK</span>
+<span id="L102">    | cons ν l =&gt;</span>
+<span id="L103">      obtain ⟨C, hC, hb⟩ := kernel_iteratedPartial_norm_le (μ :: ν :: l)</span>
+<span id="L104">      have hb&#39; (q : ℍ) (hq : q ≠ 0) :</span>
+<span id="L105">          ‖iteratedPartial (μ :: ν :: l) kernel q‖ ≤ C * ‖q‖⁻¹ ^ (3 + (μ :: ν :: l).length) := by</span>
+<span id="L106">        simpa only [inv_pow] using hb q hq</span>
+<span id="L107">      obtain ⟨u, hu, hbound⟩ := lattice_decay_majorant L (by simp; omega) hC hb&#39; hK</span>
+<span id="L108">      exact ⟨u, hu, by simpa only [zetaJet_cons_cons] using hbound⟩</span>
+<span id="L109"></span>
+<span id="L110">theorem zetaJet_normal_all (L : Submodule ℤ ℍ)</span>
+<span id="L111">    [DiscreteTopology L] [IsZLattice ℝ L] (l : List (Fin 4)) (U : Set ℍ) :</span>
+<span id="L112">    NormallySummableOn (fun a : L =&gt; zetaJet l (a : ℍ)) U :=</span>
+<span id="L113">  fun _ _ hK =&gt; zetaJet_majorant L l hK.isBounded</span>
+<span id="L114"></span>
+<span id="L115">theorem zetaJet_normal (L : Submodule ℤ ℍ)</span>
+<span id="L116">    [DiscreteTopology L] [IsZLattice ℝ L] (l : List (Fin 4)) (S : Set L) (U : Set ℍ) :</span>
+<span id="L117">    NormallySummableOn (fun a : S =&gt; zetaJet l (a.1 : ℍ)) U := by</span>
+<span id="L118">  intro K _ hK</span>
+<span id="L119">  obtain ⟨u, hu, hb⟩ := zetaJet_majorant L l hK.isBounded</span>
+<span id="L120">  exact ⟨fun a =&gt; u a.1, hu.subtype _, Subtype.val_injective.tendsto_cofinite.eventually hb⟩</span>
+<span id="L121"></span>
+<span id="L122">end MathResearch.Fueter</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

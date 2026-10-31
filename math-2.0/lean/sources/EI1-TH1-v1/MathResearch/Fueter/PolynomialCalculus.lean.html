@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the EI1/v1 verification.">
+<title>MathResearch/Fueter/PolynomialCalculus.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the EI1/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Fueter/PolynomialCalculus.lean</h1><p><a href="PolynomialCalculus.lean" download>Download exact source</a>. SHA-256: <code>d6c0757ed3ba5d8e104abe64375667c93a92135658cc2f0b069f3cb11afedc8c</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Fueter.HarmonicPolynomial</span>
+<span id="L3"></span>
+<span id="L4">/-! Evaluating real multivariate polynomials on mathlib&#39;s real quaternion space. -/</span>
+<span id="L5">@[expose] public section</span>
+<span id="L6">noncomputable section</span>
+<span id="L7">open scoped Quaternion Topology BigOperators ContDiff</span>
+<span id="L8">open MvPolynomial</span>
+<span id="L9">namespace MathResearch.Fueter</span>
+<span id="L10"></span>
+<span id="L11">/-- The four real component projections, in the order `re, imI, imJ, imK`. -/</span>
+<span id="L12">def realCoord (i : Fin 4) : ℍ →L[ℝ] ℝ :=</span>
+<span id="L13">  (ContinuousLinearMap.proj i).comp coordinateBasis.equivFunL.toContinuousLinearMap</span>
+<span id="L14"></span>
+<span id="L15">@[simp] theorem realCoord_apply (i : Fin 4) (q : ℍ) :</span>
+<span id="L16">    realCoord i q = coordinateBasis.repr q i := rfl</span>
+<span id="L17"></span>
+<span id="L18">@[simp] theorem realCoord_basis (i j : Fin 4) :</span>
+<span id="L19">    realCoord i (coordinateBasis j) = if i = j then 1 else 0 := by</span>
+<span id="L20">  simp [realCoord_apply, Module.Basis.repr_self, Finsupp.single_apply, eq_comm]</span>
+<span id="L21"></span>
+<span id="L22">/-- Evaluation in the standard four real coordinates of a quaternion. -/</span>
+<span id="L23">def polyEval (P : RealPoly4) (q : ℍ) : ℝ := eval (coordinateBasis.repr q) P</span>
+<span id="L24"></span>
+<span id="L25">@[simp] theorem polyEval_C (c : ℝ) (q : ℍ) : polyEval (C c) q = c := by simp [polyEval]</span>
+<span id="L26">@[simp] theorem polyEval_X (i : Fin 4) (q : ℍ) : polyEval (X i) q = realCoord i q := by</span>
+<span id="L27">  simp [polyEval]</span>
+<span id="L28">@[simp] theorem polyEval_add (P Q : RealPoly4) (q : ℍ) :</span>
+<span id="L29">    polyEval (P + Q) q = polyEval P q + polyEval Q q := by simp [polyEval]</span>
+<span id="L30">@[simp] theorem polyEval_sub (P Q : RealPoly4) (q : ℍ) :</span>
+<span id="L31">    polyEval (P - Q) q = polyEval P q - polyEval Q q := by simp [polyEval]</span>
+<span id="L32">@[simp] theorem polyEval_two (q : ℍ) : polyEval 2 q = 2 := by simp [polyEval]</span>
+<span id="L33">@[simp] theorem polyEval_mul (P Q : RealPoly4) (q : ℍ) :</span>
+<span id="L34">    polyEval (P * Q) q = polyEval P q * polyEval Q q := by simp [polyEval]</span>
+<span id="L35"></span>
+<span id="L36">theorem polyEval_C_fun (c : ℝ) : polyEval (C c) = fun _ =&gt; c := funext (polyEval_C c)</span>
+<span id="L37">theorem polyEval_add_fun (P Q : RealPoly4) :</span>
+<span id="L38">    polyEval (P + Q) = fun q =&gt; polyEval P q + polyEval Q q := funext (polyEval_add P Q)</span>
+<span id="L39">theorem polyEval_mul_X_fun (P : RealPoly4) (i : Fin 4) :</span>
+<span id="L40">    polyEval (P * X i) = fun q =&gt; polyEval P q * realCoord i q := by</span>
+<span id="L41">  funext q; simp</span>
+<span id="L42"></span>
+<span id="L43">@[fun_prop] theorem polyEval_contDiff (P : RealPoly4) : ContDiff ℝ ∞ (polyEval P) := by</span>
+<span id="L44">  induction P using MvPolynomial.induction_on with</span>
+<span id="L45">  | C c =&gt; simpa only [polyEval_C_fun] using (contDiff_const : ContDiff ℝ ∞ (fun _ : ℍ =&gt; c))</span>
+<span id="L46">  | add P Q hp hq =&gt; simpa only [polyEval_add_fun] using hp.add hq</span>
+<span id="L47">  | mul_X P i hp =&gt; simpa only [polyEval_mul_X_fun] using hp.mul (realCoord i).contDiff</span>
+<span id="L48"></span>
+<span id="L49">/-- Symbolic polynomial differentiation agrees with the actual Fréchet derivative. -/</span>
+<span id="L50">theorem polyEval_pderiv (P : RealPoly4) (j : Fin 4) (q : ℍ) :</span>
+<span id="L51">    fderiv ℝ (polyEval P) q (coordinateBasis j) = polyEval (pderiv j P) q := by</span>
+<span id="L52">  induction P using MvPolynomial.induction_on with</span>
+<span id="L53">  | C c =&gt; rw [polyEval_C_fun]; simp [polyEval]</span>
+<span id="L54">  | add P Q hp hq =&gt;</span>
+<span id="L55">    have hdP := (polyEval_contDiff P).differentiable (by simp)</span>
+<span id="L56">    have hdQ := (polyEval_contDiff Q).differentiable (by simp)</span>
+<span id="L57">    simp only [polyEval_add_fun, fderiv_fun_add hdP.differentiableAt hdQ.differentiableAt,</span>
+<span id="L58">      add_apply, hp, hq, map_add]</span>
+<span id="L59">  | mul_X P i hp =&gt;</span>
+<span id="L60">    have hdP := (polyEval_contDiff P).differentiable (by simp)</span>
+<span id="L61">    simp only [polyEval_mul_X_fun, fderiv_fun_mul hdP.differentiableAt</span>
+<span id="L62">      (realCoord i).differentiableAt, add_apply, smul_apply,</span>
+<span id="L63">      (realCoord i).fderiv, hp, smul_eq_mul, pderiv_mul]</span>
+<span id="L64">    by_cases h : i = j</span>
+<span id="L65">    · subst i; simp; ring</span>
+<span id="L66">    · simp [pderiv_X_of_ne h, h, mul_comm]</span>
+<span id="L67"></span>
+<span id="L68">@[simp] theorem polyEval_normSq (q : ℍ) : polyEval normSqPoly q = Quaternion.normSq q := by</span>
+<span id="L69">  simp [polyEval, normSqPoly, Fin.sum_univ_succ, coordinateBasis,</span>
+<span id="L70">    QuaternionAlgebra.coe_basisOneIJK_repr, Quaternion.normSq_def, pow_two, add_assoc]</span>
+<span id="L71"></span>
+<span id="L72">theorem coordinateBasis_orthonormal : Orthonormal ℝ coordinateBasis := by</span>
+<span id="L73">  rw [orthonormal_iff_ite]</span>
+<span id="L74">  intro i j</span>
+<span id="L75">  simp only [Quaternion.inner_def, coordinateBasis_eq]</span>
+<span id="L76">  fin_cases i &lt;;&gt; fin_cases j &lt;;&gt; norm_num</span>
+<span id="L77"></span>
+<span id="L78">/-- The standard quaternion basis, now equipped with its Euclidean orthonormality. -/</span>
+<span id="L79">def quaternionOrthonormalBasis : OrthonormalBasis (Fin 4) ℝ ℍ :=</span>
+<span id="L80">  coordinateBasis.toOrthonormalBasis coordinateBasis_orthonormal</span>
+<span id="L81"></span>
+<span id="L82">@[simp] theorem quaternionOrthonormalBasis_apply (i : Fin 4) :</span>
+<span id="L83">    quaternionOrthonormalBasis i = coordinateBasis i := by</span>
+<span id="L84">  exact congrFun (Module.Basis.coe_toOrthonormalBasis _ _) i</span>
+<span id="L85"></span>
+<span id="L86">/-- The algebraic polynomial Laplacian is the ordinary Euclidean Laplacian. -/</span>
+<span id="L87">theorem polyEval_laplacian (P : RealPoly4) :</span>
+<span id="L88">    Laplacian.laplacian (polyEval P) = polyEval (polyLaplacian P) := by</span>
+<span id="L89">  rw [InnerProductSpace.laplacian_eq_iteratedFDeriv_orthonormalBasis (polyEval P) quaternionOrthonormalBasis]</span>
+<span id="L90">  funext q</span>
+<span id="L91">  simp only [polyEval, polyLaplacian, map_sum]</span>
+<span id="L92">  apply Finset.sum_congr rfl</span>
+<span id="L93">  intro i _</span>
+<span id="L94">  rw [iteratedFDeriv_two_apply]</span>
+<span id="L95">  simp only [Matrix.cons_val_zero, Matrix.cons_val_one, quaternionOrthonormalBasis_apply]</span>
+<span id="L96">  have hd : DifferentiableAt ℝ (fderiv ℝ (polyEval P)) q :=</span>
+<span id="L97">    (((polyEval_contDiff P).contDiffOn.fderiv_of_isOpen (m := ∞) isOpen_univ</span>
+<span id="L98">      (by simp)).contDiffAt (by simp)).differentiableAt (by simp)</span>
+<span id="L99">  have hfun : (fun x =&gt; fderiv ℝ (polyEval P) x (coordinateBasis i)) =</span>
+<span id="L100">      polyEval (pderiv i P) := funext (polyEval_pderiv P i)</span>
+<span id="L101">  change fderiv ℝ (fderiv ℝ (polyEval P)) q (coordinateBasis i) (coordinateBasis i) =</span>
+<span id="L102">    polyEval (pderiv i (pderiv i P)) q</span>
+<span id="L103">  rw [← polyEval_pderiv (pderiv i P) i q, ← hfun,</span>
+<span id="L104">    fderiv_clm_apply hd (differentiableAt_const (coordinateBasis i))]</span>
+<span id="L105">  simp</span>
+<span id="L106"></span>
+<span id="L107">theorem polyEval_harmonic {P : RealPoly4} (hP : polyLaplacian P = 0) :</span>
+<span id="L108">    InnerProductSpace.HarmonicOnNhd (polyEval P) Set.univ := by</span>
+<span id="L109">  intro q _</span>
+<span id="L110">  refine ⟨(polyEval_contDiff P).contDiffAt.of_le (by simp), ?_⟩</span>
+<span id="L111">  rw [polyEval_laplacian, hP]</span>
+<span id="L112">  exact Filter.Eventually.of_forall (fun x =&gt; by simp [polyEval])</span>
+<span id="L113"></span>
+<span id="L114">end MathResearch.Fueter</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

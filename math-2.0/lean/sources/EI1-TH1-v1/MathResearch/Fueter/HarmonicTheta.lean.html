@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the EI1/v1 verification.">
+<title>MathResearch/Fueter/HarmonicTheta.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the EI1/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Fueter/HarmonicTheta.lean</h1><p><a href="HarmonicTheta.lean" download>Download exact source</a>. SHA-256: <code>9dbf26347f9077c51850428114616e1c5c91b2466f03f3d282989525cabfc1fa</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Fueter.KernelNumerator</span>
+<span id="L3">public import MathResearch.Fueter.RealMellin</span>
+<span id="L4"></span>
+<span id="L5">/-! TH1: the absolutely convergent Mellin formula for real components of EI1&#39;s numerators. -/</span>
+<span id="L6">@[expose] public section</span>
+<span id="L7">noncomputable section</span>
+<span id="L8">open scoped Quaternion Topology BigOperators ContDiff</span>
+<span id="L9">open MeasureTheory Set Real</span>
+<span id="L10">namespace MathResearch.Fueter</span>
+<span id="L11"></span>
+<span id="L12">@[simp] theorem kernelNumerator_eval_zero (ν : Fin 3 → ℕ) (k : Fin 4) :</span>
+<span id="L13">    polyEval (kernelNumerator ν k) 0 = 0 := by</span>
+<span id="L14">  unfold kernelNumerator</span>
+<span id="L15">  cases spatialDerivativeList ν with</span>
+<span id="L16">  | nil =&gt; simp [numeratorJet]</span>
+<span id="L17">  | cons j l =&gt; simp [numeratorJet, numeratorStep, polyEval_sub, polyEval_mul]</span>
+<span id="L18"></span>
+<span id="L19">variable (L : Submodule ℤ ℍ) [DiscreteTopology L] [IsZLattice ℝ L]</span>
+<span id="L20"></span>
+<span id="L21">/-- TH1&#39;s scalar Eisenstein coefficient, expressed directly as a polynomial lattice sum. -/</span>
+<span id="L22">def numeratorCoefficient (ν : Fin 3 → ℕ) (k : Fin 4) : ℝ :=</span>
+<span id="L23">  ∑&#39; l : {l : L // l ≠ 0},</span>
+<span id="L24">    polyEval (kernelNumerator ν k) (l.1 : ℍ) /</span>
+<span id="L25">      Quaternion.normSq (l.1 : ℍ) ^ ((∑ i, ν i) + 2)</span>
+<span id="L26"></span>
+<span id="L27">/-- The imaginary-axis theta series `θ_{L,H}(it)`, including the zero lattice point. -/</span>
+<span id="L28">def harmonicTheta (ν : Fin 3 → ℕ) (k : Fin 4) (t : ℝ) : ℝ :=</span>
+<span id="L29">  ∑&#39; l : L, polyEval (kernelNumerator ν k) (l : ℍ) * exp (-Real.pi * t * Quaternion.normSq (l : ℍ))</span>
+<span id="L30"></span>
+<span id="L31">theorem summable_numeratorCoefficient_norm (ν : Fin 3 → ℕ) (k : Fin 4)</span>
+<span id="L32">    (hν : 2 ≤ ∑ i, ν i) :</span>
+<span id="L33">    Summable (fun l : {l : L // l ≠ 0} =&gt;</span>
+<span id="L34">      |polyEval (kernelNumerator ν k) (l.1 : ℍ)| /</span>
+<span id="L35">        Quaternion.normSq (l.1 : ℍ) ^ ((∑ i, ν i) + 2)) := by</span>
+<span id="L36">  have hc : Summable (fun l : {l : L // l ≠ 0} =&gt; ‖realCoord k (higherKernel ν (l.1 : ℍ))‖) :=</span>
+<span id="L37">    Summable.of_nonneg_of_le (fun _ =&gt; norm_nonneg _) (fun l =&gt; (realCoord k).le_opNorm _)</span>
+<span id="L38">      ((summable_norm_eisenstein L ν hν).mul_left ‖realCoord k‖)</span>
+<span id="L39">  convert hc using 1</span>
+<span id="L40">  funext l</span>
+<span id="L41">  have hn : 0 ≤ Quaternion.normSq (l.1 : ℍ) := Quaternion.normSq_nonneg</span>
+<span id="L42">  rw [kernelNumerator_represents ν k (by simpa using l.2), Real.norm_eq_abs, abs_div,</span>
+<span id="L43">    abs_of_nonneg (pow_nonneg hn _)]</span>
+<span id="L44"></span>
+<span id="L45">/-- The new scalar coefficient is precisely a real component of the existing coefficient. -/</span>
+<span id="L46">theorem numeratorCoefficient_eq_component (ν : Fin 3 → ℕ) (k : Fin 4)</span>
+<span id="L47">    (hν : 2 ≤ ∑ i, ν i) : numeratorCoefficient L ν k = realCoord k (eisensteinCoefficient L ν) := by</span>
+<span id="L48">  rw [numeratorCoefficient, eisensteinCoefficient,</span>
+<span id="L49">    (realCoord k).map_tsum (summable_norm_eisenstein L ν hν).of_norm]</span>
+<span id="L50">  apply tsum_congr</span>
+<span id="L51">  intro l</span>
+<span id="L52">  exact (kernelNumerator_represents ν k (by simpa using l.2)).symm</span>
+<span id="L53"></span>
+<span id="L54">omit [DiscreteTopology L] [IsZLattice ℝ L] in</span>
+<span id="L55">theorem harmonicTheta_eq_nonzero (ν : Fin 3 → ℕ) (k : Fin 4) (t : ℝ) :</span>
+<span id="L56">    harmonicTheta L ν k t = ∑&#39; l : {l : L // l ≠ 0},</span>
+<span id="L57">      polyEval (kernelNumerator ν k) (l.1 : ℍ) * exp (-Real.pi * t * Quaternion.normSq (l.1 : ℍ)) := by</span>
+<span id="L58">  unfold harmonicTheta</span>
+<span id="L59">  symm</span>
+<span id="L60">  apply tsum_subtype_eq_of_support_subset (s := {l : L | l ≠ 0})</span>
+<span id="L61">    (f := fun l : L =&gt; polyEval (kernelNumerator ν k) (l : ℍ) *</span>
+<span id="L62">      exp (-Real.pi * t * Quaternion.normSq (l : ℍ)))</span>
+<span id="L63">  intro l hl</span>
+<span id="L64">  by_contra h</span>
+<span id="L65">  have : l = 0 := by simpa using h</span>
+<span id="L66">  subst l</span>
+<span id="L67">  simp [Function.mem_support] at hl</span>
+<span id="L68"></span>
+<span id="L69">omit [DiscreteTopology L] [IsZLattice ℝ L] in</span>
+<span id="L70">/-- The positive rates appearing in the real Mellin lemmas. -/</span>
+<span id="L71">private theorem theta_rate_pos (l : {l : L // l ≠ 0}) :</span>
+<span id="L72">    0 &lt; Real.pi * Quaternion.normSq (l.1 : ℍ) := by</span>
+<span id="L73">  exact mul_pos Real.pi_pos (lt_of_le_of_ne Quaternion.normSq_nonneg</span>
+<span id="L74">    (Ne.symm (Quaternion.normSq_ne_zero.mpr (by simpa using l.2))))</span>
+<span id="L75"></span>
+<span id="L76">private theorem summable_theta_rate (ν : Fin 3 → ℕ) (k : Fin 4) (hν : 2 ≤ ∑ i, ν i) :</span>
+<span id="L77">    Summable (fun l : {l : L // l ≠ 0} =&gt;</span>
+<span id="L78">      |polyEval (kernelNumerator ν k) (l.1 : ℍ)| /</span>
+<span id="L79">        (Real.pi * Quaternion.normSq (l.1 : ℍ)) ^ ((∑ i, ν i) + 2)) := by</span>
+<span id="L80">  simpa only [mul_pow, div_mul_eq_div_div, div_right_comm] using</span>
+<span id="L81">    (summable_numeratorCoefficient_norm L ν k hν).div_const (Real.pi ^ ((∑ i, ν i) + 2))</span>
+<span id="L82"></span>
+<span id="L83">theorem summable_harmonicTheta (ν : Fin 3 → ℕ) (k : Fin 4) (hν : 2 ≤ ∑ i, ν i)</span>
+<span id="L84">    {t : ℝ} (ht : 0 &lt; t) :</span>
+<span id="L85">    Summable (fun l : L =&gt; polyEval (kernelNumerator ν k) (l : ℍ) *</span>
+<span id="L86">      exp (-Real.pi * t * Quaternion.normSq (l : ℍ))) := by</span>
+<span id="L87">  have hs := summable_exp_series ((∑ i, ν i) + 2) (theta_rate_pos L)</span>
+<span id="L88">    (summable_theta_rate L ν k hν) ht</span>
+<span id="L89">  have he (l : L) : -(Real.pi * Quaternion.normSq (l : ℍ)) * t =</span>
+<span id="L90">      -Real.pi * t * Quaternion.normSq (l : ℍ) := by ring</span>
+<span id="L91">  simp_rw [he] at hs</span>
+<span id="L92">  have hh := (Set.finite_singleton (0 : L)).summable_compl_iff</span>
+<span id="L93">    (f := fun l : L =&gt; polyEval (kernelNumerator ν k) (l : ℍ) *</span>
+<span id="L94">      exp (-Real.pi * t * Quaternion.normSq (l : ℍ)))</span>
+<span id="L95">  apply hh.mp</span>
+<span id="L96">  change Summable (fun l : {l : L // l ≠ 0} =&gt;</span>
+<span id="L97">    polyEval (kernelNumerator ν k) (l.1 : ℍ) * exp (-Real.pi * t * Quaternion.normSq (l.1 : ℍ)))</span>
+<span id="L98">  exact hs</span>
+<span id="L99"></span>
+<span id="L100">/-- Absolute convergence of precisely the sum of weighted integrals in TH1. -/</span>
+<span id="L101">theorem harmonicTheta_absolute_interchange (ν : Fin 3 → ℕ) (k : Fin 4) (hν : 2 ≤ ∑ i, ν i) :</span>
+<span id="L102">    Summable (fun l : {l : L // l ≠ 0} =&gt; ∫ t : ℝ in Ioi 0,</span>
+<span id="L103">      ‖t ^ ((∑ i, ν i) + 1) * (polyEval (kernelNumerator ν k) (l.1 : ℍ) *</span>
+<span id="L104">        exp (-Real.pi * t * Quaternion.normSq (l.1 : ℍ)))‖) := by</span>
+<span id="L105">  have hs := summable_integral_norm_mellin ((∑ i, ν i) + 1) (theta_rate_pos L)</span>
+<span id="L106">    (by simpa [Nat.add_assoc] using summable_theta_rate L ν k hν)</span>
+<span id="L107">  have he (l : {l : L // l ≠ 0}) (t : ℝ) :</span>
+<span id="L108">      -(Real.pi * Quaternion.normSq (l.1 : ℍ)) * t =</span>
+<span id="L109">      -Real.pi * t * Quaternion.normSq (l.1 : ℍ) := by ring</span>
+<span id="L110">  simpa only [Nat.add_assoc, he] using hs</span>
+<span id="L111"></span>
+<span id="L112">theorem harmonicTheta_integrable (ν : Fin 3 → ℕ) (k : Fin 4) (hν : 2 ≤ ∑ i, ν i) :</span>
+<span id="L113">    IntegrableOn (fun t : ℝ =&gt; t ^ ((∑ i, ν i) + 1) * harmonicTheta L ν k t) (Ioi 0) := by</span>
+<span id="L114">  have hi := integrableOn_mellin_series ((∑ i, ν i) + 1) (theta_rate_pos L)</span>
+<span id="L115">    (by simpa [Nat.add_assoc] using summable_theta_rate L ν k hν)</span>
+<span id="L116">  convert hi using 1</span>
+<span id="L117">  funext t</span>
+<span id="L118">  rw [harmonicTheta_eq_nonzero]</span>
+<span id="L119">  congr 1</span>
+<span id="L120">  apply tsum_congr</span>
+<span id="L121">  intro l</span>
+<span id="L122">  congr 2</span>
+<span id="L123">  ring</span>
+<span id="L124"></span>
+<span id="L125">/-- TH1&#39;s Mellin value, in fact valid for every spatial order at least two. -/</span>
+<span id="L126">theorem harmonicTheta_mellin (ν : Fin 3 → ℕ) (k : Fin 4) (hν : 2 ≤ ∑ i, ν i) :</span>
+<span id="L127">    numeratorCoefficient L ν k =</span>
+<span id="L128">      Real.pi ^ ((∑ i, ν i) + 2) / Gamma (((∑ i, ν i) : ℕ) + 2) *</span>
+<span id="L129">        ∫ t : ℝ in Ioi 0, t ^ ((∑ i, ν i) + 1) * harmonicTheta L ν k t := by</span>
+<span id="L130">  have he := real_mellin_series ((∑ i, ν i) + 1) (theta_rate_pos L)</span>
+<span id="L131">    (by simpa [Nat.add_assoc] using summable_theta_rate L ν k hν)</span>
+<span id="L132">  have hfun (t : ℝ) : (∑&#39; l : {l : L // l ≠ 0},</span>
+<span id="L133">      polyEval (kernelNumerator ν k) (l.1 : ℍ) * exp (-(Real.pi * Quaternion.normSq (l.1 : ℍ)) * t)) =</span>
+<span id="L134">      harmonicTheta L ν k t := by</span>
+<span id="L135">    rw [harmonicTheta_eq_nonzero]</span>
+<span id="L136">    apply tsum_congr</span>
+<span id="L137">    intro l</span>
+<span id="L138">    congr 2</span>
+<span id="L139">    ring</span>
+<span id="L140">  simp_rw [hfun, Nat.add_assoc, Nat.cast_add, Nat.cast_one] at he</span>
+<span id="L141">  have hcoeff : (∑&#39; l : {l : L // l ≠ 0},</span>
+<span id="L142">      polyEval (kernelNumerator ν k) (l.1 : ℍ) /</span>
+<span id="L143">        (Real.pi * Quaternion.normSq (l.1 : ℍ)) ^ ((∑ i, ν i) + 2)) =</span>
+<span id="L144">      numeratorCoefficient L ν k / Real.pi ^ ((∑ i, ν i) + 2) := by</span>
+<span id="L145">    rw [numeratorCoefficient, ← tsum_div_const]</span>
+<span id="L146">    apply tsum_congr</span>
+<span id="L147">    intro l</span>
+<span id="L148">    simp only [mul_pow, div_eq_mul_inv, mul_inv_rev]</span>
+<span id="L149">    ring</span>
+<span id="L150">  norm_num only [Nat.reduceAdd, one_add_one_eq_two] at he</span>
+<span id="L151">  simp only [add_assoc, one_add_one_eq_two] at he</span>
+<span id="L152">  rw [hcoeff] at he</span>
+<span id="L153">  rw [he]</span>
+<span id="L154">  have hg : Gamma (((∑ i, ν i) : ℕ) + 2) ≠ 0 := (Gamma_pos_of_pos (by positivity)).ne&#39;</span>
+<span id="L155">  field_simp</span>
+<span id="L156"></span>
+<span id="L157">/-- TH1/v1: the stated odd-order Mellin identity, with all convergence claims proved. -/</span>
+<span id="L158">theorem TH1_v1 (ν : Fin 3 → ℕ) (k : Fin 4) (_hodd : Odd (∑ i, ν i))</span>
+<span id="L159">    (hν : 3 ≤ ∑ i, ν i) :</span>
+<span id="L160">    (∀ t : ℝ, 0 &lt; t → Summable (fun l : L =&gt;</span>
+<span id="L161">      polyEval (kernelNumerator ν k) (l : ℍ) * exp (-Real.pi * t * Quaternion.normSq (l : ℍ)))) ∧</span>
+<span id="L162">    Summable (fun l : {l : L // l ≠ 0} =&gt; |polyEval (kernelNumerator ν k) (l.1 : ℍ)| /</span>
+<span id="L163">      Quaternion.normSq (l.1 : ℍ) ^ ((∑ i, ν i) + 2)) ∧</span>
+<span id="L164">    Summable (fun l : {l : L // l ≠ 0} =&gt; ∫ t : ℝ in Ioi 0,</span>
+<span id="L165">      ‖t ^ ((∑ i, ν i) + 1) * (polyEval (kernelNumerator ν k) (l.1 : ℍ) *</span>
+<span id="L166">        exp (-Real.pi * t * Quaternion.normSq (l.1 : ℍ)))‖) ∧</span>
+<span id="L167">    IntegrableOn (fun t : ℝ =&gt; t ^ ((∑ i, ν i) + 1) * harmonicTheta L ν k t) (Ioi 0) ∧</span>
+<span id="L168">    numeratorCoefficient L ν k = realCoord k (eisensteinCoefficient L ν) ∧</span>
+<span id="L169">    numeratorCoefficient L ν k = Real.pi ^ ((∑ i, ν i) + 2) / Gamma (((∑ i, ν i) : ℕ) + 2) *</span>
+<span id="L170">      ∫ t : ℝ in Ioi 0, t ^ ((∑ i, ν i) + 1) * harmonicTheta L ν k t := by</span>
+<span id="L171">  have h₂ : 2 ≤ ∑ i, ν i := by omega</span>
+<span id="L172">  exact ⟨fun _ ht =&gt; summable_harmonicTheta L ν k h₂ ht,</span>
+<span id="L173">    summable_numeratorCoefficient_norm L ν k h₂, harmonicTheta_absolute_interchange L ν k h₂,</span>
+<span id="L174">    harmonicTheta_integrable L ν k h₂, numeratorCoefficient_eq_component L ν k h₂,</span>
+<span id="L175">    harmonicTheta_mellin L ν k h₂⟩</span>
+<span id="L176"></span>
+<span id="L177">end MathResearch.Fueter</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>
