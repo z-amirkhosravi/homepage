@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the N1/v2 verification.">
+<title>MathResearch/Fueter/EllipticPeriodicity.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the N1/v2 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Fueter/EllipticPeriodicity.lean</h1><p><a href="EllipticPeriodicity.lean" download>Download exact source</a>. SHA-256: <code>f57be324356722c5c434fe67a8c6f91cf69c6127b84a905cc92fb418028a7845</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2"></span>
+<span id="L3">public import MathResearch.Fueter.Elliptic</span>
+<span id="L4">public import Mathlib.Analysis.Normed.Module.Connected</span>
+<span id="L5"></span>
+<span id="L6">/-! E2: evenness and periodicity of the regularized quaternionic elliptic functions. -/</span>
+<span id="L7">@[expose] public section</span>
+<span id="L8">noncomputable section</span>
+<span id="L9">open scoped Quaternion Topology BigOperators ContDiff</span>
+<span id="L10">namespace MathResearch.Fueter</span>
+<span id="L11"></span>
+<span id="L12">theorem kernelSpatialPartial_even_all (j : Fin 3) (q : ℍ) :</span>
+<span id="L13">    kernelSpatialPartial j (-q) = kernelSpatialPartial j q := by</span>
+<span id="L14">  by_cases hq : q = 0</span>
+<span id="L15">  · simp [hq]</span>
+<span id="L16">  · exact kernelSpatialPartial_even j q hq</span>
+<span id="L17"></span>
+<span id="L18">/-- Evenness reindexes intact brackets; it does not split a borderline divergent sum. -/</span>
+<span id="L19">theorem elliptic_even (L : Submodule ℤ ℍ) (j : Fin 3) (q : ℍ) :</span>
+<span id="L20">    elliptic L j (-q) = elliptic L j q := by</span>
+<span id="L21">  unfold elliptic</span>
+<span id="L22">  rw [kernelSpatialPartial_even_all]</span>
+<span id="L23">  congr 1</span>
+<span id="L24">  rw [← (nonzeroLatticeNeg L).tsum_eq]</span>
+<span id="L25">  apply tsum_congr</span>
+<span id="L26">  intro a</span>
+<span id="L27">  change kernelSpatialPartial j (-q + -(a.1 : ℍ)) - kernelSpatialPartial j (-(a.1 : ℍ)) = _</span>
+<span id="L28">  rw [← neg_add, kernelSpatialPartial_even_all, kernelSpatialPartial_even_all]</span>
+<span id="L29"></span>
+<span id="L30">theorem not_mem_lattice_add (L : Submodule ℤ ℍ) (w : L) {q : ℍ} (hq : q ∉ L) :</span>
+<span id="L31">    q + (w : ℍ) ∉ L := by</span>
+<span id="L32">  intro h</span>
+<span id="L33">  exact hq (by simpa using L.sub_mem h w.2)</span>
+<span id="L34"></span>
+<span id="L35">variable (L : Submodule ℤ ℍ) [DiscreteTopology L] [IsZLattice ℝ L]</span>
+<span id="L36"></span>
+<span id="L37">/-- E1 identifies every first real derivative with a genuinely convergent full lattice sum. -/</span>
+<span id="L38">theorem elliptic_coordPartial (j : Fin 3) (μ : Fin 4) {q : ℍ} (hq : q ∉ L) :</span>
+<span id="L39">    coordPartial μ (elliptic L j) q = ∑&#39; a : L, kernelJet j [μ] (q + (a : ℍ)) := by</span>
+<span id="L40">  simpa only [iteratedPartial, regularizedJet_cons] using elliptic_iteratedPartial L j [μ] hq</span>
+<span id="L41"></span>
+<span id="L42">theorem elliptic_coordPartial_add (j : Fin 3) (μ : Fin 4) (w : L) {q : ℍ} (hq : q ∉ L) :</span>
+<span id="L43">    coordPartial μ (elliptic L j) (q + (w : ℍ)) = coordPartial μ (elliptic L j) q := by</span>
+<span id="L44">  rw [elliptic_coordPartial L j μ (not_mem_lattice_add L w hq), elliptic_coordPartial L j μ hq]</span>
+<span id="L45">  simpa [add_assoc] using (Equiv.addLeft w).tsum_eq</span>
+<span id="L46">    (fun a : L =&gt; kernelJet j [μ] (q + (a : ℍ)))</span>
+<span id="L47"></span>
+<span id="L48">theorem elliptic_fderiv_add (j : Fin 3) (w : L) {q : ℍ} (hq : q ∉ L) :</span>
+<span id="L49">    fderiv ℝ (elliptic L j) (q + (w : ℍ)) = fderiv ℝ (elliptic L j) q := by</span>
+<span id="L50">  apply ContinuousLinearMap.ext</span>
+<span id="L51">  intro v</span>
+<span id="L52">  rw [← coordinateBasis.sum_repr v]</span>
+<span id="L53">  simp only [map_sum, map_smul]</span>
+<span id="L54">  apply Finset.sum_congr rfl</span>
+<span id="L55">  intro μ _</span>
+<span id="L56">  congr 1</span>
+<span id="L57">  exact elliptic_coordPartial_add L j μ w hq</span>
+<span id="L58"></span>
+<span id="L59">omit [IsZLattice ℝ L] in</span>
+<span id="L60">/-- Mathlib supplies path connectedness of the complement of a countable set in real</span>
+<span id="L61"> dimension greater than one. A discrete quaternionic lattice satisfies these hypotheses. -/</span>
+<span id="L62">theorem isConnected_lattice_compl : IsConnected (L : Set ℍ)ᶜ := by</span>
+<span id="L63">  have hc : (L : Set ℍ).Countable := (isClosed_quaternionLattice L).isLindelof.countable inferInstance</span>
+<span id="L64">  apply hc.isConnected_compl_of_one_lt_rank</span>
+<span id="L65">  rw [← Module.finrank_eq_rank, Quaternion.finrank_eq_four]</span>
+<span id="L66">  norm_num</span>
+<span id="L67"></span>
+<span id="L68">/-- Vanishing derivatives make the period increment constant on the entire domain;</span>
+<span id="L69">evenness makes that constant its own negative, hence zero. -/</span>
+<span id="L70">theorem elliptic_add (j : Fin 3) (w : L) {q : ℍ} (hq : q ∉ L) :</span>
+<span id="L71">    elliptic L j (q + (w : ℍ)) = elliptic L j q := by</span>
+<span id="L72">  let H : ℍ → ℍ := fun x =&gt; elliptic L j (x + (w : ℍ)) - elliptic L j x</span>
+<span id="L73">  have hU := (isClosed_quaternionLattice L).isOpen_compl</span>
+<span id="L74">  have hd (x) (hx : x ∉ L) : DifferentiableAt ℝ (elliptic L j) x :=</span>
+<span id="L75">    ((elliptic_regular L j).1.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)</span>
+<span id="L76">  have hH (x) (hx : x ∉ L) : HasFDerivAt (𝕜 := ℝ) H 0 x := by</span>
+<span id="L77">    have h := ((hd _ (not_mem_lattice_add L w hx)).hasFDerivAt.comp x</span>
+<span id="L78">      ((hasFDerivAt_id x).add_const (w : ℍ))).sub (hd x hx).hasFDerivAt</span>
+<span id="L79">    convert! h using 1</span>
+<span id="L80">    simp [elliptic_fderiv_add L j w hx]</span>
+<span id="L81">  have hn : -q - (w : ℍ) ∉ L := by</span>
+<span id="L82">    have h := not_mem_lattice_add L (-w) (q := -q) (by simpa using hq)</span>
+<span id="L83">    simpa [sub_eq_add_neg] using h</span>
+<span id="L84">  have he : H q = H (-q - (w : ℍ)) := hU.is_const_of_fderiv_eq_zero</span>
+<span id="L85">    (isConnected_lattice_compl L).isPreconnected</span>
+<span id="L86">    (fun x hx =&gt; (hH x hx).differentiableAt.differentiableWithinAt)</span>
+<span id="L87">    (fun x hx =&gt; (hH x hx).fderiv) hq hn</span>
+<span id="L88">  have hflip : H (-q - (w : ℍ)) = -H q := by</span>
+<span id="L89">    have harg : -q - (w : ℍ) = -(q + (w : ℍ)) := by abel</span>
+<span id="L90">    dsimp only [H]</span>
+<span id="L91">    rw [sub_add_cancel, harg, elliptic_even, elliptic_even, neg_sub]</span>
+<span id="L92">  have hs : H q = -H q := he.trans hflip</span>
+<span id="L93">  have hz : (2 : ℝ) • H q = 0 := by</span>
+<span id="L94">    rw [two_smul]</span>
+<span id="L95">    exact eq_neg_iff_add_eq_zero.mp hs</span>
+<span id="L96">  exact sub_eq_zero.mp ((smul_eq_zero.mp hz).resolve_left (by norm_num))</span>
+<span id="L97"></span>
+<span id="L98">/-- E2 version 2: both identities hold for every off-lattice point and every lattice period. -/</span>
+<span id="L99">theorem E2_v2 (j : Fin 3) :</span>
+<span id="L100">    ∀ q : ℍ, q ∉ L → ∀ w : L,</span>
+<span id="L101">      elliptic L j (-q) = elliptic L j q ∧</span>
+<span id="L102">      elliptic L j (q + (w : ℍ)) = elliptic L j q := by</span>
+<span id="L103">  exact fun q hq w =&gt; ⟨elliptic_even L j q, elliptic_add L j w hq⟩</span>
+<span id="L104"></span>
+<span id="L105">end MathResearch.Fueter</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

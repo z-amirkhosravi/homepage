@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the N1/v2 verification.">
+<title>MathResearch/Fueter/PartialCommutation.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the N1/v2 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Fueter/PartialCommutation.lean</h1><p><a href="PartialCommutation.lean" download>Download exact source</a>. SHA-256: <code>beee71a3b75caab5db817a4776b024989c0e6f2ef358b4f6373fc3724279c371</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2"></span>
+<span id="L3">public import MathResearch.Fueter.Elliptic</span>
+<span id="L4">public import Mathlib.Data.List.Perm.Basic</span>
+<span id="L5"></span>
+<span id="L6">/-! Reordering smooth real coordinate derivatives and the spatial multi-index convention. -/</span>
+<span id="L7">@[expose] public section</span>
+<span id="L8">noncomputable section</span>
+<span id="L9">open scoped Quaternion Topology BigOperators ContDiff</span>
+<span id="L10">open Filter</span>
+<span id="L11">namespace MathResearch.Fueter</span>
+<span id="L12"></span>
+<span id="L13">theorem contDiffOn_iteratedPartial {U : Set ℍ} (hU : IsOpen U) {f : ℍ → ℍ}</span>
+<span id="L14">    (hf : ContDiffOn ℝ ∞ f U) (l : List (Fin 4)) :</span>
+<span id="L15">    ContDiffOn ℝ ∞ (iteratedPartial l f) U := by</span>
+<span id="L16">  induction l with</span>
+<span id="L17">  | nil =&gt; exact hf</span>
+<span id="L18">  | cons μ l ih =&gt; exact contDiffOn_directional hU ih (coordinateBasis μ)</span>
+<span id="L19"></span>
+<span id="L20">/-- Equality on an open set is preserved by every ordered real derivative. -/</span>
+<span id="L21">theorem iteratedPartial_congr_on {U : Set ℍ} (hU : IsOpen U) {f g : ℍ → ℍ}</span>
+<span id="L22">    (hfg : Set.EqOn f g U) (l : List (Fin 4)) :</span>
+<span id="L23">    Set.EqOn (iteratedPartial l f) (iteratedPartial l g) U := by</span>
+<span id="L24">  induction l with</span>
+<span id="L25">  | nil =&gt; exact hfg</span>
+<span id="L26">  | cons μ l ih =&gt;</span>
+<span id="L27">    intro q hq</span>
+<span id="L28">    have he : iteratedPartial l f =ᶠ[𝓝 q] iteratedPartial l g :=</span>
+<span id="L29">      eventually_of_mem (hU.mem_nhds hq) ih</span>
+<span id="L30">    exact congrArg (fun A : ℍ →L[ℝ] ℍ =&gt; A (coordinateBasis μ)) he.fderiv_eq</span>
+<span id="L31"></span>
+<span id="L32">/-- Mathlib&#39;s symmetry of the second Fréchet derivative gives commuting coordinate partials. -/</span>
+<span id="L33">theorem coordPartial_comm {U : Set ℍ} (hU : IsOpen U) {f : ℍ → ℍ}</span>
+<span id="L34">    (hf : ContDiffOn ℝ ∞ f U) (μ ν : Fin 4) {q : ℍ} (hq : q ∈ U) :</span>
+<span id="L35">    coordPartial μ (coordPartial ν f) q = coordPartial ν (coordPartial μ f) q := by</span>
+<span id="L36">  have hd : DifferentiableAt ℝ (fderiv ℝ f) q :=</span>
+<span id="L37">    ((hf.fderiv_of_isOpen (m := ∞) hU (by simp)).contDiffAt</span>
+<span id="L38">      (hU.mem_nhds hq)).differentiableAt (by simp)</span>
+<span id="L39">  change fderiv ℝ (directional (coordinateBasis ν) f) q (coordinateBasis μ) =</span>
+<span id="L40">    fderiv ℝ (directional (coordinateBasis μ) f) q (coordinateBasis ν)</span>
+<span id="L41">  rw [fderiv_directional hd, fderiv_directional hd]</span>
+<span id="L42">  exact ((hf.contDiffAt (hU.mem_nhds hq)).isSymmSndFDerivAt (by simp)).eq _ _</span>
+<span id="L43"></span>
+<span id="L44">/-- All reorderings of an ordered derivative list agree on the smooth open domain. -/</span>
+<span id="L45">theorem iteratedPartial_perm {U : Set ℍ} (hU : IsOpen U) {f : ℍ → ℍ}</span>
+<span id="L46">    (hf : ContDiffOn ℝ ∞ f U) {l m : List (Fin 4)} (hp : l.Perm m) :</span>
+<span id="L47">    Set.EqOn (iteratedPartial l f) (iteratedPartial m f) U := by</span>
+<span id="L48">  induction hp with</span>
+<span id="L49">  | nil =&gt; exact fun _ _ =&gt; rfl</span>
+<span id="L50">  | cons μ _ ih =&gt; exact iteratedPartial_congr_on hU ih [μ]</span>
+<span id="L51">  | swap μ ν l =&gt;</span>
+<span id="L52">    intro q hq</span>
+<span id="L53">    exact coordPartial_comm hU (contDiffOn_iteratedPartial hU hf l) ν μ hq</span>
+<span id="L54">  | trans _ _ ih₁ ih₂ =&gt; exact fun _ hq =&gt; (ih₁ hq).trans (ih₂ hq)</span>
+<span id="L55"></span>
+<span id="L56">/-- The ordered list implementing `∂₁^μ₁ ∂₂^μ₂ ∂₃^μ₃`. -/</span>
+<span id="L57">def spatialDerivativeList (μ : Fin 3 → ℕ) : List (Fin 4) :=</span>
+<span id="L58">  List.replicate (μ 0) 1 ++ List.replicate (μ 1) 2 ++ List.replicate (μ 2) 3</span>
+<span id="L59"></span>
+<span id="L60">theorem multiIndexPartial_spatial (μ : Fin 3 → ℕ) (f : ℍ → ℍ) :</span>
+<span id="L61">    multiIndexPartial (spatialMultiIndex μ) f = iteratedPartial (spatialDerivativeList μ) f := by</span>
+<span id="L62">  rfl</span>
+<span id="L63"></span>
+<span id="L64">theorem spatialDerivativeList_length (μ : Fin 3 → ℕ) :</span>
+<span id="L65">    (spatialDerivativeList μ).length = ∑ i, μ i := by</span>
+<span id="L66">  simp [spatialDerivativeList, Fin.sum_univ_succ]</span>
+<span id="L67"></span>
+<span id="L68">/-- Adding a unit multi-index inserts exactly one derivative in the corresponding coordinate. -/</span>
+<span id="L69">theorem spatialDerivativeList_add_single (μ : Fin 3 → ℕ) (j : Fin 3) :</span>
+<span id="L70">    (spatialDerivativeList μ ++ [j.succ]).Perm (spatialDerivativeList (μ + Pi.single j 1)) := by</span>
+<span id="L71">  apply List.perm_iff_count.mpr</span>
+<span id="L72">  intro i</span>
+<span id="L73">  fin_cases i &lt;;&gt; fin_cases j &lt;;&gt;</span>
+<span id="L74">    simp [spatialDerivativeList, List.count_append, List.count_replicate, Pi.add_apply,</span>
+<span id="L75">      Nat.add_comm]</span>
+<span id="L76"></span>
+<span id="L77">/-- The derivative occurring in E1 is exactly the higher kernel indexed in N1. -/</span>
+<span id="L78">theorem kernelJet_spatial (μ : Fin 3 → ℕ) (j : Fin 3) {q : ℍ} (hq : q ≠ 0) :</span>
+<span id="L79">    kernelJet j (spatialDerivativeList μ) q = higherKernel (μ + Pi.single j 1) q := by</span>
+<span id="L80">  rw [higherKernel, multiIndexPartial_spatial]</span>
+<span id="L81">  exact iteratedPartial_perm isOpen_punctured kernel_smooth</span>
+<span id="L82">    (spatialDerivativeList_add_single μ j) hq</span>
+<span id="L83"></span>
+<span id="L84">end MathResearch.Fueter</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>
