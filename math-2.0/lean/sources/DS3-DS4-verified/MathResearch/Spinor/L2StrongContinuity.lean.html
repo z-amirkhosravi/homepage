@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/L2StrongContinuity.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/L2StrongContinuity.lean</h1><p><a href="L2StrongContinuity.lean" download>Download exact source</a>. SHA-256: <code>44b138128145a5d0f1e12d06ae6cb058636f15ef232d71423cd31502d0297b5c</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.WeightedL2Action</span>
+<span id="L3">public import Mathlib.MeasureTheory.Function.ContinuousMapDense</span>
+<span id="L4">public import Mathlib.MeasureTheory.Integral.DominatedConvergence</span>
+<span id="L5">public import Mathlib.Topology.EMetricSpace.Lipschitz</span>
+<span id="L6"></span>
+<span id="L7">/-! Strong continuity of the concrete ambient C7 action.</span>
+<span id="L8">This uses bounded continuous approximation and finite weighted mass. It is an</span>
+<span id="L9">alternative to the compact-support approximation in R060 section 3; that</span>
+<span id="L10">proof difference is recorded in the internal continuation notes. -/</span>
+<span id="L11">@[expose] public section</span>
+<span id="L12">noncomputable section</span>
+<span id="L13">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L14">set_option maxHeartbeats 800000</span>
+<span id="L15">open scoped Quaternion ENNReal Topology BoundedContinuousFunction Matrix.Norms.Elementwise</span>
+<span id="L16">open MeasureTheory Filter</span>
+<span id="L17">namespace MathResearch.Spinor</span>
+<span id="L18"></span>
+<span id="L19">theorem continuous_signatureAdjoint : Continuous signatureAdjoint := by</span>
+<span id="L20">  apply continuous_pi; intro i</span>
+<span id="L21">  apply continuous_pi; intro j</span>
+<span id="L22">  fin_cases i &lt;;&gt; fin_cases j &lt;;&gt; simp only [signatureAdjoint] &lt;;&gt; fun_prop</span>
+<span id="L23"></span>
+<span id="L24">theorem continuous_sp11_coe : Continuous (fun g : Sp11 =&gt; (g : QuaternionMatrix2)) :=</span>
+<span id="L25">  continuous_subtype_val</span>
+<span id="L26"></span>
+<span id="L27">instance sp11FirstCountableTopology : FirstCountableTopology Sp11 :=</span>
+<span id="L28">  inferInstanceAs (FirstCountableTopology {g : QuaternionMatrix2 // IsSp11 g})</span>
+<span id="L29"></span>
+<span id="L30">theorem IsSp11.row_norms {g : QuaternionMatrix2} (hg : IsSp11 g) :</span>
+<span id="L31">    Quaternion.normSq (g 1 1) - Quaternion.normSq (g 1 0) = 1 := by</span>
+<span id="L32">  have h := congrArg (fun M : QuaternionMatrix2 =&gt; (M 1 1).re) hg.2</span>
+<span id="L33">  simpa [signatureAdjoint, Matrix.mul_apply, Fin.sum_univ_two,</span>
+<span id="L34">    Quaternion.normSq_def&#39;, pow_two, sub_eq_add_neg, mul_comm, add_comm] using h</span>
+<span id="L35"></span>
+<span id="L36">def inverseMobiusGap (g : Sp11) : ℝ :=</span>
+<span id="L37">  ‖(signatureAdjoint g) 1 1‖ - ‖(signatureAdjoint g) 1 0‖</span>
+<span id="L38"></span>
+<span id="L39">theorem inverseMobiusGap_pos (g : Sp11) : 0 &lt; inverseMobiusGap g := by</span>
+<span id="L40">  have h := (isSp11_signatureAdjoint g.property).row_norms</span>
+<span id="L41">  rw [Quaternion.normSq_eq_norm_mul_self, Quaternion.normSq_eq_norm_mul_self] at h</span>
+<span id="L42">  unfold inverseMobiusGap</span>
+<span id="L43">  nlinarith [norm_nonneg ((signatureAdjoint g) 1 0), norm_nonneg ((signatureAdjoint g) 1 1)]</span>
+<span id="L44"></span>
+<span id="L45">theorem continuous_inverseMobiusGap : Continuous inverseMobiusGap := by</span>
+<span id="L46">  have h := continuous_signatureAdjoint.comp continuous_sp11_coe</span>
+<span id="L47">  exact ((continuous_apply 1).comp ((continuous_apply 1).comp h)).norm.sub</span>
+<span id="L48">    ((continuous_apply 0).comp ((continuous_apply 1).comp h)).norm</span>
+<span id="L49"></span>
+<span id="L50">theorem inverseMobiusGap_le_norm (g : Sp11) {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L51">    inverseMobiusGap g ≤ ‖mobiusDenominator (signatureAdjoint g) q‖ := by</span>
+<span id="L52">  have hq&#39; : ‖q‖ ≤ 1 := ((mem_ball_iff q).mp hq).le</span>
+<span id="L53">  have h := norm_sub_le ((signatureAdjoint g) 1 0 * q + (signatureAdjoint g) 1 1)</span>
+<span id="L54">    ((signatureAdjoint g) 1 0 * q)</span>
+<span id="L55">  simp only [add_sub_cancel_left, norm_mul] at h</span>
+<span id="L56">  have hc := mul_le_mul_of_nonneg_left hq&#39; (norm_nonneg ((signatureAdjoint g) 1 0))</span>
+<span id="L57">  dsimp only [inverseMobiusGap, mobiusDenominator]</span>
+<span id="L58">  nlinarith</span>
+<span id="L59"></span>
+<span id="L60">theorem ballRepresentation_bound (n : ℕ) (g : Sp11) (F : ℍ →ᵇ BinaryForm n)</span>
+<span id="L61">    {a : ℝ} (ha : 0 &lt; a) (hag : a ≤ inverseMobiusGap g) {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L62">    ‖ballRepresentation n g F q‖ ≤ a⁻¹ ^ (n+2) * ‖F‖ := by</span>
+<span id="L63">  rw [ballRepresentation, ballAction_norm]</span>
+<span id="L64">  apply mul_le_mul</span>
+<span id="L65">  · exact pow_le_pow_left₀ (by positivity)</span>
+<span id="L66">      (inv_le_inv₀ (lt_of_lt_of_le ha (hag.trans (inverseMobiusGap_le_norm g hq))) ha |&gt;.mpr</span>
+<span id="L67">        (hag.trans (inverseMobiusGap_le_norm g hq))) _</span>
+<span id="L68">  · exact F.norm_coe_le_norm _</span>
+<span id="L69">  · exact norm_nonneg _</span>
+<span id="L70">  · positivity</span>
+<span id="L71"></span>
+<span id="L72">theorem continuousAt_ballRepresentation_parameter (n : ℕ) {F : ℍ → BinaryForm n}</span>
+<span id="L73">    (hF : Continuous F) (g : Sp11) {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L74">    ContinuousAt (fun h : Sp11 =&gt; ballRepresentation n h F q) g := by</span>
+<span id="L75">  have hmat := continuous_signatureAdjoint.comp continuous_sp11_coe</span>
+<span id="L76">  have hentry (i j : Fin 2) : Continuous (fun h : Sp11 =&gt; (signatureAdjoint h) i j) :=</span>
+<span id="L77">    (continuous_apply j).comp ((continuous_apply i).comp hmat)</span>
+<span id="L78">  have hJ : Continuous (fun h : Sp11 =&gt; mobiusDenominator (signatureAdjoint h) q) :=</span>
+<span id="L79">    ((hentry 1 0).mul continuous_const).add (hentry 1 1)</span>
+<span id="L80">  have hne := mobiusDenominator_ne_zero (isSp11_signatureAdjoint g.property) hq</span>
+<span id="L81">  have hi := hJ.continuousAt.inv₀ hne</span>
+<span id="L82">  have hp : ContinuousAt (fun h : Sp11 =&gt; mobiusPoint (signatureAdjoint h) q) g :=</span>
+<span id="L83">    (((hentry 0 0).mul continuous_const).add (hentry 0 1)).continuousAt.mul hi</span>
+<span id="L84">  have hv := (contDiff_quaternionPolynomialRepresentation n).continuous.continuousAt.comp</span>
+<span id="L85">    (hi.prodMk (hF.continuousAt.comp hp))</span>
+<span id="L86">  have hw := (Quaternion.continuous_normSq.comp hJ).continuousAt.inv₀</span>
+<span id="L87">    (Quaternion.normSq_ne_zero.mpr hne)</span>
+<span id="L88">  exact hw.smul hv</span>
+<span id="L89"></span>
+<span id="L90">theorem weightedL2Action_ae_of_representative (n : ℕ) (hn : 2 ≤ n) (g : Sp11)</span>
+<span id="L91">    (f : BallL2 n) (F : ℍ → BinaryForm n) (hF : (f : ℍ → BinaryForm n) =ᵐ[weightedBallMeasure n] F) :</span>
+<span id="L92">    (weightedL2Action n hn g f : ℍ → BinaryForm n) =ᵐ[weightedBallMeasure n]</span>
+<span id="L93">      ballRepresentation n g F := by</span>
+<span id="L94">  have hcomp := (mobius_quasiMeasurePreserving_weighted n hn</span>
+<span id="L95">    (isSp11_signatureAdjoint g.property)).ae hF</span>
+<span id="L96">  filter_upwards [weightedL2Action_ae n hn g f, hcomp] with q hq hc</span>
+<span id="L97">  rw [hq]</span>
+<span id="L98">  simp only [ballRepresentation, ballAction, hc]</span>
+<span id="L99"></span>
+<span id="L100">/-- Continuity on the bounded continuous dense class, by dominated convergence</span>
+<span id="L101">with an explicit local bound on the nonconstant fibre multiplier. -/</span>
+<span id="L102">theorem continuous_weightedL2Action_boundedContinuous (n : ℕ) (hn : 2 ≤ n)</span>
+<span id="L103">    (F : ℍ →ᵇ BinaryForm n) : Continuous (fun g : Sp11 =&gt; weightedL2Action n hn g</span>
+<span id="L104">      (BoundedContinuousFunction.toLp 2 (weightedBallMeasure n) ℂ F)) := by</span>
+<span id="L105">  let f := BoundedContinuousFunction.toLp 2 (weightedBallMeasure n) ℂ F</span>
+<span id="L106">  have hrep := BoundedContinuousFunction.coeFn_toLp 2 (weightedBallMeasure n) ℂ F</span>
+<span id="L107">  have ha (g : Sp11) := weightedL2Action_ae_of_representative n hn g f F hrep</span>
+<span id="L108">  have hB : ∀ᵐ q ∂weightedBallMeasure n, q ∈ Ball :=</span>
+<span id="L109">    (ae_weightedBall_iff n hn _).mpr (ae_restrict_mem ball_isOpen.measurableSet)</span>
+<span id="L110">  apply continuous_iff_continuousAt.mpr</span>
+<span id="L111">  intro g</span>
+<span id="L112">  let a := inverseMobiusGap g / 2</span>
+<span id="L113">  have ha_pos : 0 &lt; a := half_pos (inverseMobiusGap_pos g)</span>
+<span id="L114">  have hag : a ≤ inverseMobiusGap g := half_le_self (inverseMobiusGap_pos g).le</span>
+<span id="L115">  let M := a⁻¹ ^ (n+2) * ‖F‖</span>
+<span id="L116">  have hM : 0 ≤ M := by dsimp [M]; positivity</span>
+<span id="L117">  have hneigh : ∀ᶠ h in 𝓝 g, a ≤ inverseMobiusGap h := by</span>
+<span id="L118">    apply (continuous_inverseMobiusGap.continuousAt.eventually (le_mem_nhds ?_))</span>
+<span id="L119">    exact half_lt_self (inverseMobiusGap_pos g)</span>
+<span id="L120">  let D : Sp11 → ℍ → ℝ := fun h q =&gt; ‖ballRepresentation n h F q - ballRepresentation n g F q‖^2</span>
+<span id="L121">  have hmeas (h : Sp11) : AEStronglyMeasurable (D h) (weightedBallMeasure n) := by</span>
+<span id="L122">    have hm := ((ballAction_aestronglyMeasurable n hn (isSp11_signatureAdjoint h.property)</span>
+<span id="L123">      F.continuous.aestronglyMeasurable).sub</span>
+<span id="L124">      (ballAction_aestronglyMeasurable n hn (isSp11_signatureAdjoint g.property)</span>
+<span id="L125">        F.continuous.aestronglyMeasurable)).norm</span>
+<span id="L126">    convert! (continuous_pow 2).comp_aestronglyMeasurable hm using 1</span>
+<span id="L127">  have hbound : ∀ᶠ h in 𝓝 g, ∀ᵐ q ∂weightedBallMeasure n, ‖D h q‖ ≤ (2*M)^2 := by</span>
+<span id="L128">    filter_upwards [hneigh] with h hh</span>
+<span id="L129">    filter_upwards [hB] with q hq</span>
+<span id="L130">    have hhq := ballRepresentation_bound n h F ha_pos hh hq</span>
+<span id="L131">    have hgq := ballRepresentation_bound n g F ha_pos hag hq</span>
+<span id="L132">    have hd := norm_sub_le (ballRepresentation n h F q) (ballRepresentation n g F q)</span>
+<span id="L133">    dsimp only [D]</span>
+<span id="L134">    rw [Real.norm_eq_abs, abs_of_nonneg (sq_nonneg _)]</span>
+<span id="L135">    exact pow_le_pow_left₀ (norm_nonneg _) (by dsimp only [M] at *; linarith) 2</span>
+<span id="L136">  have hpoint : ∀ᵐ q ∂weightedBallMeasure n, Tendsto (fun h =&gt; D h q) (𝓝 g) (𝓝 (0 : ℝ)) := by</span>
+<span id="L137">    filter_upwards [hB] with q hq</span>
+<span id="L138">    have h := ((continuousAt_ballRepresentation_parameter n F.continuous g hq).tendsto.sub</span>
+<span id="L139">      (tendsto_const_nhds (x := ballRepresentation n g F q))).norm.pow 2</span>
+<span id="L140">    simpa [D] using h</span>
+<span id="L141">  have hdct := tendsto_integral_filter_of_dominated_convergence (fun _ : ℍ =&gt; (2*M)^2)</span>
+<span id="L142">    (Eventually.of_forall hmeas) hbound (integrable_const _) hpoint</span>
+<span id="L143">  have he (h : Sp11) : ‖weightedL2Action n hn h f - weightedL2Action n hn g f‖^2 =</span>
+<span id="L144">      ∫ q, D h q ∂weightedBallMeasure n := by</span>
+<span id="L145">    rw [l2_norm_sq_integral]</span>
+<span id="L146">    apply integral_congr_ae</span>
+<span id="L147">    filter_upwards [Lp.coeFn_sub (weightedL2Action n hn h f) (weightedL2Action n hn g f),</span>
+<span id="L148">      ha h, ha g] with q hsub hh hg</span>
+<span id="L149">    dsimp only [D]</span>
+<span id="L150">    rw [hsub]</span>
+<span id="L151">    simp only [Pi.sub_apply, hh, hg]</span>
+<span id="L152">  have hsq : Tendsto (fun h =&gt; ‖weightedL2Action n hn h f - weightedL2Action n hn g f‖^2)</span>
+<span id="L153">      (𝓝 g) (𝓝 (0 : ℝ)) := by</span>
+<span id="L154">    simpa only [he, integral_zero] using hdct</span>
+<span id="L155">  have hsqrt := (Real.continuous_sqrt.tendsto 0).comp hsq</span>
+<span id="L156">  apply tendsto_iff_norm_sub_tendsto_zero.mpr</span>
+<span id="L157">  simpa only [Function.comp_def, Real.sqrt_sq (norm_nonneg _), Real.sqrt_zero] using hsqrt</span>
+<span id="L158"></span>
+<span id="L159">/-- The ambient representation is strongly continuous. The proof uses the</span>
+<span id="L160">bounded-continuous alternative recorded in the internal notes, not an assumed</span>
+<span id="L161">continuity property or the unproved regularity of the kernel. -/</span>
+<span id="L162">theorem continuous_weightedL2Representation (n : ℕ) (hn : 2 ≤ n) :</span>
+<span id="L163">    Continuous (fun z : BallL2 n × Sp11 =&gt; weightedL2Representation n hn z.2 z.1) := by</span>
+<span id="L164">  change Continuous (fun z : BallL2 n × Sp11 =&gt; weightedL2Action n hn z.2 z.1)</span>
+<span id="L165">  apply continuous_prod_of_dense_continuous_lipschitzWith _ 1</span>
+<span id="L166">    (BoundedContinuousFunction.toLp_denseRange (BinaryForm n) (weightedBallMeasure n) ℂ</span>
+<span id="L167">      (p := 2) (by norm_num))</span>
+<span id="L168">  · intro f hf</span>
+<span id="L169">    obtain ⟨F, rfl⟩ := hf</span>
+<span id="L170">    exact continuous_weightedL2Action_boundedContinuous n hn F</span>
+<span id="L171">  · intro g</span>
+<span id="L172">    exact (weightedL2Unitary n hn g).isometry.lipschitzWith</span>
+<span id="L173"></span>
+<span id="L174">theorem stronglyContinuous_weightedL2Representation (n : ℕ) (hn : 2 ≤ n) (f : BallL2 n) :</span>
+<span id="L175">    Continuous (fun g : Sp11 =&gt; weightedL2Representation n hn g f) := by</span>
+<span id="L176">  have h : Continuous (fun g : Sp11 =&gt; (f, g)) := continuous_const.prodMk continuous_id</span>
+<span id="L177">  change Continuous (fun g : Sp11 =&gt; weightedL2Action n hn g f)</span>
+<span id="L178">  have hc : Continuous (fun z : BallL2 n × Sp11 =&gt; weightedL2Action n hn z.2 z.1) :=</span>
+<span id="L179">    continuous_weightedL2Representation n hn</span>
+<span id="L180">  simpa only [Function.comp_def] using! hc.comp h</span>
+<span id="L181"></span>
+<span id="L182">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

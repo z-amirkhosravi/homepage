@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/WeightedMeasure.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/WeightedMeasure.lean</h1><p><a href="WeightedMeasure.lean" download>Download exact source</a>. SHA-256: <code>78e3a5831cdcaf590c411a8f58b699e8e581170f09ef58e28ef46cb7a3d2ca6b</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.MobiusJacobian</span>
+<span id="L3">public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace</span>
+<span id="L4">public import Mathlib.MeasureTheory.Function.L2Space</span>
+<span id="L5">public import Mathlib.MeasureTheory.Function.LpSpace.Indicator</span>
+<span id="L6"></span>
+<span id="L7">/-! The actual weighted ball measure and its Möbius change-of-variables identity. -/</span>
+<span id="L8">@[expose] public section</span>
+<span id="L9">noncomputable section</span>
+<span id="L10">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L11">open scoped Quaternion Matrix.Norms.Elementwise ENNReal</span>
+<span id="L12">open MeasureTheory</span>
+<span id="L13">namespace MathResearch.Spinor</span>
+<span id="L14"></span>
+<span id="L15">instance quaternionMeasurableSpace : MeasurableSpace ℍ := borel ℍ</span>
+<span id="L16">instance quaternionBorelSpace : BorelSpace ℍ := ⟨rfl⟩</span>
+<span id="L17">instance binaryFormMeasurableSpace (n : ℕ) : MeasurableSpace (BinaryForm n) := borel (BinaryForm n)</span>
+<span id="L18">instance binaryFormBorelSpace (n : ℕ) : BorelSpace (BinaryForm n) := ⟨rfl⟩</span>
+<span id="L19"></span>
+<span id="L20">def weightConstant (n : ℕ) : ℝ := (n:ℝ)*(n-1:ℝ)/Real.pi^2</span>
+<span id="L21"></span>
+<span id="L22">def ballDensity (n : ℕ) (q : ℍ) : ℝ := weightConstant n * ballScale q ^ (n-2)</span>
+<span id="L23"></span>
+<span id="L24">/-- The measure C_n (1-|q|²)^(n-2) dv restricted to the unit ball. -/</span>
+<span id="L25">def weightedBallMeasure (n : ℕ) : Measure ℍ :=</span>
+<span id="L26">  (volume.restrict Ball).withDensity (fun q =&gt; ENNReal.ofReal (ballDensity n q))</span>
+<span id="L27"></span>
+<span id="L28">abbrev BallL2 (n : ℕ) := Lp (BinaryForm n) 2 (weightedBallMeasure n)</span>
+<span id="L29"></span>
+<span id="L30">theorem weightConstant_pos (n : ℕ) (hn : 2 ≤ n) : 0 &lt; weightConstant n := by</span>
+<span id="L31">  unfold weightConstant</span>
+<span id="L32">  have : (2:ℝ) ≤ n := by exact_mod_cast hn</span>
+<span id="L33">  exact div_pos (mul_pos (by linarith) (by linarith)) (sq_pos_of_pos Real.pi_pos)</span>
+<span id="L34"></span>
+<span id="L35">theorem ballDensity_pos (n : ℕ) (hn : 2 ≤ n) {q : ℍ} (hq : q ∈ Ball) : 0 &lt; ballDensity n q :=</span>
+<span id="L36">  mul_pos (weightConstant_pos n hn) (pow_pos hq _)</span>
+<span id="L37"></span>
+<span id="L38">theorem continuous_ballDensity (n : ℕ) : Continuous (ballDensity n) :=</span>
+<span id="L39">  continuous_const.mul (contDiff_ballScale.continuous.pow _)</span>
+<span id="L40"></span>
+<span id="L41">theorem mobiusPoint_inverse {g : QuaternionMatrix2} (hg : IsSp11 g) {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L42">    mobiusPoint (signatureAdjoint g) (mobiusPoint g q)=q := by</span>
+<span id="L43">  rw [← mobiusPoint_mul _ _ (mobiusDenominator_ne_zero hg hq),hg.1,mobiusPoint_one]</span>
+<span id="L44"></span>
+<span id="L45">theorem mobiusPoint_bijOn {g : QuaternionMatrix2} (hg : IsSp11 g) : Set.BijOn (mobiusPoint g) Ball Ball := by</span>
+<span id="L46">  refine ⟨fun _ hq =&gt; mobiusPoint_mem_ball hg hq, ?_, ?_⟩</span>
+<span id="L47">  · intro q hq r hr he</span>
+<span id="L48">    have h := congrArg (mobiusPoint (signatureAdjoint g)) he</span>
+<span id="L49">    simpa [mobiusPoint_inverse hg hq,mobiusPoint_inverse hg hr] using h</span>
+<span id="L50">  · intro q hq</span>
+<span id="L51">    refine ⟨mobiusPoint (signatureAdjoint g) q,mobiusPoint_mem_ball (isSp11_signatureAdjoint hg) hq,?_⟩</span>
+<span id="L52">    simpa only [signatureAdjoint_involutive] using mobiusPoint_inverse (isSp11_signatureAdjoint hg) hq</span>
+<span id="L53"></span>
+<span id="L54">theorem weighted_density_cancellation (n : ℕ) (hn : 2 ≤ n) {g : QuaternionMatrix2}</span>
+<span id="L55">    (hg : IsSp11 g) {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L56">    (Quaternion.normSq (mobiusDenominator g q))⁻¹ ^ 4 * ballDensity n (mobiusPoint g q) =</span>
+<span id="L57">      ballDensity n q * (‖mobiusDenominator g q‖⁻¹ ^ (n+2))^2 := by</span>
+<span id="L58">  rw [ballDensity,ballDensity,ballScale_mobius hg hq,Quaternion.normSq_eq_norm_mul_self]</span>
+<span id="L59">  rw [show n+2=(n-2)+4 by omega,pow_add]</span>
+<span id="L60">  simp only [div_pow,mul_pow,mul_inv_rev]</span>
+<span id="L61">  rw [div_eq_mul_inv,mul_inv_rev]</span>
+<span id="L62">  simp only [inv_pow]</span>
+<span id="L63">  ring</span>
+<span id="L64"></span>
+<span id="L65">/-- The weighted square norm is preserved, for arbitrary functions whenever the integral is defined. -/</span>
+<span id="L66">theorem weighted_integral_ballAction (n : ℕ) (hn : 2 ≤ n) (f : ℍ → BinaryForm n)</span>
+<span id="L67">    {g : QuaternionMatrix2} (hg : IsSp11 g) :</span>
+<span id="L68">    (∫ q in Ball, ballDensity n q * ‖ballAction n g f q‖^2) =</span>
+<span id="L69">      ∫ q in Ball, ballDensity n q * ‖f q‖^2 := by</span>
+<span id="L70">  have h := integral_image_eq_integral_abs_det_fderiv_smul (volume : Measure ℍ) ball_isOpen.measurableSet</span>
+<span id="L71">    (fun q hq =&gt; (hasFDerivAt_mobiusPoint g (mobiusDenominator_ne_zero hg hq)).hasFDerivWithinAt)</span>
+<span id="L72">    (mobiusPoint_bijOn hg).injOn (fun q =&gt; ballDensity n q * ‖f q‖^2)</span>
+<span id="L73">  rw [(mobiusPoint_bijOn hg).image_eq] at h</span>
+<span id="L74">  rw [h]</span>
+<span id="L75">  apply setIntegral_congr_fun ball_isOpen.measurableSet</span>
+<span id="L76">  intro q hq</span>
+<span id="L77">  dsimp only</span>
+<span id="L78">  rw [ballAction_norm]</span>
+<span id="L79">  have hd : (mobiusDerivative g q).det=(Quaternion.normSq (mobiusDenominator g q))⁻¹ ^ 4 := by</span>
+<span id="L80">    rw [← (hasFDerivAt_mobiusPoint g (mobiusDenominator_ne_zero hg hq)).fderiv]</span>
+<span id="L81">    exact mobiusJacobian g hg q hq</span>
+<span id="L82">  rw [hd,abs_of_nonneg (by positivity),smul_eq_mul,← mul_assoc,weighted_density_cancellation n hn hg hq,mul_pow]</span>
+<span id="L83">  ring</span>
+<span id="L84"></span>
+<span id="L85">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/InvariantDensity.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/InvariantDensity.lean</h1><p><a href="InvariantDensity.lean" download>Download exact source</a>. SHA-256: <code>fc2baeaf6ce8e92cfdf0205b73731a8058c9dbc86a1ca7c7441065410bee1cab</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import Mathlib.MeasureTheory.Measure.WithDensity</span>
+<span id="L3"></span>
+<span id="L4">/-! Change of variables for an invariant density, using mathlib&#39;s measure maps</span>
+<span id="L5">and nonnegative integrals. -/</span>
+<span id="L6">@[expose] public section</span>
+<span id="L7">noncomputable section</span>
+<span id="L8">open MeasureTheory</span>
+<span id="L9">open scoped ENNReal</span>
+<span id="L10">namespace MathResearch.Analysis</span>
+<span id="L11">variable {X Y : Type*} [MeasurableSpace X] [MeasurableSpace Y]</span>
+<span id="L12"></span>
+<span id="L13">theorem map_withDensity_comp (μ : Measure X) {T : X → Y} (hT : Measurable T)</span>
+<span id="L14">    {w : Y → ℝ≥0∞} (hw : Measurable w) :</span>
+<span id="L15">    Measure.map T (μ.withDensity (fun x =&gt; w (T x))) = (Measure.map T μ).withDensity w := by</span>
+<span id="L16">  apply Measure.ext_of_lintegral</span>
+<span id="L17">  intro f hf</span>
+<span id="L18">  rw [lintegral_map hf hT,</span>
+<span id="L19">    lintegral_withDensity_eq_lintegral_mul _ (show Measurable (fun x =&gt; w (T x)) from hw.comp hT)</span>
+<span id="L20">      (show Measurable (fun x =&gt; f (T x)) from hf.comp hT),</span>
+<span id="L21">    lintegral_withDensity_eq_lintegral_mul _ hw hf,</span>
+<span id="L22">    lintegral_map (hw.mul hf) hT]</span>
+<span id="L23">  rfl</span>
+<span id="L24"></span>
+<span id="L25">theorem measurePreserving_withDensity {μ : Measure X} {T : X → X}</span>
+<span id="L26">    (hT : MeasurePreserving T μ μ) {w : X → ℝ≥0∞} (hw : Measurable w)</span>
+<span id="L27">    (hinv : ∀ x, w (T x) = w x) :</span>
+<span id="L28">    MeasurePreserving T (μ.withDensity w) (μ.withDensity w) := by</span>
+<span id="L29">  refine ⟨hT.measurable, ?_⟩</span>
+<span id="L30">  have h := map_withDensity_comp μ hT.measurable hw</span>
+<span id="L31">  simpa only [hinv, hT.map_eq] using h</span>
+<span id="L32"></span>
+<span id="L33">end MathResearch.Analysis</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

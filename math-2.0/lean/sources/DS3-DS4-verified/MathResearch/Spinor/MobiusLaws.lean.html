@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/MobiusLaws.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/MobiusLaws.lean</h1><p><a href="MobiusLaws.lean" download>Download exact source</a>. SHA-256: <code>4076e11170ceec187b0c97a325715ce99beab40fea7970eb39b02d3cfe9befcd</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.SmoothCorrespondence</span>
+<span id="L3"></span>
+<span id="L4">/-! Group laws and the automorphy cocycle on the actual quaternionic ball. -/</span>
+<span id="L5">@[expose] public section</span>
+<span id="L6">noncomputable section</span>
+<span id="L7">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L8">open scoped Quaternion Matrix.Norms.Elementwise</span>
+<span id="L9">namespace MathResearch.Spinor</span>
+<span id="L10"></span>
+<span id="L11">/-- Sp(1,1), bundled using the already verified two-sided matrix inverse equations. -/</span>
+<span id="L12">def Sp11 := {g : QuaternionMatrix2 // IsSp11 g}</span>
+<span id="L13"></span>
+<span id="L14">instance : Coe Sp11 QuaternionMatrix2 := ⟨Subtype.val⟩</span>
+<span id="L15"></span>
+<span id="L16">instance : Group Sp11 where</span>
+<span id="L17">  mul g h := ⟨g.val*h.val,g.property.mul h.property⟩</span>
+<span id="L18">  one := ⟨1,by simp [IsSp11]⟩</span>
+<span id="L19">  inv g := ⟨signatureAdjoint g.val,isSp11_signatureAdjoint g.property⟩</span>
+<span id="L20">  mul_assoc a b c := Subtype.ext (mul_assoc a.val b.val c.val)</span>
+<span id="L21">  one_mul a := Subtype.ext (one_mul a.val)</span>
+<span id="L22">  mul_one a := Subtype.ext (mul_one a.val)</span>
+<span id="L23">  inv_mul_cancel a := Subtype.ext a.property.1</span>
+<span id="L24"></span>
+<span id="L25">@[simp] theorem Sp11.coe_mul (g h : Sp11) : (↑(g*h) : QuaternionMatrix2) = (g:QuaternionMatrix2)*h := rfl</span>
+<span id="L26">@[simp] theorem Sp11.coe_one : (↑(1:Sp11) : QuaternionMatrix2)=1 := rfl</span>
+<span id="L27">@[simp] theorem Sp11.coe_inv (g : Sp11) : (↑g⁻¹ : QuaternionMatrix2)=signatureAdjoint g := rfl</span>
+<span id="L28"></span>
+<span id="L29">theorem Sp11.isSp11 (g : Sp11) : IsSp11 (g : QuaternionMatrix2) := g.property</span>
+<span id="L30"></span>
+<span id="L31">/-- The cocycle keeps the noncommutative multiplication order. -/</span>
+<span id="L32">theorem mobiusDenominator_cocycle (a b : QuaternionMatrix2) {q : ℍ}</span>
+<span id="L33">    (hb : mobiusDenominator b q ≠ 0) :</span>
+<span id="L34">    mobiusDenominator (a*b) q = mobiusDenominator a (mobiusPoint b q)*mobiusDenominator b q := by</span>
+<span id="L35">  change b 1 0*q+b 1 1 ≠ 0 at hb</span>
+<span id="L36">  simp only [mobiusDenominator, mobiusPoint, Matrix.mul_apply, Fin.sum_univ_two]</span>
+<span id="L37">  simp only [add_mul, mul_assoc, inv_mul_cancel₀ hb, mul_one]</span>
+<span id="L38">  noncomm_ring</span>
+<span id="L39"></span>
+<span id="L40">theorem mobiusPoint_mul (a b : QuaternionMatrix2) {q : ℍ}</span>
+<span id="L41">    (hb : mobiusDenominator b q ≠ 0) : mobiusPoint (a*b) q = mobiusPoint a (mobiusPoint b q) := by</span>
+<span id="L42">  have hn : (a*b) 0 0*q+(a*b) 0 1 =</span>
+<span id="L43">      (a 0 0*mobiusPoint b q+a 0 1)*mobiusDenominator b q := by</span>
+<span id="L44">    change b 1 0*q+b 1 1 ≠ 0 at hb</span>
+<span id="L45">    simp only [mobiusPoint, mobiusDenominator, Matrix.mul_apply, Fin.sum_univ_two]</span>
+<span id="L46">    simp only [add_mul, mul_assoc, inv_mul_cancel₀ hb, mul_one]</span>
+<span id="L47">    noncomm_ring</span>
+<span id="L48">  unfold mobiusPoint at ⊢</span>
+<span id="L49">  rw [hn, mobiusDenominator_cocycle a b hb, mul_inv_rev]</span>
+<span id="L50">  simp only [mul_assoc, mul_inv_cancel_left₀ hb]</span>
+<span id="L51">  rfl</span>
+<span id="L52"></span>
+<span id="L53">@[simp] theorem mobiusDenominator_one (q : ℍ) : mobiusDenominator 1 q=1 := by simp [mobiusDenominator]</span>
+<span id="L54">@[simp] theorem mobiusPoint_one (q : ℍ) : mobiusPoint 1 q=q := by simp [mobiusPoint]</span>
+<span id="L55"></span>
+<span id="L56">/-- The concrete ball action as a genuine group action. -/</span>
+<span id="L57">instance : MulAction Sp11 Ball where</span>
+<span id="L58">  smul g q := ⟨mobiusPoint g q,mobiusPoint_mem_ball g.isSp11 q.property⟩</span>
+<span id="L59">  one_smul q := Subtype.ext (mobiusPoint_one q)</span>
+<span id="L60">  mul_smul g h q := Subtype.ext (mobiusPoint_mul g h (mobiusDenominator_ne_zero h.isSp11 q.property))</span>
+<span id="L61"></span>
+<span id="L62">@[simp] theorem Sp11.smul_val (g : Sp11) (q : Ball) : (g • q).val = mobiusPoint g q := rfl</span>
+<span id="L63"></span>
+<span id="L64">/-- The ball defining function transforms by the squared denominator norm. -/</span>
+<span id="L65">theorem ballScale_mobius {g : QuaternionMatrix2} (hg : IsSp11 g) {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L66">    ballScale (mobiusPoint g q)=ballScale q / Quaternion.normSq (mobiusDenominator g q) := by</span>
+<span id="L67">  rw [← groupOrigin_section_product g q hq, groupOrigin_scale (hg.mul (ballSection_isSp11 q hq)), section_product_entry]</span>
+<span id="L68">  simp only [Quaternion.normSq_smul, inv_pow, mul_inv_rev, inv_inv]</span>
+<span id="L69">  rw [Real.sq_sqrt hq.le]</span>
+<span id="L70">  simp only [mobiusDenominator, div_eq_mul_inv, mul_comm]</span>
+<span id="L71"></span>
+<span id="L72">/-- C7 is an action; composition reverses for the matrices supplied directly to ballAction. -/</span>
+<span id="L73">theorem ballAction_mul (n : ℕ) (f : ℍ → BinaryForm n) {a b : QuaternionMatrix2}</span>
+<span id="L74">    (ha : IsSp11 a) (hb : IsSp11 b) {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L75">    ballAction n (a*b) f q=ballAction n b (ballAction n a f) q := by</span>
+<span id="L76">  have h₁ := fullLift_section_translate n (a*b) f q hq</span>
+<span id="L77">  have h₂ := fullLift_section_translate n b (ballAction n a f) q hq</span>
+<span id="L78">  rw [fullLift_ballAction n f ha (hb.mul (ballSection_isSp11 q hq)), ← mul_assoc] at h₂</span>
+<span id="L79">  have he : weightedSpinor n (ballAction n (a*b) f) q=weightedSpinor n (ballAction n b (ballAction n a f)) q := h₁.symm.trans h₂</span>
+<span id="L80">  exact (smul_right_injective _ (ne_of_gt (ballWeight_pos _ hq))) he</span>
+<span id="L81"></span>
+<span id="L82">theorem ballRepresentation_mul (n : ℕ) (f : ℍ → BinaryForm n) {a b : QuaternionMatrix2}</span>
+<span id="L83">    (ha : IsSp11 a) (hb : IsSp11 b) {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L84">    ballRepresentation n (a*b) f q=ballRepresentation n a (ballRepresentation n b f) q := by</span>
+<span id="L85">  simp only [ballRepresentation, signatureAdjoint_mul]</span>
+<span id="L86">  exact ballAction_mul n f (isSp11_signatureAdjoint hb) (isSp11_signatureAdjoint ha) hq</span>
+<span id="L87"></span>
+<span id="L88">@[simp] theorem ballRepresentation_one (n : ℕ) (f : ℍ → BinaryForm n) (q : ℍ) :</span>
+<span id="L89">    ballRepresentation n 1 f q=f q := by simp [ballRepresentation,ballAction]</span>
+<span id="L90"></span>
+<span id="L91">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

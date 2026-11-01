@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/GroupKernel.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/GroupKernel.lean</h1><p><a href="GroupKernel.lean" download>Download exact source</a>. SHA-256: <code>c431de21da62f04a44407b9dd95cb4ba890f6b7fd38dddf781f828f06648c8da</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.SchmidCovariance</span>
+<span id="L3">public import Mathlib.Analysis.SpecialFunctions.Exponential</span>
+<span id="L4"></span>
+<span id="L5">/-! Intrinsic group derivatives and left-translation invariance of the verified kernel. -/</span>
+<span id="L6">@[expose] public section</span>
+<span id="L7">noncomputable section</span>
+<span id="L8">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L9">open scoped Quaternion BigOperators Matrix.Norms.Elementwise Topology</span>
+<span id="L10">namespace MathResearch.Spinor</span>
+<span id="L11"></span>
+<span id="L12">def matrixLeftCLM (g : QuaternionMatrix2) : QuaternionMatrix2 →L[ℝ] QuaternionMatrix2 :=</span>
+<span id="L13">  (LinearMap.mulLeft ℝ g).toContinuousLinearMap</span>
+<span id="L14"></span>
+<span id="L15">@[simp] theorem matrixLeftCLM_apply (g h : QuaternionMatrix2) : matrixLeftCLM g h = g*h := rfl</span>
+<span id="L16"></span>
+<span id="L17">theorem differentiableAt_ballSection (q : ℍ) (hq : q ∈ Ball) : DifferentiableAt ℝ ballSection q := by</span>
+<span id="L18">  have hr := ((hasFDerivAt_inv ((Real.sqrt_pos.mpr hq).ne&#39;)).comp q</span>
+<span id="L19">    ((hasFDerivAt_ballScale q).sqrt (ne_of_gt hq))).differentiableAt</span>
+<span id="L20">  have hb : DifferentiableAt ℝ (fun x : ℍ =&gt; (1 : QuaternionMatrix2) + tangentCLM x) q :=</span>
+<span id="L21">    (differentiableAt_const _).add tangentCLM.differentiableAt</span>
+<span id="L22">  convert! hr.smul hb using 1</span>
+<span id="L23">  funext x</span>
+<span id="L24">  apply Matrix.ext; intro i j</span>
+<span id="L25">  fin_cases i &lt;;&gt; fin_cases j &lt;;&gt; simp [ballSection, tangentMatrix]</span>
+<span id="L26"></span>
+<span id="L27">@[simp] theorem ballSection_zero : ballSection 0 = 1 := by</span>
+<span id="L28">  apply Matrix.ext; intro i j</span>
+<span id="L29">  fin_cases i &lt;;&gt; fin_cases j &lt;;&gt; simp [ballSection, ballScale]</span>
+<span id="L30"></span>
+<span id="L31">/-- A curve lying in G near zero with tangent gξ_v; no ambient extension affects this derivative. -/</span>
+<span id="L32">def rightSectionPath (g : QuaternionMatrix2) (v : ℍ) (t : ℝ) : QuaternionMatrix2 :=</span>
+<span id="L33">  g * ballSection (t • v)</span>
+<span id="L34"></span>
+<span id="L35">@[simp] theorem rightSectionPath_zero (g : QuaternionMatrix2) (v : ℍ) : rightSectionPath g v 0 = g := by</span>
+<span id="L36">  simp [rightSectionPath]</span>
+<span id="L37"></span>
+<span id="L38">theorem rightSectionPath_hasDerivAt (g : QuaternionMatrix2) (v : ℍ) :</span>
+<span id="L39">    HasDerivAt (rightSectionPath g v) (g*tangentMatrix v) 0 := by</span>
+<span id="L40">  have h0 : (0 : ℍ) ∈ Ball := by simp [Ball, ballScale]</span>
+<span id="L41">  have hσ : HasFDerivAt ballSection (fderiv ℝ ballSection 0) ((fun t : ℝ =&gt; t • v) 0) := by</span>
+<span id="L42">    simpa using (differentiableAt_ballSection 0 h0).hasFDerivAt</span>
+<span id="L43">  have hd := (matrixLeftCLM g).hasFDerivAt.comp_hasDerivAt 0</span>
+<span id="L44">    (hσ.comp_hasDerivAt 0 ((hasDerivAt_id (0:ℝ)).smul_const v))</span>
+<span id="L45">  simpa [rightSectionPath, Function.comp_def, fderiv_ballSection 0 v h0, ballScale] using! hd</span>
+<span id="L46"></span>
+<span id="L47">/-- Agreement on G implies agreement of its tangent derivatives, for differentiable representatives. -/</span>
+<span id="L48">theorem rightLieDerivative_congr_on_group (n : ℕ) (F H : QuaternionMatrix2 → BinaryForm n)</span>
+<span id="L49">    (he : ∀ g, IsSp11 g → F g = H g) {g : QuaternionMatrix2} (hg : IsSp11 g)</span>
+<span id="L50">    (hF : DifferentiableAt ℝ F g) (hH : DifferentiableAt ℝ H g) (v : ℍ) :</span>
+<span id="L51">    rightLieDerivative n F g v = rightLieDerivative n H g v := by</span>
+<span id="L52">  have h0 : (0 : ℍ) ∈ Ball := by simp [Ball, ballScale]</span>
+<span id="L53">  have hc : ContinuousAt (fun t : ℝ =&gt; t • v) 0 := ((hasDerivAt_id (0:ℝ)).smul_const v).continuousAt</span>
+<span id="L54">  have ht : ∀ᶠ t : ℝ in 𝓝 0, t • v ∈ Ball :=</span>
+<span id="L55">    hc.eventually (by simpa using ball_isOpen.mem_nhds h0)</span>
+<span id="L56">  have hEq : (fun t =&gt; F (rightSectionPath g v t)) =ᶠ[𝓝 0] fun t =&gt; H (rightSectionPath g v t) :=</span>
+<span id="L57">    ht.mono fun t h =&gt; he _ (hg.mul (ballSection_isSp11 _ h))</span>
+<span id="L58">  rw [← rightLieDerivative_eq_path n F g hF v (rightSectionPath g v) (rightSectionPath_zero g v) (rightSectionPath_hasDerivAt g v),</span>
+<span id="L59">    ← rightLieDerivative_eq_path n H g hH v (rightSectionPath g v) (rightSectionPath_zero g v) (rightSectionPath_hasDerivAt g v)]</span>
+<span id="L60">  exact hEq.deriv_eq</span>
+<span id="L61"></span>
+<span id="L62">open scoped Matrix.Norms.Operator in</span>
+<span id="L63">/-- The right derivative also equals the wiki&#39;s derivative along the actual matrix exponential. -/</span>
+<span id="L64">theorem rightLieDerivative_eq_exp (n : ℕ) (F : QuaternionMatrix2 → BinaryForm n)</span>
+<span id="L65">    (g : QuaternionMatrix2) (hF : DifferentiableAt ℝ F g) (v : ℍ) :</span>
+<span id="L66">    deriv (fun t : ℝ =&gt; F (g * NormedSpace.exp (t • tangentMatrix v))) 0 =</span>
+<span id="L67">      rightLieDerivative n F g v := by</span>
+<span id="L68">  apply rightLieDerivative_eq_path n F g hF v</span>
+<span id="L69">  · simp</span>
+<span id="L70">  · simpa using (hasDerivAt_exp_smul_const (tangentMatrix v) (0 : ℝ)).const_mul g</span>
+<span id="L71"></span>
+<span id="L72">/-- Projected operators are independent of the differentiable extension off G. -/</span>
+<span id="L73">theorem projectedGroupOperator_congr_on_group (n : ℕ) (F H : QuaternionMatrix2 → BinaryForm n)</span>
+<span id="L74">    (he : ∀ g, IsSp11 g → F g = H g) {g : QuaternionMatrix2} (hg : IsSp11 g)</span>
+<span id="L75">    (hF : DifferentiableAt ℝ F g) (hH : DifferentiableAt ℝ H g) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L76">    projectedGroupOperator n F g d = projectedGroupOperator n H g d := by</span>
+<span id="L77">  simp only [projectedGroupOperator, rightLieDerivative_congr_on_group n F H he hg hF hH]</span>
+<span id="L78"></span>
+<span id="L79">/-- The moving-frame formula for every differentiable right-equivariant representative. -/</span>
+<span id="L80">theorem SC1_equivariant_frame_v1 (m : ℕ) (F : QuaternionMatrix2 → BinaryForm (m+1))</span>
+<span id="L81">    (hK : RightEquivariant (m+1) F) (hF : ∀ g, IsSp11 g → DifferentiableAt ℝ F g)</span>
+<span id="L82">    (q v : ℍ) (hq : q ∈ Ball) :</span>
+<span id="L83">    rightLieDerivative (m+1) F (ballSection q) v =</span>
+<span id="L84">      ballScale q • fderiv ℝ (fun x =&gt; F (ballSection x)) q v +</span>
+<span id="L85">        infinitesimalAction m (quaternionMatrix (connectionCoefficient q v)) (F (ballSection q)) := by</span>
+<span id="L86">  let U := fun x =&gt; F (ballSection x)</span>
+<span id="L87">  have hU : ∀ x ∈ Ball, DifferentiableAt ℝ U x := fun x hx =&gt;</span>
+<span id="L88">    (hF _ (ballSection_isSp11 x hx)).comp x (differentiableAt_ballSection x hx)</span>
+<span id="L89">  have hlift : DifferentiableAt ℝ (frameLift (m+1) U) (ballSection q) :=</span>
+<span id="L90">    differentiableAt_frameLift (m+1) U (ballSection_isSp11 q hq)</span>
+<span id="L91">      (by simpa [groupOrigin_ballSection q hq] using hU q hq)</span>
+<span id="L92">  rw [← rightLieDerivative_congr_on_group (m+1) (frameLift (m+1) U) F</span>
+<span id="L93">    (fun g hg =&gt; frameLift_recover (m+1) F hK hg) (ballSection_isSp11 q hq) hlift (hF _ (ballSection_isSp11 q hq)) v]</span>
+<span id="L94">  exact SC1_frame_v1 m U q v hq (hU q hq)</span>
+<span id="L95"></span>
+<span id="L96">/-- Left translation commutes with the projected right derivative. -/</span>
+<span id="L97">theorem projectedGroupOperator_left_translate (n : ℕ) (F : QuaternionMatrix2 → BinaryForm n)</span>
+<span id="L98">    (a g : QuaternionMatrix2) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L99">    projectedGroupOperator n (fun x =&gt; F (a*x)) g d = projectedGroupOperator n F (a*g) d := by</span>
+<span id="L100">  have he (v : ℍ) : (fun t =&gt; F (a * rightAffinePath g v t)) =</span>
+<span id="L101">      (fun t =&gt; F (rightAffinePath (a*g) v t)) := by</span>
+<span id="L102">    funext t</span>
+<span id="L103">    simp [rightAffinePath, mul_add, mul_assoc]</span>
+<span id="L104">  simp only [projectedGroupOperator, rightLieDerivative, he]</span>
+<span id="L105"></span>
+<span id="L106">/-- SC1/v1 for an arbitrary differentiable right-equivariant group representative. -/</span>
+<span id="L107">theorem SC1_v1 (m : ℕ) (F : QuaternionMatrix2 → BinaryForm (m+1))</span>
+<span id="L108">    (hK : RightEquivariant (m+1) F) (hF : ∀ g, IsSp11 g → DifferentiableAt ℝ F g)</span>
+<span id="L109">    (q : ℍ) (hq : q ∈ Ball) :</span>
+<span id="L110">    (∀ v, ballSectionInverse q * fderiv ℝ ballSection q v =</span>
+<span id="L111">      (ballScale q)⁻¹ • !![(2:ℝ)⁻¹ • (v * star q - q * star v), v;</span>
+<span id="L112">        star v, connectionCoefficient q v]) ∧</span>
+<span id="L113">    (∀ v w, ballCurvature q v w = -(ballScale q)⁻¹ ^ 2 • (star v * w - star w * v)) ∧</span>
+<span id="L114">    (∀ v, rightLieDerivative (m+1) F (ballSection q) v =</span>
+<span id="L115">      ballScale q • fderiv ℝ (fun x =&gt; F (ballSection x)) q v +</span>
+<span id="L116">        infinitesimalAction m (quaternionMatrix (connectionCoefficient q v)) (F (ballSection q))) :=</span>
+<span id="L117">  ⟨fun v =&gt; ballSection_maurerCartan q v hq, fun v w =&gt; ballCurvature_eq q v w hq,</span>
+<span id="L118">    fun v =&gt; SC1_equivariant_frame_v1 m F hK hF q v hq⟩</span>
+<span id="L119"></span>
+<span id="L120">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

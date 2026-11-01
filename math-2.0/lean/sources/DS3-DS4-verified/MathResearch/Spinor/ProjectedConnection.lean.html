@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/ProjectedConnection.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/ProjectedConnection.lean</h1><p><a href="ProjectedConnection.lean" download>Download exact source</a>. SHA-256: <code>32e5885e76084ec689e316681d2d52963d84fc364011f17d4161741dc908e25a</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.QuaternionMatrix</span>
+<span id="L3"></span>
+<span id="L4">/-! All-degree projected connection identities, SC2/v1. -/</span>
+<span id="L5">@[expose] public section</span>
+<span id="L6">noncomputable section</span>
+<span id="L7">open scoped BigOperators Quaternion</span>
+<span id="L8">open MvPolynomial</span>
+<span id="L9">namespace MathResearch.Spinor</span>
+<span id="L10"></span>
+<span id="L11">/-- Left multiplication of a two-component polynomial column by a complex matrix. -/</span>
+<span id="L12">def matrixColumn (M : Matrix2) (h : Fin 2 → ComplexPoly2) (i : Fin 2) : ComplexPoly2 :=</span>
+<span id="L13">  C (M i 0) * h 0 + C (M i 1) * h 1</span>
+<span id="L14"></span>
+<span id="L15">/-- Euler operator X∂X+Y∂Y on arbitrary binary polynomials. -/</span>
+<span id="L16">def euler (p : ComplexPoly2) : ComplexPoly2 := X 0 * pderiv 0 p + X 1 * pderiv 1 p</span>
+<span id="L17"></span>
+<span id="L18">/-- The unweighted operator identity L10, before homogeneity is imposed. -/</span>
+<span id="L19">theorem projected_full_identity (q : ℍ) (p : ComplexPoly2) (i : Fin 2) :</span>
+<span id="L20">    (∑ μ : Fin 4, matrixColumn (quaternionMatrix (Fueter.coordinateBasis μ))</span>
+<span id="L21">      (fun j =&gt; pderiv j (infinitesimal (quaternionMatrix (star (Fueter.coordinateBasis μ) * q)) p)) i) =</span>
+<span id="L22">    2 * matrixColumn (quaternionMatrix q) (fun j =&gt; euler (pderiv j p) + 2 * pderiv j p) i := by</span>
+<span id="L23">  have hI : (C Complex.I : ComplexPoly2) ^ 2 = -1 := by</span>
+<span id="L24">    rw [← map_pow, Complex.I_sq, map_neg, map_one]</span>
+<span id="L25">  fin_cases i &lt;;&gt;</span>
+<span id="L26">    simp [matrixColumn, infinitesimal, substitution, quaternionMatrix, Fueter.coordinateBasis_eq,</span>
+<span id="L27">      Fin.sum_univ_succ, euler, pderiv_X] &lt;;&gt;</span>
+<span id="L28">    ring_nf &lt;;&gt; simp [hI] &lt;;&gt; ring</span>
+<span id="L29"></span>
+<span id="L30">/-- The projected compact contribution, still for arbitrary polynomials. -/</span>
+<span id="L31">theorem projected_connection_identity (q : ℍ) (p : ComplexPoly2) (i : Fin 2) :</span>
+<span id="L32">    (∑ μ : Fin 4, matrixColumn (quaternionMatrix (Fueter.coordinateBasis μ))</span>
+<span id="L33">      (fun j =&gt; pderiv j (infinitesimal (quaternionMatrix (connectionCoefficient q (Fueter.coordinateBasis μ))) p)) i) =</span>
+<span id="L34">    matrixColumn (quaternionMatrix q) (fun j =&gt; euler (pderiv j p) + 3 * pderiv j p) i := by</span>
+<span id="L35">  have hI : (C Complex.I : ComplexPoly2) ^ 2 = -1 := by</span>
+<span id="L36">    rw [← map_pow, Complex.I_sq, map_neg, map_one]</span>
+<span id="L37">  have hcomm := pderiv_comm (0 : Fin 2) 1 p</span>
+<span id="L38">  fin_cases i &lt;;&gt;</span>
+<span id="L39">    simp [matrixColumn, infinitesimal, substitution, quaternionMatrix, connectionCoefficient_eq,</span>
+<span id="L40">      Fueter.coordinateBasis_eq, Fin.sum_univ_succ, euler, pderiv_X] &lt;;&gt;</span>
+<span id="L41">    simp only [hcomm] &lt;;&gt;</span>
+<span id="L42">    ring_nf &lt;;&gt; simp [hI] &lt;;&gt; ring</span>
+<span id="L43"></span>
+<span id="L44">theorem euler_homogeneous (m : ℕ) (p : BinaryForm m) :</span>
+<span id="L45">    euler p = (m : ℂ) • (p : ComplexPoly2) := by</span>
+<span id="L46">  simpa [euler, Fin.sum_univ_two, ← Nat.cast_smul_eq_nsmul ℂ] using p.property.sum_X_mul_pderiv</span>
+<span id="L47"></span>
+<span id="L48">/-- The first SC2 identity in polynomial column coordinates. -/</span>
+<span id="L49">theorem projected_full_homogeneous (m : ℕ) (q : ℍ) (p : BinaryForm (m + 1)) (i : Fin 2) :</span>
+<span id="L50">    (∑ μ : Fin 4, matrixColumn (quaternionMatrix (Fueter.coordinateBasis μ))</span>
+<span id="L51">      (fun j =&gt; pderiv j (infinitesimal (quaternionMatrix (star (Fueter.coordinateBasis μ) * q)) p)) i) =</span>
+<span id="L52">    (2 * (m + 2) : ℂ) • matrixColumn (quaternionMatrix q) (fun j =&gt; pderiv j (p : ComplexPoly2)) i := by</span>
+<span id="L53">  rw [projected_full_identity]</span>
+<span id="L54">  have he (j : Fin 2) : euler (pderiv j (p : ComplexPoly2)) = (m : ℂ) • pderiv j (p : ComplexPoly2) :=</span>
+<span id="L55">    euler_homogeneous m (derivative m j p)</span>
+<span id="L56">  simp [matrixColumn, he, smul_eq_C_mul, map_ofNat]</span>
+<span id="L57">  ring</span>
+<span id="L58"></span>
+<span id="L59">/-- The real scalar removed from conjugate(v)q is the Euclidean inner product. -/</span>
+<span id="L60">theorem connectionCoefficient_eq_inner (q v : ℍ) :</span>
+<span id="L61">    connectionCoefficient q v = star v * q - (inner ℝ v q : ℍ) := by</span>
+<span id="L62">  rw [connectionCoefficient_eq]</span>
+<span id="L63">  congr 2</span>
+<span id="L64">  simp [Quaternion.inner_def]</span>
+<span id="L65"></span>
+<span id="L66">/-- Reconstruction in the real orthonormal basis 1,i,j,k. -/</span>
+<span id="L67">theorem coordinateBasis_inner_sum (q : ℍ) :</span>
+<span id="L68">    (∑ μ : Fin 4, (inner ℝ (Fueter.coordinateBasis μ) q) • Fueter.coordinateBasis μ) = q := by</span>
+<span id="L69">  ext &lt;;&gt; simp [Fueter.coordinateBasis_eq, Fin.sum_univ_succ, Quaternion.inner_def]</span>
+<span id="L70"></span>
+<span id="L71">theorem infinitesimal_quaternion_sub (a b : ℍ) (p : ComplexPoly2) :</span>
+<span id="L72">    infinitesimal (quaternionMatrix (a - b)) p =</span>
+<span id="L73">      infinitesimal (quaternionMatrix a) p - infinitesimal (quaternionMatrix b) p := by</span>
+<span id="L74">  have h := quaternionMatrixHom.map_sub a b</span>
+<span id="L75">  change quaternionMatrix (a - b) = quaternionMatrix a - quaternionMatrix b at h</span>
+<span id="L76">  rw [h]</span>
+<span id="L77">  simp [infinitesimal, substitution, sub_mul]</span>
+<span id="L78">  ring</span>
+<span id="L79"></span>
+<span id="L80">/-- The scalar correction in L11, reconstructed before using homogeneity. -/</span>
+<span id="L81">theorem matrixColumn_inner_sum (q : ℍ) (h : Fin 2 → ComplexPoly2) (i : Fin 2) :</span>
+<span id="L82">    (∑ μ : Fin 4, (inner ℝ (Fueter.coordinateBasis μ) q : ℂ) •</span>
+<span id="L83">      matrixColumn (quaternionMatrix (Fueter.coordinateBasis μ)) h i) =</span>
+<span id="L84">      matrixColumn (quaternionMatrix q) h i := by</span>
+<span id="L85">  have hs : (∑ μ : Fin 4, (inner ℝ (Fueter.coordinateBasis μ) q : ℂ) •</span>
+<span id="L86">      quaternionMatrix (Fueter.coordinateBasis μ)) = quaternionMatrix q := by</span>
+<span id="L87">    calc</span>
+<span id="L88">      _ = ∑ μ : Fin 4, quaternionMatrix ((inner ℝ (Fueter.coordinateBasis μ) q) •</span>
+<span id="L89">          Fueter.coordinateBasis μ) := by simp only [quaternionMatrix_real_smul]</span>
+<span id="L90">      _ = quaternionMatrixHom (∑ μ : Fin 4, (inner ℝ (Fueter.coordinateBasis μ) q) •</span>
+<span id="L91">          Fueter.coordinateBasis μ) := (map_sum quaternionMatrixHom _ _).symm</span>
+<span id="L92">      _ = _ := congrArg quaternionMatrix (coordinateBasis_inner_sum q)</span>
+<span id="L93">  have hi := congrArg (fun M =&gt; matrixColumn M h i) hs</span>
+<span id="L94">  simpa [matrixColumn, Matrix.sum_apply, Matrix.smul_apply, smul_eq_mul,</span>
+<span id="L95">    smul_eq_C_mul, Finset.sum_add_distrib, Finset.sum_mul,</span>
+<span id="L96">    map_sum, map_mul, mul_assoc, mul_add] using hi</span>
+<span id="L97"></span>
+<span id="L98">/-- The second SC2 identity: L9 minus the degree-n scalar action, as in L11. -/</span>
+<span id="L99">theorem projected_connection_homogeneous (m : ℕ) (q : ℍ) (p : BinaryForm (m + 1)) (i : Fin 2) :</span>
+<span id="L100">    (∑ μ : Fin 4, matrixColumn (quaternionMatrix (Fueter.coordinateBasis μ))</span>
+<span id="L101">      (fun j =&gt; pderiv j (infinitesimal (quaternionMatrix (connectionCoefficient q (Fueter.coordinateBasis μ))) p)) i) =</span>
+<span id="L102">    (m + 3 : ℂ) • matrixColumn (quaternionMatrix q) (fun j =&gt; pderiv j (p : ComplexPoly2)) i := by</span>
+<span id="L103">  have hsplit (v : ℍ) :</span>
+<span id="L104">      infinitesimal (quaternionMatrix (connectionCoefficient q v)) p =</span>
+<span id="L105">        infinitesimal (quaternionMatrix (star v * q)) p -</span>
+<span id="L106">        ((m + 1 : ℂ) * (inner ℝ v q : ℂ)) • (p : ComplexPoly2) := by</span>
+<span id="L107">    rw [connectionCoefficient_eq_inner, infinitesimal_quaternion_sub, infinitesimal_real]</span>
+<span id="L108">    simp</span>
+<span id="L109">  calc</span>
+<span id="L110">    _ = (∑ μ : Fin 4, matrixColumn (quaternionMatrix (Fueter.coordinateBasis μ))</span>
+<span id="L111">          (fun j =&gt; pderiv j (infinitesimal (quaternionMatrix (star (Fueter.coordinateBasis μ) * q)) p)) i) -</span>
+<span id="L112">        (m + 1 : ℂ) • (∑ μ : Fin 4, (inner ℝ (Fueter.coordinateBasis μ) q : ℂ) •</span>
+<span id="L113">          matrixColumn (quaternionMatrix (Fueter.coordinateBasis μ)) (fun j =&gt; pderiv j (p : ComplexPoly2)) i) := by</span>
+<span id="L114">      simp only [hsplit, map_sub, Finset.smul_sum, smul_smul,</span>
+<span id="L115">        ← Finset.sum_sub_distrib]</span>
+<span id="L116">      apply Finset.sum_congr rfl</span>
+<span id="L117">      intro μ _</span>
+<span id="L118">      simp [matrixColumn, smul_eq_C_mul]</span>
+<span id="L119">      ring</span>
+<span id="L120">    _ = _ := by</span>
+<span id="L121">      rw [projected_full_homogeneous, matrixColumn_inner_sum, ← sub_smul]</span>
+<span id="L122">      congr 1</span>
+<span id="L123">      ring</span>
+<span id="L124"></span>
+<span id="L125">/-- Taking a coefficient commutes with the matrix action, using left quaternion multiplication. -/</span>
+<span id="L126">theorem matrixColumn_pack_coeff (q : ℍ) (h : Fin 2 → ComplexPoly2) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L127">    pack ((matrixColumn (quaternionMatrix q) h 0).coeff d)</span>
+<span id="L128">      ((matrixColumn (quaternionMatrix q) h 1).coeff d) = q * pack ((h 0).coeff d) ((h 1).coeff d) := by</span>
+<span id="L129">  simpa [matrixColumn] using quaternionMatrix_pack q ((h 0).coeff d) ((h 1).coeff d)</span>
+<span id="L130"></span>
+<span id="L131">theorem pack_sum {ι : Type*} (s : Finset ι) (a b : ι → ℂ) :</span>
+<span id="L132">    pack (∑ i ∈ s, a i) (∑ i ∈ s, b i) = ∑ i ∈ s, pack (a i) (b i) := by</span>
+<span id="L133">  classical</span>
+<span id="L134">  induction s using Finset.induction_on with</span>
+<span id="L135">  | empty =&gt; simp [pack]</span>
+<span id="L136">  | @insert i s hi ih =&gt; simp [hi, pack_add, ih]</span>
+<span id="L137"></span>
+<span id="L138">theorem pack_real_smul (r : ℝ) (a b : ℂ) :</span>
+<span id="L139">    pack ((r : ℂ) * a) ((r : ℂ) * b) = r • pack a b := by</span>
+<span id="L140">  ext &lt;;&gt; simp [pack_components]</span>
+<span id="L141"></span>
+<span id="L142">/-- Translate any scalar polynomial-column identity into the exact quaternion coefficient identity. -/</span>
+<span id="L143">theorem column_identity_to_quaternion (q : ℍ) (P : Fin 4 → ComplexPoly2)</span>
+<span id="L144">    (p : ComplexPoly2) (r : ℝ)</span>
+<span id="L145">    (h : ∀ i : Fin 2, (∑ μ : Fin 4, matrixColumn (quaternionMatrix (Fueter.coordinateBasis μ))</span>
+<span id="L146">        (fun j =&gt; pderiv j (P μ)) i) =</span>
+<span id="L147">      (r : ℂ) • matrixColumn (quaternionMatrix q) (fun j =&gt; pderiv j p) i)</span>
+<span id="L148">    (d : Fin 2 →₀ ℕ) :</span>
+<span id="L149">    (∑ μ : Fin 4, Fueter.coordinateBasis μ *</span>
+<span id="L150">      pack ((pderiv 0 (P μ)).coeff d) ((pderiv 1 (P μ)).coeff d)) =</span>
+<span id="L151">    r • (q * pack ((pderiv 0 p).coeff d) ((pderiv 1 p).coeff d)) := by</span>
+<span id="L152">  have hh := congrArg₂ pack (congrArg (fun f : ComplexPoly2 =&gt; f.coeff d) (h 0))</span>
+<span id="L153">    (congrArg (fun f : ComplexPoly2 =&gt; f.coeff d) (h 1))</span>
+<span id="L154">  simpa [pack_sum, matrixColumn_pack_coeff, pack_real_smul] using hh</span>
+<span id="L155"></span>
+<span id="L156">/-- First SC2 formula, as equality of the complete quaternion coefficient rows. -/</span>
+<span id="L157">theorem projected_full_quaternion (m : ℕ) (q : ℍ) (p : BinaryForm (m + 1)) :</span>
+<span id="L158">    (fun k =&gt; ∑ μ : Fin 4, Fueter.coordinateBasis μ *</span>
+<span id="L159">      fueterCoefficients m (infinitesimalAction m (quaternionMatrix (star (Fueter.coordinateBasis μ) * q)) p) k) =</span>
+<span id="L160">    (fun k =&gt; (2 * (m + 2) : ℝ) • (q * fueterCoefficients m p k)) := by</span>
+<span id="L161">  funext k</span>
+<span id="L162">  apply column_identity_to_quaternion q</span>
+<span id="L163">    (fun μ =&gt; infinitesimal (quaternionMatrix (star (Fueter.coordinateBasis μ) * q)) p) p</span>
+<span id="L164">    (2 * (m + 2)) _ (exponent m k)</span>
+<span id="L165">  intro i</span>
+<span id="L166">  simpa using projected_full_homogeneous m q p i</span>
+<span id="L167"></span>
+<span id="L168">/-- Second SC2 formula, as equality of the complete quaternion coefficient rows. -/</span>
+<span id="L169">theorem projected_connection_quaternion (m : ℕ) (q : ℍ) (p : BinaryForm (m + 1)) :</span>
+<span id="L170">    (fun k =&gt; ∑ μ : Fin 4, Fueter.coordinateBasis μ *</span>
+<span id="L171">      fueterCoefficients m (infinitesimalAction m (quaternionMatrix (connectionCoefficient q (Fueter.coordinateBasis μ))) p) k) =</span>
+<span id="L172">    (fun k =&gt; (m + 3 : ℝ) • (q * fueterCoefficients m p k)) := by</span>
+<span id="L173">  funext k</span>
+<span id="L174">  apply column_identity_to_quaternion q</span>
+<span id="L175">    (fun μ =&gt; infinitesimal (quaternionMatrix (connectionCoefficient q (Fueter.coordinateBasis μ))) p) p</span>
+<span id="L176">    (m + 3) _ (exponent m k)</span>
+<span id="L177">  intro i</span>
+<span id="L178">  simpa using projected_connection_homogeneous m q p i</span>
+<span id="L179"></span>
+<span id="L180">/-- SC2/v1, with m=n-1: both identities, for every quaternion q and every degree n≥1. -/</span>
+<span id="L181">theorem SC2_v1_coefficients (m : ℕ) (q : ℍ) (p : BinaryForm (m + 1)) :</span>
+<span id="L182">    ((fun k =&gt; ∑ μ : Fin 4, Fueter.coordinateBasis μ *</span>
+<span id="L183">      fueterCoefficients m (infinitesimalAction m (quaternionMatrix (star (Fueter.coordinateBasis μ) * q)) p) k) =</span>
+<span id="L184">      (fun k =&gt; (2 * (m + 2) : ℝ) • (q * fueterCoefficients m p k))) ∧</span>
+<span id="L185">    ((fun k =&gt; ∑ μ : Fin 4, Fueter.coordinateBasis μ *</span>
+<span id="L186">      fueterCoefficients m (infinitesimalAction m (quaternionMatrix (connectionCoefficient q (Fueter.coordinateBasis μ))) p) k) =</span>
+<span id="L187">      (fun k =&gt; (m + 3 : ℝ) • (q * fueterCoefficients m p k))) :=</span>
+<span id="L188">  ⟨projected_full_quaternion m q p, projected_connection_quaternion m q p⟩</span>
+<span id="L189"></span>
+<span id="L190">/-- SC2/v1 with the wiki&#39;s n: both quaternion polynomial identities, coefficientwise at every exponent. -/</span>
+<span id="L191">theorem SC2_v1 (n : ℕ) (hn : 1 ≤ n) (q : ℍ) (p : BinaryForm n) :</span>
+<span id="L192">    ((fun d =&gt; ∑ μ : Fin 4, Fueter.coordinateBasis μ *</span>
+<span id="L193">      polynomialFueterCoefficients (infinitesimal (quaternionMatrix (star (Fueter.coordinateBasis μ) * q)) p) d) =</span>
+<span id="L194">      (fun d =&gt; (2 * (n + 1) : ℝ) • (q * polynomialFueterCoefficients p d))) ∧</span>
+<span id="L195">    ((fun d =&gt; ∑ μ : Fin 4, Fueter.coordinateBasis μ *</span>
+<span id="L196">      polynomialFueterCoefficients (infinitesimal (quaternionMatrix (connectionCoefficient q (Fueter.coordinateBasis μ))) p) d) =</span>
+<span id="L197">      (fun d =&gt; (n + 2 : ℝ) • (q * polynomialFueterCoefficients p d))) := by</span>
+<span id="L198">  obtain ⟨m, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : n ≠ 0)</span>
+<span id="L199">  constructor</span>
+<span id="L200">  · funext d</span>
+<span id="L201">    apply column_identity_to_quaternion q</span>
+<span id="L202">      (fun μ =&gt; infinitesimal (quaternionMatrix (star (Fueter.coordinateBasis μ) * q)) p) p</span>
+<span id="L203">      (2 * (m.succ + 1)) _ d</span>
+<span id="L204">    intro i</span>
+<span id="L205">    convert projected_full_homogeneous m q p i using 1; norm_num [Nat.cast_succ, add_assoc]</span>
+<span id="L206">  · funext d</span>
+<span id="L207">    apply column_identity_to_quaternion q</span>
+<span id="L208">      (fun μ =&gt; infinitesimal (quaternionMatrix (connectionCoefficient q (Fueter.coordinateBasis μ))) p) p</span>
+<span id="L209">      (m.succ + 2) _ d</span>
+<span id="L210">    intro i</span>
+<span id="L211">    convert projected_connection_homogeneous m q p i using 1; norm_num [Nat.cast_succ, add_assoc]</span>
+<span id="L212"></span>
+<span id="L213">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

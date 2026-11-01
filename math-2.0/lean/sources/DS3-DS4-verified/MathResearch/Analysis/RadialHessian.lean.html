@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/RadialHessian.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/RadialHessian.lean</h1><p><a href="RadialHessian.lean" download>Download exact source</a>. SHA-256: <code>9c058112d3e8f23a4242f736a6de03c5e58775f0a0639be996c6f25b23e04b3c</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Analysis.RadialLaplacian</span>
+<span id="L3">public import Mathlib.Analysis.Calculus.Deriv.Inv</span>
+<span id="L4"></span>
+<span id="L5">/-! Local radial Hessian formulas in real dimension four. These are used only</span>
+<span id="L6">in the separate classical mean-value theorem. -/</span>
+<span id="L7">@[expose] public section</span>
+<span id="L8">noncomputable section</span>
+<span id="L9">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L10">set_option maxHeartbeats 1200000</span>
+<span id="L11">open scoped Quaternion ContDiff Topology</span>
+<span id="L12">open InnerProductSpace Set Filter</span>
+<span id="L13">namespace MathResearch.Spinor</span>
+<span id="L14">local instance radialHessianLocalInstance0 : NormedAddCommGroup ℍ := inferInstance</span>
+<span id="L15">local instance radialHessianLocalInstance1 : NormedSpace ℝ ℍ := inferInstance</span>
+<span id="L16">variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]</span>
+<span id="L17">local instance radialHessianLocalInstance2 : NormedAddCommGroup (ℍ →L[ℝ] E) := inferInstance</span>
+<span id="L18">local instance radialHessianLocalInstance3 : NormedSpace ℝ (ℍ →L[ℝ] E) := inferInstance</span>
+<span id="L19"></span>
+<span id="L20">theorem hasFDerivAt_quaternionNorm {q : ℍ} (hq : q ≠ 0) :</span>
+<span id="L21">    HasFDerivAt (norm : ℍ → ℝ) (‖q‖⁻¹ • innerSL ℝ q) q := by</span>
+<span id="L22">  have h := (hasStrictFDerivAt_norm_sq q).hasFDerivAt.sqrt (pow_ne_zero 2 (norm_ne_zero_iff.mpr hq))</span>
+<span id="L23">  convert! h using 1</span>
+<span id="L24">  · funext x</span>
+<span id="L25">    simp</span>
+<span id="L26">  · ext v</span>
+<span id="L27">    simp only [Real.sqrt_sq (norm_nonneg q), smul_apply,</span>
+<span id="L28">      innerSL_apply_apply, smul_eq_mul]</span>
+<span id="L29">    field_simp</span>
+<span id="L30">    ring</span>
+<span id="L31"></span>
+<span id="L32">/-- First radial derivative on the punctured ball. -/</span>
+<span id="L33">theorem fderiv_radial_norm {A : ℍ → E} {M M&#39; : ℝ → E}</span>
+<span id="L34">    (hA : ∀ q ∈ Ball, A q = M ‖q‖)</span>
+<span id="L35">    (hM : ∀ r ∈ Ioo (0:ℝ) 1, HasDerivAt M (M&#39; r) r)</span>
+<span id="L36">    {q : ℍ} (hq : q ∈ Ball) (hq0 : q ≠ 0) (v : ℍ) :</span>
+<span id="L37">    fderiv ℝ A q v = (‖q‖⁻¹ * inner ℝ q v) • M&#39; ‖q‖ := by</span>
+<span id="L38">  have hr : ‖q‖ ∈ Ioo (0:ℝ) 1 := ⟨norm_pos_iff.mpr hq0, (mem_ball_iff q).mp hq⟩</span>
+<span id="L39">  have hd := (hM ‖q‖ hr).hasFDerivAt.comp q (hasFDerivAt_quaternionNorm hq0)</span>
+<span id="L40">  have he : A =ᶠ[𝓝 q] (fun x =&gt; M ‖x‖) := by</span>
+<span id="L41">    filter_upwards [ball_isOpen.mem_nhds hq] with x hx</span>
+<span id="L42">    exact hA x hx</span>
+<span id="L43">  rw [(hd.congr_of_eventuallyEq he).fderiv]</span>
+<span id="L44">  simp only [ContinuousLinearMap.comp_apply, ContinuousLinearMap.toSpanSingleton_apply, smul_apply, innerSL_apply_apply, smul_eq_mul]</span>
+<span id="L45"></span>
+<span id="L46">/-- The radial Hessian in a tangential direction has eigenvalue M&#39;(r)/r. -/</span>
+<span id="L47">theorem radial_hessian_tangent {A : ℍ → E} {M M&#39; M&#39;&#39; : ℝ → E}</span>
+<span id="L48">    (hA : ∀ q ∈ Ball, A q = M ‖q‖)</span>
+<span id="L49">    (hM : ∀ r ∈ Ioo (0:ℝ) 1, HasDerivAt M (M&#39; r) r)</span>
+<span id="L50">    (hM&#39; : ∀ r ∈ Ioo (0:ℝ) 1, HasDerivAt M&#39; (M&#39;&#39; r) r)</span>
+<span id="L51">    {q : ℍ} (hq : q ∈ Ball) (hq0 : q ≠ 0)</span>
+<span id="L52">    (hDA : DifferentiableAt ℝ (fderiv ℝ A) q)</span>
+<span id="L53">    (v : ℍ) (hv : inner ℝ q v = 0) :</span>
+<span id="L54">    fderiv ℝ (fderiv ℝ A) q v v = (‖v‖^2 / ‖q‖) • M&#39; ‖q‖ := by</span>
+<span id="L55">  have hr : ‖q‖ ∈ Ioo (0:ℝ) 1 := ⟨norm_pos_iff.mpr hq0, (mem_ball_iff q).mp hq⟩</span>
+<span id="L56">  have hn := hasFDerivAt_quaternionNorm hq0</span>
+<span id="L57">  have hi : HasFDerivAt (fun x : ℍ =&gt; inner ℝ x v) (innerSL ℝ v) q := by</span>
+<span id="L58">    simpa only [coe_innerSL_apply, real_inner_comm] using (innerSL ℝ v).hasFDerivAt (x := q)</span>
+<span id="L59">  have hc := ((hasDerivAt_inv (norm_ne_zero_iff.mpr hq0)).comp_hasFDerivAt q hn).mul hi</span>
+<span id="L60">  have hd := hc.smul ((hM&#39; ‖q‖ hr).hasFDerivAt.comp q hn)</span>
+<span id="L61">  have he : (fun x =&gt; fderiv ℝ A x v) =ᶠ[𝓝 q]</span>
+<span id="L62">      (fun x : ℍ =&gt; (‖x‖⁻¹ * inner ℝ x v) • M&#39; ‖x‖) := by</span>
+<span id="L63">    filter_upwards [ball_isOpen.mem_nhds hq, eventually_ne_nhds hq0] with x hx hx0</span>
+<span id="L64">    exact fderiv_radial_norm hA hM hx hx0 v</span>
+<span id="L65">  have H := (hd.congr_of_eventuallyEq he).fderiv</span>
+<span id="L66">  have H&#39; := congrArg (fun L : ℍ →L[ℝ] E =&gt; L v) H</span>
+<span id="L67">  rw [fderiv_clm_apply hDA (differentiableAt_const _)] at H&#39;</span>
+<span id="L68">  simpa [hv, real_inner_self_eq_norm_sq, div_eq_mul_inv, mul_comm] using H&#39;</span>
+<span id="L69"></span>
+<span id="L70">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

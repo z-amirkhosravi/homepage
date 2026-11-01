@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/RotationalBallMeasure.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/RotationalBallMeasure.lean</h1><p><a href="RotationalBallMeasure.lean" download>Download exact source</a>. SHA-256: <code>2d1e0c7e36e244d62c34412c88331ea0986c2a831cd1929eb8c2252520979029</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Analysis.QuaternionicInvariantMeasure</span>
+<span id="L3">public import MathResearch.Analysis.QuaternionicSphericalAverage</span>
+<span id="L4">public import MathResearch.Analysis.InvariantDensity</span>
+<span id="L5">public import Mathlib.MeasureTheory.Measure.Haar.InnerProductSpace</span>
+<span id="L6"></span>
+<span id="L7">/-! Rotational invariance of the radial probability measure in DS3.</span>
+<span id="L8">The subtype version permits compact averaging with functions continuous only</span>
+<span id="L9">inside the ball; arbitrary outside values never enter the argument. -/</span>
+<span id="L10">@[expose] public section</span>
+<span id="L11">noncomputable section</span>
+<span id="L12">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L13">open scoped Quaternion ENNReal</span>
+<span id="L14">open MeasureTheory MeasureTheory.Measure Set</span>
+<span id="L15">namespace MathResearch.Spinor</span>
+<span id="L16"></span>
+<span id="L17">def unitBallRotation (a : Fueter.UnitQuaternion) : Ball ≃ₜ Ball where</span>
+<span id="L18">  toFun q := ⟨(a:ℍ)*q, unit_mul_mem_ball a q.property⟩</span>
+<span id="L19">  invFun q := ⟨((a⁻¹ : Fueter.UnitQuaternion):ℍ)*q, unit_mul_mem_ball a⁻¹ q.property⟩</span>
+<span id="L20">  left_inv q := by</span>
+<span id="L21">    apply Subtype.ext</span>
+<span id="L22">    change ((a⁻¹ : Fueter.UnitQuaternion):ℍ) * ((a:ℍ)*q) = q</span>
+<span id="L23">    rw [Fueter.unitQuaternion_coe_inv, ← mul_assoc, Unitary.coe_star_mul_self, one_mul]</span>
+<span id="L24">  right_inv q := by</span>
+<span id="L25">    apply Subtype.ext</span>
+<span id="L26">    change (a:ℍ) * (((a⁻¹ : Fueter.UnitQuaternion):ℍ)*q) = q</span>
+<span id="L27">    rw [Fueter.unitQuaternion_coe_inv, ← mul_assoc, ← Unitary.coe_star, Unitary.coe_mul_star_self, one_mul]</span>
+<span id="L28">  continuous_toFun := (continuous_const.mul continuous_subtype_val).subtype_mk _</span>
+<span id="L29">  continuous_invFun := (continuous_const.mul continuous_subtype_val).subtype_mk _</span>
+<span id="L30"></span>
+<span id="L31">theorem ballDensity_unit_mul (n : ℕ) (a : Fueter.UnitQuaternion) (q : ℍ) :</span>
+<span id="L32">    ballDensity n ((a:ℍ)*q) = ballDensity n q := by</span>
+<span id="L33">  simp [ballDensity, ballScale, map_mul, Fueter.unitQuaternion_normSq]</span>
+<span id="L34"></span>
+<span id="L35">theorem unitRotation_preserves_weightedBall (n : ℕ) (a : Fueter.UnitQuaternion) :</span>
+<span id="L36">    MeasurePreserving (fun q : ℍ =&gt; (a:ℍ)*q) (weightedBallMeasure n) (weightedBallMeasure n) := by</span>
+<span id="L37">  let L := Fueter.quaternionRotation (a,1)</span>
+<span id="L38">  have he : L ⁻¹&#39; Ball = Ball := by</span>
+<span id="L39">    ext q</span>
+<span id="L40">    simp only [mem_preimage, mem_ball_iff, L.norm_map]</span>
+<span id="L41">  have hv : MeasurePreserving L (volume.restrict Ball) (volume.restrict Ball) := by</span>
+<span id="L42">    have h := L.measurePreserving.restrict_preimage_emb L.toHomeomorph.measurableEmbedding Ball</span>
+<span id="L43">    rwa [he] at h</span>
+<span id="L44">  have hd := MathResearch.Analysis.measurePreserving_withDensity hv</span>
+<span id="L45">    (continuous_ballDensity n).measurable.ennreal_ofReal</span>
+<span id="L46">    (fun q =&gt; congrArg ENNReal.ofReal (show ballDensity n (L q) = ballDensity n q from by</span>
+<span id="L47">      simpa [L, Fueter.quaternionRotation] using ballDensity_unit_mul n a q))</span>
+<span id="L48">  simpa [weightedBallMeasure, L, Fueter.quaternionRotation] using hd</span>
+<span id="L49"></span>
+<span id="L50">/-- The same radial measure on the open-ball subtype. -/</span>
+<span id="L51">def weightedBallSubtypeMeasure (n : ℕ) : Measure Ball :=</span>
+<span id="L52">  ballVolume.withDensity (fun q =&gt; ENNReal.ofReal (ballDensity n q))</span>
+<span id="L53"></span>
+<span id="L54">theorem map_weightedBallSubtypeMeasure (n : ℕ) :</span>
+<span id="L55">    Measure.map (Subtype.val : Ball → ℍ) (weightedBallSubtypeMeasure n) = weightedBallMeasure n := by</span>
+<span id="L56">  rw [weightedBallSubtypeMeasure, MathResearch.Analysis.map_withDensity_comp ballVolume</span>
+<span id="L57">    measurable_subtype_coe (continuous_ballDensity n).measurable.ennreal_ofReal,</span>
+<span id="L58">    show Measure.map (Subtype.val : Ball → ℍ) ballVolume = volume.restrict Ball from</span>
+<span id="L59">      map_comap_subtype_coe ball_isOpen.measurableSet volume]</span>
+<span id="L60">  rfl</span>
+<span id="L61"></span>
+<span id="L62">instance weightedBallSubtypeMeasure_finite (n : ℕ) : IsFiniteMeasure (weightedBallSubtypeMeasure n) := by</span>
+<span id="L63">  constructor</span>
+<span id="L64">  have h := congrArg (fun μ : Measure ℍ =&gt; μ univ) (map_weightedBallSubtypeMeasure n)</span>
+<span id="L65">  rw [Measure.map_apply measurable_subtype_coe MeasurableSet.univ, preimage_univ] at h</span>
+<span id="L66">  rw [h]</span>
+<span id="L67">  exact measure_lt_top _ _</span>
+<span id="L68"></span>
+<span id="L69">theorem weightedBallSubtypeMeasure_isProbability (n : ℕ) (hn : 2 ≤ n) :</span>
+<span id="L70">    IsProbabilityMeasure (weightedBallSubtypeMeasure n) := by</span>
+<span id="L71">  constructor</span>
+<span id="L72">  have h := congrArg (fun μ : Measure ℍ =&gt; μ univ) (map_weightedBallSubtypeMeasure n)</span>
+<span id="L73">  rw [Measure.map_apply measurable_subtype_coe MeasurableSet.univ, preimage_univ] at h</span>
+<span id="L74">  rw [h, weightedBallMeasure_univ n hn]</span>
+<span id="L75"></span>
+<span id="L76">theorem unitBallRotation_preserving (n : ℕ) (a : Fueter.UnitQuaternion) :</span>
+<span id="L77">    MeasurePreserving (unitBallRotation a) (weightedBallSubtypeMeasure n) (weightedBallSubtypeMeasure n) := by</span>
+<span id="L78">  refine ⟨(unitBallRotation a).measurable, ?_⟩</span>
+<span id="L79">  apply (MeasurableEmbedding.subtype_coe ball_isOpen.measurableSet).map_injective</span>
+<span id="L80">  rw [Measure.map_map measurable_subtype_coe (unitBallRotation a).measurable]</span>
+<span id="L81">  change Measure.map ((fun q : ℍ =&gt; (a:ℍ)*q) ∘ (Subtype.val : Ball → ℍ)) _ = _</span>
+<span id="L82">  have hm : Measurable (fun q : ℍ =&gt; (a:ℍ)*q) := (continuous_const.mul continuous_id).measurable</span>
+<span id="L83">  rw [← Measure.map_map hm measurable_subtype_coe,</span>
+<span id="L84">    map_weightedBallSubtypeMeasure, (unitRotation_preserves_weightedBall n a).map_eq]</span>
+<span id="L85"></span>
+<span id="L86">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

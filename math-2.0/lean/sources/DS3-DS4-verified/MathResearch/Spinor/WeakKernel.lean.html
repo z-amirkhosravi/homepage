@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/WeakKernel.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/WeakKernel.lean</h1><p><a href="WeakKernel.lean" download>Download exact source</a>. SHA-256: <code>0e1e6e4fc4c4d3d2a5b2236d770e579108ff2818751adb599ccd7a1d442fd68c</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.WeightedMeasure</span>
+<span id="L3">public import Mathlib.Analysis.Distribution.TestFunction</span>
+<span id="L4">public import Mathlib.Analysis.InnerProductSpace.Adjoint</span>
+<span id="L5"></span>
+<span id="L6">/-! The weak Fueter kernel as a closed subspace of the actual weighted L² space.</span>
+<span id="L7">The defining tests use the adjoint of the coefficient symbol of D_l T_n.</span>
+<span id="L8">This file does not assert Weyl regularity or the classical/weak comparison. -/</span>
+<span id="L9">@[expose] public section</span>
+<span id="L10">noncomputable section</span>
+<span id="L11">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L12">open scoped Quaternion BigOperators Distributions</span>
+<span id="L13">open MeasureTheory</span>
+<span id="L14">namespace MathResearch.Spinor</span>
+<span id="L15"></span>
+<span id="L16">def ballOpen : TopologicalSpace.Opens ℍ := ⟨Ball, ball_isOpen⟩</span>
+<span id="L17">abbrev BallTest := 𝓓(ballOpen, ℝ)</span>
+<span id="L18"></span>
+<span id="L19">/-- The `(j,d)` coefficient of the symbol e_μ T_n, complex linear in the spinor. -/</span>
+<span id="L20">def weakSymbol (n : ℕ) (μ : Fin 4) (j : Fin 2) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L21">    BinaryForm n →L[ℂ] ℂ :=</span>
+<span id="L22">  LinearMap.toContinuousLinearMap</span>
+<span id="L23">    { toFun := fun p =&gt; (spinorProjection n (Fueter.coordinateBasis μ) p j).coeff d</span>
+<span id="L24">      map_add&#39; := by</span>
+<span id="L25">        intro p r</span>
+<span id="L26">        rw [spinorProjection_add_right]</span>
+<span id="L27">        simp</span>
+<span id="L28">      map_smul&#39; := by</span>
+<span id="L29">        intro c p</span>
+<span id="L30">        simp [spinorProjection, matrixColumn]</span>
+<span id="L31">        ring }</span>
+<span id="L32"></span>
+<span id="L33">/-- Formal-adjoint test vector; inverse density converts the weighted pairing to Lebesgue testing. -/</span>
+<span id="L34">def weakTestVector (n : ℕ) (φ : BallTest) (j : Fin 2) (d : Fin 2 →₀ ℕ) (q : ℍ) : BinaryForm n :=</span>
+<span id="L35">  (ballDensity n q)⁻¹ • ∑ μ : Fin 4,</span>
+<span id="L36">    (fderiv ℝ φ q (Fueter.coordinateBasis μ)) • (weakSymbol n μ j d).adjoint 1</span>
+<span id="L37"></span>
+<span id="L38">theorem weakTestVector_tsupport (n : ℕ) (φ : BallTest) (j : Fin 2) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L39">    tsupport (weakTestVector n φ j d) ⊆ tsupport φ := by</span>
+<span id="L40">  apply closure_minimal _ (isClosed_tsupport _)</span>
+<span id="L41">  intro q hq</span>
+<span id="L42">  by_contra h</span>
+<span id="L43">  have hz (μ : Fin 4) : fderiv ℝ φ q (Fueter.coordinateBasis μ) = 0 :=</span>
+<span id="L44">    image_eq_zero_of_notMem_tsupport (f := fun x =&gt; fderiv ℝ φ x (Fueter.coordinateBasis μ))</span>
+<span id="L45">      (fun hx =&gt; h ((tsupport_fderiv_apply_subset ℝ _ ) hx))</span>
+<span id="L46">  exact hq (by simp [weakTestVector, hz])</span>
+<span id="L47"></span>
+<span id="L48">theorem weakTestVector_continuous (n : ℕ) (hn : 2 ≤ n) (φ : BallTest)</span>
+<span id="L49">    (j : Fin 2) (d : Fin 2 →₀ ℕ) : Continuous (weakTestVector n φ j d) := by</span>
+<span id="L50">  apply ContinuousOn.continuous_of_tsupport_subset _ ball_isOpen</span>
+<span id="L51">    ((weakTestVector_tsupport n φ j d).trans φ.tsupport_subset)</span>
+<span id="L52">  unfold weakTestVector</span>
+<span id="L53">  have hw := (continuous_ballDensity n).continuousOn.inv₀ (s := Ball)</span>
+<span id="L54">    (fun q hq =&gt; (ballDensity_pos n hn hq).ne&#39;)</span>
+<span id="L55">  apply hw.smul</span>
+<span id="L56">  · apply Continuous.continuousOn</span>
+<span id="L57">    apply continuous_finsetSum</span>
+<span id="L58">    intro μ _</span>
+<span id="L59">    exact ((φ.contDiff.continuous_fderiv (by simp)).clm_apply continuous_const).smul continuous_const</span>
+<span id="L60"></span>
+<span id="L61">instance weightedBallMeasure_locallyFinite (n : ℕ) : IsLocallyFiniteMeasure (weightedBallMeasure n) :=</span>
+<span id="L62">  IsLocallyFiniteMeasure.withDensity_ofReal (continuous_ballDensity n)</span>
+<span id="L63"></span>
+<span id="L64">theorem weakTestVector_memLp (n : ℕ) (hn : 2 ≤ n) (φ : BallTest)</span>
+<span id="L65">    (j : Fin 2) (d : Fin 2 →₀ ℕ) : MemLp (weakTestVector n φ j d) 2 (weightedBallMeasure n) :=</span>
+<span id="L66">  (weakTestVector_continuous n hn φ j d).memLp_of_hasCompactSupport</span>
+<span id="L67">    (φ.hasCompactSupport.of_isClosed_subset (isClosed_tsupport _) (weakTestVector_tsupport n φ j d))</span>
+<span id="L68"></span>
+<span id="L69">/-- The continuous complex-linear weak differential test. -/</span>
+<span id="L70">def weakTest (n : ℕ) (hn : 2 ≤ n) (φ : BallTest) (j : Fin 2) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L71">    BallL2 n →L[ℂ] ℂ :=</span>
+<span id="L72">  innerSL ℂ ((weakTestVector_memLp n hn φ j d).toLp (weakTestVector n φ j d))</span>
+<span id="L73"></span>
+<span id="L74">/-- All real compactly supported smooth tests and all polynomial coefficients are imposed. -/</span>
+<span id="L75">def weakKernel (n : ℕ) (hn : 2 ≤ n) : Submodule ℂ (BallL2 n) :=</span>
+<span id="L76">  ⨅ (φ : BallTest) (j : Fin 2) (d : Fin 2 →₀ ℕ), (weakTest n hn φ j d).ker</span>
+<span id="L77"></span>
+<span id="L78">@[simp] theorem mem_weakKernel (n : ℕ) (hn : 2 ≤ n) (f : BallL2 n) :</span>
+<span id="L79">    f ∈ weakKernel n hn ↔ ∀ φ j d, weakTest n hn φ j d f = 0 := by</span>
+<span id="L80">  simp [weakKernel]</span>
+<span id="L81"></span>
+<span id="L82">theorem weakKernel_isClosed (n : ℕ) (hn : 2 ≤ n) : IsClosed (weakKernel n hn : Set (BallL2 n)) := by</span>
+<span id="L83">  simp only [weakKernel, Submodule.coe_iInf]</span>
+<span id="L84">  exact isClosed_iInter fun φ =&gt; isClosed_iInter fun j =&gt; isClosed_iInter fun d =&gt;</span>
+<span id="L85">    (weakTest n hn φ j d).isClosed_ker</span>
+<span id="L86"></span>
+<span id="L87">instance weakKernel_completeSpace (n : ℕ) (hn : 2 ≤ n) : CompleteSpace (weakKernel n hn) :=</span>
+<span id="L88">  (weakKernel_isClosed n hn).completeSpace_coe</span>
+<span id="L89"></span>
+<span id="L90">/-- The Hilbert space of weak polynomial spinors. No regularity hypothesis is used for completeness. -/</span>
+<span id="L91">abbrev WeakBallSpace (n : ℕ) (hn : 2 ≤ n) := weakKernel n hn</span>
+<span id="L92"></span>
+<span id="L93">/-- The test vector really is the formal-adjoint symbol against Lebesgue measure:</span>
+<span id="L94">its weighted inner product is the sum of directional derivatives of the test times the symbol. -/</span>
+<span id="L95">theorem weakTestVector_pairing (n : ℕ) (hn : 2 ≤ n) (φ : BallTest)</span>
+<span id="L96">    (j : Fin 2) (d : Fin 2 →₀ ℕ) (p : BinaryForm n) {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L97">    (ballDensity n q : ℂ) * inner ℂ (weakTestVector n φ j d q) p =</span>
+<span id="L98">      ∑ μ : Fin 4, (fderiv ℝ φ q (Fueter.coordinateBasis μ) : ℂ) * weakSymbol n μ j d p := by</span>
+<span id="L99">  have hr (r : ℝ) (v : BinaryForm n) : inner ℂ (r • v) p = (r : ℂ) * inner ℂ v p := by</span>
+<span id="L100">    change inner ℂ ((r:ℂ) • v) p = _</span>
+<span id="L101">    rw [inner_smul_left]</span>
+<span id="L102">    simp</span>
+<span id="L103">  simp only [weakTestVector, hr, sum_inner, ContinuousLinearMap.adjoint_inner_left,</span>
+<span id="L104">    RCLike.inner_apply, map_one, mul_one]</span>
+<span id="L105">  rw [← mul_assoc, ← Complex.ofReal_mul, mul_inv_cancel₀ (ballDensity_pos n hn hq).ne&#39;]</span>
+<span id="L106">  simp</span>
+<span id="L107"></span>
+<span id="L108">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

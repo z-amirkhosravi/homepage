@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/SmoothDistribution.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/SmoothDistribution.lean</h1><p><a href="SmoothDistribution.lean" download>Download exact source</a>. SHA-256: <code>4b6d1cf1b0a09f9b44bd4e305b38c9f72d451506678c36fb1076ff1afa5a885f</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Analysis.RadialLaplacian</span>
+<span id="L3">public import Mathlib.Analysis.Calculus.LineDeriv.IntegrationByParts</span>
+<span id="L4"></span>
+<span id="L5">/-! Classical derivatives and distribution derivatives agree on the open ball.</span>
+<span id="L6">All integration-by-parts factors are explicitly proved integrable. -/</span>
+<span id="L7">@[expose] public section</span>
+<span id="L8">noncomputable section</span>
+<span id="L9">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L10">open scoped Quaternion ContDiff Topology Distributions BigOperators</span>
+<span id="L11">open MeasureTheory InnerProductSpace Filter</span>
+<span id="L12">namespace MathResearch.Spinor</span>
+<span id="L13"></span>
+<span id="L14">variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]</span>
+<span id="L15"></span>
+<span id="L16">theorem contDiffOn_directional {u : ℍ → E} (hu : ContDiffOn ℝ ∞ u Ball) (v : ℍ) :</span>
+<span id="L17">    ContDiffOn ℝ ∞ (fun x =&gt; fderiv ℝ u x v) Ball :=</span>
+<span id="L18">  (hu.fderiv_of_isOpen ball_isOpen (m := ∞) (by simp)).clm_apply contDiffOn_const</span>
+<span id="L19"></span>
+<span id="L20">theorem integral_test_directional {u : ℍ → E} (hu : ContDiffOn ℝ ∞ u Ball)</span>
+<span id="L21">    (v : ℍ) (φ : BallTest) :</span>
+<span id="L22">    ∫ x, φ x • fderiv ℝ u x v = - ∫ x, testDirectional v φ x • u x := by</span>
+<span id="L23">  have hi := hu.continuousOn.locallyIntegrableOn (μ := volume) ball_isOpen.measurableSet</span>
+<span id="L24">  have hi&#39; := (contDiffOn_directional hu v).continuousOn.locallyIntegrableOn (μ := volume) ball_isOpen.measurableSet</span>
+<span id="L25">  have hf&#39;g : Integrable (fun x =&gt; fderiv ℝ φ x v • u x) := by</span>
+<span id="L26">    simpa only [testDirectional_apply] using (testDirectional v φ).integrable_smul hi</span>
+<span id="L27">  exact integral_smul_fderiv_eq_neg_fderiv_smul_of_integrable hf&#39;g (φ.integrable_smul hi&#39;)</span>
+<span id="L28">    (φ.integrable_smul hi) (fun x _ =&gt; φ.contDiff.differentiable (by simp) x)</span>
+<span id="L29">    (fun x hx =&gt; ((hu x (φ.tsupport_subset hx)).contDiffAt</span>
+<span id="L30">      (ball_isOpen.mem_nhds (φ.tsupport_subset hx))).differentiableAt (by simp))</span>
+<span id="L31"></span>
+<span id="L32">/-- Equality for actual mathlib distributions, including the derivative sign. -/</span>
+<span id="L33">theorem distribution_directional_of_smooth {u : ℍ → E} (hu : ContDiffOn ℝ ∞ u Ball) (v : ℍ) :</span>
+<span id="L34">    Distribution.lineDerivCLM (k := ⊤) v (Distribution.ofFun ballOpen u volume ⊤) =</span>
+<span id="L35">      Distribution.ofFun ballOpen (fun x =&gt; fderiv ℝ u x v) volume ⊤ := by</span>
+<span id="L36">  ext φ : 1</span>
+<span id="L37">  rw [Distribution.lineDerivCLM_apply,</span>
+<span id="L38">    Distribution.ofFun_apply (hu.continuousOn.locallyIntegrableOn ball_isOpen.measurableSet),</span>
+<span id="L39">    Distribution.ofFun_apply ((contDiffOn_directional hu v).continuousOn.locallyIntegrableOn</span>
+<span id="L40">      ball_isOpen.measurableSet)]</span>
+<span id="L41">  exact (integral_test_directional hu v φ).symm</span>
+<span id="L42"></span>
+<span id="L43">/-- Pointwise local form of the coordinate Laplacian identity. -/</span>
+<span id="L44">theorem laplacian_eq_sum_directional_at {u : ℍ → E} {a : ℍ} (hu : ContDiffAt ℝ ∞ u a) :</span>
+<span id="L45">    Laplacian.laplacian u a = ∑ i : Fin 4,</span>
+<span id="L46">      fderiv ℝ (fun x =&gt; fderiv ℝ u x (Fueter.coordinateBasis i)) a</span>
+<span id="L47">        (Fueter.coordinateBasis i) := by</span>
+<span id="L48">  rw [laplacian_eq_iteratedFDeriv_orthonormalBasis u quaternionONB]</span>
+<span id="L49">  apply Finset.sum_congr rfl</span>
+<span id="L50">  intro i _</span>
+<span id="L51">  rw [iteratedFDeriv_two_apply]</span>
+<span id="L52">  rw [fderiv_clm_apply ((hu.fderiv_right (m := ∞) (by simp)).differentiableAt (by simp))</span>
+<span id="L53">    (differentiableAt_const _)]</span>
+<span id="L54">  simp</span>
+<span id="L55"></span>
+<span id="L56">theorem contDiffOn_laplacian {u : ℍ → E} (hu : ContDiffOn ℝ ∞ u Ball) :</span>
+<span id="L57">    ContDiffOn ℝ ∞ (Laplacian.laplacian u) Ball := by</span>
+<span id="L58">  have hs : ContDiffOn ℝ ∞ (fun a =&gt; ∑ i : Fin 4,</span>
+<span id="L59">      fderiv ℝ (fun x =&gt; fderiv ℝ u x (Fueter.coordinateBasis i)) a (Fueter.coordinateBasis i)) Ball :=</span>
+<span id="L60">    ContDiffOn.sum (fun i _ =&gt; contDiffOn_directional (contDiffOn_directional hu _) _)</span>
+<span id="L61">  apply hs.congr</span>
+<span id="L62">  intro a ha</span>
+<span id="L63">  exact laplacian_eq_sum_directional_at ((hu a ha).contDiffAt (ball_isOpen.mem_nhds ha))</span>
+<span id="L64"></span>
+<span id="L65">/-- Two integrations by parts identify the distributional and classical Laplacians. -/</span>
+<span id="L66">theorem distributionLaplacian_of_smooth {u : ℍ → E} (hu : ContDiffOn ℝ ∞ u Ball) :</span>
+<span id="L67">    distributionLaplacian (Distribution.ofFun ballOpen u volume ⊤) =</span>
+<span id="L68">      Distribution.ofFun ballOpen (Laplacian.laplacian u) volume ⊤ := by</span>
+<span id="L69">  ext φ : 1</span>
+<span id="L70">  simp only [distributionLaplacian, FunLike.coe_sum, Finset.sum_apply]</span>
+<span id="L71">  simp_rw [distribution_directional_of_smooth hu,</span>
+<span id="L72">    distribution_directional_of_smooth (contDiffOn_directional hu _)]</span>
+<span id="L73">  have H (i : Fin 4) := (contDiffOn_directional</span>
+<span id="L74">    (contDiffOn_directional hu (Fueter.coordinateBasis i)) (Fueter.coordinateBasis i)).continuousOn.locallyIntegrableOn</span>
+<span id="L75">      (μ := volume) ball_isOpen.measurableSet</span>
+<span id="L76">  simp_rw [Distribution.ofFun_apply (Ω := ballOpen) (H _)]</span>
+<span id="L77">  rw [Distribution.ofFun_apply ((contDiffOn_laplacian hu).continuousOn.locallyIntegrableOn</span>
+<span id="L78">    ball_isOpen.measurableSet), ← integral_finsetSum _ (fun i _ =&gt; φ.integrable_smul (H i))]</span>
+<span id="L79">  apply integral_congr_ae</span>
+<span id="L80">  filter_upwards with a</span>
+<span id="L81">  by_cases ha : a ∈ Ball</span>
+<span id="L82">  · rw [laplacian_eq_sum_directional_at ((hu a ha).contDiffAt (ball_isOpen.mem_nhds ha)), Finset.smul_sum]</span>
+<span id="L83">  · simp [φ.zero_on_compl ha]</span>
+<span id="L84"></span>
+<span id="L85">variable [CompleteSpace E]</span>
+<span id="L86"></span>
+<span id="L87">/-- A smooth distributional harmonic function is harmonic in mathlib&#39;s sense. -/</span>
+<span id="L88">theorem harmonicOnNhd_of_smooth_distributionLaplacian_zero {u : ℍ → E}</span>
+<span id="L89">    (hu : ContDiffOn ℝ ∞ u Ball)</span>
+<span id="L90">    (hΔ : distributionLaplacian (Distribution.ofFun ballOpen u volume ⊤) = 0) :</span>
+<span id="L91">    HarmonicOnNhd u Ball := by</span>
+<span id="L92">  rw [distributionLaplacian_of_smooth hu, ← Distribution.ofFun_zero] at hΔ</span>
+<span id="L93">  have hcont := (contDiffOn_laplacian hu).continuousOn</span>
+<span id="L94">  have he := Distribution.ofFun_injective (hcont.locallyIntegrableOn ball_isOpen.measurableSet)</span>
+<span id="L95">    (locallyIntegrableOn_zero) hΔ</span>
+<span id="L96">  have hz := Measure.eqOn_open_of_ae_eq he ball_isOpen hcont continuousOn_const</span>
+<span id="L97">  intro a ha</span>
+<span id="L98">  refine ⟨((hu a ha).contDiffAt (ball_isOpen.mem_nhds ha)).of_le (by simp), ?_⟩</span>
+<span id="L99">  filter_upwards [ball_isOpen.mem_nhds ha] with x hx</span>
+<span id="L100">  exact hz hx</span>
+<span id="L101"></span>
+<span id="L102">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

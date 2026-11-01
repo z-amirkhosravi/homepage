@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/QuaternionicHaarMeasure.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/QuaternionicHaarMeasure.lean</h1><p><a href="QuaternionicHaarMeasure.lean" download>Download exact source</a>. SHA-256: <code>5c3388f091110b5e53746f4eab6231ce550d498f5c7b53eea9910bb8429a3f7f</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Analysis.QuaternionicInvariantMeasure</span>
+<span id="L3">public import Mathlib.MeasureTheory.Group.LIntegral</span>
+<span id="L4"></span>
+<span id="L5">/-! Construction of normalized Haar measure on Sp(1,1) from B×K.</span>
+<span id="L6">Left invariance is proved by the section cocycle, compact Haar invariance,</span>
+<span id="L7">and the already established Möbius invariance of the base density. -/</span>
+<span id="L8">@[expose] public section</span>
+<span id="L9">noncomputable section</span>
+<span id="L10">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L11">set_option maxHeartbeats 800000</span>
+<span id="L12">open scoped Quaternion ENNReal</span>
+<span id="L13">open MeasureTheory MeasureTheory.Measure</span>
+<span id="L14">namespace MathResearch.Spinor</span>
+<span id="L15"></span>
+<span id="L16">instance sp11T2Space : T2Space Sp11 := inferInstanceAs (T2Space {g : QuaternionMatrix2 // IsSp11 g})</span>
+<span id="L17"></span>
+<span id="L18">instance compactHaar_isMulLeftInvariant : IsMulLeftInvariant compactHaar := by</span>
+<span id="L19">  unfold compactHaar</span>
+<span id="L20">  infer_instance</span>
+<span id="L21">instance unitQuaternionHaar_isOpenPos : IsOpenPosMeasure unitQuaternionHaar := by</span>
+<span id="L22">  unfold unitQuaternionHaar</span>
+<span id="L23">  infer_instance</span>
+<span id="L24">instance compactHaar_isOpenPos : IsOpenPosMeasure compactHaar := by</span>
+<span id="L25">  unfold compactHaar</span>
+<span id="L26">  infer_instance</span>
+<span id="L27"></span>
+<span id="L28">/-- Haar normalization with dq/(1-|q|²)^4 on B and probability Haar on K. -/</span>
+<span id="L29">def normalizedGroupHaar : Measure Sp11 :=</span>
+<span id="L30">  Measure.map groupFromBallCoordinates (ballInvariantMeasure.prod compactHaar)</span>
+<span id="L31"></span>
+<span id="L32">theorem lintegral_normalizedGroupHaar (f : Sp11 → ℝ≥0∞) (hf : Measurable f) :</span>
+<span id="L33">    (∫⁻ g, f g ∂normalizedGroupHaar) =</span>
+<span id="L34">      ∫⁻ q : Ball, ∫⁻ k : CompactPair, f (groupFromBallCoordinates (q,k))</span>
+<span id="L35">        ∂compactHaar ∂ballInvariantMeasure := by</span>
+<span id="L36">  rw [normalizedGroupHaar, lintegral_map hf continuous_groupFromBallCoordinates.measurable]</span>
+<span id="L37">  exact lintegral_prod _ (hf.comp continuous_groupFromBallCoordinates.measurable).aemeasurable</span>
+<span id="L38"></span>
+<span id="L39">instance normalizedGroupHaar_leftInvariant : IsMulLeftInvariant normalizedGroupHaar := by</span>
+<span id="L40">  constructor</span>
+<span id="L41">  intro g</span>
+<span id="L42">  apply Measure.ext_of_lintegral</span>
+<span id="L43">  intro f hf</span>
+<span id="L44">  have hm : Measurable (fun h : Sp11 =&gt; g * h) := (continuous_const.mul continuous_id).measurable</span>
+<span id="L45">  rw [lintegral_map hf hm,</span>
+<span id="L46">    lintegral_normalizedGroupHaar _ (show Measurable (fun h =&gt; f (g*h)) from</span>
+<span id="L47">      hf.comp (continuous_const.mul continuous_id).measurable),</span>
+<span id="L48">    lintegral_normalizedGroupHaar f hf]</span>
+<span id="L49">  simp_rw [group_coordinates_left_mul]</span>
+<span id="L50">  have he (q : Ball) :</span>
+<span id="L51">      (∫⁻ k, f (groupFromBallCoordinates (g • q, sectionCorrection g q * k)) ∂compactHaar) =</span>
+<span id="L52">        ∫⁻ k, f (groupFromBallCoordinates (g • q,k)) ∂compactHaar :=</span>
+<span id="L53">    lintegral_mul_left_eq_self (fun k =&gt; f (groupFromBallCoordinates (g • q,k))) _</span>
+<span id="L54">  simp_rw [he]</span>
+<span id="L55">  exact (measurePreserving_ballGroupAction g).lintegral_comp</span>
+<span id="L56">    (hf.comp continuous_groupFromBallCoordinates.measurable).lintegral_prod_right&#39;</span>
+<span id="L57"></span>
+<span id="L58">instance normalizedGroupHaar_openPos : IsOpenPosMeasure normalizedGroupHaar :=</span>
+<span id="L59">  continuous_groupFromBallCoordinates.isOpenPosMeasure_map</span>
+<span id="L60">    groupBallHomeomorph.symm.surjective</span>
+<span id="L61"></span>
+<span id="L62">instance normalizedGroupHaar_finiteOnCompacts : IsFiniteMeasureOnCompacts normalizedGroupHaar := by</span>
+<span id="L63">  constructor</span>
+<span id="L64">  intro K hK</span>
+<span id="L65">  rw [normalizedGroupHaar, Measure.map_apply continuous_groupFromBallCoordinates.measurable</span>
+<span id="L66">    hK.isClosed.measurableSet]</span>
+<span id="L67">  have he : groupFromBallCoordinates ⁻¹&#39; K = groupBallHomeomorph &#39;&#39; K := by</span>
+<span id="L68">    ext x</span>
+<span id="L69">    constructor</span>
+<span id="L70">    · intro hx</span>
+<span id="L71">      exact ⟨groupFromBallCoordinates x, hx, groupBallCoordinates_fromCoordinates x⟩</span>
+<span id="L72">    · rintro ⟨g,hg,rfl⟩</span>
+<span id="L73">      change groupFromBallCoordinates (groupBallCoordinates g) ∈ K</span>
+<span id="L74">      simpa only [groupFromBallCoordinates_coordinates] using hg</span>
+<span id="L75">  rw [he]</span>
+<span id="L76">  exact (hK.image continuous_groupBallCoordinates).measure_lt_top</span>
+<span id="L77"></span>
+<span id="L78">/-- The coordinate measure is a genuine Haar measure, with no external premise. -/</span>
+<span id="L79">instance normalizedGroupHaar_isHaar : normalizedGroupHaar.IsHaarMeasure where</span>
+<span id="L80"></span>
+<span id="L81">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/SchmidFueter.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/SchmidFueter.lean</h1><p><a href="SchmidFueter.lean" download>Download exact source</a>. SHA-256: <code>f6b7108e68849753aaa70dd6055d1482ed91fa92355ec9245c023ff0b8ec11ae</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.FrameLift</span>
+<span id="L3">public import MathResearch.Spinor.WeightedFueter</span>
+<span id="L4"></span>
+<span id="L5">/-! SC1 and SC3: the moving-frame and weighted Schmid–Fueter identities. -/</span>
+<span id="L6">@[expose] public section</span>
+<span id="L7">noncomputable section</span>
+<span id="L8">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L9">open scoped Quaternion BigOperators Matrix.Norms.Elementwise</span>
+<span id="L10">open MvPolynomial</span>
+<span id="L11">namespace MathResearch.Spinor</span>
+<span id="L12"></span>
+<span id="L13">/-- Each coefficient of the unnormalized T_n=p_X-jp_Y is real continuous linear. -/</span>
+<span id="L14">def fueterCoefficientCLM (n : ℕ) (d : Fin 2 →₀ ℕ) : BinaryForm n →L[ℝ] ℍ :=</span>
+<span id="L15">  LinearMap.toContinuousLinearMap</span>
+<span id="L16">    { toFun := fun p =&gt; polynomialFueterCoefficients p d</span>
+<span id="L17">      map_add&#39; := by intros; simp [polynomialFueterCoefficients, pack_add]</span>
+<span id="L18">      map_smul&#39; := by</span>
+<span id="L19">        intro r p</span>
+<span id="L20">        change polynomialFueterCoefficients ((r : ℂ) • (p : ComplexPoly2)) d = r • polynomialFueterCoefficients p d</span>
+<span id="L21">        simpa [polynomialFueterCoefficients] using</span>
+<span id="L22">          pack_real_smul r ((pderiv 0 (p : ComplexPoly2)).coeff d) ((pderiv 1 (p : ComplexPoly2)).coeff d) }</span>
+<span id="L23"></span>
+<span id="L24">@[simp] theorem fueterCoefficientCLM_apply (n : ℕ) (d : Fin 2 →₀ ℕ) (p : BinaryForm n) :</span>
+<span id="L25">    fueterCoefficientCLM n d p = polynomialFueterCoefficients p d := rfl</span>
+<span id="L26"></span>
+<span id="L27">/-- 24 times the normalized projected operator, with all polynomial coefficients retained. -/</span>
+<span id="L28">def projectedGroupOperator (n : ℕ) (F : QuaternionMatrix2 → BinaryForm n)</span>
+<span id="L29">    (g : QuaternionMatrix2) (d : Fin 2 →₀ ℕ) : ℍ :=</span>
+<span id="L30">  ∑ μ : Fin 4, Fueter.coordinateBasis μ *</span>
+<span id="L31">    fueterCoefficientCLM n d (rightLieDerivative n F g (Fueter.coordinateBasis μ))</span>
+<span id="L32"></span>
+<span id="L33">def schmidOperator (n : ℕ) (F : QuaternionMatrix2 → BinaryForm n)</span>
+<span id="L34">    (g : QuaternionMatrix2) (d : Fin 2 →₀ ℕ) : ℍ := (24 : ℝ)⁻¹ • projectedGroupOperator n F g d</span>
+<span id="L35"></span>
+<span id="L36">theorem schmidOperator_normalization (n : ℕ) (F : QuaternionMatrix2 → BinaryForm n)</span>
+<span id="L37">    (g : QuaternionMatrix2) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L38">    (24 : ℝ) • schmidOperator n F g d = projectedGroupOperator n F g d := by</span>
+<span id="L39">  simp [schmidOperator, smul_smul]</span>
+<span id="L40"></span>
+<span id="L41">/-- Projection of the verified moving-frame derivative, with the SC2 term included. -/</span>
+<span id="L42">theorem projectedGroupOperator_section (m : ℕ) (U : ℍ → BinaryForm (m+1)) (q : ℍ)</span>
+<span id="L43">    (hq : q ∈ Ball) (hU : DifferentiableAt ℝ U q) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L44">    projectedGroupOperator (m+1) (frameLift (m+1) U) (ballSection q) d =</span>
+<span id="L45">      ballScale q • Fueter.leftOperator (fun x =&gt; fueterCoefficientCLM (m+1) d (U x)) q +</span>
+<span id="L46">      (m+3 : ℝ) • (q * fueterCoefficientCLM (m+1) d (U q)) := by</span>
+<span id="L47">  have hd := (fueterCoefficientCLM (m+1) d).hasFDerivAt.comp q hU.hasFDerivAt</span>
+<span id="L48">  change HasFDerivAt (fun x =&gt; fueterCoefficientCLM (m+1) d (U x)) _ q at hd</span>
+<span id="L49">  have hc := congrFun (SC2_v1 (m+1) (by omega) q (U q)).2 d</span>
+<span id="L50">  simp only [Nat.cast_add, Nat.cast_one] at hc</span>
+<span id="L51">  rw [projectedGroupOperator, Fueter.leftOperator_eq]</span>
+<span id="L52">  simp only [SC1_frame_v1 m U q _ hq hU, map_add, map_smul,</span>
+<span id="L53">    mul_add, mul_smul_comm, Finset.sum_add_distrib, ← Finset.smul_sum]</span>
+<span id="L54">  have hfirst : (∑ μ : Fin 4, Fueter.coordinateBasis μ *</span>
+<span id="L55">      fueterCoefficientCLM (m+1) d (fderiv ℝ U q (Fueter.coordinateBasis μ))) =</span>
+<span id="L56">      ∑ μ : Fin 4, Fueter.coordinateBasis μ *</span>
+<span id="L57">        Fueter.coordPartial μ (fun x =&gt; fueterCoefficientCLM (m+1) d (U x)) q := by</span>
+<span id="L58">    simp only [Fueter.coordPartial, Fueter.directional, hd.fderiv, ContinuousLinearMap.comp_apply]</span>
+<span id="L59">  rw [hfirst]</span>
+<span id="L60">  congr 1</span>
+<span id="L61">  simpa only [fueterCoefficientCLM_apply, infinitesimalAction, LinearMap.coe_mk, AddHom.coe_mk,</span>
+<span id="L62">    show (m:ℝ)+1+2 = m+3 by ring] using hc</span>
+<span id="L63"></span>
+<span id="L64">/-- SC1/v1: the actual section connection, curvature and changing-frame formula. -/</span>
+<span id="L65">theorem SC1_section_v1 (m : ℕ) (U : ℍ → BinaryForm (m+1)) (q : ℍ)</span>
+<span id="L66">    (hq : q ∈ Ball) (hU : DifferentiableAt ℝ U q) :</span>
+<span id="L67">    (∀ v, ballSectionInverse q * fderiv ℝ ballSection q v =</span>
+<span id="L68">      (ballScale q)⁻¹ • !![(2:ℝ)⁻¹ • (v * star q - q * star v), v;</span>
+<span id="L69">        star v, connectionCoefficient q v]) ∧</span>
+<span id="L70">    (∀ v w, ballCurvature q v w = -(ballScale q)⁻¹ ^ 2 • (star v * w - star w * v)) ∧</span>
+<span id="L71">    (∀ v, rightLieDerivative (m+1) (frameLift (m+1) U) (ballSection q) v =</span>
+<span id="L72">      ballScale q • fderiv ℝ U q v + infinitesimalAction m (quaternionMatrix (connectionCoefficient q v)) (U q)) :=</span>
+<span id="L73">  ⟨fun v =&gt; ballSection_maurerCartan q v hq, fun v w =&gt; ballCurvature_eq q v w hq,</span>
+<span id="L74">    fun v =&gt; SC1_frame_v1 m U q v hq hU⟩</span>
+<span id="L75"></span>
+<span id="L76">/-- The section data corresponding to the ball spinor f, with the exact positive real power. -/</span>
+<span id="L77">def weightedSpinor (n : ℕ) (f : ℍ → BinaryForm n) (q : ℍ) : BinaryForm n :=</span>
+<span id="L78">  ballWeight (((n:ℝ)+2)/2) q • f q</span>
+<span id="L79"></span>
+<span id="L80">/-- The exact weighted identity, with n=m+1, at every polynomial exponent. -/</span>
+<span id="L81">theorem SC3_v1_coefficients (m : ℕ) (f : ℍ → BinaryForm (m+1)) (q : ℍ)</span>
+<span id="L82">    (hq : q ∈ Ball) (hf : DifferentiableAt ℝ f q) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L83">    projectedGroupOperator (m+1) (frameLift (m+1) (weightedSpinor (m+1) f)) (ballSection q) d =</span>
+<span id="L84">      ballWeight ((((m+1:ℕ):ℝ)+4)/2) q •</span>
+<span id="L85">        Fueter.leftOperator (fun x =&gt; fueterCoefficientCLM (m+1) d (f x)) q := by</span>
+<span id="L86">  have hU : DifferentiableAt ℝ (weightedSpinor (m+1) f) q :=</span>
+<span id="L87">    ((hasFDerivAt_ballWeight _ hq).smul hf.hasFDerivAt).differentiableAt</span>
+<span id="L88">  rw [projectedGroupOperator_section m _ q hq hU]</span>
+<span id="L89">  simpa only [weightedSpinor, map_smul, Nat.cast_add, Nat.cast_one,</span>
+<span id="L90">    show (m:ℝ)+1+2 = m+3 by ring] using</span>
+<span id="L91">      weighted_fueter_cancellation (m+1) (fun x =&gt; fueterCoefficientCLM (m+1) d (f x)) hq</span>
+<span id="L92">        ((fueterCoefficientCLM (m+1) d).differentiableAt.comp q hf)</span>
+<span id="L93"></span>
+<span id="L94">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

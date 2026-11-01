@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/RowAction.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/RowAction.lean</h1><p><a href="RowAction.lean" download>Download exact source</a>. SHA-256: <code>279a9acfdfafb1f33f44840aa41384a56ae759c28d1011b3735c5637df1c0374</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.WeightedMeasure</span>
+<span id="L3"></span>
+<span id="L4">/-! The coefficient matrix and transpose in DS2&#39;s row action C3, with right complex scalars. -/</span>
+<span id="L5">@[expose] public section</span>
+<span id="L6">noncomputable section</span>
+<span id="L7">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L8">open scoped Quaternion BigOperators</span>
+<span id="L9">namespace MathResearch.Spinor</span>
+<span id="L10"></span>
+<span id="L11">/-- Columns are the coefficients of τ_m(M) on the ordered monomial basis. -/</span>
+<span id="L12">def coefficientActionMatrix (m : ℕ) (M : Matrix2) : Matrix (Fin (m+1)) (Fin (m+1)) ℂ :=</span>
+<span id="L13">  fun k l =&gt; coefficients m (polynomialRepresentation m M (monomialForm m l)) k</span>
+<span id="L14"></span>
+<span id="L15">theorem coefficients_action (m : ℕ) (M : Matrix2) (p : BinaryForm m) (k : Fin (m+1)) :</span>
+<span id="L16">    coefficients m (polynomialRepresentation m M p) k =</span>
+<span id="L17">      ∑ l, coefficientActionMatrix m M k l * coefficients m p l := by</span>
+<span id="L18">  conv_lhs =&gt; rw [← monomialForm_expansion m p]</span>
+<span id="L19">  simp only [map_sum, map_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]</span>
+<span id="L20">  apply Finset.sum_congr rfl</span>
+<span id="L21">  intro l _</span>
+<span id="L22">  exact mul_comm _ _</span>
+<span id="L23"></span>
+<span id="L24">/-- On a row, this is right multiplication by the transpose of the coefficient matrix.</span>
+<span id="L25">The complex entries multiply quaternion coefficients on the right. -/</span>
+<span id="L26">def rowSubstitution (m : ℕ) (M : Matrix2) (h : Fin (m+1) → ℍ) (k : Fin (m+1)) : ℍ :=</span>
+<span id="L27">  ∑ l, h l * ((coefficientActionMatrix m M).transpose l k : ℍ)</span>
+<span id="L28"></span>
+<span id="L29">theorem fueterCoefficients_action (m : ℕ) (a : ℍ) (p : BinaryForm (m+1)) (k : Fin (m+1)) :</span>
+<span id="L30">    fueterCoefficients m (polynomialRepresentation (m+1) (quaternionMatrix a) p) k =</span>
+<span id="L31">      a * rowSubstitution m (quaternionMatrix a) (fueterCoefficients m p) k := by</span>
+<span id="L32">  change pack (coefficients m (derivative m 0 (polynomialRepresentation (m+1) (quaternionMatrix a) p)) k)</span>
+<span id="L33">    (coefficients m (derivative m 1 (polynomialRepresentation (m+1) (quaternionMatrix a) p)) k) = _</span>
+<span id="L34">  rw [derivative_action, derivative_action]</span>
+<span id="L35">  simp only [map_add, map_smul, Pi.add_apply, Pi.smul_apply, smul_eq_mul]</span>
+<span id="L36">  rw [quaternionMatrix_pack, coefficients_action, coefficients_action, pack_sum]</span>
+<span id="L37">  congr 1</span>
+<span id="L38">  apply Finset.sum_congr rfl</span>
+<span id="L39">  intro l _</span>
+<span id="L40">  exact pack_smul _ _ _</span>
+<span id="L41"></span>
+<span id="L42">theorem fueterCoefficients_real_smul (m : ℕ) (r : ℝ) (p : BinaryForm (m+1)) (k : Fin (m+1)) :</span>
+<span id="L43">    fueterCoefficients m (r • p) k = r • fueterCoefficients m p k := by</span>
+<span id="L44">  change pack (coefficients m (derivative m 0 ((r:ℂ) • p)) k)</span>
+<span id="L45">    (coefficients m (derivative m 1 ((r:ℂ) • p)) k) = _</span>
+<span id="L46">  simp only [map_smul, Pi.smul_apply, smul_eq_mul]</span>
+<span id="L47">  exact pack_real_smul _ _ _</span>
+<span id="L48"></span>
+<span id="L49">/-- The actual normalized quaternion coefficient row T_n/n, n=m+1. -/</span>
+<span id="L50">def normalizedFueterRow (m : ℕ) (p : BinaryForm (m+1)) (k : Fin (m+1)) : ℍ :=</span>
+<span id="L51">  (m+1:ℝ)⁻¹ • fueterCoefficients m p k</span>
+<span id="L52"></span>
+<span id="L53">/-- C3, before inserting the inverse group element. -/</span>
+<span id="L54">def rowBallAction (m : ℕ) (a : QuaternionMatrix2) (h : ℍ → Fin (m+1) → ℍ)</span>
+<span id="L55">    (q : ℍ) (k : Fin (m+1)) : ℍ :=</span>
+<span id="L56">  (Quaternion.normSq (mobiusDenominator a q))⁻¹ •</span>
+<span id="L57">    ((mobiusDenominator a q)⁻¹ *</span>
+<span id="L58">      rowSubstitution m (quaternionMatrix ((mobiusDenominator a q)⁻¹)) (h (mobiusPoint a q)) k)</span>
+<span id="L59"></span>
+<span id="L60">/-- C3 with the same inverse-element convention as C7. -/</span>
+<span id="L61">def rowBallRepresentation (m : ℕ) (g : QuaternionMatrix2) := rowBallAction m (signatureAdjoint g)</span>
+<span id="L62"></span>
+<span id="L63">/-- The exact normalized C3/C7 intertwiner, including transpose and both multiplication sides. -/</span>
+<span id="L64">theorem DS2_row_intertwining (m : ℕ) (g : QuaternionMatrix2) (f : ℍ → BinaryForm (m+1))</span>
+<span id="L65">    (q : ℍ) (k : Fin (m+1)) :</span>
+<span id="L66">    normalizedFueterRow m (ballRepresentation (m+1) g f q) k =</span>
+<span id="L67">      rowBallRepresentation m g (fun x =&gt; normalizedFueterRow m (f x)) q k := by</span>
+<span id="L68">  simp only [ballRepresentation, ballAction, normalizedFueterRow, rowBallRepresentation, rowBallAction,</span>
+<span id="L69">    fueterCoefficients_real_smul, fueterCoefficients_action, rowSubstitution,</span>
+<span id="L70">    smul_mul_assoc, ← Finset.smul_sum, mul_smul_comm]</span>
+<span id="L71">  exact smul_comm _ _ _</span>
+<span id="L72"></span>
+<span id="L73">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

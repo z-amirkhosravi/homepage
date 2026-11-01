@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Fueter/LatticeDilation.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Fueter/LatticeDilation.lean</h1><p><a href="LatticeDilation.lean" download>Download exact source</a>. SHA-256: <code>7e97b6e54e271e67802911406dd64d7166107f3d6465220b31af79a34bbac758</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Fueter.ZetaQuasiperiods</span>
+<span id="L3"></span>
+<span id="L4">/-! Dilation of a real quaternionic lattice, using mathlib&#39;s lattice transport. -/</span>
+<span id="L5">@[expose] public section</span>
+<span id="L6">noncomputable section</span>
+<span id="L7">open scoped Quaternion Topology BigOperators ContDiff</span>
+<span id="L8">namespace MathResearch.Fueter</span>
+<span id="L9"></span>
+<span id="L10">/-- Multiplication by a nonzero real scalar as a continuous real linear equivalence. -/</span>
+<span id="L11">def realDilation (a : ℝ) (ha : a ≠ 0) : ℍ ≃L[ℝ] ℍ :=</span>
+<span id="L12">  (LinearEquiv.smulOfNeZero ℝ ℍ a ha).toContinuousLinearEquiv</span>
+<span id="L13"></span>
+<span id="L14">@[simp] theorem realDilation_apply (a : ℝ) (ha : a ≠ 0) (q : ℍ) :</span>
+<span id="L15">    realDilation a ha q = a • q := rfl</span>
+<span id="L16"></span>
+<span id="L17">@[simp] theorem realDilation_symm_apply (a : ℝ) (ha : a ≠ 0) (q : ℍ) :</span>
+<span id="L18">    (realDilation a ha).symm q = a⁻¹ • q := rfl</span>
+<span id="L19"></span>
+<span id="L20">/-- The dilated lattice aL, represented by pullback under multiplication by a⁻¹. -/</span>
+<span id="L21">def dilatedLattice (L : Submodule ℤ ℍ) (a : ℝ) (ha : a ≠ 0) : Submodule ℤ ℍ :=</span>
+<span id="L22">  ZLattice.comap ℝ L (realDilation a ha).symm.toLinearMap</span>
+<span id="L23"></span>
+<span id="L24">instance (L : Submodule ℤ ℍ) [DiscreteTopology L] (a : ℝ) (ha : a ≠ 0) :</span>
+<span id="L25">    DiscreteTopology (dilatedLattice L a ha) := by unfold dilatedLattice; infer_instance</span>
+<span id="L26"></span>
+<span id="L27">instance (L : Submodule ℤ ℍ) [DiscreteTopology L] [IsZLattice ℝ L] (a : ℝ) (ha : a ≠ 0) :</span>
+<span id="L28">    IsZLattice ℝ (dilatedLattice L a ha) := by unfold dilatedLattice; infer_instance</span>
+<span id="L29"></span>
+<span id="L30">/-- The definition is exactly the set of scalar multiples of lattice elements. -/</span>
+<span id="L31">theorem mem_dilatedLattice (L : Submodule ℤ ℍ) (a : ℝ) (ha : a ≠ 0) (q : ℍ) :</span>
+<span id="L32">    q ∈ dilatedLattice L a ha ↔ ∃ x ∈ L, a • x = q := by</span>
+<span id="L33">  change a⁻¹ • q ∈ L ↔ _</span>
+<span id="L34">  constructor</span>
+<span id="L35">  · intro h</span>
+<span id="L36">    exact ⟨a⁻¹ • q, h, by simp [smul_smul, ha]⟩</span>
+<span id="L37">  · rintro ⟨x, hx, rfl⟩</span>
+<span id="L38">    simpa [smul_smul, ha] using hx</span>
+<span id="L39"></span>
+<span id="L40">@[simp] theorem smul_mem_dilatedLattice (L : Submodule ℤ ℍ) (a : ℝ) (ha : a ≠ 0) (q : ℍ) :</span>
+<span id="L41">    a • q ∈ dilatedLattice L a ha ↔ q ∈ L := by</span>
+<span id="L42">  change a⁻¹ • (a • q) ∈ L ↔ _</span>
+<span id="L43">  simp [smul_smul, ha]</span>
+<span id="L44"></span>
+<span id="L45">/-- The bijection of all lattice indices, w ↦ aw. -/</span>
+<span id="L46">def latticeDilationEquiv (L : Submodule ℤ ℍ) (a : ℝ) (ha : a ≠ 0) :</span>
+<span id="L47">    L ≃ₗ[ℤ] dilatedLattice L a ha :=</span>
+<span id="L48">  ZLattice.comap_equiv ℝ L (realDilation a ha).symm.toLinearEquiv</span>
+<span id="L49"></span>
+<span id="L50">@[simp] theorem latticeDilationEquiv_apply (L : Submodule ℤ ℍ) (a : ℝ) (ha : a ≠ 0) (w : L) :</span>
+<span id="L51">    (latticeDilationEquiv L a ha w : ℍ) = a • (w : ℍ) := rfl</span>
+<span id="L52"></span>
+<span id="L53">/-- The same bijection restricts to the nonzero indices in the defining series. -/</span>
+<span id="L54">def nonzeroLatticeDilationEquiv (L : Submodule ℤ ℍ) (a : ℝ) (ha : a ≠ 0) :</span>
+<span id="L55">    {w : L // w ≠ 0} ≃ {w : dilatedLattice L a ha // w ≠ 0} :=</span>
+<span id="L56">  (latticeDilationEquiv L a ha).toEquiv.subtypeEquiv (fun w =&gt; by simp)</span>
+<span id="L57"></span>
+<span id="L58">end MathResearch.Fueter</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

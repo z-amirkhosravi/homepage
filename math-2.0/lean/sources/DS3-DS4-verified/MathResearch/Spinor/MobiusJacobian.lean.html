@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/MobiusJacobian.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/MobiusJacobian.lean</h1><p><a href="MobiusJacobian.lean" download>Download exact source</a>. SHA-256: <code>39318573b8a61462e24d8e30a4e5f09b8c3bd6d3567db33618990ad259896082</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.MobiusLaws</span>
+<span id="L3">public import MathResearch.Spinor.PolynomialUnitary</span>
+<span id="L4">public import Mathlib.MeasureTheory.Function.Jacobian</span>
+<span id="L5"></span>
+<span id="L6">/-! The actual real derivative, determinant, and multiplier norm of the ball action. -/</span>
+<span id="L7">@[expose] public section</span>
+<span id="L8">noncomputable section</span>
+<span id="L9">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L10">open scoped Quaternion Matrix.Norms.Elementwise</span>
+<span id="L11">namespace MathResearch.Spinor</span>
+<span id="L12"></span>
+<span id="L13">theorem mobiusPoint_mul_denominator (g : QuaternionMatrix2) {q : ℍ}</span>
+<span id="L14">    (hJ : mobiusDenominator g q ≠ 0) :</span>
+<span id="L15">    mobiusPoint g q * mobiusDenominator g q = g 0 0*q+g 0 1 := by</span>
+<span id="L16">  simp [mobiusPoint,hJ]</span>
+<span id="L17"></span>
+<span id="L18">def mobiusLeftFactor (g : QuaternionMatrix2) (q : ℍ) : ℍ := g 0 0-mobiusPoint g q*g 1 0</span>
+<span id="L19"></span>
+<span id="L20">def mobiusDerivative (g : QuaternionMatrix2) (q : ℍ) : ℍ →L[ℝ] ℍ :=</span>
+<span id="L21">  (Fueter.quaternionMulLeft (mobiusLeftFactor g q)).toContinuousLinearMap.comp</span>
+<span id="L22">    (Fueter.quaternionMulRight ((mobiusDenominator g q)⁻¹)).toContinuousLinearMap</span>
+<span id="L23"></span>
+<span id="L24">@[simp] theorem mobiusDerivative_apply (g : QuaternionMatrix2) (q v : ℍ) :</span>
+<span id="L25">    mobiusDerivative g q v = mobiusLeftFactor g q*v*(mobiusDenominator g q)⁻¹ := by</span>
+<span id="L26">  simp [mobiusDerivative,Fueter.quaternionMulLeft,Fueter.quaternionMulRight,mul_assoc]</span>
+<span id="L27"></span>
+<span id="L28">theorem hasFDerivAt_mobiusPoint (g : QuaternionMatrix2) {q : ℍ}</span>
+<span id="L29">    (hJ : mobiusDenominator g q ≠ 0) : HasFDerivAt (mobiusPoint g) (mobiusDerivative g q) q := by</span>
+<span id="L30">  have hJd : HasFDerivAt (mobiusDenominator g)</span>
+<span id="L31">      (Fueter.quaternionMulLeft (g 1 0)).toContinuousLinearMap q :=</span>
+<span id="L32">    (Fueter.quaternionMulLeft (g 1 0)).toContinuousLinearMap.hasFDerivAt.add_const _</span>
+<span id="L33">  have hNd : HasFDerivAt (fun x : ℍ =&gt; g 0 0*x+g 0 1)</span>
+<span id="L34">      (Fueter.quaternionMulLeft (g 0 0)).toContinuousLinearMap q :=</span>
+<span id="L35">    (Fueter.quaternionMulLeft (g 0 0)).toContinuousLinearMap.hasFDerivAt.add_const _</span>
+<span id="L36">  convert! hNd.mul&#39; ((hasFDerivAt_inv&#39; hJ).comp q hJd) using 1</span>
+<span id="L37">  apply ContinuousLinearMap.ext; intro v</span>
+<span id="L38">  simp [mobiusDerivative,Fueter.quaternionMulLeft,Fueter.quaternionMulRight,</span>
+<span id="L39">    ContinuousLinearMap.mulLeftRight_apply,mobiusLeftFactor,mobiusPoint]</span>
+<span id="L40">  noncomm_ring</span>
+<span id="L41"></span>
+<span id="L42">theorem section_product_first_entry (g : QuaternionMatrix2) (q : ℍ) (i : Fin 2) :</span>
+<span id="L43">    (g*ballSection q) i 0=(Real.sqrt (ballScale q))⁻¹ • (g i 0+g i 1*star q) := by</span>
+<span id="L44">  simp [ballSection,Matrix.mul_apply,Fin.sum_univ_two,smul_add]</span>
+<span id="L45"></span>
+<span id="L46">theorem horizontal_column_norm {h : QuaternionMatrix2} (hh : IsSp11 h) :</span>
+<span id="L47">    Quaternion.normSq (h 0 0-groupOrigin h*h 1 0)=ballScale (groupOrigin h) := by</span>
+<span id="L48">  have he : h 0 0-groupOrigin h*h 1 0=ballScale (groupOrigin h) • h 0 0 := by</span>
+<span id="L49">    rw [hh.lowerLeft_eq,← mul_assoc,Quaternion.self_mul_star]</span>
+<span id="L50">    rw [Quaternion.coe_mul_eq_smul]</span>
+<span id="L51">    simp [ballScale,sub_eq_add_neg,add_smul]</span>
+<span id="L52">  have hu := compactLeft_unit hh</span>
+<span id="L53">  rw [compactLeft,Quaternion.normSq_smul,Real.sq_sqrt (groupOrigin_mem_ball hh).le] at hu</span>
+<span id="L54">  rw [he,Quaternion.normSq_smul]</span>
+<span id="L55">  calc</span>
+<span id="L56">    _ = ballScale (groupOrigin h) * (ballScale (groupOrigin h)*Quaternion.normSq (h 0 0)) := by ring</span>
+<span id="L57">    _ = _ := by rw [hu,mul_one]</span>
+<span id="L58"></span>
+<span id="L59">theorem horizontal_column_section {g : QuaternionMatrix2} (hg : IsSp11 g) {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L60">    (g*ballSection q) 0 0-groupOrigin (g*ballSection q)*(g*ballSection q) 1 0 =</span>
+<span id="L61">      Real.sqrt (ballScale q) • mobiusLeftFactor g q := by</span>
+<span id="L62">  have he := mobiusPoint_mul_denominator g (mobiusDenominator_ne_zero hg hq)</span>
+<span id="L63">  have hb : g 0 1-mobiusPoint g q*g 1 1 = -(mobiusLeftFactor g q*q) := by</span>
+<span id="L64">    unfold mobiusDenominator at he</span>
+<span id="L65">    unfold mobiusLeftFactor</span>
+<span id="L66">    rw [sub_mul,neg_sub,mul_assoc]</span>
+<span id="L67">    apply sub_eq_sub_iff_add_eq_add.mpr</span>
+<span id="L68">    simpa only [mul_add,add_comm] using he.symm</span>
+<span id="L69">  rw [groupOrigin_section_product g q hq,section_product_first_entry,section_product_first_entry,mul_smul_comm,← smul_sub]</span>
+<span id="L70">  have hinside : g 0 0+g 0 1*star q-mobiusPoint g q*(g 1 0+g 1 1*star q)=</span>
+<span id="L71">      ballScale q • mobiusLeftFactor g q := by</span>
+<span id="L72">    calc</span>
+<span id="L73">      _ = mobiusLeftFactor g q+(g 0 1-mobiusPoint g q*g 1 1)*star q := by unfold mobiusLeftFactor; noncomm_ring</span>
+<span id="L74">      _ = _ := by</span>
+<span id="L75">        rw [hb,neg_mul,mul_assoc,Quaternion.self_mul_star]</span>
+<span id="L76">        rw [Quaternion.mul_coe_eq_smul]</span>
+<span id="L77">        simp [ballScale,sub_eq_add_neg,add_smul]</span>
+<span id="L78">  rw [hinside,smul_smul]</span>
+<span id="L79">  congr 1</span>
+<span id="L80">  have hs := Real.sq_sqrt hq.le</span>
+<span id="L81">  have hn := (Real.sqrt_pos.mpr hq).ne&#39;</span>
+<span id="L82">  field_simp</span>
+<span id="L83">  exact hs.symm</span>
+<span id="L84"></span>
+<span id="L85">theorem mobiusLeftFactor_normSq {g : QuaternionMatrix2} (hg : IsSp11 g) {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L86">    Quaternion.normSq (mobiusLeftFactor g q)=(Quaternion.normSq (mobiusDenominator g q))⁻¹ := by</span>
+<span id="L87">  have h := horizontal_column_norm (hg.mul (ballSection_isSp11 q hq))</span>
+<span id="L88">  rw [horizontal_column_section hg hq,Quaternion.normSq_smul,Real.sq_sqrt hq.le,</span>
+<span id="L89">    groupOrigin_section_product g q hq,ballScale_mobius hg hq,div_eq_mul_inv] at h</span>
+<span id="L90">  exact mul_left_cancel₀ (ne_of_gt hq) h</span>
+<span id="L91"></span>
+<span id="L92">/-- The real four-dimensional Jacobian is |cq+d|⁻⁸. -/</span>
+<span id="L93">theorem mobiusJacobian (g : QuaternionMatrix2) (hg : IsSp11 g) (q : ℍ) (hq : q ∈ Ball) :</span>
+<span id="L94">    (fderiv ℝ (mobiusPoint g) q).det = (Quaternion.normSq (mobiusDenominator g q))⁻¹ ^ 4 := by</span>
+<span id="L95">  rw [(hasFDerivAt_mobiusPoint g (mobiusDenominator_ne_zero hg hq)).fderiv]</span>
+<span id="L96">  change LinearMap.det ((Fueter.quaternionMulLeft (mobiusLeftFactor g q)).comp</span>
+<span id="L97">    (Fueter.quaternionMulRight ((mobiusDenominator g q)⁻¹))) = _</span>
+<span id="L98">  rw [LinearMap.det_comp,Fueter.det_quaternionMulLeft,Fueter.det_quaternionMulRight,</span>
+<span id="L99">    mobiusLeftFactor_normSq hg hq,map_inv₀]</span>
+<span id="L100">  ring</span>
+<span id="L101"></span>
+<span id="L102">/-- The exact multiplier norm, independent of the differential equation. -/</span>
+<span id="L103">theorem ballAction_norm (n : ℕ) (g : QuaternionMatrix2) (f : ℍ → BinaryForm n) (q : ℍ) :</span>
+<span id="L104">    ‖ballAction n g f q‖ = ‖mobiusDenominator g q‖⁻¹ ^ (n+2)*‖f (mobiusPoint g q)‖ := by</span>
+<span id="L105">  rw [ballAction,norm_smul,quaternionAction_norm,norm_inv]</span>
+<span id="L106">  rw [Real.norm_eq_abs,abs_of_nonneg Quaternion.normSq_nonneg,Quaternion.normSq_eq_norm_mul_self]</span>
+<span id="L107">  simp only [norm_inv,mul_inv_rev,pow_succ]</span>
+<span id="L108">  ring</span>
+<span id="L109"></span>
+<span id="L110">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

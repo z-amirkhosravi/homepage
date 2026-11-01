@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/QuaternionicRadialMeanValue.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/QuaternionicRadialMeanValue.lean</h1><p><a href="QuaternionicRadialMeanValue.lean" download>Download exact source</a>. SHA-256: <code>5a42e660b9b32bb3c1ac51c1386f813083f6075bc852e8528cadf74525040bc1</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Analysis.QuaternionicMeanValue</span>
+<span id="L3">public import MathResearch.Analysis.RotationalBallMeasure</span>
+<span id="L4"></span>
+<span id="L5">/-! Radial probability mean values, by spherical averaging and Fubini.</span>
+<span id="L6">Rotational invariance is the angular part of radial integration; the total mass</span>
+<span id="L7">one was already proved by the explicit radial integral in ProbabilityMeasure. -/</span>
+<span id="L8">@[expose] public section</span>
+<span id="L9">noncomputable section</span>
+<span id="L10">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L11">set_option maxHeartbeats 1000000</span>
+<span id="L12">open scoped Quaternion ContDiff</span>
+<span id="L13">open MeasureTheory</span>
+<span id="L14">namespace MathResearch.Spinor</span>
+<span id="L15"></span>
+<span id="L16">/-- The exact radial mean-value dependency of DS3/DS4, with its L¹ hypothesis. -/</span>
+<span id="L17">theorem radialMeanValueOnBall_proved : RadialMeanValueOnBall := by</span>
+<span id="L18">  intro E _ _ _ n hn f hf hH hI</span>
+<span id="L19">  let μ := weightedBallSubtypeMeasure n</span>
+<span id="L20">  let F : Ball → E := fun q =&gt; f q</span>
+<span id="L21">  let : IsProbabilityMeasure μ := weightedBallSubtypeMeasure_isProbability n hn</span>
+<span id="L22">  have hF : Continuous F := hf.continuousOn.domRestrict</span>
+<span id="L23">  have hi : Integrable F μ := by</span>
+<span id="L24">    have H := (MeasurableEmbedding.subtype_coe ball_isOpen.measurableSet).integrable_map_iff</span>
+<span id="L25">      (μ := μ) (g := f)</span>
+<span id="L26">    rw [map_weightedBallSubtypeMeasure n] at H</span>
+<span id="L27">    exact H.mp hI</span>
+<span id="L28">  have hJ : Continuous (fun x : Fueter.UnitQuaternion × Ball =&gt; F (unitBallRotation x.1 x.2)) := by</span>
+<span id="L29">    apply hF.comp</span>
+<span id="L30">    apply Continuous.subtype_mk</span>
+<span id="L31">    exact (continuous_subtype_val.comp continuous_fst).mul (continuous_subtype_val.comp continuous_snd)</span>
+<span id="L32">  have hInner (a : Fueter.UnitQuaternion) :</span>
+<span id="L33">      (∫ q : Ball, F (unitBallRotation a q) ∂μ) = ∫ q : Ball, F q ∂μ :=</span>
+<span id="L34">    (unitBallRotation_preserving n a).integral_comp (unitBallRotation a).measurableEmbedding F</span>
+<span id="L35">  have hNorm (a : Fueter.UnitQuaternion) :</span>
+<span id="L36">      (∫ q : Ball, ‖F (unitBallRotation a q)‖ ∂μ) = ∫ q : Ball, ‖F q‖ ∂μ :=</span>
+<span id="L37">    (unitBallRotation_preserving n a).integral_comp (unitBallRotation a).measurableEmbedding (fun q =&gt; ‖F q‖)</span>
+<span id="L38">  have hProd : Integrable (fun x : Fueter.UnitQuaternion × Ball =&gt; F (unitBallRotation x.1 x.2))</span>
+<span id="L39">      (unitQuaternionHaar.prod μ) := by</span>
+<span id="L40">    apply (integrable_prod_iff hJ.aestronglyMeasurable).mpr</span>
+<span id="L41">    constructor</span>
+<span id="L42">    · exact Filter.Eventually.of_forall fun a =&gt;</span>
+<span id="L43">        (unitBallRotation_preserving n a).integrable_comp_of_integrable hi</span>
+<span id="L44">    · simpa only [hNorm] using</span>
+<span id="L45">        (integrable_const (μ := unitQuaternionHaar) (∫ q : Ball, ‖F q‖ ∂μ))</span>
+<span id="L46">  calc</span>
+<span id="L47">    (∫ q, f q ∂weightedBallMeasure n) = ∫ q : Ball, F q ∂μ := by</span>
+<span id="L48">      rw [← map_weightedBallSubtypeMeasure n]</span>
+<span id="L49">      exact (MeasurableEmbedding.subtype_coe ball_isOpen.measurableSet).integral_map f</span>
+<span id="L50">    _ = ∫ a : Fueter.UnitQuaternion, ∫ q : Ball, F (unitBallRotation a q) ∂μ ∂unitQuaternionHaar := by</span>
+<span id="L51">      simp only [hInner, integral_const, probReal_univ, one_smul]</span>
+<span id="L52">    _ = ∫ q : Ball, ∫ a : Fueter.UnitQuaternion, F (unitBallRotation a q) ∂unitQuaternionHaar ∂μ :=</span>
+<span id="L53">      integral_integral_swap hProd</span>
+<span id="L54">    _ = ∫ _q : Ball, f 0 ∂μ := by</span>
+<span id="L55">      apply integral_congr_ae</span>
+<span id="L56">      apply Filter.Eventually.of_forall</span>
+<span id="L57">      intro q</span>
+<span id="L58">      exact sphericalAverage_harmonic hf hH q.property</span>
+<span id="L59">    _ = f 0 := by simp</span>
+<span id="L60"></span>
+<span id="L61">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/HarmonicMeanValue.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/HarmonicMeanValue.lean</h1><p><a href="HarmonicMeanValue.lean" download>Download exact source</a>. SHA-256: <code>8138db2c0920acdb03e5c76998194ffad705ae7c00acb43ce0943d0006c7aeb3</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.CompactGroup</span>
+<span id="L3"></span>
+<span id="L4">/-! Explicit, presently unverified background mean-value theorems.</span>
+<span id="L5">These are precise theorem interfaces, not axioms and not instances. Research</span>
+<span id="L6">results using them must retain the corresponding hypothesis. The standard</span>
+<span id="L7">background proof belongs to a separate development and expository article. -/</span>
+<span id="L8">@[expose] public section</span>
+<span id="L9">noncomputable section</span>
+<span id="L10">open scoped Quaternion ContDiff</span>
+<span id="L11">open MeasureTheory InnerProductSpace</span>
+<span id="L12">namespace MathResearch.Spinor</span>
+<span id="L13"></span>
+<span id="L14">/-- The four-dimensional spherical mean-value theorem, expressed through Haar</span>
+<span id="L15">probability on unit quaternions. It is not proved in this module. -/</span>
+<span id="L16">def SphericalMeanValueOnBall : Prop :=</span>
+<span id="L17">  ∀ (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E],</span>
+<span id="L18">    ∀ F : ℍ → E, ContDiffOn ℝ ∞ F Ball → HarmonicOnNhd F Ball →</span>
+<span id="L19">      ∀ q ∈ Ball, (∫ a : Fueter.UnitQuaternion, F ((a:ℍ)⁻¹*q) ∂unitQuaternionHaar) = F 0</span>
+<span id="L20"></span>
+<span id="L21">/-- The radial probability mean-value theorem on the ball, a standard corollary</span>
+<span id="L22">of spherical mean values and polar integration. It is not proved here. -/</span>
+<span id="L23">def RadialMeanValueOnBall : Prop :=</span>
+<span id="L24">  ∀ (E : Type) [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E],</span>
+<span id="L25">    ∀ (n : ℕ), 2 ≤ n → ∀ F : ℍ → E,</span>
+<span id="L26">      ContDiffOn ℝ ∞ F Ball → HarmonicOnNhd F Ball → Integrable F (weightedBallMeasure n) →</span>
+<span id="L27">        (∫ q, F q ∂weightedBallMeasure n) = F 0</span>
+<span id="L28"></span>
+<span id="L29">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

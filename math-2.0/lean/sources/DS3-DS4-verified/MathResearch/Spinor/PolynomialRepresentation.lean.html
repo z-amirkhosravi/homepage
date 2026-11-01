@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/PolynomialRepresentation.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/PolynomialRepresentation.lean</h1><p><a href="PolynomialRepresentation.lean" download>Download exact source</a>. SHA-256: <code>0b09c1da442ba4079c154a9b1aca9ee8da599c97c27d0dbd2c658e5fafb559b8</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.GradientIsometry</span>
+<span id="L3">public import Mathlib.RepresentationTheory.Basic</span>
+<span id="L4">public import Mathlib.LinearAlgebra.Matrix.GeneralLinearGroup.Defs</span>
+<span id="L5">public import Mathlib.Analysis.Calculus.Deriv.Add</span>
+<span id="L6">public import Mathlib.Analysis.Calculus.Deriv.Comp</span>
+<span id="L7">public import Mathlib.Analysis.Calculus.Deriv.Prod</span>
+<span id="L8">public import Mathlib.Analysis.Calculus.Deriv.Mul</span>
+<span id="L9">public import Mathlib.Analysis.Normed.Module.FiniteDimension</span>
+<span id="L10">public import Mathlib.Analysis.Calculus.Deriv.Linear</span>
+<span id="L11"></span>
+<span id="L12">/-! The binary polynomial representation and its genuine infinitesimal action. -/</span>
+<span id="L13">@[expose] public section</span>
+<span id="L14">noncomputable section</span>
+<span id="L15">open scoped BigOperators</span>
+<span id="L16">open MvPolynomial</span>
+<span id="L17">namespace MathResearch.Spinor</span>
+<span id="L18"></span>
+<span id="L19">abbrev Matrix2 := Matrix (Fin 2) (Fin 2) ℂ</span>
+<span id="L20">abbrev ComplexPoly2 := MvPolynomial (Fin 2) ℂ</span>
+<span id="L21"></span>
+<span id="L22">/-- Column j of the substitution (X,Y)M. -/</span>
+<span id="L23">def substitution (M : Matrix2) (j : Fin 2) : ComplexPoly2 :=</span>
+<span id="L24">  C (M 0 j) * X 0 + C (M 1 j) * X 1</span>
+<span id="L25"></span>
+<span id="L26">/-- τ(M)p = p(M₀₀X+M₁₀Y, M₀₁X+M₁₁Y), on all polynomials. -/</span>
+<span id="L27">def polynomialAction (M : Matrix2) : ComplexPoly2 →ₐ[ℂ] ComplexPoly2 :=</span>
+<span id="L28">  aeval (substitution M)</span>
+<span id="L29"></span>
+<span id="L30">@[simp] theorem polynomialAction_X (M : Matrix2) (i : Fin 2) :</span>
+<span id="L31">    polynomialAction M (X i) = substitution M i := by simp [polynomialAction]</span>
+<span id="L32"></span>
+<span id="L33">@[simp] theorem polynomialAction_C (M : Matrix2) (z : ℂ) :</span>
+<span id="L34">    polynomialAction M (C z) = C z := by simp [polynomialAction]</span>
+<span id="L35"></span>
+<span id="L36">@[simp] theorem substitution_one (i : Fin 2) : substitution 1 i = X i := by</span>
+<span id="L37">  fin_cases i &lt;;&gt; simp [substitution, Matrix.one_apply]</span>
+<span id="L38"></span>
+<span id="L39">theorem polynomialAction_one : polynomialAction 1 = AlgHom.id ℂ ComplexPoly2 := by</span>
+<span id="L40">  ext i; simp</span>
+<span id="L41"></span>
+<span id="L42">theorem polynomialAction_mul (M N : Matrix2) :</span>
+<span id="L43">    polynomialAction (M * N) = (polynomialAction M).comp (polynomialAction N) := by</span>
+<span id="L44">  apply MvPolynomial.algHom_ext</span>
+<span id="L45">  intro i</span>
+<span id="L46">  simp [substitution, Matrix.mul_apply, Fin.sum_univ_two]</span>
+<span id="L47">  ring</span>
+<span id="L48"></span>
+<span id="L49">/-- Polynomial chain rule in the chosen matrix convention. -/</span>
+<span id="L50">theorem polynomialAction_chainRule (M : Matrix2) (p : ComplexPoly2) (j : Fin 2) :</span>
+<span id="L51">    pderiv j (polynomialAction M p) =</span>
+<span id="L52">      C (M j 0) * polynomialAction M (pderiv 0 p) +</span>
+<span id="L53">      C (M j 1) * polynomialAction M (pderiv 1 p) := by</span>
+<span id="L54">  induction p using MvPolynomial.induction_on generalizing j with</span>
+<span id="L55">  | C z =&gt; simp</span>
+<span id="L56">  | add p q hp hq =&gt; simp [hp, hq]; ring</span>
+<span id="L57">  | mul_X p i hp =&gt;</span>
+<span id="L58">    fin_cases i &lt;;&gt; fin_cases j &lt;;&gt; simp [substitution, hp, pderiv_X] &lt;;&gt; ring</span>
+<span id="L59"></span>
+<span id="L60">theorem substitution_homogeneous (M : Matrix2) (i : Fin 2) : (substitution M i).IsHomogeneous 1 := by</span>
+<span id="L61">  apply IsHomogeneous.add</span>
+<span id="L62">  · simpa using (isHomogeneous_C (Fin 2) (M 0 i)).mul (isHomogeneous_X (R := ℂ) 0)</span>
+<span id="L63">  · simpa using (isHomogeneous_C (Fin 2) (M 1 i)).mul (isHomogeneous_X (R := ℂ) 1)</span>
+<span id="L64"></span>
+<span id="L65">theorem polynomialAction_homogeneous (n : ℕ) (M : Matrix2) (p : BinaryForm n) :</span>
+<span id="L66">    (polynomialAction M p).IsHomogeneous n := by</span>
+<span id="L67">  simpa [polynomialAction] using p.property.aeval (substitution M) (substitution_homogeneous M)</span>
+<span id="L68"></span>
+<span id="L69">/-- The complex representation on V_n, defined for the whole matrix monoid. -/</span>
+<span id="L70">def polynomialRepresentation (n : ℕ) : Representation ℂ Matrix2 (BinaryForm n) where</span>
+<span id="L71">  toFun M :=</span>
+<span id="L72">    { toFun p := ⟨polynomialAction M p, polynomialAction_homogeneous n M p⟩</span>
+<span id="L73">      map_add&#39; _ _ := by apply Subtype.ext; simp</span>
+<span id="L74">      map_smul&#39; _ _ := by apply Subtype.ext; simp }</span>
+<span id="L75">  map_one&#39; := by ext p; simp [polynomialAction_one]</span>
+<span id="L76">  map_mul&#39; M N := by ext p; simp [polynomialAction_mul]</span>
+<span id="L77"></span>
+<span id="L78">/-- Restricting the matrix-monoid action gives the usual representation of GL₂(ℂ). -/</span>
+<span id="L79">def generalLinearPolynomialRepresentation (n : ℕ) :</span>
+<span id="L80">    Representation ℂ (Matrix.GeneralLinearGroup (Fin 2) ℂ) (BinaryForm n) :=</span>
+<span id="L81">  (polynomialRepresentation n).comp (Units.coeHom Matrix2)</span>
+<span id="L82"></span>
+<span id="L83">/-- The usual first-order vector field R_M on polynomials. -/</span>
+<span id="L84">def infinitesimal (M : Matrix2) (p : ComplexPoly2) : ComplexPoly2 :=</span>
+<span id="L85">  substitution M 0 * pderiv 0 p + substitution M 1 * pderiv 1 p</span>
+<span id="L86"></span>
+<span id="L87">@[simp] theorem infinitesimal_C (M : Matrix2) (z : ℂ) : infinitesimal M (C z) = 0 := by</span>
+<span id="L88">  simp [infinitesimal]</span>
+<span id="L89">@[simp] theorem infinitesimal_X (M : Matrix2) (i : Fin 2) : infinitesimal M (X i) = substitution M i := by</span>
+<span id="L90">  fin_cases i &lt;;&gt; simp [infinitesimal, pderiv_X]</span>
+<span id="L91">@[simp] theorem infinitesimal_add (M : Matrix2) (p q : ComplexPoly2) :</span>
+<span id="L92">    infinitesimal M (p + q) = infinitesimal M p + infinitesimal M q := by</span>
+<span id="L93">  simp [infinitesimal, mul_add]; ring</span>
+<span id="L94">@[simp] theorem infinitesimal_smul (M : Matrix2) (z : ℂ) (p : ComplexPoly2) :</span>
+<span id="L95">    infinitesimal M (z • p) = z • infinitesimal M p := by</span>
+<span id="L96">  simp [infinitesimal, smul_add]</span>
+<span id="L97"></span>
+<span id="L98">theorem infinitesimal_mul (M : Matrix2) (p q : ComplexPoly2) :</span>
+<span id="L99">    infinitesimal M (p * q) = infinitesimal M p * q + p * infinitesimal M q := by</span>
+<span id="L100">  simp [infinitesimal]; ring</span>
+<span id="L101"></span>
+<span id="L102">/-- The infinitesimal action respects the matrix commutator. -/</span>
+<span id="L103">theorem infinitesimal_commutator (M N : Matrix2) (p : ComplexPoly2) :</span>
+<span id="L104">    infinitesimal M (infinitesimal N p) - infinitesimal N (infinitesimal M p) =</span>
+<span id="L105">      infinitesimal (M * N - N * M) p := by</span>
+<span id="L106">  simp [infinitesimal, substitution, Matrix.mul_apply, Fin.sum_univ_two, pderiv_X]</span>
+<span id="L107">  rw [pderiv_comm (0 : Fin 2) 1 p]</span>
+<span id="L108">  ring</span>
+<span id="L109"></span>
+<span id="L110">theorem infinitesimal_homogeneous (m : ℕ) (M : Matrix2) (p : BinaryForm (m + 1)) :</span>
+<span id="L111">    (infinitesimal M p).IsHomogeneous (m + 1) := by</span>
+<span id="L112">  apply IsHomogeneous.add</span>
+<span id="L113">  · simpa [Nat.add_comm] using (substitution_homogeneous M 0).mul (p.property.pderiv (i := 0))</span>
+<span id="L114">  · simpa [Nat.add_comm] using (substitution_homogeneous M 1).mul (p.property.pderiv (i := 1))</span>
+<span id="L115"></span>
+<span id="L116">/-- The infinitesimal polynomial action on positive-degree binary forms. -/</span>
+<span id="L117">def infinitesimalAction (m : ℕ) (M : Matrix2) : BinaryForm (m + 1) →ₗ[ℂ] BinaryForm (m + 1) where</span>
+<span id="L118">  toFun p := ⟨infinitesimal M p, infinitesimal_homogeneous m M p⟩</span>
+<span id="L119">  map_add&#39; _ _ := by apply Subtype.ext; simp</span>
+<span id="L120">  map_smul&#39; _ _ := by apply Subtype.ext; simp</span>
+<span id="L121"></span>
+<span id="L122">theorem substitution_affine (M : Matrix2) (t : ℂ) (i : Fin 2) :</span>
+<span id="L123">    substitution (1 + t • M) i = X i + t • substitution M i := by</span>
+<span id="L124">  simp only [substitution, Matrix.add_apply, Matrix.smul_apply, smul_eq_mul, map_add, map_mul]</span>
+<span id="L125">  fin_cases i &lt;;&gt; simp [Matrix.one_apply, Algebra.smul_def] &lt;;&gt; ring</span>
+<span id="L126"></span>
+<span id="L127">private theorem hasDerivAt_coeff_mul (f g : ℂ → ComplexPoly2) (df dg : ComplexPoly2)</span>
+<span id="L128">    (hf : ∀ d, HasDerivAt (fun t =&gt; (f t).coeff d) (df.coeff d) 0)</span>
+<span id="L129">    (hg : ∀ d, HasDerivAt (fun t =&gt; (g t).coeff d) (dg.coeff d) 0) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L130">    HasDerivAt (fun t =&gt; (f t * g t).coeff d) ((df * g 0 + f 0 * dg).coeff d) 0 := by</span>
+<span id="L131">  convert HasDerivAt.fun_sum (u := Finset.antidiagonal d)</span>
+<span id="L132">    (fun (x : (Fin 2 →₀ ℕ) × (Fin 2 →₀ ℕ)) _ =&gt; (hf x.1).mul (hg x.2)) using 1 &lt;;&gt;</span>
+<span id="L133">    simp [coeff_mul, Finset.sum_add_distrib]</span>
+<span id="L134"></span>
+<span id="L135">/-- The coefficientwise analytic derivative of substitution at the identity. -/</span>
+<span id="L136">theorem polynomialAction_hasDerivAt_coeff (M : Matrix2) (p : ComplexPoly2) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L137">    HasDerivAt (fun t : ℂ =&gt; (polynomialAction (1 + t • M) p).coeff d)</span>
+<span id="L138">      ((infinitesimal M p).coeff d) 0 := by</span>
+<span id="L139">  induction p using MvPolynomial.induction_on generalizing d with</span>
+<span id="L140">  | C z =&gt; simpa using hasDerivAt_const (0 : ℂ) ((C z : ComplexPoly2).coeff d)</span>
+<span id="L141">  | add p q hp hq =&gt; simpa using! (hp d).fun_add (hq d)</span>
+<span id="L142">  | mul_X p i hp =&gt;</span>
+<span id="L143">    have hx (e : Fin 2 →₀ ℕ) : HasDerivAt</span>
+<span id="L144">        (fun t : ℂ =&gt; (polynomialAction (1 + t • M) (X i)).coeff e)</span>
+<span id="L145">        ((substitution M i).coeff e) 0 := by</span>
+<span id="L146">      simpa [substitution_affine] using</span>
+<span id="L147">        ((hasDerivAt_id (0 : ℂ)).mul_const ((substitution M i).coeff e)).const_add ((X i : ComplexPoly2).coeff e)</span>
+<span id="L148">    simpa [infinitesimal_mul, polynomialAction_one] using</span>
+<span id="L149">      hasDerivAt_coeff_mul (fun t =&gt; polynomialAction (1 + t • M) p)</span>
+<span id="L150">        (fun t =&gt; polynomialAction (1 + t • M) (X i)) (infinitesimal M p) (substitution M i) hp hx d</span>
+<span id="L151"></span>
+<span id="L152">/-- dτ is an actual derivative in the weighted finite-dimensional norm, not an assumed formula. -/</span>
+<span id="L153">theorem polynomialRepresentation_hasDerivAt (m : ℕ) (M : Matrix2) (p : BinaryForm (m + 1)) :</span>
+<span id="L154">    HasDerivAt (fun t : ℂ =&gt; polynomialRepresentation (m + 1) (1 + t • M) p)</span>
+<span id="L155">      (infinitesimalAction m M p) 0 := by</span>
+<span id="L156">  let e := (coefficientEquiv (m + 1)).toContinuousLinearEquiv</span>
+<span id="L157">  have h : HasDerivAt (fun t : ℂ =&gt; e (polynomialRepresentation (m + 1) (1 + t • M) p))</span>
+<span id="L158">      (e (infinitesimalAction m M p)) 0 := by</span>
+<span id="L159">    apply hasDerivAt_pi.mpr</span>
+<span id="L160">    intro k</span>
+<span id="L161">    exact polynomialAction_hasDerivAt_coeff M p (exponent (m + 1) k)</span>
+<span id="L162">  simpa [Function.comp_def] using e.symm.hasFDerivAt.comp_hasDerivAt 0 h</span>
+<span id="L163"></span>
+<span id="L164">/-- The same differential along real parameters, for use with real Lie groups. -/</span>
+<span id="L165">theorem polynomialRepresentation_hasDerivAt_real (m : ℕ) (M : Matrix2) (p : BinaryForm (m + 1)) :</span>
+<span id="L166">    HasDerivAt (fun t : ℝ =&gt; polynomialRepresentation (m + 1) (1 + (t : ℂ) • M) p)</span>
+<span id="L167">      (infinitesimalAction m M p) 0 := by</span>
+<span id="L168">  simpa [Function.comp_def] using</span>
+<span id="L169">    (polynomialRepresentation_hasDerivAt m M p).scomp (h := fun t : ℝ =&gt; (t : ℂ)) (0 : ℝ) Complex.ofRealCLM.hasDerivAt</span>
+<span id="L170"></span>
+<span id="L171">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

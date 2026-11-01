@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/UnitaryIrreducible.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/UnitaryIrreducible.lean</h1><p><a href="UnitaryIrreducible.lean" download>Download exact source</a>. SHA-256: <code>d355f37dd49a3315aa18123c0901e6007652388ec73fc4059d476678e8a27736</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.CompactAveraging</span>
+<span id="L3"></span>
+<span id="L4">/-! Elementary invariant-subspace and transport lemmas. The research proofs</span>
+<span id="L5">call these results; their abstract linear-algebra proofs are kept separate. -/</span>
+<span id="L6">@[expose] public section</span>
+<span id="L7">noncomputable section</span>
+<span id="L8">namespace MathResearch.Spinor</span>
+<span id="L9"></span>
+<span id="L10">/-- The elementary invariant-span step, with the ambient Hilbert space abstract.</span>
+<span id="L11">This merely packages the application of irreducibility to the constants. -/</span>
+<span id="L12">theorem equivariant_irreducible_range_le_span</span>
+<span id="L13">    {G K H V : Type*} [Group G] [NormedAddCommGroup H] [InnerProductSpace ℂ H]</span>
+<span id="L14">    [NormedAddCommGroup V] [InnerProductSpace ℂ V]</span>
+<span id="L15">    (ρ : G →* (H ≃ₗᵢ[ℂ] H)) (c : V →ₗᵢ[ℂ] H)</span>
+<span id="L16">    (σ : K → V →ₗ[ℂ] V) (ι : K → G)</span>
+<span id="L17">    (he : ∀ k v, c (σ k v) = ρ (ι k) (c v))</span>
+<span id="L18">    (hir : ∀ M : Submodule ℂ V, (∀ k v, v ∈ M → σ k v ∈ M) → M = ⊥ ∨ M = ⊤)</span>
+<span id="L19">    (v : V) (hv : v ≠ 0) :</span>
+<span id="L20">    LinearMap.range c.toLinearMap ≤ Submodule.span ℂ (Set.range fun g : G =&gt; ρ g (c v)) := by</span>
+<span id="L21">  let S := Submodule.span ℂ (Set.range fun g : G =&gt; ρ g (c v))</span>
+<span id="L22">  have hs : UnitaryInvariant ρ S := by</span>
+<span id="L23">    intro g x hx</span>
+<span id="L24">    change x ∈ S.comap (ρ g).toLinearEquiv.toLinearMap</span>
+<span id="L25">    apply Submodule.span_le.mpr _ hx</span>
+<span id="L26">    rintro _ ⟨a, rfl⟩</span>
+<span id="L27">    exact Submodule.subset_span ⟨g*a, by simp [map_mul]⟩</span>
+<span id="L28">  let M := S.comap c.toLinearMap</span>
+<span id="L29">  have hM : ∀ k p, p ∈ M → σ k p ∈ M := by</span>
+<span id="L30">    intro k p hp</span>
+<span id="L31">    change c (σ k p) ∈ S</span>
+<span id="L32">    rw [he]</span>
+<span id="L33">    exact hs _ _ hp</span>
+<span id="L34">  have hvM : v ∈ M := by</span>
+<span id="L35">    change c v ∈ S</span>
+<span id="L36">    apply Submodule.subset_span</span>
+<span id="L37">    exact ⟨1, by simp⟩</span>
+<span id="L38">  have hne : M ≠ ⊥ := by</span>
+<span id="L39">    intro hz</span>
+<span id="L40">    rw [hz, Submodule.mem_bot] at hvM</span>
+<span id="L41">    exact hv hvM</span>
+<span id="L42">  have ht := (hir M hM).resolve_left hne</span>
+<span id="L43">  rintro x ⟨p, rfl⟩</span>
+<span id="L44">  exact (show p ∈ M from ht ▸ Submodule.mem_top)</span>
+<span id="L45"></span>
+<span id="L46">/-- Transport of topological irreducibility through an intertwining unitary equivalence. -/</span>
+<span id="L47">theorem TopologicallyIrreducible.transport</span>
+<span id="L48">    {G H H&#39; : Type*} [Group G] [NormedAddCommGroup H] [InnerProductSpace ℂ H]</span>
+<span id="L49">    [NormedAddCommGroup H&#39;] [InnerProductSpace ℂ H&#39;]</span>
+<span id="L50">    (ρ : G →* (H ≃ₗᵢ[ℂ] H)) (σ : G →* (H&#39; ≃ₗᵢ[ℂ] H&#39;)) (e : H ≃ₗᵢ[ℂ] H&#39;)</span>
+<span id="L51">    (he : ∀ g x, σ g (e x) = e (ρ g x)) (hi : TopologicallyIrreducible ρ) :</span>
+<span id="L52">    TopologicallyIrreducible σ := by</span>
+<span id="L53">  intro M hc hm</span>
+<span id="L54">  have hMc : IsClosed ((M.comap e.toLinearEquiv.toLinearMap : Submodule ℂ H) : Set H) :=</span>
+<span id="L55">    hc.preimage e.continuous</span>
+<span id="L56">  have hMi : UnitaryInvariant ρ (M.comap e.toLinearEquiv.toLinearMap) := by</span>
+<span id="L57">    intro g x hx</span>
+<span id="L58">    change e (ρ g x) ∈ M</span>
+<span id="L59">    rw [← he]</span>
+<span id="L60">    exact hm g _ hx</span>
+<span id="L61">  rcases hi _ hMc hMi with h | h</span>
+<span id="L62">  · left</span>
+<span id="L63">    apply le_antisymm _ bot_le</span>
+<span id="L64">    intro y hy</span>
+<span id="L65">    obtain ⟨x, rfl⟩ := e.surjective y</span>
+<span id="L66">    have hx : x ∈ M.comap e.toLinearEquiv.toLinearMap := hy</span>
+<span id="L67">    rw [h, Submodule.mem_bot] at hx</span>
+<span id="L68">    simp [hx]</span>
+<span id="L69">  · right</span>
+<span id="L70">    apply le_antisymm le_top</span>
+<span id="L71">    intro y _</span>
+<span id="L72">    obtain ⟨x, rfl⟩ := e.surjective y</span>
+<span id="L73">    exact (show x ∈ M.comap e.toLinearEquiv.toLinearMap from h ▸ Submodule.mem_top)</span>
+<span id="L74"></span>
+<span id="L75"></span>
+<span id="L76">/-- Transfer an intertwining isometry to a unitarily equivalent model. -/</span>
+<span id="L77">theorem intertwiningIsometry_transport</span>
+<span id="L78">    {G H H&#39; L : Type*} [Group G] [NormedAddCommGroup H] [NormedSpace ℂ H]</span>
+<span id="L79">    [NormedAddCommGroup H&#39;] [NormedSpace ℂ H&#39;] [NormedAddCommGroup L] [NormedSpace ℂ L]</span>
+<span id="L80">    (ρ : G →* (H ≃ₗᵢ[ℂ] H)) (σ : G →* (H&#39; ≃ₗᵢ[ℂ] H&#39;)) (τ : G →* (L ≃ₗᵢ[ℂ] L))</span>
+<span id="L81">    (e : H ≃ₗᵢ[ℂ] H&#39;) (E : H →ₗᵢ[ℂ] L)</span>
+<span id="L82">    (he : ∀ a x, σ a (e x) = e (ρ a x))</span>
+<span id="L83">    (hE : ∀ a x, E (ρ a x) = τ a (E x)) (a : G) (y : H&#39;) :</span>
+<span id="L84">    (E.comp e.symm.toLinearIsometry) (σ a y) = τ a ((E.comp e.symm.toLinearIsometry) y) := by</span>
+<span id="L85">  change E (e.symm (σ a y)) = τ a (E (e.symm y))</span>
+<span id="L86">  have h : e.symm (σ a y) = ρ a (e.symm y) := by</span>
+<span id="L87">    apply e.injective</span>
+<span id="L88">    rw [e.apply_symm_apply, ← he, e.apply_symm_apply]</span>
+<span id="L89">  rw [h, hE]</span>
+<span id="L90"></span>
+<span id="L91">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

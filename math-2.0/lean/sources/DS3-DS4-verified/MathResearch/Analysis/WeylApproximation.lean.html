@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/WeylApproximation.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/WeylApproximation.lean</h1><p><a href="WeylApproximation.lean" download>Download exact source</a>. SHA-256: <code>3913e5eacb3a6c8a98aa04fb4df55c760f4d1a0bf7089f6ae3f78f7c7803d416</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Analysis.WeylTests</span>
+<span id="L3"></span>
+<span id="L4">/-! Almost-everywhere recovery by the signed Weyl kernels. The convergence</span>
+<span id="L5">uses mathlib&#39;s Lebesgue differentiation theorem, not a regularity assumption. -/</span>
+<span id="L6">@[expose] public section</span>
+<span id="L7">noncomputable section</span>
+<span id="L8">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L9">open scoped Quaternion ContDiff Topology Convolution</span>
+<span id="L10">open MeasureTheory MeasureTheory.Measure Filter Set Metric ContinuousLinearMap</span>
+<span id="L11">namespace MathResearch.Spinor</span>
+<span id="L12"></span>
+<span id="L13">def weylRadius (k : ℕ) : ℝ := 1 / ((k : ℝ) + 1)</span>
+<span id="L14"></span>
+<span id="L15">theorem weylRadius_pos (k : ℕ) : 0 &lt; weylRadius k := by unfold weylRadius; positivity</span>
+<span id="L16"></span>
+<span id="L17">theorem weylRadius_tendsto : Tendsto weylRadius atTop (𝓝 0) :=</span>
+<span id="L18">  tendsto_one_div_add_atTop_nhds_zero_nat</span>
+<span id="L19"></span>
+<span id="L20">/-- The bound needed by the Lebesgue-point approximate-identity theorem. -/</span>
+<span id="L21">theorem weylScaledKernel_bound : ∃ C : ℝ, ∀ r : ℝ, 0 &lt; r → ∀ q : ℍ,</span>
+<span id="L22">    |weylScaledKernel r q| ≤ C / volume.real (closedBall (0 : ℍ) (2 * r)) := by</span>
+<span id="L23">  obtain ⟨M, hM⟩ := hasCompactSupport_weylKernel.exists_bound_of_continuous</span>
+<span id="L24">    contDiff_weylKernel.continuous</span>
+<span id="L25">  let V := volume.real (closedBall (0 : ℍ) 1)</span>
+<span id="L26">  have hV : 0 &lt; V := ENNReal.toReal_pos</span>
+<span id="L27">    (measure_closedBall_pos volume (0 : ℍ) (by norm_num)).ne&#39; measure_closedBall_lt_top.ne</span>
+<span id="L28">  refine ⟨M * 2 ^ 4 * V, fun r hr q =&gt; ?_⟩</span>
+<span id="L29">  have hb : |weylScaledKernel r q| ≤ r⁻¹ ^ 4 * M := by</span>
+<span id="L30">    simp only [weylScaledKernel, abs_mul, abs_pow, abs_inv, abs_of_pos hr]</span>
+<span id="L31">    exact mul_le_mul_of_nonneg_left (hM (r⁻¹ • q)) (pow_nonneg (inv_nonneg.mpr hr.le) _)</span>
+<span id="L32">  apply hb.trans_eq</span>
+<span id="L33">  rw [addHaar_real_closedBall&#39; volume _ (by positivity), Quaternion.finrank_eq_four]</span>
+<span id="L34">  change r⁻¹ ^ 4 * M = M * 2 ^ 4 * V / ((2 * r) ^ 4 * V)</span>
+<span id="L35">  field_simp</span>
+<span id="L36"></span>
+<span id="L37">variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]</span>
+<span id="L38"></span>
+<span id="L39">/-- Relates the displayed smoothing integral to mathlib&#39;s convolution. -/</span>
+<span id="L40">theorem weylSmooth_eq_convolution (r : ℝ) (u : ℍ → E) :</span>
+<span id="L41">    weylSmooth r u = weylScaledKernel r ⋆[lsmul ℝ ℝ, volume] u := by</span>
+<span id="L42">  funext a</span>
+<span id="L43">  rw [convolution_eq_swap]</span>
+<span id="L44">  rfl</span>
+<span id="L45"></span>
+<span id="L46">theorem contDiff_weylSmooth {u : ℍ → E} (hu : LocallyIntegrable u volume)</span>
+<span id="L47">    {r : ℝ} (hr : 0 &lt; r) : ContDiff ℝ ∞ (weylSmooth r u) := by</span>
+<span id="L48">  rw [weylSmooth_eq_convolution]</span>
+<span id="L49">  exact (hasCompactSupport_weylScaledKernel hr).contDiff_convolution_left (lsmul ℝ ℝ)</span>
+<span id="L50">    (contDiff_weylScaledKernel r) hu</span>
+<span id="L51"></span>
+<span id="L52">variable [CompleteSpace E]</span>
+<span id="L53"></span>
+<span id="L54">theorem ae_tendsto_weylSmooth {u : ℍ → E} (hu : LocallyIntegrable u volume) :</span>
+<span id="L55">    ∀ᵐ a ∂volume, Tendsto (fun k =&gt; weylSmooth (weylRadius k) u a) atTop (𝓝 (u a)) := by</span>
+<span id="L56">  obtain ⟨C, hC⟩ := weylScaledKernel_bound</span>
+<span id="L57">  have hr : Tendsto (fun k =&gt; 2 * weylRadius k) atTop (𝓝[&gt;] 0) :=</span>
+<span id="L58">    tendsto_nhdsWithin_iff.mpr ⟨by simpa using weylRadius_tendsto.const_mul 2,</span>
+<span id="L59">      Eventually.of_forall (fun k =&gt; mul_pos (by norm_num) (weylRadius_pos k))⟩</span>
+<span id="L60">  filter_upwards [(Besicovitch.vitaliFamily volume).ae_tendsto_average_norm_sub hu] with a ha</span>
+<span id="L61">  have havg := (ha.comp (Besicovitch.tendsto_filterAt volume a)).comp hr</span>
+<span id="L62">  apply tendsto_integral_smul_of_tendsto_average_norm_sub C havg</span>
+<span id="L63">  · exact Eventually.of_forall (fun k =&gt; hu.integrableOn_isCompact (isCompact_closedBall _ _))</span>
+<span id="L64">  · apply tendsto_const_nhds.congr</span>
+<span id="L65">    intro k</span>
+<span id="L66">    rw [← integral_neg_eq_self]</span>
+<span id="L67">    simpa only [sub_neg_eq_add, integral_add_left_eq_self] using (integral_weylScaledKernel (weylRadius_pos k)).symm</span>
+<span id="L68">  · exact Eventually.of_forall (fun k =&gt;</span>
+<span id="L69">      subset_trans subset_closure (tsupport_reflect_translate_subset</span>
+<span id="L70">        (weylScaledKernel_tsupport (weylRadius_pos k)) a))</span>
+<span id="L71">  · filter_upwards with k q</span>
+<span id="L72">    rw [addHaar_real_closedBall_center]</span>
+<span id="L73">    exact hC _ (weylRadius_pos k) _</span>
+<span id="L74"></span>
+<span id="L75">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

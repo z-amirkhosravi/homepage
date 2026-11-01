@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Fueter/ZetaQuasiperiods.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Fueter/ZetaQuasiperiods.lean</h1><p><a href="ZetaQuasiperiods.lean" download>Download exact source</a>. SHA-256: <code>5ebf065aa22fd89fcf6911e38e1180b5eb8f14ced5d04f42e79b0de6df37a0eb</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Fueter.Zeta</span>
+<span id="L3"></span>
+<span id="L4">/-! E3: oddness, both regularity equations, real derivatives, and additive quasiperiods. -/</span>
+<span id="L5">@[expose] public section</span>
+<span id="L6">noncomputable section</span>
+<span id="L7">open scoped Quaternion Topology BigOperators ContDiff</span>
+<span id="L8">open Filter</span>
+<span id="L9">namespace MathResearch.Fueter</span>
+<span id="L10"></span>
+<span id="L11">/-- Differentiating the odd kernel gives an even real differential. -/</span>
+<span id="L12">theorem kernel_fderiv_neg (a : ℍ) (ha : a ≠ 0) :</span>
+<span id="L13">    fderiv ℝ kernel (-a) = fderiv ℝ kernel a := by</span>
+<span id="L14">  apply ContinuousLinearMap.ext</span>
+<span id="L15">  intro v</span>
+<span id="L16">  rw [kernel_differential_coordinates, kernel_differential_coordinates]</span>
+<span id="L17">  apply Finset.sum_congr rfl</span>
+<span id="L18">  intro μ _</span>
+<span id="L19">  congr 1</span>
+<span id="L20">  simpa [iteratedPartial] using kernel_iteratedPartial_neg [μ] a ha</span>
+<span id="L21"></span>
+<span id="L22">/-- Oddness reindexes the entire Taylor brackets, without separating divergent series. -/</span>
+<span id="L23">theorem zeta_odd (L : Submodule ℤ ℍ) : Function.Odd (zeta L) := by</span>
+<span id="L24">  intro q</span>
+<span id="L25">  unfold zeta</span>
+<span id="L26">  rw [kernel_odd, neg_add, ← tsum_neg, ← (nonzeroLatticeNeg L).tsum_eq]</span>
+<span id="L27">  congr 1</span>
+<span id="L28">  apply tsum_congr</span>
+<span id="L29">  intro a</span>
+<span id="L30">  have ha : (a.1 : ℍ) ≠ 0 := by simpa using a.2</span>
+<span id="L31">  change kernel (-q + -(a.1 : ℍ)) - kernel (-(a.1 : ℍ)) -</span>
+<span id="L32">    fderiv ℝ kernel (-(a.1 : ℍ)) (-q) = _</span>
+<span id="L33">  rw [← neg_add, kernel_odd, kernel_odd, kernel_fderiv_neg _ ha, map_neg]</span>
+<span id="L34">  abel</span>
+<span id="L35"></span>
+<span id="L36">variable (L : Submodule ℤ ℍ) [DiscreteTopology L] [IsZLattice ℝ L]</span>
+<span id="L37"></span>
+<span id="L38">/-- Left regularity determines the time derivative from the three E-C1 functions. -/</span>
+<span id="L39">theorem zeta_timePartial {q : ℍ} (hq : q ∉ L) :</span>
+<span id="L40">    coordPartial 0 (zeta L) q = -∑ j : Fin 3, coordinateBasis j.succ * elliptic L j q := by</span>
+<span id="L41">  have h := (zeta_regular L).2.1 q hq</span>
+<span id="L42">  rw [leftOperator_eq, Fin.sum_univ_succ] at h</span>
+<span id="L43">  have h0 : coordinateBasis 0 = 1 := by rw [coordinateBasis_eq]; rfl</span>
+<span id="L44">  simp only [h0, one_mul, zeta_spatialPartial L _ hq] at h</span>
+<span id="L45">  exact eq_neg_of_add_eq_zero_left h</span>
+<span id="L46"></span>
+<span id="L47">theorem zeta_coordPartial_add (μ : Fin 4) (w : L) {q : ℍ} (hq : q ∉ L) :</span>
+<span id="L48">    coordPartial μ (zeta L) (q + (w : ℍ)) = coordPartial μ (zeta L) q := by</span>
+<span id="L49">  refine Fin.cases ?_ (fun j =&gt; ?_) μ</span>
+<span id="L50">  · rw [zeta_timePartial L (not_mem_lattice_add L w hq), zeta_timePartial L hq]</span>
+<span id="L51">    simp only [elliptic_add L _ w hq]</span>
+<span id="L52">  · rw [zeta_spatialPartial L j (not_mem_lattice_add L w hq),</span>
+<span id="L53">      zeta_spatialPartial L j hq, elliptic_add L j w hq]</span>
+<span id="L54"></span>
+<span id="L55">theorem zeta_fderiv_add (w : L) {q : ℍ} (hq : q ∉ L) :</span>
+<span id="L56">    fderiv ℝ (zeta L) (q + (w : ℍ)) = fderiv ℝ (zeta L) q := by</span>
+<span id="L57">  apply ContinuousLinearMap.ext</span>
+<span id="L58">  intro v</span>
+<span id="L59">  rw [← coordinateBasis.sum_repr v]</span>
+<span id="L60">  simp only [map_sum, map_smul]</span>
+<span id="L61">  apply Finset.sum_congr rfl</span>
+<span id="L62">  intro μ _</span>
+<span id="L63">  congr 1</span>
+<span id="L64">  exact zeta_coordPartial_add L μ w hq</span>
+<span id="L65"></span>
+<span id="L66">/-- The increment is constant on the connected complement of the lattice. -/</span>
+<span id="L67">theorem zeta_increment_const (w : L) {q r : ℍ} (hq : q ∉ L) (hr : r ∉ L) :</span>
+<span id="L68">    zeta L (q + (w : ℍ)) - zeta L q = zeta L (r + (w : ℍ)) - zeta L r := by</span>
+<span id="L69">  let H : ℍ → ℍ := fun x =&gt; zeta L (x + (w : ℍ)) - zeta L x</span>
+<span id="L70">  have hU := (isClosed_quaternionLattice L).isOpen_compl</span>
+<span id="L71">  have hd (x) (hx : x ∉ L) : DifferentiableAt ℝ (zeta L) x :=</span>
+<span id="L72">    ((zeta_regular L).1.contDiffAt (hU.mem_nhds hx)).differentiableAt (by simp)</span>
+<span id="L73">  have hH (x) (hx : x ∉ L) : HasFDerivAt (𝕜 := ℝ) H 0 x := by</span>
+<span id="L74">    have h := ((hd _ (not_mem_lattice_add L w hx)).hasFDerivAt.comp x</span>
+<span id="L75">      ((hasFDerivAt_id x).add_const (w : ℍ))).sub (hd x hx).hasFDerivAt</span>
+<span id="L76">    convert! h using 1</span>
+<span id="L77">    simp [zeta_fderiv_add L w hx]</span>
+<span id="L78">  exact hU.is_const_of_fderiv_eq_zero (isConnected_lattice_compl L).isPreconnected</span>
+<span id="L79">    (fun x hx =&gt; (hH x hx).differentiableAt.differentiableWithinAt)</span>
+<span id="L80">    (fun x hx =&gt; (hH x hx).fderiv) hq hr</span>
+<span id="L81"></span>
+<span id="L82">/-- A basepoint only constructs the map; `zeta_increment_const` proves independence. -/</span>
+<span id="L83">def zetaBasepoint : ℍ := (isConnected_lattice_compl L).nonempty.choose</span>
+<span id="L84"></span>
+<span id="L85">omit [IsZLattice ℝ L] in</span>
+<span id="L86">theorem zetaBasepoint_not_mem : zetaBasepoint L ∉ L :=</span>
+<span id="L87">  (isConnected_lattice_compl L).nonempty.choose_spec</span>
+<span id="L88"></span>
+<span id="L89">/-- The additive quasiperiod map η_L : L → ℍ. -/</span>
+<span id="L90">def zetaQuasiperiod : L →+ ℍ where</span>
+<span id="L91">  toFun w := zeta L (zetaBasepoint L + (w : ℍ)) - zeta L (zetaBasepoint L)</span>
+<span id="L92">  map_zero&#39; := by simp</span>
+<span id="L93">  map_add&#39; v w := by</span>
+<span id="L94">    have h := zeta_increment_const L w (not_mem_lattice_add L v (zetaBasepoint_not_mem L))</span>
+<span id="L95">      (zetaBasepoint_not_mem L)</span>
+<span id="L96">    change zeta L (zetaBasepoint L + ((v : ℍ) + (w : ℍ))) - zeta L (zetaBasepoint L) = _</span>
+<span id="L97">    rw [sub_eq_iff_eq_add] at h</span>
+<span id="L98">    rw [← add_assoc, h]</span>
+<span id="L99">    abel</span>
+<span id="L100"></span>
+<span id="L101">/-- The quasiperiod identity holds at every off-lattice point. -/</span>
+<span id="L102">theorem zeta_add (w : L) {q : ℍ} (hq : q ∉ L) :</span>
+<span id="L103">    zeta L (q + (w : ℍ)) - zeta L q = zetaQuasiperiod L w :=</span>
+<span id="L104">  zeta_increment_const L w hq (zetaBasepoint_not_mem L)</span>
+<span id="L105"></span>
+<span id="L106">theorem zeta_unique_quasiperiod :</span>
+<span id="L107">    ∃! η : L →+ ℍ, ∀ w : L, ∀ q : ℍ, q ∉ L →</span>
+<span id="L108">      zeta L (q + (w : ℍ)) - zeta L q = η w := by</span>
+<span id="L109">  refine ⟨zetaQuasiperiod L, fun w _ hq =&gt; zeta_add L w hq, ?_⟩</span>
+<span id="L110">  intro η hη</span>
+<span id="L111">  apply AddMonoidHom.ext</span>
+<span id="L112">  intro w</span>
+<span id="L113">  exact (hη w (zetaBasepoint L) (zetaBasepoint_not_mem L)).symm</span>
+<span id="L114"></span>
+<span id="L115">/-- E3 version 2. Index zero is the leading kernel; every nonzero index is exactly</span>
+<span id="L116">E-C2&#39;s intact Taylor bracket. Lists include time and all orders of real differentiation. -/</span>
+<span id="L117">theorem E3_v2 :</span>
+<span id="L118">    (∀ l : List (Fin 4), ∀ q ∉ L,</span>
+<span id="L119">      Summable (fun a : L =&gt; ‖iteratedPartial l (zetaJet [] (a : ℍ)) q‖)) ∧</span>
+<span id="L120">    (∀ l : List (Fin 4), ∀ K : Set ℍ, IsCompact K → K ⊆ (L : Set ℍ)ᶜ →</span>
+<span id="L121">      TendstoUniformlyOn (fun s : Finset L =&gt; fun q =&gt;</span>
+<span id="L122">        ∑ a ∈ s, iteratedPartial l (zetaJet [] (a : ℍ)) q)</span>
+<span id="L123">        (iteratedPartial l (zeta L)) atTop K) ∧</span>
+<span id="L124">    (∀ l : List (Fin 4), HasSumLocallyUniformlyOn</span>
+<span id="L125">      (fun a : L =&gt; iteratedPartial l (zetaJet [] (a : ℍ)))</span>
+<span id="L126">      (iteratedPartial l (zeta L)) (L : Set ℍ)ᶜ) ∧</span>
+<span id="L127">    Function.Odd (zeta L) ∧</span>
+<span id="L128">    TwoSidedRegularOn (zeta L) (L : Set ℍ)ᶜ ∧</span>
+<span id="L129">    (∀ j : Fin 3, ∀ q ∉ L, coordPartial j.succ (zeta L) q = elliptic L j q) ∧</span>
+<span id="L130">    (∃! η : L →+ ℍ, ∀ w : L, ∀ q : ℍ, q ∉ L →</span>
+<span id="L131">      zeta L (q + (w : ℍ)) - zeta L q = η w) := by</span>
+<span id="L132">  exact ⟨fun l _ hq =&gt; (zeta_termwise_normal L l).summable_norm hq,</span>
+<span id="L133">    fun l _ hK hKL =&gt; zeta_termwise_uniformOn L l hK hKL,</span>
+<span id="L134">    zeta_termwise_locallyUniform L, zeta_odd L, zeta_regular L,</span>
+<span id="L135">    fun j _ hq =&gt; zeta_spatialPartial L j hq, zeta_unique_quasiperiod L⟩</span>
+<span id="L136"></span>
+<span id="L137">end MathResearch.Fueter</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

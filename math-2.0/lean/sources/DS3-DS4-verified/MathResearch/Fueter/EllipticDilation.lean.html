@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Fueter/EllipticDilation.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Fueter/EllipticDilation.lean</h1><p><a href="EllipticDilation.lean" download>Download exact source</a>. SHA-256: <code>2d13c5f9d9c1e77baad7654e8115371a812eca30893625e17cfcc89d72b6d4fb</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Fueter.LatticeDilation</span>
+<span id="L3"></span>
+<span id="L4">/-! E6: real dilation of elliptic functions, zeta, and the additive quasiperiod map. -/</span>
+<span id="L5">@[expose] public section</span>
+<span id="L6">noncomputable section</span>
+<span id="L7">open scoped Quaternion Topology BigOperators ContDiff</span>
+<span id="L8">namespace MathResearch.Fueter</span>
+<span id="L9"></span>
+<span id="L10">/-- The first real derivatives of the kernel have degree -4, including time. -/</span>
+<span id="L11">theorem kernel_coordPartial_smul (μ : Fin 4) (a : ℝ) (ha : a ≠ 0)</span>
+<span id="L12">    (q : ℍ) (hq : q ≠ 0) :</span>
+<span id="L13">    coordPartial μ kernel (a • q) = (a ^ 4)⁻¹ • coordPartial μ kernel q := by</span>
+<span id="L14">  simpa [iteratedPartial] using kernel_iteratedPartial_smul [μ] a ha q hq</span>
+<span id="L15"></span>
+<span id="L16">theorem kernelSpatialPartial_smul (j : Fin 3) (a : ℝ) (ha : a ≠ 0)</span>
+<span id="L17">    (q : ℍ) (hq : q ≠ 0) :</span>
+<span id="L18">    kernelSpatialPartial j (a • q) = (a ^ 4)⁻¹ • kernelSpatialPartial j q :=</span>
+<span id="L19">  kernel_coordPartial_smul j.succ a ha q hq</span>
+<span id="L20"></span>
+<span id="L21">/-- Homogeneity of the complete real differential, as a continuous linear map. -/</span>
+<span id="L22">theorem kernel_fderiv_smul (a : ℝ) (ha : a ≠ 0) (b : ℍ) (hb : b ≠ 0) :</span>
+<span id="L23">    fderiv ℝ kernel (a • b) = (a ^ 4)⁻¹ • fderiv ℝ kernel b := by</span>
+<span id="L24">  apply ContinuousLinearMap.ext</span>
+<span id="L25">  intro q</span>
+<span id="L26">  change fderiv ℝ kernel (a • b) q = (a ^ 4)⁻¹ • fderiv ℝ kernel b q</span>
+<span id="L27">  rw [kernel_differential_coordinates, kernel_differential_coordinates, Finset.smul_sum]</span>
+<span id="L28">  apply Finset.sum_congr rfl</span>
+<span id="L29">  intro μ _</span>
+<span id="L30">  rw [kernel_coordPartial_smul μ a ha b hb, smul_comm]</span>
+<span id="L31"></span>
+<span id="L32">/-- Scaling the basepoint and the differential&#39;s argument gives the Taylor weight -3. -/</span>
+<span id="L33">theorem kernel_fderiv_smul_apply (a : ℝ) (ha : a ≠ 0) (b : ℍ) (hb : b ≠ 0) (q : ℍ) :</span>
+<span id="L34">    fderiv ℝ kernel (a • b) (a • q) = (a ^ 3)⁻¹ • fderiv ℝ kernel b q := by</span>
+<span id="L35">  rw [map_smul, kernel_fderiv_smul a ha b hb]</span>
+<span id="L36">  simp only [smul_apply, smul_smul]</span>
+<span id="L37">  congr 1</span>
+<span id="L38">  field_simp</span>
+<span id="L39"></span>
+<span id="L40">variable (L : Submodule ℤ ℍ) [DiscreteTopology L] [IsZLattice ℝ L]</span>
+<span id="L41"></span>
+<span id="L42">omit [DiscreteTopology L] [IsZLattice ℝ L] in</span>
+<span id="L43">/-- Reindex the convergent E-C1 brackets by the lattice dilation. -/</span>
+<span id="L44">theorem elliptic_dilate (j : Fin 3) (a : ℝ) (ha : a ≠ 0) {q : ℍ} (hq : q ∉ L) :</span>
+<span id="L45">    elliptic (dilatedLattice L a ha) j (a • q) = (a ^ 4)⁻¹ • elliptic L j q := by</span>
+<span id="L46">  have hq0 : q ≠ 0 := fun h =&gt; hq (h ▸ L.zero_mem)</span>
+<span id="L47">  unfold elliptic</span>
+<span id="L48">  rw [← (nonzeroLatticeDilationEquiv L a ha).tsum_eq]</span>
+<span id="L49">  change kernelSpatialPartial j (a • q) +</span>
+<span id="L50">    (∑&#39; b : {b : L // b ≠ 0}, (kernelSpatialPartial j (a • q + a • (b.1 : ℍ)) -</span>
+<span id="L51">      kernelSpatialPartial j (a • (b.1 : ℍ)))) = _</span>
+<span id="L52">  rw [kernelSpatialPartial_smul j a ha q hq0, smul_add, ← tsum_const_smul&#39;&#39;]</span>
+<span id="L53">  congr 1</span>
+<span id="L54">  apply tsum_congr</span>
+<span id="L55">  intro b</span>
+<span id="L56">  have hb : (b.1 : ℍ) ≠ 0 := by simpa using b.2</span>
+<span id="L57">  rw [← smul_add, kernelSpatialPartial_smul j a ha _ (add_lattice_ne_zero L b.1 hq),</span>
+<span id="L58">    kernelSpatialPartial_smul j a ha _ hb, smul_sub]</span>
+<span id="L59"></span>
+<span id="L60">omit [DiscreteTopology L] [IsZLattice ℝ L] in</span>
+<span id="L61">/-- Reindex intact E-C2 brackets; the differential scales in both its slots. -/</span>
+<span id="L62">theorem zeta_dilate (a : ℝ) (ha : a ≠ 0) (q : ℍ) :</span>
+<span id="L63">    zeta (dilatedLattice L a ha) (a • q) = (a ^ 3)⁻¹ • zeta L q := by</span>
+<span id="L64">  unfold zeta</span>
+<span id="L65">  rw [← (nonzeroLatticeDilationEquiv L a ha).tsum_eq]</span>
+<span id="L66">  change kernel (a • q) +</span>
+<span id="L67">    (∑&#39; b : {b : L // b ≠ 0}, (kernel (a • q + a • (b.1 : ℍ)) -</span>
+<span id="L68">      kernel (a • (b.1 : ℍ)) - fderiv ℝ kernel (a • (b.1 : ℍ)) (a • q))) = _</span>
+<span id="L69">  rw [kernel_smul a ha q, smul_add, ← tsum_const_smul&#39;&#39;]</span>
+<span id="L70">  congr 1</span>
+<span id="L71">  apply tsum_congr</span>
+<span id="L72">  intro b</span>
+<span id="L73">  have hb : (b.1 : ℍ) ≠ 0 := by simpa using b.2</span>
+<span id="L74">  rw [← smul_add, kernel_smul a ha, kernel_smul a ha, kernel_fderiv_smul_apply a ha _ hb,</span>
+<span id="L75">    smul_sub, smul_sub]</span>
+<span id="L76"></span>
+<span id="L77">/-- Scaling the zeta increment scales the uniquely determined additive quasiperiod. -/</span>
+<span id="L78">theorem zetaQuasiperiod_dilate (a : ℝ) (ha : a ≠ 0) (w : L) :</span>
+<span id="L79">    zetaQuasiperiod (dilatedLattice L a ha) (latticeDilationEquiv L a ha w) =</span>
+<span id="L80">      (a ^ 3)⁻¹ • zetaQuasiperiod L w := by</span>
+<span id="L81">  have hq := zetaBasepoint_not_mem L</span>
+<span id="L82">  have haq : a • zetaBasepoint L ∉ dilatedLattice L a ha := by simpa using hq</span>
+<span id="L83">  calc</span>
+<span id="L84">    _ = zeta (dilatedLattice L a ha)</span>
+<span id="L85">          (a • zetaBasepoint L + (latticeDilationEquiv L a ha w : ℍ)) -</span>
+<span id="L86">        zeta (dilatedLattice L a ha) (a • zetaBasepoint L) :=</span>
+<span id="L87">      (zeta_add (dilatedLattice L a ha) (latticeDilationEquiv L a ha w) haq).symm</span>
+<span id="L88">    _ = (a ^ 3)⁻¹ • (zeta L (zetaBasepoint L + (w : ℍ)) - zeta L (zetaBasepoint L)) := by</span>
+<span id="L89">      rw [latticeDilationEquiv_apply, ← smul_add,</span>
+<span id="L90">        zeta_dilate L a ha (zetaBasepoint L + (w : ℍ)), zeta_dilate L a ha (zetaBasepoint L), smul_sub]</span>
+<span id="L91">    _ = _ := by rw [zeta_add L w hq]</span>
+<span id="L92"></span>
+<span id="L93">/-- E6 version 1: all three real dilation identities for every positive scale. -/</span>
+<span id="L94">theorem E6_v1 (a : ℝ) (ha : 0 &lt; a) (j : Fin 3) (q : ℍ) (hq : q ∉ L) (w : L) :</span>
+<span id="L95">    elliptic (dilatedLattice L a ha.ne&#39;) j (a • q) = (a ^ 4)⁻¹ • elliptic L j q ∧</span>
+<span id="L96">    zeta (dilatedLattice L a ha.ne&#39;) (a • q) = (a ^ 3)⁻¹ • zeta L q ∧</span>
+<span id="L97">    zetaQuasiperiod (dilatedLattice L a ha.ne&#39;) (latticeDilationEquiv L a ha.ne&#39; w) =</span>
+<span id="L98">      (a ^ 3)⁻¹ • zetaQuasiperiod L w :=</span>
+<span id="L99">  ⟨elliptic_dilate L j a ha.ne&#39; hq, zeta_dilate L a ha.ne&#39; q,</span>
+<span id="L100">    zetaQuasiperiod_dilate L a ha.ne&#39; w⟩</span>
+<span id="L101"></span>
+<span id="L102">end MathResearch.Fueter</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

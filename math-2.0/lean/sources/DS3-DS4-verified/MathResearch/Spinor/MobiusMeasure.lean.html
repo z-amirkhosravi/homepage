@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/MobiusMeasure.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/MobiusMeasure.lean</h1><p><a href="MobiusMeasure.lean" download>Download exact source</a>. SHA-256: <code>d01a53d2c972f43ee5f88a48a4402f2b10f6ccfae205f8b4eb655cc622de85c2</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.WeakConstants</span>
+<span id="L3"></span>
+<span id="L4">/-! Measure-theoretic consequences of DS2&#39;s actual Jacobian calculation. -/</span>
+<span id="L5">@[expose] public section</span>
+<span id="L6">noncomputable section</span>
+<span id="L7">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L8">open scoped Quaternion ENNReal</span>
+<span id="L9">open MeasureTheory</span>
+<span id="L10">namespace MathResearch.Spinor</span>
+<span id="L11"></span>
+<span id="L12">theorem measurable_mobiusDenominator (g : QuaternionMatrix2) : Measurable (mobiusDenominator g) := by</span>
+<span id="L13">  unfold mobiusDenominator</span>
+<span id="L14">  fun_prop</span>
+<span id="L15"></span>
+<span id="L16">theorem measurable_mobiusPoint (g : QuaternionMatrix2) : Measurable (mobiusPoint g) := by</span>
+<span id="L17">  unfold mobiusPoint</span>
+<span id="L18">  exact (measurable_const.mul measurable_id |&gt;.add measurable_const).mul</span>
+<span id="L19">    (measurable_mobiusDenominator g).inv</span>
+<span id="L20"></span>
+<span id="L21">def mobiusJacobianDensity (g : QuaternionMatrix2) (q : ℍ) : ℝ≥0∞ :=</span>
+<span id="L22">  ENNReal.ofReal ((Quaternion.normSq (mobiusDenominator g q))⁻¹ ^ 4)</span>
+<span id="L23"></span>
+<span id="L24">theorem measurable_mobiusJacobianDensity (g : QuaternionMatrix2) :</span>
+<span id="L25">    Measurable (mobiusJacobianDensity g) := by</span>
+<span id="L26">  unfold mobiusJacobianDensity</span>
+<span id="L27">  exact ((Quaternion.continuous_normSq.measurable.comp</span>
+<span id="L28">    (measurable_mobiusDenominator g)).inv.pow_const _).ennreal_ofReal</span>
+<span id="L29"></span>
+<span id="L30">theorem mobiusJacobianDensity_ne_zero {g : QuaternionMatrix2} (hg : IsSp11 g)</span>
+<span id="L31">    {q : ℍ} (hq : q ∈ Ball) : mobiusJacobianDensity g q ≠ 0 := by</span>
+<span id="L32">  apply ENNReal.ofReal_ne_zero_iff.mpr</span>
+<span id="L33">  rw [Quaternion.normSq_eq_norm_mul_self]</span>
+<span id="L34">  exact pow_pos (inv_pos.mpr (mul_pos (norm_pos_iff.mpr (mobiusDenominator_ne_zero hg hq))</span>
+<span id="L35">    (norm_pos_iff.mpr (mobiusDenominator_ne_zero hg hq)))) _</span>
+<span id="L36"></span>
+<span id="L37">/-- The written Jacobian formula as an equality of measures, not only total integrals. -/</span>
+<span id="L38">theorem mobius_map_jacobian {g : QuaternionMatrix2} (hg : IsSp11 g) :</span>
+<span id="L39">    Measure.map (mobiusPoint g) ((volume.restrict Ball).withDensity (mobiusJacobianDensity g)) =</span>
+<span id="L40">      volume.restrict Ball := by</span>
+<span id="L41">  have h := map_withDensity_abs_det_fderiv_eq_addHaar (volume : Measure ℍ)</span>
+<span id="L42">    ball_isOpen.measurableSet.nullMeasurableSet</span>
+<span id="L43">    (fun q hq =&gt; (hasFDerivAt_mobiusPoint g (mobiusDenominator_ne_zero hg hq)).hasFDerivWithinAt)</span>
+<span id="L44">    (mobiusPoint_bijOn hg).injOn</span>
+<span id="L45">  rw [(mobiusPoint_bijOn hg).image_eq] at h</span>
+<span id="L46">  convert! h using 2</span>
+<span id="L47">  apply withDensity_congr_ae</span>
+<span id="L48">  filter_upwards [ae_restrict_mem ball_isOpen.measurableSet] with q hq</span>
+<span id="L49">  have hd : (mobiusDerivative g q).det = (Quaternion.normSq (mobiusDenominator g q))⁻¹ ^ 4 := by</span>
+<span id="L50">    rw [← (hasFDerivAt_mobiusPoint g (mobiusDenominator_ne_zero hg hq)).fderiv]</span>
+<span id="L51">    exact mobiusJacobian g hg q hq</span>
+<span id="L52">  dsimp only [mobiusJacobianDensity]</span>
+<span id="L53">  rw [hd, abs_of_nonneg (by positivity)]</span>
+<span id="L54"></span>
+<span id="L55">theorem mobius_quasiMeasurePreserving_volume {g : QuaternionMatrix2} (hg : IsSp11 g) :</span>
+<span id="L56">    QuasiMeasurePreserving (mobiusPoint g) (volume.restrict Ball) (volume.restrict Ball) := by</span>
+<span id="L57">  have ha : volume.restrict Ball ≪</span>
+<span id="L58">      (volume.restrict Ball).withDensity (mobiusJacobianDensity g) :=</span>
+<span id="L59">    withDensity_absolutelyContinuous&#39; (measurable_mobiusJacobianDensity g).aemeasurable</span>
+<span id="L60">      ((ae_restrict_mem ball_isOpen.measurableSet).mono fun _ hq =&gt; mobiusJacobianDensity_ne_zero hg hq)</span>
+<span id="L61">  refine ⟨measurable_mobiusPoint g, ?_⟩</span>
+<span id="L62">  simpa only [mobius_map_jacobian hg] using ha.map (measurable_mobiusPoint g)</span>
+<span id="L63"></span>
+<span id="L64">theorem mobius_quasiMeasurePreserving_weighted (n : ℕ) (hn : 2 ≤ n)</span>
+<span id="L65">    {g : QuaternionMatrix2} (hg : IsSp11 g) :</span>
+<span id="L66">    QuasiMeasurePreserving (mobiusPoint g) (weightedBallMeasure n) (weightedBallMeasure n) := by</span>
+<span id="L67">  apply (mobius_quasiMeasurePreserving_volume hg).mono_left</span>
+<span id="L68">    (withDensity_absolutelyContinuous _ _) |&gt;.mono_right</span>
+<span id="L69">  apply withDensity_absolutelyContinuous&#39;</span>
+<span id="L70">    (continuous_ballDensity n).measurable.ennreal_ofReal.aemeasurable</span>
+<span id="L71">  filter_upwards [ae_restrict_mem ball_isOpen.measurableSet] with q hq</span>
+<span id="L72">  exact ENNReal.ofReal_ne_zero_iff.mpr (ballDensity_pos n hn hq)</span>
+<span id="L73"></span>
+<span id="L74">theorem ballAction_aestronglyMeasurable (n : ℕ) (hn : 2 ≤ n)</span>
+<span id="L75">    {g : QuaternionMatrix2} (hg : IsSp11 g) {f : ℍ → BinaryForm n}</span>
+<span id="L76">    (hf : AEStronglyMeasurable f (weightedBallMeasure n)) :</span>
+<span id="L77">    AEStronglyMeasurable (ballAction n g f) (weightedBallMeasure n) := by</span>
+<span id="L78">  have hcomp := hf.comp_quasiMeasurePreserving (mobius_quasiMeasurePreserving_weighted n hn hg)</span>
+<span id="L79">  have hJ := (measurable_mobiusDenominator g).inv.aestronglyMeasurable (μ := weightedBallMeasure n)</span>
+<span id="L80">  have hp := (contDiff_quaternionPolynomialRepresentation n).continuous.comp_aestronglyMeasurable</span>
+<span id="L81">    (hJ.prodMk hcomp)</span>
+<span id="L82">  exact ((Quaternion.continuous_normSq.measurable.comp</span>
+<span id="L83">    (measurable_mobiusDenominator g)).inv.aestronglyMeasurable).smul hp</span>
+<span id="L84"></span>
+<span id="L85">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

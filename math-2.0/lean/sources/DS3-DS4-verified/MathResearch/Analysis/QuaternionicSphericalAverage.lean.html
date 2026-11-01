@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/QuaternionicSphericalAverage.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/QuaternionicSphericalAverage.lean</h1><p><a href="QuaternionicSphericalAverage.lean" download>Download exact source</a>. SHA-256: <code>216102d8d1a9585b3f56c861239792aa0946ee0fbc2471492525a4ab6fb6106b</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Analysis.HarmonicMeanValue</span>
+<span id="L3">public import MathResearch.Analysis.CompactParametricIntegral</span>
+<span id="L4">public import MathResearch.Analysis.CompactHaarSymmetry</span>
+<span id="L5">public import Mathlib.MeasureTheory.Group.Integral</span>
+<span id="L6"></span>
+<span id="L7">/-! Smooth spherical averaging on the quaternionic ball. Compact integration</span>
+<span id="L8">and its derivatives are background analysis, separate from DS3. -/</span>
+<span id="L9">@[expose] public section</span>
+<span id="L10">noncomputable section</span>
+<span id="L11">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L12">set_option maxHeartbeats 800000</span>
+<span id="L13">open scoped Quaternion ContDiff Topology</span>
+<span id="L14">open MeasureTheory Set Filter</span>
+<span id="L15">namespace MathResearch.Spinor</span>
+<span id="L16"></span>
+<span id="L17">local instance sphericalLocalInstance0 : NormedAddCommGroup ℍ := inferInstance</span>
+<span id="L18">local instance sphericalLocalInstance1 : NormedSpace ℝ ℍ := inferInstance</span>
+<span id="L19"></span>
+<span id="L20">variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]</span>
+<span id="L21">local instance sphericalLocalInstance2 : NormedAddCommGroup (ℍ →L[ℝ] E) := inferInstance</span>
+<span id="L22">local instance sphericalLocalInstance3 : NormedSpace ℝ (ℍ →L[ℝ] E) := inferInstance</span>
+<span id="L23"></span>
+<span id="L24">/-- Average over left unit-quaternion rotations. -/</span>
+<span id="L25">def sphericalAverage (f : ℍ → E) (q : ℍ) : E :=</span>
+<span id="L26">  ∫ a : Fueter.UnitQuaternion, f ((a : ℍ)*q) ∂unitQuaternionHaar</span>
+<span id="L27"></span>
+<span id="L28">/-- Derivative of the rotated function, as an actual continuous linear map. -/</span>
+<span id="L29">def rotatedDerivative (f : ℍ → E) (q : ℍ) (a : Fueter.UnitQuaternion) : ℍ →L[ℝ] E :=</span>
+<span id="L30">  (fderiv ℝ f ((a : ℍ)*q)).comp (ContinuousLinearMap.mul ℝ ℍ (a : ℍ))</span>
+<span id="L31"></span>
+<span id="L32">theorem unit_mul_mem_ball (a : Fueter.UnitQuaternion) {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L33">    (a : ℍ)*q ∈ Ball := by</span>
+<span id="L34">  rw [mem_ball_iff, norm_mul, Fueter.unitQuaternion_norm, one_mul]</span>
+<span id="L35">  exact (mem_ball_iff q).mp hq</span>
+<span id="L36"></span>
+<span id="L37">omit [NormedSpace ℝ E] in</span>
+<span id="L38">theorem continuousOn_rotatedFunction {f : ℍ → E} (hf : ContinuousOn f Ball) :</span>
+<span id="L39">    ContinuousOn (fun x : ℍ × Fueter.UnitQuaternion =&gt; f ((x.2 : ℍ)*x.1)) (Ball ×ˢ univ) :=</span>
+<span id="L40">  hf.comp ((continuous_subtype_val.comp continuous_snd).mul continuous_fst).continuousOn</span>
+<span id="L41">    (fun x hx =&gt; unit_mul_mem_ball x.2 hx.1)</span>
+<span id="L42"></span>
+<span id="L43">theorem continuousOn_rotatedDerivative {f : ℍ → E} (hf : ContDiffOn ℝ ∞ f Ball) :</span>
+<span id="L44">    ContinuousOn (Function.uncurry (rotatedDerivative f)) (Ball ×ˢ univ) := by</span>
+<span id="L45">  have hD := continuousOn_rotatedFunction</span>
+<span id="L46">    (hf.fderiv_of_isOpen ball_isOpen (m := ∞) (by simp)).continuousOn</span>
+<span id="L47">  have hL : Continuous (fun x : ℍ × Fueter.UnitQuaternion =&gt;</span>
+<span id="L48">      ContinuousLinearMap.mul ℝ ℍ (x.2 : ℍ)) :=</span>
+<span id="L49">    (ContinuousLinearMap.mul ℝ ℍ).continuous.comp (continuous_subtype_val.comp continuous_snd)</span>
+<span id="L50">  exact hD.clm_comp hL.continuousOn</span>
+<span id="L51"></span>
+<span id="L52">theorem rotatedDerivative_integrable {f : ℍ → E} (hf : ContDiffOn ℝ ∞ f Ball)</span>
+<span id="L53">    {q : ℍ} (hq : q ∈ Ball) : Integrable (rotatedDerivative f q) unitQuaternionHaar := by</span>
+<span id="L54">  have hc : Continuous (rotatedDerivative f q) := by</span>
+<span id="L55">    apply continuousOn_univ.mp</span>
+<span id="L56">    exact (continuousOn_rotatedDerivative hf).comp</span>
+<span id="L57">      (continuous_const.prodMk continuous_id).continuousOn (fun _ _ =&gt; ⟨hq, trivial⟩)</span>
+<span id="L58">  exact hc.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)</span>
+<span id="L59"></span>
+<span id="L60">theorem hasFDerivAt_sphericalAverage {f : ℍ → E} (hf : ContDiffOn ℝ ∞ f Ball)</span>
+<span id="L61">    {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L62">    HasFDerivAt (sphericalAverage f) (∫ a, rotatedDerivative f q a ∂unitQuaternionHaar) q := by</span>
+<span id="L63">  apply MathResearch.Analysis.hasFDerivAt_integral_compact ball_isOpen</span>
+<span id="L64">    (continuousOn_rotatedFunction hf.continuousOn) (continuousOn_rotatedDerivative hf)</span>
+<span id="L65">  · intro x hx a</span>
+<span id="L66">    exact ((hf.contDiffAt (ball_isOpen.mem_nhds (unit_mul_mem_ball a hx))).differentiableAt</span>
+<span id="L67">      (by simp)).hasFDerivAt.comp x (ContinuousLinearMap.mul ℝ ℍ (a : ℍ)).hasFDerivAt</span>
+<span id="L68">  · exact hq</span>
+<span id="L69"></span>
+<span id="L70">theorem fderiv_sphericalAverage {f : ℍ → E} (hf : ContDiffOn ℝ ∞ f Ball)</span>
+<span id="L71">    {q : ℍ} (hq : q ∈ Ball) (v : ℍ) :</span>
+<span id="L72">    fderiv ℝ (sphericalAverage f) q v =</span>
+<span id="L73">      ∫ a : Fueter.UnitQuaternion, fderiv ℝ f ((a:ℍ)*q) ((a:ℍ)*v) ∂unitQuaternionHaar := by</span>
+<span id="L74">  rw [(hasFDerivAt_sphericalAverage hf hq).fderiv,</span>
+<span id="L75">    ContinuousLinearMap.integral_apply (rotatedDerivative_integrable hf hq)]</span>
+<span id="L76">  rfl</span>
+<span id="L77"></span>
+<span id="L78">/-- Second derivative of a rotated function. -/</span>
+<span id="L79">def rotatedSecondDerivative (f : ℍ → E) (q : ℍ) (a : Fueter.UnitQuaternion) :</span>
+<span id="L80">    ℍ →L[ℝ] ℍ →L[ℝ] E :=</span>
+<span id="L81">  ((ContinuousLinearMap.compL ℝ ℍ ℍ E).flip (ContinuousLinearMap.mul ℝ ℍ (a : ℍ))).comp</span>
+<span id="L82">    ((fderiv ℝ (fderiv ℝ f) ((a : ℍ)*q)).comp (ContinuousLinearMap.mul ℝ ℍ (a : ℍ)))</span>
+<span id="L83"></span>
+<span id="L84">theorem continuousOn_rotatedSecondDerivative {f : ℍ → E} (hf : ContDiffOn ℝ ∞ f Ball) :</span>
+<span id="L85">    ContinuousOn (Function.uncurry (rotatedSecondDerivative f)) (Ball ×ˢ univ) := by</span>
+<span id="L86">  have hD := continuousOn_rotatedDerivative</span>
+<span id="L87">    (hf.fderiv_of_isOpen ball_isOpen (m := ∞) (by simp))</span>
+<span id="L88">  have hL : Continuous (fun x : ℍ × Fueter.UnitQuaternion =&gt;</span>
+<span id="L89">      (ContinuousLinearMap.compL ℝ ℍ ℍ E).flip (ContinuousLinearMap.mul ℝ ℍ (x.2 : ℍ))) :=</span>
+<span id="L90">    (ContinuousLinearMap.compL ℝ ℍ ℍ E).flip.continuous.comp</span>
+<span id="L91">      ((ContinuousLinearMap.mul ℝ ℍ).continuous.comp (continuous_subtype_val.comp continuous_snd))</span>
+<span id="L92">  exact hL.continuousOn.clm_comp hD</span>
+<span id="L93"></span>
+<span id="L94">theorem hasFDerivAt_averageDerivative {f : ℍ → E} (hf : ContDiffOn ℝ ∞ f Ball)</span>
+<span id="L95">    {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L96">    HasFDerivAt (fun x =&gt; ∫ a, rotatedDerivative f x a ∂unitQuaternionHaar)</span>
+<span id="L97">      (∫ a, rotatedSecondDerivative f q a ∂unitQuaternionHaar) q := by</span>
+<span id="L98">  apply MathResearch.Analysis.hasFDerivAt_integral_compact ball_isOpen</span>
+<span id="L99">    (continuousOn_rotatedDerivative hf) (continuousOn_rotatedSecondDerivative hf)</span>
+<span id="L100">  · intro x hx a</span>
+<span id="L101">    have hdf := hf.fderiv_of_isOpen ball_isOpen (m := ∞) (by simp)</span>
+<span id="L102">    have h := ((hdf.contDiffAt (ball_isOpen.mem_nhds (unit_mul_mem_ball a hx))).differentiableAt</span>
+<span id="L103">      (by simp)).hasFDerivAt.comp x (ContinuousLinearMap.mul ℝ ℍ (a : ℍ)).hasFDerivAt</span>
+<span id="L104">    exact ((ContinuousLinearMap.compL ℝ ℍ ℍ E).flip</span>
+<span id="L105">      (ContinuousLinearMap.mul ℝ ℍ (a : ℍ))).hasFDerivAt.comp x h</span>
+<span id="L106">  · exact hq</span>
+<span id="L107"></span>
+<span id="L108">theorem hasFDerivAt_fderiv_sphericalAverage {f : ℍ → E} (hf : ContDiffOn ℝ ∞ f Ball)</span>
+<span id="L109">    {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L110">    HasFDerivAt (fderiv ℝ (sphericalAverage f))</span>
+<span id="L111">      (∫ a, rotatedSecondDerivative f q a ∂unitQuaternionHaar) q := by</span>
+<span id="L112">  apply (hasFDerivAt_averageDerivative hf hq).congr_of_eventuallyEq</span>
+<span id="L113">  filter_upwards [ball_isOpen.mem_nhds hq] with x hx</span>
+<span id="L114">  exact (hasFDerivAt_sphericalAverage hf hx).fderiv</span>
+<span id="L115"></span>
+<span id="L116">theorem rotatedSecondDerivative_integrable {f : ℍ → E} (hf : ContDiffOn ℝ ∞ f Ball)</span>
+<span id="L117">    {q : ℍ} (hq : q ∈ Ball) : Integrable (rotatedSecondDerivative f q) unitQuaternionHaar := by</span>
+<span id="L118">  exact MathResearch.Analysis.integrable_compact_slice</span>
+<span id="L119">    (continuousOn_rotatedSecondDerivative hf) hq</span>
+<span id="L120"></span>
+<span id="L121">/-- The Hessian of the average is the average of the rotated Hessians. -/</span>
+<span id="L122">theorem secondFDeriv_sphericalAverage {f : ℍ → E} (hf : ContDiffOn ℝ ∞ f Ball)</span>
+<span id="L123">    {q : ℍ} (hq : q ∈ Ball) (v w : ℍ) :</span>
+<span id="L124">    fderiv ℝ (fderiv ℝ (sphericalAverage f)) q v w =</span>
+<span id="L125">      ∫ a : Fueter.UnitQuaternion,</span>
+<span id="L126">        fderiv ℝ (fderiv ℝ f) ((a:ℍ)*q) ((a:ℍ)*v) ((a:ℍ)*w) ∂unitQuaternionHaar := by</span>
+<span id="L127">  rw [(hasFDerivAt_fderiv_sphericalAverage hf hq).fderiv,</span>
+<span id="L128">    ContinuousLinearMap.integral_apply (rotatedSecondDerivative_integrable hf hq),</span>
+<span id="L129">    ContinuousLinearMap.integral_apply ((rotatedSecondDerivative_integrable hf hq).apply_continuousLinearMap v)]</span>
+<span id="L130">  rfl</span>
+<span id="L131"></span>
+<span id="L132">/-- Spherical averaging commutes with the Euclidean Laplacian. -/</span>
+<span id="L133">theorem laplacian_sphericalAverage {f : ℍ → E} (hf : ContDiffOn ℝ ∞ f Ball)</span>
+<span id="L134">    {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L135">    Laplacian.laplacian (sphericalAverage f) q =</span>
+<span id="L136">      ∫ a : Fueter.UnitQuaternion, Laplacian.laplacian f ((a:ℍ)*q) ∂unitQuaternionHaar := by</span>
+<span id="L137">  rw [InnerProductSpace.laplacian_eq_iteratedFDeriv_orthonormalBasis _ quaternionONB]</span>
+<span id="L138">  simp only [iteratedFDeriv_two_apply, Matrix.cons_val_zero, Matrix.cons_val_one,</span>
+<span id="L139">    Matrix.cons_val_fin_one, secondFDeriv_sphericalAverage hf hq]</span>
+<span id="L140">  rw [← integral_finsetSum]</span>
+<span id="L141">  · apply integral_congr_ae</span>
+<span id="L142">    apply Filter.Eventually.of_forall</span>
+<span id="L143">    intro a</span>
+<span id="L144">    rw [InnerProductSpace.laplacian_eq_iteratedFDeriv_orthonormalBasis _</span>
+<span id="L145">      (quaternionONB.map (Fueter.quaternionRotation (a,1)))]</span>
+<span id="L146">    simp only [iteratedFDeriv_two_apply, Matrix.cons_val_zero, Matrix.cons_val_one,</span>
+<span id="L147">      Matrix.cons_val_fin_one, OrthonormalBasis.map_apply]</span>
+<span id="L148">    simp [Fueter.quaternionRotation]</span>
+<span id="L149">  · intro i _</span>
+<span id="L150">    exact ((rotatedSecondDerivative_integrable hf hq).apply_continuousLinearMap</span>
+<span id="L151">      (quaternionONB i)).apply_continuousLinearMap (quaternionONB i)</span>
+<span id="L152"></span>
+<span id="L153">@[simp] theorem sphericalAverage_zero [CompleteSpace E] (f : ℍ → E) : sphericalAverage f 0 = f 0 := by</span>
+<span id="L154">  simp [sphericalAverage]</span>
+<span id="L155"></span>
+<span id="L156">theorem sphericalAverage_unit_mul (f : ℍ → E) (b : Fueter.UnitQuaternion) (q : ℍ) :</span>
+<span id="L157">    sphericalAverage f ((b : ℍ)*q) = sphericalAverage f q := by</span>
+<span id="L158">  simpa only [sphericalAverage, Submonoid.coe_mul, mul_assoc] using</span>
+<span id="L159">    (integral_mul_right_eq_self (μ := unitQuaternionHaar)</span>
+<span id="L160">      (fun a : Fueter.UnitQuaternion =&gt; f ((a : ℍ)*q)) b)</span>
+<span id="L161"></span>
+<span id="L162">/-- The average depends only on the Euclidean radius. -/</span>
+<span id="L163">theorem sphericalAverage_radial (f : ℍ → E) (q : ℍ) :</span>
+<span id="L164">    sphericalAverage f q = sphericalAverage f (‖q‖ • (1 : ℍ)) := by</span>
+<span id="L165">  by_cases hq : q = 0</span>
+<span id="L166">  · simp [hq]</span>
+<span id="L167">  · have he : (Fueter.normalizeQuaternion q hq : ℍ) * (‖q‖ • (1 : ℍ)) = q := by</span>
+<span id="L168">      change (‖q‖⁻¹ • q) * (‖q‖ • (1 : ℍ)) = q</span>
+<span id="L169">      simp [smul_smul, norm_ne_zero_iff.mpr hq]</span>
+<span id="L170">    calc</span>
+<span id="L171">      _ = sphericalAverage f ((Fueter.normalizeQuaternion q hq : ℍ) * (‖q‖ • (1 : ℍ))) :=</span>
+<span id="L172">        congrArg (sphericalAverage f) he.symm</span>
+<span id="L173">      _ = _ := sphericalAverage_unit_mul f _ _</span>
+<span id="L174"></span>
+<span id="L175">/-- The first derivative at the center vanishes by compact symmetry. -/</span>
+<span id="L176">theorem fderiv_sphericalAverage_zero {f : ℍ → E} (hf : ContDiffOn ℝ ∞ f Ball) (v : ℍ) :</span>
+<span id="L177">    fderiv ℝ (sphericalAverage f) 0 v = 0 := by</span>
+<span id="L178">  rw [fderiv_sphericalAverage hf (by simp [mem_ball_iff])]</span>
+<span id="L179">  apply integral_eq_zero_of_mul_left_eq_neg (g := (-1 : Fueter.UnitQuaternion))</span>
+<span id="L180">  intro a</span>
+<span id="L181">  simp [Unitary.coe_neg]</span>
+<span id="L182"></span>
+<span id="L183">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

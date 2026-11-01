@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/RegularSquareIntegrable.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/RegularSquareIntegrable.lean</h1><p><a href="RegularSquareIntegrable.lean" download>Download exact source</a>. SHA-256: <code>da08b060e97752518eb9519e71768bd18c55ab68327f52d4144ca5d7b3253cec</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.RegularCoefficient</span>
+<span id="L3">public import MathResearch.Spinor.CompactSchur</span>
+<span id="L4"></span>
+<span id="L5">/-! DS4&#39;s Haar–Schur calculation for the actual regular Hilbert model.</span>
+<span id="L6">Mean values and quotient Haar integration are explicit named background inputs;</span>
+<span id="L7">compact Schur orthogonality is invoked from its separate verified module. -/</span>
+<span id="L8">@[expose] public section</span>
+<span id="L9">noncomputable section</span>
+<span id="L10">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L11">set_option maxHeartbeats 1000000</span>
+<span id="L12">open scoped Quaternion ContDiff ENNReal</span>
+<span id="L13">open MeasureTheory</span>
+<span id="L14">namespace MathResearch.Spinor</span>
+<span id="L15"></span>
+<span id="L16">/-- The squared-norm constant C13, with the specified Haar normalization. -/</span>
+<span id="L17">def coefficientNormConstant (n : ℕ) (v : BinaryForm n) : ℝ :=</span>
+<span id="L18">  ‖v‖^2 / ((n+1:ℝ)*weightConstant n)</span>
+<span id="L19"></span>
+<span id="L20">theorem coefficientNormConstant_pos (n : ℕ) (hn : 2 ≤ n) (v : BinaryForm n) (hv : v ≠ 0) :</span>
+<span id="L21">    0 &lt; coefficientNormConstant n v :=</span>
+<span id="L22">  div_pos (sq_pos_of_pos (norm_pos_iff.mpr hv)) (mul_pos (by positivity) (weightConstant_pos n hn))</span>
+<span id="L23"></span>
+<span id="L24">theorem regularCoefficient_quotientAverage (meanValue : RadialMeanValueOnBall)</span>
+<span id="L25">    (n : ℕ) (hn : 2 ≤ n) (hSchur : CompactSchurInput n compactHaar)</span>
+<span id="L26">    (v : BinaryForm n) (f : WeakBallSpace n hn)</span>
+<span id="L27">    (F : ℍ → BinaryForm n) (hF : ContDiffOn ℝ ∞ F Ball)</span>
+<span id="L28">    (he : (f.val : ℍ → BinaryForm n) =ᵐ[weightedBallMeasure n] F)</span>
+<span id="L29">    (q : ℍ) (hq : q ∈ Ball) :</span>
+<span id="L30">    quotientHaarAverage (fun g =&gt; ‖regularCoefficient n hn v f g‖^2) q =</span>
+<span id="L31">      coefficientNormConstant n v * (ballDensity n q * ‖F q‖^2) := by</span>
+<span id="L32">  unfold quotientHaarAverage</span>
+<span id="L33">  simp_rw [regularCoefficient_eq_lift meanValue n hn v f F hF he,</span>
+<span id="L34">    liftedCoefficient, ballCompactPoint_coe q hq, fullLift_section_compact n F q hq]</span>
+<span id="L35">  rw [hSchur, weightedSpinor, norm_smul, Real.norm_eq_abs,</span>
+<span id="L36">    abs_of_pos (ballWeight_pos _ hq), mul_pow]</span>
+<span id="L37">  have hc := (weightConstant_pos n hn).ne&#39;</span>
+<span id="L38">  calc</span>
+<span id="L39">    _ = ((ballScale q)⁻¹ ^ 4 * (ballWeight (((n:ℝ)+2)/2) q)^2) * ‖F q‖^2 * ‖v‖^2 / (n+1:ℝ) := by ring</span>
+<span id="L40">    _ = _ := by rw [lift_weight_cancellation n hn q hq]; unfold coefficientNormConstant ballDensity; field_simp</span>
+<span id="L41"></span>
+<span id="L42">/-- Conversion of the weighted norm integrand to ordinary ball volume. -/</span>
+<span id="L43">theorem weighted_square_integral (n : ℕ) (hn : 2 ≤ n) (F : ℍ → BinaryForm n) :</span>
+<span id="L44">    (∫ q, ‖F q‖^2 ∂weightedBallMeasure n) = ∫ q in Ball, ballDensity n q * ‖F q‖^2 := by</span>
+<span id="L45">  change (∫ q, ‖F q‖^2 ∂(volume.restrict Ball).withDensity (fun q =&gt; ENNReal.ofReal (ballDensity n q))) = _</span>
+<span id="L46">  rw [integral_withDensity_eq_integral_toReal_smul</span>
+<span id="L47">    (continuous_ballDensity n).measurable.ennreal_ofReal (Filter.Eventually.of_forall fun _ =&gt; ENNReal.ofReal_lt_top)]</span>
+<span id="L48">  apply setIntegral_congr_fun ball_isOpen.measurableSet</span>
+<span id="L49">  intro q hq</span>
+<span id="L50">  simp [ENNReal.toReal_ofReal (ballDensity_pos n hn hq).le]</span>
+<span id="L51"></span>
+<span id="L52">theorem weighted_square_integrable (n : ℕ) (hn : 2 ≤ n) (F : ℍ → BinaryForm n)</span>
+<span id="L53">    (hi : Integrable (fun q =&gt; ‖F q‖^2) (weightedBallMeasure n)) :</span>
+<span id="L54">    IntegrableOn (fun q =&gt; ballDensity n q * ‖F q‖^2) Ball volume := by</span>
+<span id="L55">  have h := (integrable_withDensity_iff_integrable_smul&#39;</span>
+<span id="L56">    (continuous_ballDensity n).measurable.ennreal_ofReal</span>
+<span id="L57">    (Filter.Eventually.of_forall fun _ =&gt; ENNReal.ofReal_lt_top)).mp hi</span>
+<span id="L58">  apply h.congr</span>
+<span id="L59">  filter_upwards [ae_restrict_mem ball_isOpen.measurableSet] with q hq</span>
+<span id="L60">  simp [ENNReal.toReal_ofReal (ballDensity_pos n hn hq).le]</span>
+<span id="L61"></span>
+<span id="L62">/-- Genuine square-integrability: the quotient theorem&#39;s integrability clause,</span>
+<span id="L63">Schur orthogonality and the original weighted L² norm provide it. -/</span>
+<span id="L64">theorem regularCoefficient_memLp (meanValue : RadialMeanValueOnBall)</span>
+<span id="L65">    (n : ℕ) (hn : 2 ≤ n) (μG : Measure Sp11) (haar : QuotientHaarIntegration μG)</span>
+<span id="L66">    (hSchur : CompactSchurInput n compactHaar) (v : BinaryForm n) (f : WeakBallSpace n hn) :</span>
+<span id="L67">    MemLp (regularCoefficient n hn v f) 2 μG := by</span>
+<span id="L68">  obtain ⟨F, hF, _, _, he⟩ := regularKernel_smooth_harmonic_classical n hn f</span>
+<span id="L69">  have hm := (Lp.aestronglyMeasurable f.val).congr he</span>
+<span id="L70">  have hLp := (Lp.memLp f.val).ae_eq he</span>
+<span id="L71">  have hi := weighted_square_integrable n hn F ((memLp_two_iff_integrable_sq_norm hm).mp hLp)</span>
+<span id="L72">  apply (memLp_two_iff_integrable_sq_norm (regularCoefficient_continuous n hn v f).aestronglyMeasurable).mpr</span>
+<span id="L73">  apply (haar.integrable_iff _ ((regularCoefficient_continuous n hn v f).norm.pow 2)</span>
+<span id="L74">    (fun _ =&gt; sq_nonneg _)).mpr</span>
+<span id="L75">  apply (hi.const_mul (coefficientNormConstant n v)).congr</span>
+<span id="L76">  filter_upwards [ae_restrict_mem ball_isOpen.measurableSet] with q hq</span>
+<span id="L77">  exact (regularCoefficient_quotientAverage meanValue n hn hSchur v f F hF he q hq).symm</span>
+<span id="L78"></span>
+<span id="L79">/-- C13 at the level of actual matrix coefficients, before choosing L² classes. -/</span>
+<span id="L80">theorem regularCoefficient_integral (meanValue : RadialMeanValueOnBall)</span>
+<span id="L81">    (n : ℕ) (hn : 2 ≤ n) (μG : Measure Sp11) (haar : QuotientHaarIntegration μG)</span>
+<span id="L82">    (hSchur : CompactSchurInput n compactHaar) (v : BinaryForm n) (f : WeakBallSpace n hn) :</span>
+<span id="L83">    (∫ g, ‖regularCoefficient n hn v f g‖^2 ∂μG) = coefficientNormConstant n v * ‖f‖^2 := by</span>
+<span id="L84">  obtain ⟨F, hF, _, _, he⟩ := regularKernel_smooth_harmonic_classical n hn f</span>
+<span id="L85">  rw [haar.integral_formula (fun g =&gt; ‖regularCoefficient n hn v f g‖^2) ((regularCoefficient_continuous n hn v f).norm.pow 2)</span>
+<span id="L86">    (fun _ =&gt; sq_nonneg _)]</span>
+<span id="L87">  calc</span>
+<span id="L88">    _ = ∫ q in Ball, coefficientNormConstant n v * (ballDensity n q * ‖F q‖^2) := by</span>
+<span id="L89">      apply setIntegral_congr_fun ball_isOpen.measurableSet</span>
+<span id="L90">      exact regularCoefficient_quotientAverage meanValue n hn hSchur v f F hF he</span>
+<span id="L91">    _ = coefficientNormConstant n v * ∫ q, ‖F q‖^2 ∂weightedBallMeasure n := by</span>
+<span id="L92">      rw [integral_const_mul, weighted_square_integral n hn F]</span>
+<span id="L93">    _ = coefficientNormConstant n v * ‖f‖^2 := by</span>
+<span id="L94">      congr 1</span>
+<span id="L95">      change _ = ‖f.val‖^2</span>
+<span id="L96">      rw [l2_norm_sq_integral]</span>
+<span id="L97">      exact integral_congr_ae (he.fun_comp (fun z =&gt; ‖z‖^2)).symm</span>
+<span id="L98"></span>
+<span id="L99">/-- The actual L²-valued coefficient map; its square-integrability is proved above. -/</span>
+<span id="L100">def regularCoefficientMap (meanValue : RadialMeanValueOnBall)</span>
+<span id="L101">    (n : ℕ) (hn : 2 ≤ n) (μG : Measure Sp11) (haar : QuotientHaarIntegration μG)</span>
+<span id="L102">    (hSchur : CompactSchurInput n compactHaar) (v : BinaryForm n) :</span>
+<span id="L103">    WeakBallSpace n hn →ₗ[ℂ] Lp ℂ 2 μG where</span>
+<span id="L104">  toFun f := (regularCoefficient_memLp meanValue n hn μG haar hSchur v f).toLp (regularCoefficient n hn v f)</span>
+<span id="L105">  map_add&#39; f h := by</span>
+<span id="L106">    apply Lp.ext</span>
+<span id="L107">    filter_upwards [MemLp.coeFn_toLp (regularCoefficient_memLp meanValue n hn μG haar hSchur v (f+h)),</span>
+<span id="L108">      MemLp.coeFn_toLp (regularCoefficient_memLp meanValue n hn μG haar hSchur v f),</span>
+<span id="L109">      MemLp.coeFn_toLp (regularCoefficient_memLp meanValue n hn μG haar hSchur v h),</span>
+<span id="L110">      Lp.coeFn_add ((regularCoefficient_memLp meanValue n hn μG haar hSchur v f).toLp _)</span>
+<span id="L111">        ((regularCoefficient_memLp meanValue n hn μG haar hSchur v h).toLp _)] with g hfh hf hh ha</span>
+<span id="L112">    rw [hfh, ha]</span>
+<span id="L113">    simp only [Pi.add_apply]</span>
+<span id="L114">    rw [hf, hh]</span>
+<span id="L115">    simp [regularCoefficient, map_add, inner_add_right]</span>
+<span id="L116">  map_smul&#39; z f := by</span>
+<span id="L117">    apply Lp.ext</span>
+<span id="L118">    filter_upwards [MemLp.coeFn_toLp (regularCoefficient_memLp meanValue n hn μG haar hSchur v (z • f)),</span>
+<span id="L119">      MemLp.coeFn_toLp (regularCoefficient_memLp meanValue n hn μG haar hSchur v f),</span>
+<span id="L120">      Lp.coeFn_smul z ((regularCoefficient_memLp meanValue n hn μG haar hSchur v f).toLp _)] with g hzf hf hs</span>
+<span id="L121">    simp only [RingHom.id_apply]</span>
+<span id="L122">    rw [hzf, hs]</span>
+<span id="L123">    simp only [Pi.smul_apply]</span>
+<span id="L124">    rw [hf]</span>
+<span id="L125">    simp [regularCoefficient, map_smul, inner_smul_right]</span>
+<span id="L126"></span>
+<span id="L127">theorem regularCoefficientMap_ae (meanValue : RadialMeanValueOnBall)</span>
+<span id="L128">    (n : ℕ) (hn : 2 ≤ n) (μG : Measure Sp11) (haar : QuotientHaarIntegration μG)</span>
+<span id="L129">    (hSchur : CompactSchurInput n compactHaar) (v : BinaryForm n) (f : WeakBallSpace n hn) :</span>
+<span id="L130">    (regularCoefficientMap meanValue n hn μG haar hSchur v f : Sp11 → ℂ) =ᵐ[μG]</span>
+<span id="L131">      regularCoefficient n hn v f :=</span>
+<span id="L132">  MemLp.coeFn_toLp (regularCoefficient_memLp meanValue n hn μG haar hSchur v f)</span>
+<span id="L133"></span>
+<span id="L134">theorem regularCoefficientMap_norm (meanValue : RadialMeanValueOnBall)</span>
+<span id="L135">    (n : ℕ) (hn : 2 ≤ n) (μG : Measure Sp11) (haar : QuotientHaarIntegration μG)</span>
+<span id="L136">    (hSchur : CompactSchurInput n compactHaar) (v : BinaryForm n) (f : WeakBallSpace n hn) :</span>
+<span id="L137">    ‖regularCoefficientMap meanValue n hn μG haar hSchur v f‖^2 = coefficientNormConstant n v * ‖f‖^2 := by</span>
+<span id="L138">  rw [l2_norm_sq_integral, ← regularCoefficient_integral meanValue n hn μG haar hSchur v f]</span>
+<span id="L139">  exact integral_congr_ae ((regularCoefficientMap_ae meanValue n hn μG haar hSchur v f).fun_comp (fun z =&gt; ‖z‖^2))</span>
+<span id="L140"></span>
+<span id="L141">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

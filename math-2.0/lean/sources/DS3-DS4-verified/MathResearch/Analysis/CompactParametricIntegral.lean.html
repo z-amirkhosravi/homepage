@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/CompactParametricIntegral.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/CompactParametricIntegral.lean</h1><p><a href="CompactParametricIntegral.lean" download>Download exact source</a>. SHA-256: <code>4f7b3926aac16dbca294d49a9316a65381d387a5beadcfeaf0209ba95e21966a</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import Mathlib.Analysis.Calculus.ParametricIntegral</span>
+<span id="L3">public import Mathlib.MeasureTheory.Integral.Bochner.Set</span>
+<span id="L4">public import Mathlib.Analysis.Normed.Module.FiniteDimension</span>
+<span id="L5"></span>
+<span id="L6">/-! Differentiation of a compactly indexed integral. The uniform bound required</span>
+<span id="L7">by mathlib&#39;s dominated differentiation theorem follows from compactness. -/</span>
+<span id="L8">@[expose] public section</span>
+<span id="L9">noncomputable section</span>
+<span id="L10">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L11">open MeasureTheory Set Filter</span>
+<span id="L12">open scoped Topology</span>
+<span id="L13">namespace MathResearch.Analysis</span>
+<span id="L14"></span>
+<span id="L15">variable {P K E : Type*} [NormedAddCommGroup P] [NormedSpace ℝ P] [ProperSpace P]</span>
+<span id="L16">  [TopologicalSpace K] [CompactSpace K] [SecondCountableTopology K] [MeasurableSpace K] [BorelSpace K]</span>
+<span id="L17">  [NormedAddCommGroup E] [NormedSpace ℝ E]</span>
+<span id="L18">  {μ : Measure K} [IsFiniteMeasure μ]</span>
+<span id="L19"></span>
+<span id="L20">omit [NormedSpace ℝ P] [ProperSpace P] [NormedSpace ℝ E] [SecondCountableTopology K] in</span>
+<span id="L21">/-- Every fibre of a continuous compact family is integrable. -/</span>
+<span id="L22">theorem integrable_compact_slice {F : P → K → E} {s : Set P}</span>
+<span id="L23">    (hF : ContinuousOn (Function.uncurry F) (s ×ˢ univ)) {x : P} (hx : x ∈ s) :</span>
+<span id="L24">    Integrable (F x) μ := by</span>
+<span id="L25">  have hc : Continuous (F x) := by</span>
+<span id="L26">    apply continuousOn_univ.mp</span>
+<span id="L27">    exact hF.comp (continuous_const.prodMk continuous_id).continuousOn</span>
+<span id="L28">      (fun a _ =&gt; ⟨hx, mem_univ a⟩)</span>
+<span id="L29">  exact hc.integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)</span>
+<span id="L30"></span>
+<span id="L31">/-- Continuous dependence on a compact index supplies an integrable uniform bound</span>
+<span id="L32">for the derivative on a sufficiently small closed ball in the parameter. -/</span>
+<span id="L33">theorem hasFDerivAt_integral_compact {F : P → K → E} {F&#39; : P → K → P →L[ℝ] E}</span>
+<span id="L34">    {s : Set P} (hs : IsOpen s)</span>
+<span id="L35">    (hF : ContinuousOn (Function.uncurry F) (s ×ˢ univ))</span>
+<span id="L36">    (hF&#39; : ContinuousOn (Function.uncurry F&#39;) (s ×ˢ univ))</span>
+<span id="L37">    (hd : ∀ x ∈ s, ∀ a, HasFDerivAt (fun y =&gt; F y a) (F&#39; x a) x)</span>
+<span id="L38">    {x : P} (hx : x ∈ s) :</span>
+<span id="L39">    HasFDerivAt (fun y =&gt; ∫ a, F y a ∂μ) (∫ a, F&#39; x a ∂μ) x := by</span>
+<span id="L40">  obtain ⟨r,hr,hrs⟩ := Metric.mem_nhds_iff.mp (hs.mem_nhds hx)</span>
+<span id="L41">  let t := Metric.closedBall x (r/2)</span>
+<span id="L42">  have ht : t ⊆ s := fun y hy =&gt; hrs (Metric.closedBall_subset_ball (by linarith) hy)</span>
+<span id="L43">  have hct : IsCompact (t ×ˢ (univ : Set K)) := (isCompact_closedBall x (r/2)).prod isCompact_univ</span>
+<span id="L44">  obtain ⟨C,hC⟩ := hct.exists_bound_of_continuousOn</span>
+<span id="L45">    (hF&#39;.mono (Set.prod_mono ht (subset_refl _)))</span>
+<span id="L46">  have hfc (y : P) (hy : y ∈ s) : Continuous (F y) := by</span>
+<span id="L47">    apply continuousOn_univ.mp</span>
+<span id="L48">    exact (hF.comp (continuous_const.prodMk continuous_id).continuousOn</span>
+<span id="L49">      (fun a _ =&gt; ⟨hy, mem_univ a⟩))</span>
+<span id="L50">  have hfc&#39; : Continuous (F&#39; x) := by</span>
+<span id="L51">    apply continuousOn_univ.mp</span>
+<span id="L52">    exact (hF&#39;.comp (continuous_const.prodMk continuous_id).continuousOn</span>
+<span id="L53">      (fun a _ =&gt; ⟨hx, mem_univ a⟩))</span>
+<span id="L54">  apply hasFDerivAt_integral_of_dominated_of_fderiv_le</span>
+<span id="L55">    (Metric.closedBall_mem_nhds x (by positivity : 0 &lt; r/2))</span>
+<span id="L56">  · filter_upwards [hs.mem_nhds hx] with y hy</span>
+<span id="L57">    exact (hfc y hy).aestronglyMeasurable</span>
+<span id="L58">  · exact (hfc x hx).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)</span>
+<span id="L59">  · exact hfc&#39;.aestronglyMeasurable</span>
+<span id="L60">  · exact Filter.Eventually.of_forall fun a y hy =&gt; hC (y,a) ⟨hy,mem_univ a⟩</span>
+<span id="L61">  · exact integrable_const C</span>
+<span id="L62">  · exact Filter.Eventually.of_forall fun a y hy =&gt; hd y (ht hy) a</span>
+<span id="L63"></span>
+<span id="L64">end MathResearch.Analysis</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Fueter/HarmonicPolynomial.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Fueter/HarmonicPolynomial.lean</h1><p><a href="HarmonicPolynomial.lean" download>Download exact source</a>. SHA-256: <code>d8897c572cc0dad7c4dc4d01646856930355789a81671580f4280a1ae925bf69</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Fueter.PartialCommutation</span>
+<span id="L3">public import Mathlib.RingTheory.MvPolynomial.EulerIdentity</span>
+<span id="L4">public import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic</span>
+<span id="L5"></span>
+<span id="L6">/-! Polynomial recurrence and harmonicity for the kernel numerators in EI1. -/</span>
+<span id="L7">@[expose] public section</span>
+<span id="L8">noncomputable section</span>
+<span id="L9">open scoped Quaternion Topology BigOperators ContDiff</span>
+<span id="L10">open MvPolynomial</span>
+<span id="L11">namespace MathResearch.Fueter</span>
+<span id="L12"></span>
+<span id="L13">abbrev RealPoly4 := MvPolynomial (Fin 4) ℝ</span>
+<span id="L14"></span>
+<span id="L15">/-- The real norm-square polynomial in the coordinates t,x,y,z. -/</span>
+<span id="L16">def normSqPoly : RealPoly4 := ∑ i : Fin 4, X i ^ 2</span>
+<span id="L17"></span>
+<span id="L18">/-- The polynomial Laplacian, with all four real coordinate directions. -/</span>
+<span id="L19">def polyLaplacian (P : RealPoly4) : RealPoly4 := ∑ i : Fin 4, pderiv i (pderiv i P)</span>
+<span id="L20"></span>
+<span id="L21">/-- One numerator step after r derivatives. -/</span>
+<span id="L22">def numeratorStep (r : ℕ) (j : Fin 4) (P : RealPoly4) : RealPoly4 :=</span>
+<span id="L23">  normSqPoly * pderiv j P - C (2 * ((r : ℝ) + 2)) * (X j * P)</span>
+<span id="L24"></span>
+<span id="L25">@[simp] theorem pderiv_normSqPoly (i : Fin 4) : pderiv i normSqPoly = 2 * X i := by</span>
+<span id="L26">  fin_cases i &lt;;&gt; norm_num [normSqPoly, Fin.sum_univ_succ, pderiv_pow]</span>
+<span id="L27"></span>
+<span id="L28">theorem normSqPoly_homogeneous : normSqPoly.IsHomogeneous 2 := by</span>
+<span id="L29">  apply IsHomogeneous.sum</span>
+<span id="L30">  intro i _</span>
+<span id="L31">  simpa using (isHomogeneous_X (R := ℝ) i).pow 2</span>
+<span id="L32"></span>
+<span id="L33">@[simp] theorem polyLaplacian_sub (P Q : RealPoly4) :</span>
+<span id="L34">    polyLaplacian (P - Q) = polyLaplacian P - polyLaplacian Q := by</span>
+<span id="L35">  simp [polyLaplacian, map_sub, Finset.sum_sub_distrib]</span>
+<span id="L36"></span>
+<span id="L37">@[simp] theorem polyLaplacian_C_mul (c : ℝ) (P : RealPoly4) :</span>
+<span id="L38">    polyLaplacian (C c * P) = C c * polyLaplacian P := by</span>
+<span id="L39">  simp [polyLaplacian, Finset.mul_sum]</span>
+<span id="L40"></span>
+<span id="L41">theorem polyLaplacian_pderiv (j : Fin 4) (P : RealPoly4) :</span>
+<span id="L42">    polyLaplacian (pderiv j P) = pderiv j (polyLaplacian P) := by</span>
+<span id="L43">  simp only [polyLaplacian, map_sum]</span>
+<span id="L44">  apply Finset.sum_congr rfl</span>
+<span id="L45">  intro i _</span>
+<span id="L46">  rw [pderiv_comm i j, pderiv_comm i j]</span>
+<span id="L47"></span>
+<span id="L48">theorem polyLaplacian_X_mul (j : Fin 4) (P : RealPoly4) :</span>
+<span id="L49">    polyLaplacian (X j * P) = X j * polyLaplacian P + 2 * pderiv j P := by</span>
+<span id="L50">  have h (i : Fin 4) : pderiv i (pderiv i (X j * P)) =</span>
+<span id="L51">      X j * pderiv i (pderiv i P) + if i = j then 2 * pderiv j P else 0 := by</span>
+<span id="L52">    by_cases hi : i = j</span>
+<span id="L53">    · subst i; simp; ring</span>
+<span id="L54">    · simp [pderiv_X, hi, Ne.symm hi]</span>
+<span id="L55">  simp only [polyLaplacian, h, Finset.sum_add_distrib, ← Finset.mul_sum]</span>
+<span id="L56">  simp</span>
+<span id="L57"></span>
+<span id="L58">theorem polyLaplacian_normSq_mul (P : RealPoly4) :</span>
+<span id="L59">    polyLaplacian (normSqPoly * P) = normSqPoly * polyLaplacian P +</span>
+<span id="L60">      4 * (∑ i : Fin 4, X i * pderiv i P) + 8 * P := by</span>
+<span id="L61">  have h (i : Fin 4) : pderiv i (pderiv i (normSqPoly * P)) =</span>
+<span id="L62">      normSqPoly * pderiv i (pderiv i P) + 4 * (X i * pderiv i P) + 2 * P := by</span>
+<span id="L63">    have hc : pderiv i (2 : RealPoly4) = 0 := by</span>
+<span id="L64">      rw [show (2 : RealPoly4) = 1 + 1 by ring, map_add, pderiv_one]</span>
+<span id="L65">      simp</span>
+<span id="L66">    simp [hc]; ring</span>
+<span id="L67">  simp only [polyLaplacian, h, Finset.sum_add_distrib, ← Finset.mul_sum,</span>
+<span id="L68">    Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]</span>
+<span id="L69">  ring</span>
+<span id="L70"></span>
+<span id="L71">theorem numeratorStep_homogeneous (r : ℕ) (j : Fin 4) {P : RealPoly4}</span>
+<span id="L72">    (hP : P.IsHomogeneous (r + 1)) : (numeratorStep r j P).IsHomogeneous (r + 2) := by</span>
+<span id="L73">  apply IsHomogeneous.sub</span>
+<span id="L74">  · convert normSqPoly_homogeneous.mul hP.pderiv using 1; omega</span>
+<span id="L75">  · convert (isHomogeneous_C (Fin 4) (2 * ((r : ℝ) + 2))).mul ((isHomogeneous_X (R := ℝ) j).mul hP) using 1; omega</span>
+<span id="L76"></span>
+<span id="L77">theorem numeratorStep_laplacian (r : ℕ) (j : Fin 4) {P : RealPoly4}</span>
+<span id="L78">    (hP : P.IsHomogeneous (r + 1)) (hH : polyLaplacian P = 0) :</span>
+<span id="L79">    polyLaplacian (numeratorStep r j P) = 0 := by</span>
+<span id="L80">  have he := hP.pderiv (i := j) |&gt;.sum_X_mul_pderiv</span>
+<span id="L81">  simp only [Nat.add_sub_cancel, nsmul_eq_mul] at he</span>
+<span id="L82">  rw [numeratorStep, polyLaplacian_sub, polyLaplacian_normSq_mul, polyLaplacian_C_mul,</span>
+<span id="L83">    polyLaplacian_X_mul, polyLaplacian_pderiv, hH, map_zero, he]</span>
+<span id="L84">  simp only [mul_zero, zero_add, map_mul, map_ofNat, map_add, map_natCast]</span>
+<span id="L85">  ring</span>
+<span id="L86"></span>
+<span id="L87">/-- The weighted numerator steps commute in every pair of real directions. -/</span>
+<span id="L88">theorem numeratorStep_comm (r : ℕ) (i j : Fin 4) (P : RealPoly4) :</span>
+<span id="L89">    numeratorStep (r + 1) i (numeratorStep r j P) =</span>
+<span id="L90">      numeratorStep (r + 1) j (numeratorStep r i P) := by</span>
+<span id="L91">  have h2 (a : Fin 4) : pderiv a (2 : RealPoly4) = 0 := (pderiv a).map_natCast 2</span>
+<span id="L92">  have hx : pderiv i (X j : RealPoly4) = pderiv j (X i) := by</span>
+<span id="L93">    by_cases h : i = j</span>
+<span id="L94">    · subst i; rfl</span>
+<span id="L95">    · simp [pderiv_X, h, Ne.symm h]</span>
+<span id="L96">  simp only [numeratorStep, map_sub, pderiv_mul, pderiv_normSqPoly,</span>
+<span id="L97">    pderiv_C, h2, zero_mul, zero_add, hx, pderiv_comm i j, Nat.cast_add, Nat.cast_one,</span>
+<span id="L98">    map_mul, map_add, map_ofNat, map_one]</span>
+<span id="L99">  ring</span>
+<span id="L100"></span>
+<span id="L101">/-- Component polynomials of quaternionic conjugation. -/</span>
+<span id="L102">def conjugatePoly (k : Fin 4) : RealPoly4 := if k = 0 then X k else -X k</span>
+<span id="L103"></span>
+<span id="L104">/-- Numerator polynomials for an arbitrary ordered list of real partial derivatives. -/</span>
+<span id="L105">def numeratorJet : List (Fin 4) → Fin 4 → RealPoly4</span>
+<span id="L106">  | [], k =&gt; conjugatePoly k</span>
+<span id="L107">  | j :: l, k =&gt; numeratorStep l.length j (numeratorJet l k)</span>
+<span id="L108"></span>
+<span id="L109">theorem conjugatePoly_homogeneous (k : Fin 4) : (conjugatePoly k).IsHomogeneous 1 := by</span>
+<span id="L110">  unfold conjugatePoly</span>
+<span id="L111">  split</span>
+<span id="L112">  · exact isHomogeneous_X _ _</span>
+<span id="L113">  · exact (isHomogeneous_X _ _).neg</span>
+<span id="L114"></span>
+<span id="L115">theorem conjugatePoly_laplacian (k : Fin 4) : polyLaplacian (conjugatePoly k) = 0 := by</span>
+<span id="L116">  fin_cases k &lt;;&gt; simp [conjugatePoly, polyLaplacian, Fin.sum_univ_succ, Pi.single_apply]</span>
+<span id="L117"></span>
+<span id="L118">theorem numeratorJet_homogeneous (l : List (Fin 4)) (k : Fin 4) :</span>
+<span id="L119">    (numeratorJet l k).IsHomogeneous (l.length + 1) := by</span>
+<span id="L120">  induction l with</span>
+<span id="L121">  | nil =&gt; exact conjugatePoly_homogeneous k</span>
+<span id="L122">  | cons j l ih =&gt; simpa [numeratorJet, Nat.add_assoc] using numeratorStep_homogeneous l.length j ih</span>
+<span id="L123"></span>
+<span id="L124">theorem numeratorJet_laplacian (l : List (Fin 4)) (k : Fin 4) :</span>
+<span id="L125">    polyLaplacian (numeratorJet l k) = 0 := by</span>
+<span id="L126">  induction l with</span>
+<span id="L127">  | nil =&gt; exact conjugatePoly_laplacian k</span>
+<span id="L128">  | cons j l ih =&gt; exact numeratorStep_laplacian l.length j (numeratorJet_homogeneous l k) ih</span>
+<span id="L129"></span>
+<span id="L130">theorem numeratorJet_perm {l m : List (Fin 4)} (h : l.Perm m) (k : Fin 4) :</span>
+<span id="L131">    numeratorJet l k = numeratorJet m k := by</span>
+<span id="L132">  induction h with</span>
+<span id="L133">  | nil =&gt; rfl</span>
+<span id="L134">  | cons j h ih =&gt; simp only [numeratorJet, h.length_eq, ih]</span>
+<span id="L135">  | swap i j l =&gt; exact numeratorStep_comm l.length j i (numeratorJet l k)</span>
+<span id="L136">  | trans _ _ ih₁ ih₂ =&gt; exact ih₁.trans ih₂</span>
+<span id="L137"></span>
+<span id="L138">/-- EI1&#39;s canonical spatial multi-index numerator, with four real polynomial components. -/</span>
+<span id="L139">def kernelNumerator (ν : Fin 3 → ℕ) (k : Fin 4) : RealPoly4 :=</span>
+<span id="L140">  numeratorJet (spatialDerivativeList ν) k</span>
+<span id="L141"></span>
+<span id="L142">theorem kernelNumerator_recurrence (ν : Fin 3 → ℕ) (j : Fin 3) (k : Fin 4) :</span>
+<span id="L143">    kernelNumerator (ν + Pi.single j 1) k =</span>
+<span id="L144">      numeratorStep (∑ i, ν i) j.succ (kernelNumerator ν k) := by</span>
+<span id="L145">  have hp : (j.succ :: spatialDerivativeList ν).Perm</span>
+<span id="L146">      (spatialDerivativeList (ν + Pi.single j 1)) :=</span>
+<span id="L147">    (List.perm_append_comm.trans (spatialDerivativeList_add_single ν j))</span>
+<span id="L148">  simpa only [kernelNumerator, numeratorJet, spatialDerivativeList_length] using</span>
+<span id="L149">    (numeratorJet_perm hp k).symm</span>
+<span id="L150"></span>
+<span id="L151">end MathResearch.Fueter</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/BinaryForm.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/BinaryForm.lean</h1><p><a href="BinaryForm.lean" download>Download exact source</a>. SHA-256: <code>1598062f2dba443b8b9c97e6ac6ebfd4a199ecf07552c2076d8332c8bd52f408</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import Mathlib.RingTheory.MvPolynomial.EulerIdentity</span>
+<span id="L3">public import Mathlib.Analysis.InnerProductSpace.PiL2</span>
+<span id="L4">public import Mathlib.Analysis.Quaternion</span>
+<span id="L5"></span>
+<span id="L6">/-! Binary homogeneous polynomials with the binomially weighted Hermitian norm. -/</span>
+<span id="L7">@[expose] public section</span>
+<span id="L8">noncomputable section</span>
+<span id="L9">open scoped BigOperators Quaternion</span>
+<span id="L10">open MvPolynomial</span>
+<span id="L11">namespace MathResearch.Spinor</span>
+<span id="L12"></span>
+<span id="L13">/-- The actual mathlib subspace of degree-n homogeneous polynomials in X and Y. -/</span>
+<span id="L14">abbrev BinaryForm (n : ℕ) := homogeneousSubmodule (Fin 2) ℂ n</span>
+<span id="L15"></span>
+<span id="L16">/-- Exponent of X^(n-k) Y^k. -/</span>
+<span id="L17">def exponent (n : ℕ) (k : Fin (n + 1)) : Fin 2 →₀ ℕ :=</span>
+<span id="L18">  Finsupp.single (0 : Fin 2) (n - k.val) + Finsupp.single 1 k.val</span>
+<span id="L19"></span>
+<span id="L20">@[simp] theorem exponent_zero (n : ℕ) (k : Fin (n + 1)) : exponent n k 0 = n - k := by</span>
+<span id="L21">  simp [exponent]</span>
+<span id="L22">@[simp] theorem exponent_one (n : ℕ) (k : Fin (n + 1)) : exponent n k 1 = k := by</span>
+<span id="L23">  simp [exponent]</span>
+<span id="L24"></span>
+<span id="L25">@[simp] theorem exponent_degree (n : ℕ) (k : Fin (n + 1)) : (exponent n k).degree = n := by</span>
+<span id="L26">  simp [Finsupp.degree_eq_sum, Fin.sum_univ_succ]; omega</span>
+<span id="L27"></span>
+<span id="L28">theorem exponent_injective (n : ℕ) : Function.Injective (exponent n) := by</span>
+<span id="L29">  intro k l h</span>
+<span id="L30">  have := congrArg (fun d =&gt; d 1) h</span>
+<span id="L31">  exact Fin.ext (by simpa using this)</span>
+<span id="L32"></span>
+<span id="L33">theorem exponent_of_degree (n : ℕ) (d : Fin 2 →₀ ℕ) (hd : d.degree = n) :</span>
+<span id="L34">    ∃ k : Fin (n + 1), exponent n k = d := by</span>
+<span id="L35">  have h : d 0 + d 1 = n := by simpa [Finsupp.degree_eq_sum, Fin.sum_univ_succ] using hd</span>
+<span id="L36">  refine ⟨⟨d 1, by omega⟩, ?_⟩</span>
+<span id="L37">  ext i; fin_cases i &lt;;&gt; simp</span>
+<span id="L38">  omega</span>
+<span id="L39"></span>
+<span id="L40">/-- The ordinary monomial coefficients, without binomial normalization. -/</span>
+<span id="L41">def coefficients (n : ℕ) : BinaryForm n →ₗ[ℂ] (Fin (n + 1) → ℂ) where</span>
+<span id="L42">  toFun p k := (p : MvPolynomial (Fin 2) ℂ).coeff (exponent n k)</span>
+<span id="L43">  map_add&#39; _ _ := by ext; simp</span>
+<span id="L44">  map_smul&#39; _ _ := by ext; simp</span>
+<span id="L45"></span>
+<span id="L46">theorem coefficients_injective (n : ℕ) : Function.Injective (coefficients n) := by</span>
+<span id="L47">  intro p q h</span>
+<span id="L48">  apply Subtype.ext</span>
+<span id="L49">  ext d</span>
+<span id="L50">  by_cases hd : d.degree = n</span>
+<span id="L51">  · obtain ⟨k, rfl⟩ := exponent_of_degree n d hd</span>
+<span id="L52">    exact congrFun h k</span>
+<span id="L53">  · have hp : (p : MvPolynomial (Fin 2) ℂ).coeff d = 0 := by</span>
+<span id="L54">      by_contra hc</span>
+<span id="L55">      exact hd (by simpa [Finsupp.degree_eq_sum, Finsupp.weight_eq_sum, Pi.one_apply] using p.property hc)</span>
+<span id="L56">    have hq : (q : MvPolynomial (Fin 2) ℂ).coeff d = 0 := by</span>
+<span id="L57">      by_contra hc</span>
+<span id="L58">      exact hd (by simpa [Finsupp.degree_eq_sum, Finsupp.weight_eq_sum, Pi.one_apply] using q.property hc)</span>
+<span id="L59">    rw [hp, hq]</span>
+<span id="L60"></span>
+<span id="L61">theorem coefficients_surjective (n : ℕ) : Function.Surjective (coefficients n) := by</span>
+<span id="L62">  intro c</span>
+<span id="L63">  let p : BinaryForm n := ⟨∑ k, monomial (exponent n k) (c k), by</span>
+<span id="L64">    apply IsHomogeneous.sum</span>
+<span id="L65">    intro k _</span>
+<span id="L66">    exact isHomogeneous_monomial (c k) (exponent_degree n k)⟩</span>
+<span id="L67">  refine ⟨p, ?_⟩</span>
+<span id="L68">  ext k</span>
+<span id="L69">  simp [coefficients, p, coeff_monomial, (exponent_injective n).eq_iff]</span>
+<span id="L70"></span>
+<span id="L71">/-- All n+1 coefficients freely parametrize the homogeneous polynomial submodule. -/</span>
+<span id="L72">def coefficientEquiv (n : ℕ) : BinaryForm n ≃ₗ[ℂ] (Fin (n + 1) → ℂ) :=</span>
+<span id="L73">  LinearEquiv.ofBijective (coefficients n) ⟨coefficients_injective n, coefficients_surjective n⟩</span>
+<span id="L74"></span>
+<span id="L75">instance (n : ℕ) : FiniteDimensional ℂ (BinaryForm n) :=</span>
+<span id="L76">  (coefficientEquiv n).symm.finiteDimensional</span>
+<span id="L77"></span>
+<span id="L78">@[simp] theorem finrank_binaryForm (n : ℕ) : Module.finrank ℂ (BinaryForm n) = n + 1 := by</span>
+<span id="L79">  rw [(coefficientEquiv n).finrank_eq]; simp</span>
+<span id="L80"></span>
+<span id="L81">/-- The coefficient embedding defining the norm: c_k / sqrt(binomial(n,k)). -/</span>
+<span id="L82">def weightedCoefficients (n : ℕ) : BinaryForm n →ₗ[ℂ] EuclideanSpace ℂ (Fin (n + 1)) where</span>
+<span id="L83">  toFun p := WithLp.toLp 2 (fun k =&gt; coefficients n p k / (Real.sqrt (n.choose k) : ℂ))</span>
+<span id="L84">  map_add&#39; _ _ := by ext; simp [add_div]</span>
+<span id="L85">  map_smul&#39; _ _ := by ext; simp [mul_div_assoc]</span>
+<span id="L86"></span>
+<span id="L87">theorem choose_pos (n : ℕ) (k : Fin (n + 1)) : (0 : ℝ) &lt; n.choose k := by</span>
+<span id="L88">  exact_mod_cast Nat.choose_pos (Nat.le_of_lt_succ k.isLt)</span>
+<span id="L89"></span>
+<span id="L90">theorem weightedCoefficients_injective (n : ℕ) : Function.Injective (weightedCoefficients n) := by</span>
+<span id="L91">  intro p q h</span>
+<span id="L92">  apply coefficients_injective n</span>
+<span id="L93">  ext k</span>
+<span id="L94">  have hk : (Real.sqrt (n.choose k) : ℂ) ≠ 0 := by</span>
+<span id="L95">    exact_mod_cast (Real.sqrt_pos.2 (choose_pos n k)).ne&#39;</span>
+<span id="L96">  exact (div_left_inj&#39; hk).mp (congrArg (fun x =&gt; x k) h)</span>
+<span id="L97"></span>
+<span id="L98">instance (n : ℕ) : NormedAddCommGroup (BinaryForm n) :=</span>
+<span id="L99">  NormedAddCommGroup.induced _ _ (weightedCoefficients n) (weightedCoefficients_injective n)</span>
+<span id="L100">instance (n : ℕ) : NormedSpace ℂ (BinaryForm n) :=</span>
+<span id="L101">  NormedSpace.induced _ _ _ (weightedCoefficients n)</span>
+<span id="L102">instance (n : ℕ) : InnerProductSpace ℂ (BinaryForm n) :=</span>
+<span id="L103">  InnerProductSpace.induced (weightedCoefficients n)</span>
+<span id="L104"></span>
+<span id="L105">/-- The norm is independently specified by the wiki&#39;s binomial weights. -/</span>
+<span id="L106">theorem binaryForm_norm_sq (n : ℕ) (p : BinaryForm n) :</span>
+<span id="L107">    ‖p‖ ^ 2 = ∑ k, ‖coefficients n p k‖ ^ 2 / (n.choose k : ℝ) := by</span>
+<span id="L108">  change ‖weightedCoefficients n p‖ ^ 2 = _</span>
+<span id="L109">  rw [EuclideanSpace.norm_sq_eq]</span>
+<span id="L110">  apply Finset.sum_congr rfl</span>
+<span id="L111">  intro k _</span>
+<span id="L112">  simp [weightedCoefficients, div_pow, Complex.norm_real,</span>
+<span id="L113">    Real.norm_eq_abs, abs_of_nonneg (Real.sqrt_nonneg _), Real.sq_sqrt (le_of_lt (choose_pos n k))]</span>
+<span id="L114"></span>
+<span id="L115">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

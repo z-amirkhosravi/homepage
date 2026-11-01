@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/DiscreteSeriesVerified.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/DiscreteSeriesVerified.lean</h1><p><a href="DiscreteSeriesVerified.lean" download>Download exact source</a>. SHA-256: <code>1273ff96a56bf680a7a2ac14c769d1ea2a2df4fe920a7e9f9a16da60f3aa2203</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.DiscreteSeriesCoefficient</span>
+<span id="L3">public import MathResearch.Analysis.QuaternionicRadialMeanValue</span>
+<span id="L4">public import MathResearch.Analysis.QuaternionicQuotientHaar</span>
+<span id="L5"></span>
+<span id="L6">/-! DS3–DS4 with the named background theorems supplied by their separate proofs.</span>
+<span id="L7">The research argument remains the compact-averaging/orthogonal-complement proof</span>
+<span id="L8">and the mean-value/Haar–Schur coefficient calculation in the internal notes. -/</span>
+<span id="L9">@[expose] public section</span>
+<span id="L10">noncomputable section</span>
+<span id="L11">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L12">set_option maxHeartbeats 1000000</span>
+<span id="L13">set_option synthInstance.maxHeartbeats 200000</span>
+<span id="L14">open scoped Quaternion</span>
+<span id="L15">open MeasureTheory</span>
+<span id="L16">namespace MathResearch.Spinor</span>
+<span id="L17"></span>
+<span id="L18">/-- DS3: topological irreducibility and density of the translates of constants. -/</span>
+<span id="L19">theorem DS3_v1 (m : ℕ) (hm : 1 ≤ m) :</span>
+<span id="L20">    TopologicallyIrreducible (regularRepresentation (m+1) (by omega)) ∧</span>
+<span id="L21">      (translateSpan (regularRepresentation (m+1) (by omega))</span>
+<span id="L22">        (LinearMap.range (constantRegularIsometry (m+1) (by omega)).toLinearMap)).topologicalClosure = ⊤ :=</span>
+<span id="L23">  DS3_v1_of_meanValue sphericalMeanValueOnBall_proved m hm</span>
+<span id="L24"></span>
+<span id="L25">/-- DS3 in the independently specified compatible-row model. -/</span>
+<span id="L26">theorem DS3_row_v1 (m : ℕ) (hm : 1 ≤ m) :</span>
+<span id="L27">    TopologicallyIrreducible (H := weakRowKernel m hm) (regularRowRepresentation m hm) ∧</span>
+<span id="L28">      (translateSpan (H := weakRowKernel m hm) (regularRowRepresentation m hm)</span>
+<span id="L29">        (LinearMap.range (constantRegularRowIsometry m hm).toLinearMap)).topologicalClosure = ⊤ :=</span>
+<span id="L30">  ⟨DS3_row_of_meanValue sphericalMeanValueOnBall_proved m hm,</span>
+<span id="L31">    DS3_row_dense_of_meanValue sphericalMeanValueOnBall_proved m hm⟩</span>
+<span id="L32"></span>
+<span id="L33">/-- DS4: C12/C13 and an injective closed invariant coefficient image in genuine</span>
+<span id="L34">Haar L². The Haar normalization and every background premise are now supplied. -/</span>
+<span id="L35">theorem DS4_v1 (m : ℕ) (hm : 1 ≤ m) (v : BinaryForm (m+1)) (hv : v ≠ 0) :</span>
+<span id="L36">    ∃ W : WeakBallSpace (m+1) (by omega) →ₗ[ℂ] Lp ℂ 2 normalizedGroupHaar,</span>
+<span id="L37">      (∀ f, (W f : Sp11 → ℂ) =ᵐ[normalizedGroupHaar] regularCoefficient (m+1) (by omega) v f) ∧</span>
+<span id="L38">      (∀ f, ‖W f‖^2 = coefficientNormConstant (m+1) v * ‖f‖^2) ∧</span>
+<span id="L39">      Function.Injective W ∧ IsClosed (Set.range W) ∧</span>
+<span id="L40">      (∀ a f, W (regularRepresentation (m+1) (by omega) a f) =</span>
+<span id="L41">        leftL2Representation normalizedGroupHaar a (W f)) ∧</span>
+<span id="L42">      UnitaryInvariant (leftL2Representation normalizedGroupHaar) (LinearMap.range W) :=</span>
+<span id="L43">  DS4_v1_of_background radialMeanValueOnBall_proved m hm normalizedGroupHaar</span>
+<span id="L44">    quotientHaarIntegration_proved v hv</span>
+<span id="L45"></span>
+<span id="L46">/-- The normalized coefficient embedding of the actual polynomial model. -/</span>
+<span id="L47">def DS4_polynomialEmbedding (m : ℕ) (hm : 1 ≤ m) (v : BinaryForm (m+1)) (hv : v ≠ 0) :</span>
+<span id="L48">    WeakBallSpace (m+1) (by omega) →ₗᵢ[ℂ] Lp ℂ 2 normalizedGroupHaar :=</span>
+<span id="L49">  regularCoefficientIsometry radialMeanValueOnBall_proved (m+1) (by omega)</span>
+<span id="L50">    normalizedGroupHaar quotientHaarIntegration_proved (compactSchurInput_proved m) v hv</span>
+<span id="L51"></span>
+<span id="L52">/-- The normalized coefficient embedding of the compatible-row model. -/</span>
+<span id="L53">def DS4_rowEmbedding (m : ℕ) (hm : 1 ≤ m) (v : BinaryForm (m+1)) (hv : v ≠ 0) :</span>
+<span id="L54">    weakRowKernel m hm →ₗᵢ[ℂ] Lp ℂ 2 normalizedGroupHaar :=</span>
+<span id="L55">  regularRowCoefficientIsometry radialMeanValueOnBall_proved m hm normalizedGroupHaar</span>
+<span id="L56">    quotientHaarIntegration_proved v hv</span>
+<span id="L57"></span>
+<span id="L58">/-- DS4&#39;s closed isometric, intertwining embedding for the compatible-row model. -/</span>
+<span id="L59">theorem DS4_row_v1 (m : ℕ) (hm : 1 ≤ m) (v : BinaryForm (m+1)) (hv : v ≠ 0) :</span>
+<span id="L60">    IsClosed (Set.range (DS4_rowEmbedding m hm v hv)) ∧</span>
+<span id="L61">      (∀ a f, DS4_rowEmbedding m hm v hv (regularRowRepresentation m hm a f) =</span>
+<span id="L62">        leftL2Representation normalizedGroupHaar a (DS4_rowEmbedding m hm v hv f)) :=</span>
+<span id="L63">  ⟨regularRowCoefficientIsometry_closed radialMeanValueOnBall_proved m hm normalizedGroupHaar</span>
+<span id="L64">      quotientHaarIntegration_proved v hv,</span>
+<span id="L65">    regularRowCoefficientIsometry_intertwines radialMeanValueOnBall_proved m hm normalizedGroupHaar</span>
+<span id="L66">      quotientHaarIntegration_proved v hv⟩</span>
+<span id="L67"></span>
+<span id="L68">/-- C13 for actual continuous matrix coefficients, including square-integrability. -/</span>
+<span id="L69">theorem DS4_coefficient_formula (m : ℕ) (hm : 1 ≤ m) (v : BinaryForm (m+1))</span>
+<span id="L70">    (f : WeakBallSpace (m+1) (by omega)) :</span>
+<span id="L71">    MemLp (regularCoefficient (m+1) (by omega) v f) 2 normalizedGroupHaar ∧</span>
+<span id="L72">      (∫ g, ‖regularCoefficient (m+1) (by omega) v f g‖^2 ∂normalizedGroupHaar) =</span>
+<span id="L73">        coefficientNormConstant (m+1) v * ‖f‖^2 :=</span>
+<span id="L74">  ⟨regularCoefficient_memLp radialMeanValueOnBall_proved (m+1) (by omega) normalizedGroupHaar</span>
+<span id="L75">      quotientHaarIntegration_proved (compactSchurInput_proved m) v f,</span>
+<span id="L76">    regularCoefficient_integral radialMeanValueOnBall_proved (m+1) (by omega) normalizedGroupHaar</span>
+<span id="L77">      quotientHaarIntegration_proved (compactSchurInput_proved m) v f⟩</span>
+<span id="L78"></span>
+<span id="L79">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

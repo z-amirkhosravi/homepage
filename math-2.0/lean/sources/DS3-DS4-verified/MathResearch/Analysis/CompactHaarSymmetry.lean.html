@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/CompactHaarSymmetry.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/CompactHaarSymmetry.lean</h1><p><a href="CompactHaarSymmetry.lean" download>Download exact source</a>. SHA-256: <code>6017204dc54a657d32f573fa421689919f932061310ab0bb0f6f4685f0205ed7</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.CompactGroup</span>
+<span id="L3">public import Mathlib.MeasureTheory.Measure.Haar.Unique</span>
+<span id="L4"></span>
+<span id="L5">/-! Right-translation and inversion invariance of the normalized compact Haar</span>
+<span id="L6">measure. Both follow from mathlib&#39;s uniqueness theorem. -/</span>
+<span id="L7">@[expose] public section</span>
+<span id="L8">noncomputable section</span>
+<span id="L9">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L10">open MeasureTheory MeasureTheory.Measure</span>
+<span id="L11">namespace MathResearch.Spinor</span>
+<span id="L12"></span>
+<span id="L13">instance unitQuaternionHaar_isHaar : unitQuaternionHaar.IsHaarMeasure := by</span>
+<span id="L14">  unfold unitQuaternionHaar</span>
+<span id="L15">  infer_instance</span>
+<span id="L16"></span>
+<span id="L17">private theorem unitQuaternionHaar_unique (ν : Measure Fueter.UnitQuaternion)</span>
+<span id="L18">    [IsMulLeftInvariant ν] [IsProbabilityMeasure ν] : ν = unitQuaternionHaar := by</span>
+<span id="L19">  have h := isMulInvariant_eq_smul_of_compactSpace ν unitQuaternionHaar</span>
+<span id="L20">  have hc := congrArg (fun μ : Measure Fueter.UnitQuaternion =&gt; μ Set.univ) h</span>
+<span id="L21">  simp only [measure_univ, Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, mul_one] at hc</span>
+<span id="L22">  rw [show haarScalarFactor ν unitQuaternionHaar = 1 from by exact_mod_cast hc.symm,</span>
+<span id="L23">    one_smul] at h</span>
+<span id="L24">  exact h</span>
+<span id="L25"></span>
+<span id="L26">instance unitQuaternionHaar_rightInvariant : IsMulRightInvariant unitQuaternionHaar := by</span>
+<span id="L27">  constructor</span>
+<span id="L28">  intro a</span>
+<span id="L29">  exact unitQuaternionHaar_unique _</span>
+<span id="L30"></span>
+<span id="L31">instance unitQuaternionHaar_invInvariant : IsInvInvariant unitQuaternionHaar := by</span>
+<span id="L32">  constructor</span>
+<span id="L33">  let : IsProbabilityMeasure unitQuaternionHaar.inv := ⟨by</span>
+<span id="L34">    rw [Measure.inv_def, Measure.map_apply measurable_inv MeasurableSet.univ]</span>
+<span id="L35">    simp⟩</span>
+<span id="L36">  exact unitQuaternionHaar_unique unitQuaternionHaar.inv</span>
+<span id="L37"></span>
+<span id="L38">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

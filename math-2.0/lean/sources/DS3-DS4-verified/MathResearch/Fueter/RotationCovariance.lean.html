@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Fueter/RotationCovariance.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Fueter/RotationCovariance.lean</h1><p><a href="RotationCovariance.lean" download>Download exact source</a>. SHA-256: <code>999a0c12d8a3e19d135963f8eccefca4fc8756f35d1d675ff921a489b6bf9980</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Fueter.CoefficientRepresentation</span>
+<span id="L3">public import MathResearch.Fueter.LatticeDilation</span>
+<span id="L4"></span>
+<span id="L5">/-! Absolute coefficient functionals and EI7&#39;s lattice rotation covariance. -/</span>
+<span id="L6">@[expose] public section</span>
+<span id="L7">noncomputable section</span>
+<span id="L8">open scoped Quaternion Topology BigOperators ContDiff</span>
+<span id="L9">namespace MathResearch.Fueter</span>
+<span id="L10"></span>
+<span id="L11">/-- The actual rotated lattice eL, transported using mathlib&#39;s lattice construction. -/</span>
+<span id="L12">def rotatedLattice (L : Submodule ℤ ℍ) (e : ℍ ≃ₗᵢ[ℝ] ℍ) : Submodule ℤ ℍ :=</span>
+<span id="L13">  ZLattice.comap ℝ L e.toContinuousLinearEquiv.symm.toLinearMap</span>
+<span id="L14"></span>
+<span id="L15">instance (L : Submodule ℤ ℍ) [DiscreteTopology L] (e : ℍ ≃ₗᵢ[ℝ] ℍ) :</span>
+<span id="L16">    DiscreteTopology (rotatedLattice L e) := by unfold rotatedLattice; infer_instance</span>
+<span id="L17"></span>
+<span id="L18">instance (L : Submodule ℤ ℍ) [DiscreteTopology L] [IsZLattice ℝ L] (e : ℍ ≃ₗᵢ[ℝ] ℍ) :</span>
+<span id="L19">    IsZLattice ℝ (rotatedLattice L e) := by unfold rotatedLattice; infer_instance</span>
+<span id="L20"></span>
+<span id="L21">theorem mem_rotatedLattice (L : Submodule ℤ ℍ) (e : ℍ ≃ₗᵢ[ℝ] ℍ) (q : ℍ) :</span>
+<span id="L22">    q ∈ rotatedLattice L e ↔ ∃ x ∈ L, e x = q := by</span>
+<span id="L23">  change e.symm q ∈ L ↔ _</span>
+<span id="L24">  constructor</span>
+<span id="L25">  · intro h</span>
+<span id="L26">    exact ⟨e.symm q, h, e.apply_symm_apply q⟩</span>
+<span id="L27">  · rintro ⟨x, hx, rfl⟩</span>
+<span id="L28">    simpa only [e.symm_apply_apply] using hx</span>
+<span id="L29"></span>
+<span id="L30">def latticeRotationEquiv (L : Submodule ℤ ℍ) (e : ℍ ≃ₗᵢ[ℝ] ℍ) : L ≃ₗ[ℤ] rotatedLattice L e :=</span>
+<span id="L31">  ZLattice.comap_equiv ℝ L e.toContinuousLinearEquiv.symm.toLinearEquiv</span>
+<span id="L32"></span>
+<span id="L33">@[simp] theorem latticeRotationEquiv_apply (L : Submodule ℤ ℍ) (e : ℍ ≃ₗᵢ[ℝ] ℍ) (w : L) :</span>
+<span id="L34">    (latticeRotationEquiv L e w : ℍ) = e (w : ℍ) := rfl</span>
+<span id="L35"></span>
+<span id="L36">def nonzeroLatticeRotationEquiv (L : Submodule ℤ ℍ) (e : ℍ ≃ₗᵢ[ℝ] ℍ) :</span>
+<span id="L37">    {w : L // w ≠ 0} ≃ {w : rotatedLattice L e // w ≠ 0} :=</span>
+<span id="L38">  (latticeRotationEquiv L e).toEquiv.subtypeEquiv (fun w =&gt; by simp)</span>
+<span id="L39"></span>
+<span id="L40">variable (L : Submodule ℤ ℍ) [DiscreteTopology L] [IsZLattice ℝ L]</span>
+<span id="L41"></span>
+<span id="L42">/-- N2 extends by finite right-linear combinations to the whole derivative space. -/</span>
+<span id="L43">theorem summable_norm_kernelDerivativeSpace {r : ℕ} (hr : 2 ≤ r) {f : SmoothPunctured}</span>
+<span id="L44">    (hf : f ∈ kernelDerivativeSpace r) :</span>
+<span id="L45">    Summable (fun w : {w : L // w ≠ 0} =&gt; ‖f (w.1 : ℍ)‖) := by</span>
+<span id="L46">  induction hf using Submodule.span_induction with</span>
+<span id="L47">  | mem x hx =&gt;</span>
+<span id="L48">    change x ∈ Set.range (fun ν : {ν : Fin 3 → ℕ // ∑ j, ν j = r} =&gt; smoothHigherKernel ν) at hx</span>
+<span id="L49">    obtain ⟨⟨ν, hν⟩, rfl⟩ := hx</span>
+<span id="L50">    have hn (w : {w : L // w ≠ 0}) : (w.1 : ℍ) ≠ 0 := by simpa using w.2</span>
+<span id="L51">    simpa only [smoothHigherKernel_apply _ (hn _)] using summable_norm_eisenstein L ν (by omega)</span>
+<span id="L52">  | zero =&gt; simp</span>
+<span id="L53">  | add f g _ _ hf hg =&gt;</span>
+<span id="L54">    exact Summable.of_nonneg_of_le (fun _ =&gt; norm_nonneg _)</span>
+<span id="L55">      (fun w =&gt; norm_add_le (f (w.1 : ℍ)) (g (w.1 : ℍ))) (hf.add hg)</span>
+<span id="L56">  | smul c f _ hf =&gt;</span>
+<span id="L57">    simpa only [smoothPunctured_smul_apply, norm_mul] using hf.mul_right ‖c.unop‖</span>
+<span id="L58"></span>
+<span id="L59">/-- The defining absolutely convergent lattice sum, as a right-H-linear functional. -/</span>
+<span id="L60">def latticeCoefficientFunctional (r : ℕ) (hr : 2 ≤ r) : CoefficientFunctional r where</span>
+<span id="L61">  toFun f := ∑&#39; w : {w : L // w ≠ 0}, (f : SmoothPunctured) (w.1 : ℍ)</span>
+<span id="L62">  map_add&#39; f g := by</span>
+<span id="L63">    exact (summable_norm_kernelDerivativeSpace L hr f.property).of_norm.tsum_add</span>
+<span id="L64">      (summable_norm_kernelDerivativeSpace L hr g.property).of_norm</span>
+<span id="L65">  map_smul&#39; c f := by</span>
+<span id="L66">    exact tsum_mul_right</span>
+<span id="L67"></span>
+<span id="L68">/-- The functional&#39;s values on generators are precisely the earlier Eisenstein coefficients. -/</span>
+<span id="L69">theorem latticeCoefficientFunctional_generator (ν : Fin 3 → ℕ) (hν : 2 ≤ ∑ j, ν j) :</span>
+<span id="L70">    latticeCoefficientFunctional L (∑ j, ν j) hν ⟨smoothHigherKernel ν, smoothHigherKernel_mem ν⟩ =</span>
+<span id="L71">      eisensteinCoefficient L ν := by</span>
+<span id="L72">  apply tsum_congr</span>
+<span id="L73">  intro w</span>
+<span id="L74">  exact smoothHigherKernel_apply ν (by simpa using w.2)</span>
+<span id="L75"></span>
+<span id="L76">/-- Reindexing under a bijective real rotation is valid for the actual lattice sums. -/</span>
+<span id="L77">theorem latticeCoefficientFunctional_rotated (r : ℕ) (hr : 2 ≤ r)</span>
+<span id="L78">    (e : ℍ ≃ₗᵢ[ℝ] ℍ) (f : kernelDerivativeSpace r) :</span>
+<span id="L79">    latticeCoefficientFunctional (rotatedLattice L e) r hr f =</span>
+<span id="L80">      ∑&#39; w : {w : L // w ≠ 0}, (f : SmoothPunctured) (e (w.1 : ℍ)) := by</span>
+<span id="L81">  exact ((nonzeroLatticeRotationEquiv L e).tsum_eq</span>
+<span id="L82">    (fun w : {w : rotatedLattice L e // w ≠ 0} =&gt; (f : SmoothPunctured) (w.1 : ℍ))).symm</span>
+<span id="L83"></span>
+<span id="L84">/-- EI7&#39;s displayed covariance identity, with the forward lattice rotation aLb⁻¹. -/</span>
+<span id="L85">theorem coefficient_rotation_covariance (r : ℕ) (hr : 2 ≤ r) (k : QuaternionSpinPair) :</span>
+<span id="L86">    latticeCoefficientFunctional (rotatedLattice L (quaternionRotation k)) r hr =</span>
+<span id="L87">      coefficientSigma r k (latticeCoefficientFunctional L r hr) := by</span>
+<span id="L88">  apply LinearMap.ext</span>
+<span id="L89">  intro f</span>
+<span id="L90">  rw [latticeCoefficientFunctional_rotated]</span>
+<span id="L91">  change (∑&#39; w : {w : L // w ≠ 0}, (f : SmoothPunctured) (quaternionRotation k (w.1 : ℍ))) =</span>
+<span id="L92">    (k.2 : ℍ) * ∑&#39; w : {w : L // w ≠ 0},</span>
+<span id="L93">      (kernelRho r k⁻¹ f : SmoothPunctured) (w.1 : ℍ)</span>
+<span id="L94">  rw [← tsum_mul_left]</span>
+<span id="L95">  apply tsum_congr</span>
+<span id="L96">  intro w</span>
+<span id="L97">  change _ = (k.2 : ℍ) * ((k⁻¹.2 : ℍ) * (f : SmoothPunctured) (quaternionRotation (k⁻¹)⁻¹ (w.1 : ℍ)))</span>
+<span id="L98">  simp only [inv_inv, Prod.snd_inv, unitQuaternion_coe_inv, ← mul_assoc,</span>
+<span id="L99">    ← Unitary.coe_star, Unitary.coe_mul_star_self, one_mul]</span>
+<span id="L100"></span>
+<span id="L101">/-- The same covariance is intrinsic to SO(4), independent of a spin lift. -/</span>
+<span id="L102">theorem coefficient_SO4_covariance (r : ℕ) (hr : 2 ≤ r) (e : QuaternionSO4) :</span>
+<span id="L103">    latticeCoefficientFunctional (rotatedLattice L e.val) r hr =</span>
+<span id="L104">      coefficientSO4Action r e (latticeCoefficientFunctional L r hr) := by</span>
+<span id="L105">  obtain ⟨k, rfl⟩ := quaternionSpinCover_surjective e</span>
+<span id="L106">  rw [coefficientSO4Action_lift]</span>
+<span id="L107">  exact coefficient_rotation_covariance L r hr k</span>
+<span id="L108"></span>
+<span id="L109">/-- EI7/v1: invariant right-H derivative space; absolutely convergent, right-H-linear</span>
+<span id="L110">coefficient functionals; the genuine real spin representation; covariance; and</span>
+<span id="L111">factorization through the actual determinant-one rotation group. -/</span>
+<span id="L112">theorem EI7_v1 (r : ℕ) (hr : 1 &lt; r) :</span>
+<span id="L113">    (∀ k : QuaternionSpinPair, ∀ f ∈ kernelDerivativeSpace r,</span>
+<span id="L114">      smoothRho k f ∈ kernelDerivativeSpace r) ∧</span>
+<span id="L115">    (∀ f : kernelDerivativeSpace r,</span>
+<span id="L116">      Summable (fun w : {w : L // w ≠ 0} =&gt; ‖(f : SmoothPunctured) (w.1 : ℍ)‖)) ∧</span>
+<span id="L117">    (∀ k : QuaternionSpinPair,</span>
+<span id="L118">      latticeCoefficientFunctional (rotatedLattice L (quaternionRotation k)) r hr =</span>
+<span id="L119">        coefficientSpinRepresentation r k (latticeCoefficientFunctional L r hr)) ∧</span>
+<span id="L120">    (∀ k : QuaternionSpinPair,</span>
+<span id="L121">      coefficientSO4Representation r (quaternionSpinCover k) = coefficientSpinRepresentation r k) ∧</span>
+<span id="L122">    (∀ e : QuaternionSO4,</span>
+<span id="L123">      latticeCoefficientFunctional (rotatedLattice L e.val) r hr =</span>
+<span id="L124">        coefficientSO4Representation r e (latticeCoefficientFunctional L r hr)) := by</span>
+<span id="L125">  exact ⟨smoothRho_mem r, fun f =&gt; summable_norm_kernelDerivativeSpace L hr f.property,</span>
+<span id="L126">    coefficient_rotation_covariance L r hr, coefficientSO4Representation_lift r,</span>
+<span id="L127">    coefficient_SO4_covariance L r hr⟩</span>
+<span id="L128"></span>
+<span id="L129">end MathResearch.Fueter</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

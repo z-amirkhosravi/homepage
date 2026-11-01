@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/QuaternionicQuotientHaar.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/QuaternionicQuotientHaar.lean</h1><p><a href="QuaternionicQuotientHaar.lean" download>Download exact source</a>. SHA-256: <code>3c744970f5b1c889c1de0ae34ae80a1aed5be3525a1e5ca846bb582511162193</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Analysis.QuaternionicHaarMeasure</span>
+<span id="L3"></span>
+<span id="L4">/-! The normalized quotient-Haar integration theorem, including integrability.</span>
+<span id="L5">The proof uses Tonelli for nonnegative functions and compact-fibre integrability;</span>
+<span id="L6">thus it also handles nonintegrable functions under Lean&#39;s totalized integral. -/</span>
+<span id="L7">@[expose] public section</span>
+<span id="L8">noncomputable section</span>
+<span id="L9">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L10">set_option maxHeartbeats 800000</span>
+<span id="L11">open scoped Quaternion ENNReal</span>
+<span id="L12">open MeasureTheory MeasureTheory.Measure</span>
+<span id="L13">namespace MathResearch.Spinor</span>
+<span id="L14"></span>
+<span id="L15">theorem quotientHaarAverage_nonneg {φ : Sp11 → ℝ} (hφ : ∀ g, 0 ≤ φ g) (q : ℍ) :</span>
+<span id="L16">    0 ≤ quotientHaarAverage φ q := by</span>
+<span id="L17">  unfold quotientHaarAverage</span>
+<span id="L18">  exact mul_nonneg (by positivity) (integral_nonneg fun k =&gt; hφ _)</span>
+<span id="L19"></span>
+<span id="L20">theorem compactCoordinate_integrable {φ : Sp11 → ℝ} (hφ : Continuous φ) (q : Ball) :</span>
+<span id="L21">    Integrable (fun k =&gt; φ (groupFromBallCoordinates (q,k))) compactHaar :=</span>
+<span id="L22">  (hφ.comp (continuous_groupFromBallCoordinates.comp (continuous_const.prodMk continuous_id))).integrable_of_hasCompactSupport (HasCompactSupport.of_compactSpace _)</span>
+<span id="L23"></span>
+<span id="L24">theorem quotientHaarAverage_aestronglyMeasurable {φ : Sp11 → ℝ} (hφ : Continuous φ) :</span>
+<span id="L25">    AEStronglyMeasurable (quotientHaarAverage φ) (volume.restrict Ball) := by</span>
+<span id="L26">  have hF : StronglyMeasurable (fun x : Ball × CompactPair =&gt; φ (groupFromBallCoordinates x)) :=</span>
+<span id="L27">    (hφ.comp continuous_groupFromBallCoordinates).stronglyMeasurable</span>
+<span id="L28">  have hc : StronglyMeasurable (fun q : Ball =&gt; quotientHaarAverage φ q) := by</span>
+<span id="L29">    have h := continuous_invariantBallDensity_subtype.stronglyMeasurable.mul (hF.integral_prod_right&#39; (ν := compactHaar))</span>
+<span id="L30">    simpa only [quotientHaarAverage, invariantBallDensity, ballCompactPoint_eq_coordinates, Pi.mul_apply] using! h</span>
+<span id="L31">  have hm : Measure.map (Subtype.val : Ball → ℍ) ballVolume = volume.restrict Ball :=</span>
+<span id="L32">    map_comap_subtype_coe ball_isOpen.measurableSet volume</span>
+<span id="L33">  rw [← hm]</span>
+<span id="L34">  exact (MeasurableEmbedding.subtype_coe ball_isOpen.measurableSet).aestronglyMeasurable_map_iff.mpr hc.aestronglyMeasurable</span>
+<span id="L35"></span>
+<span id="L36">/-- Tonelli&#39;s formula, before converting extended nonnegative integrals to real integrals. -/</span>
+<span id="L37">theorem lintegral_quotientHaarAverage {φ : Sp11 → ℝ} (hφ : Continuous φ)</span>
+<span id="L38">    (hpos : ∀ g, 0 ≤ φ g) :</span>
+<span id="L39">    (∫⁻ g, ENNReal.ofReal (φ g) ∂normalizedGroupHaar) =</span>
+<span id="L40">      ∫⁻ q in Ball, ENNReal.ofReal (quotientHaarAverage φ q) := by</span>
+<span id="L41">  rw [lintegral_normalizedGroupHaar _ hφ.measurable.ennreal_ofReal]</span>
+<span id="L42">  have hf : Measurable (fun q : Ball =&gt; ∫⁻ k : CompactPair,</span>
+<span id="L43">      ENNReal.ofReal (φ (groupFromBallCoordinates (q,k))) ∂compactHaar) :=</span>
+<span id="L44">    (hφ.measurable.ennreal_ofReal.comp continuous_groupFromBallCoordinates.measurable).lintegral_prod_right&#39;</span>
+<span id="L45">  unfold ballInvariantMeasure</span>
+<span id="L46">  rw [lintegral_withDensity_eq_lintegral_mul _</span>
+<span id="L47">    continuous_invariantBallDensity_subtype.measurable.ennreal_ofReal</span>
+<span id="L48">    hf]</span>
+<span id="L49">  simp only [Pi.mul_apply]</span>
+<span id="L50">  have he (q : Ball) :</span>
+<span id="L51">      ENNReal.ofReal (invariantBallDensity q) *</span>
+<span id="L52">        (∫⁻ k, ENNReal.ofReal (φ (groupFromBallCoordinates (q,k))) ∂compactHaar) =</span>
+<span id="L53">      ENNReal.ofReal (quotientHaarAverage φ q) := by</span>
+<span id="L54">    rw [← ofReal_integral_eq_lintegral_ofReal (compactCoordinate_integrable hφ q)</span>
+<span id="L55">      (Filter.Eventually.of_forall fun k =&gt; hpos _),</span>
+<span id="L56">      ← ENNReal.ofReal_mul (invariantBallDensity_pos q.property).le]</span>
+<span id="L57">    simp only [quotientHaarAverage, invariantBallDensity, ballCompactPoint_eq_coordinates]</span>
+<span id="L58">  simp_rw [he]</span>
+<span id="L59">  simpa only [ballVolume] using (lintegral_subtype_comap (μ := (volume : Measure ℍ))</span>
+<span id="L60">    ball_isOpen.measurableSet (fun q =&gt; ENNReal.ofReal (quotientHaarAverage φ q)))</span>
+<span id="L61"></span>
+<span id="L62">/-- The quotient formula detects integrability, as well as equality of integrals. -/</span>
+<span id="L63">theorem integrable_quotientHaar_iff {φ : Sp11 → ℝ} (hφ : Continuous φ)</span>
+<span id="L64">    (hpos : ∀ g, 0 ≤ φ g) :</span>
+<span id="L65">    Integrable φ normalizedGroupHaar ↔ IntegrableOn (quotientHaarAverage φ) Ball volume := by</span>
+<span id="L66">  have hG := hφ.aestronglyMeasurable (μ := normalizedGroupHaar)</span>
+<span id="L67">  have hB := quotientHaarAverage_aestronglyMeasurable hφ</span>
+<span id="L68">  simp only [IntegrableOn, Integrable, hG, hB, true_and]</span>
+<span id="L69">  rw [hasFiniteIntegral_iff_ofReal (Filter.Eventually.of_forall hpos),</span>
+<span id="L70">    hasFiniteIntegral_iff_ofReal (Filter.Eventually.of_forall (quotientHaarAverage_nonneg hpos)),</span>
+<span id="L71">    lintegral_quotientHaarAverage hφ hpos]</span>
+<span id="L72"></span>
+<span id="L73">theorem integral_quotientHaar {φ : Sp11 → ℝ} (hφ : Continuous φ)</span>
+<span id="L74">    (hpos : ∀ g, 0 ≤ φ g) :</span>
+<span id="L75">    (∫ g, φ g ∂normalizedGroupHaar) = ∫ q in Ball, quotientHaarAverage φ q := by</span>
+<span id="L76">  rw [integral_eq_lintegral_of_nonneg_ae (Filter.Eventually.of_forall hpos) hφ.aestronglyMeasurable,</span>
+<span id="L77">    integral_eq_lintegral_of_nonneg_ae</span>
+<span id="L78">      (Filter.Eventually.of_forall (quotientHaarAverage_nonneg hpos))</span>
+<span id="L79">      (quotientHaarAverage_aestronglyMeasurable hφ), lintegral_quotientHaarAverage hφ hpos]</span>
+<span id="L80"></span>
+<span id="L81">/-- The exact background interface required by DS4, now proved separately. -/</span>
+<span id="L82">theorem quotientHaarIntegration_proved : QuotientHaarIntegration normalizedGroupHaar where</span>
+<span id="L83">  isHaar := normalizedGroupHaar_isHaar</span>
+<span id="L84">  integrable_iff := fun _ hφ hpos =&gt; integrable_quotientHaar_iff hφ hpos</span>
+<span id="L85">  integral_formula := fun _ hφ hpos =&gt; integral_quotientHaar hφ hpos</span>
+<span id="L86"></span>
+<span id="L87">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

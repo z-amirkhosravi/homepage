@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/CompactIrreducible.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/CompactIrreducible.lean</h1><p><a href="CompactIrreducible.lean" download>Download exact source</a>. SHA-256: <code>022d557b9eddbaa39ef965f39708a4b1a2e588caa2ae3c95764c2470dcc7c0b7</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.CompactGroup</span>
+<span id="L3">public import Mathlib.LinearAlgebra.Eigenspace.Triangularizable</span>
+<span id="L4">public import Mathlib.Analysis.Complex.Polynomial.Basic</span>
+<span id="L5">public import Mathlib.Analysis.Calculus.Deriv.Slope</span>
+<span id="L6"></span>
+<span id="L7">/-! Irreducibility of the compact binary-form representation, proved by its</span>
+<span id="L8">actual Lie derivatives, distinct monomial weights, and raising/lowering maps. -/</span>
+<span id="L9">@[expose] public section</span>
+<span id="L10">noncomputable section</span>
+<span id="L11">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L12">set_option maxHeartbeats 1000000</span>
+<span id="L13">open scoped Quaternion ContDiff BigOperators</span>
+<span id="L14">open MeasureTheory MvPolynomial Filter</span>
+<span id="L15">namespace MathResearch.Spinor</span>
+<span id="L16"></span>
+<span id="L17">def imaginaryBasis (i : Fin 3) : ℍ := Fueter.coordinateBasis i.succ</span>
+<span id="L18"></span>
+<span id="L19">def unitQuaternionCircle (i : Fin 3) (t : ℝ) : Fueter.UnitQuaternion := by</span>
+<span id="L20">  refine ⟨Real.cos t • (1 : ℍ) + Real.sin t • imaginaryBasis i, ?_⟩</span>
+<span id="L21">  have h : Quaternion.normSq (Real.cos t • (1 : ℍ) + Real.sin t • imaginaryBasis i) = 1 := by</span>
+<span id="L22">    fin_cases i &lt;;&gt; simp [imaginaryBasis, Fueter.coordinateBasis_eq, Quaternion.normSq_def&#39;]</span>
+<span id="L23">  constructor</span>
+<span id="L24">  · rw [Quaternion.star_mul_self, h, Quaternion.coe_one]</span>
+<span id="L25">  · rw [Quaternion.self_mul_star, h, Quaternion.coe_one]</span>
+<span id="L26"></span>
+<span id="L27">@[simp] theorem unitQuaternionCircle_zero (i : Fin 3) : unitQuaternionCircle i 0 = 1 := by</span>
+<span id="L28">  apply Subtype.ext</span>
+<span id="L29">  simp [unitQuaternionCircle]</span>
+<span id="L30"></span>
+<span id="L31">theorem unitQuaternionCircle_hasDerivAt (i : Fin 3) :</span>
+<span id="L32">    HasDerivAt (fun t =&gt; (unitQuaternionCircle i t : ℍ)) (imaginaryBasis i) 0 := by</span>
+<span id="L33">  simpa only [unitQuaternionCircle, Real.sin_zero, Real.cos_zero, neg_zero, zero_smul,</span>
+<span id="L34">    one_smul, zero_add, Pi.add_apply] using!</span>
+<span id="L35">    ((Real.hasDerivAt_cos 0).smul_const (1 : ℍ)).add</span>
+<span id="L36">      ((Real.hasDerivAt_sin 0).smul_const (imaginaryBasis i))</span>
+<span id="L37"></span>
+<span id="L38">def CompactPolynomialInvariant (n : ℕ) (M : Submodule ℂ (BinaryForm n)) : Prop :=</span>
+<span id="L39">  ∀ a : Fueter.UnitQuaternion, ∀ p ∈ M,</span>
+<span id="L40">    polynomialRepresentation n (quaternionMatrix a) p ∈ M</span>
+<span id="L41"></span>
+<span id="L42">theorem CompactPolynomialInvariant.infinitesimal_mem {m : ℕ}</span>
+<span id="L43">    {M : Submodule ℂ (BinaryForm (m+1))} (hM : CompactPolynomialInvariant (m+1) M)</span>
+<span id="L44">    (p : BinaryForm (m+1)) (hp : p ∈ M) (i : Fin 3) :</span>
+<span id="L45">    infinitesimalAction m (quaternionMatrix (imaginaryBasis i)) p ∈ M := by</span>
+<span id="L46">  let A := fun a : ℍ =&gt; polynomialRepresentation (m+1) (quaternionMatrix a) p</span>
+<span id="L47">  have hA : DifferentiableAt ℝ A 1 :=</span>
+<span id="L48">    ((contDiff_quaternionPolynomialRepresentation (m+1)).comp</span>
+<span id="L49">      (contDiff_id.prodMk (contDiff_const (c := p)))).differentiable (by simp) 1</span>
+<span id="L50">  have ha : HasFDerivAt A (fderiv ℝ A 1) ((unitQuaternionCircle i 0 : Fueter.UnitQuaternion) : ℍ) := by</span>
+<span id="L51">    simpa only [unitQuaternionCircle_zero, OneMemClass.coe_one] using hA.hasFDerivAt</span>
+<span id="L52">  have hd := ha.comp_hasDerivAt 0 (unitQuaternionCircle_hasDerivAt i)</span>
+<span id="L53">  have hh : HasDerivAt (fun t =&gt; A (unitQuaternionCircle i t))</span>
+<span id="L54">      (infinitesimalAction m (quaternionMatrix (imaginaryBasis i)) p) 0 := by</span>
+<span id="L55">    simpa only [unitQuaternionCircle_zero, OneMemClass.coe_one, A,</span>
+<span id="L56">      fderiv_quaternionPolynomialRepresentation_one, Function.comp_def] using! hd</span>
+<span id="L57">  apply (M.closed_of_finiteDimensional).mem_of_tendsto hh.tendsto_slope_zero</span>
+<span id="L58">  filter_upwards [] with t</span>
+<span id="L59">  exact (M.restrictScalars ℝ).smul_mem _ (M.sub_mem (hM _ p hp) (hM _ p hp))</span>
+<span id="L60"></span>
+<span id="L61">/-- H, E and F in the usual sl₂ convention on homogeneous polynomials. -/</span>
+<span id="L62">def polynomialWeight (m : ℕ) : Module.End ℂ (BinaryForm (m+1)) :=</span>
+<span id="L63">  infinitesimalAction m !![1, 0; 0, -1]</span>
+<span id="L64">def polynomialRaise (m : ℕ) : Module.End ℂ (BinaryForm (m+1)) :=</span>
+<span id="L65">  infinitesimalAction m !![0, 1; 0, 0]</span>
+<span id="L66">def polynomialLower (m : ℕ) : Module.End ℂ (BinaryForm (m+1)) :=</span>
+<span id="L67">  infinitesimalAction m !![0, 0; 1, 0]</span>
+<span id="L68"></span>
+<span id="L69">theorem polynomialWeight_val (m : ℕ) (p : BinaryForm (m+1)) :</span>
+<span id="L70">    (polynomialWeight m p : ComplexPoly2) = X 0 * pderiv 0 p - X 1 * pderiv 1 p := by</span>
+<span id="L71">  simp [polynomialWeight, infinitesimalAction, infinitesimal, substitution, sub_eq_add_neg]</span>
+<span id="L72">theorem polynomialRaise_val (m : ℕ) (p : BinaryForm (m+1)) :</span>
+<span id="L73">    (polynomialRaise m p : ComplexPoly2) = X 0 * pderiv 1 p := by</span>
+<span id="L74">  simp [polynomialRaise, infinitesimalAction, infinitesimal, substitution]</span>
+<span id="L75">theorem polynomialLower_val (m : ℕ) (p : BinaryForm (m+1)) :</span>
+<span id="L76">    (polynomialLower m p : ComplexPoly2) = X 1 * pderiv 0 p := by</span>
+<span id="L77">  simp [polynomialLower, infinitesimalAction, infinitesimal, substitution]</span>
+<span id="L78"></span>
+<span id="L79">theorem CompactPolynomialInvariant.weight_mem {m : ℕ}</span>
+<span id="L80">    {M : Submodule ℂ (BinaryForm (m+1))} (hM : CompactPolynomialInvariant (m+1) M)</span>
+<span id="L81">    (p : BinaryForm (m+1)) (hp : p ∈ M) : polynomialWeight m p ∈ M := by</span>
+<span id="L82">  have h := M.smul_mem (-Complex.I) (hM.infinitesimal_mem p hp 0)</span>
+<span id="L83">  have he : (-Complex.I) • infinitesimalAction m (quaternionMatrix (imaginaryBasis 0)) p =</span>
+<span id="L84">      polynomialWeight m p := by</span>
+<span id="L85">    apply Subtype.ext</span>
+<span id="L86">    simp [polynomialWeight, imaginaryBasis, Fueter.coordinateBasis_eq, infinitesimalAction,</span>
+<span id="L87">      infinitesimal, substitution, quaternionMatrix, smul_eq_C_mul, ← mul_assoc, ← map_mul]</span>
+<span id="L88">    abel</span>
+<span id="L89">  rwa [he] at h</span>
+<span id="L90"></span>
+<span id="L91">theorem CompactPolynomialInvariant.raise_mem {m : ℕ}</span>
+<span id="L92">    {M : Submodule ℂ (BinaryForm (m+1))} (hM : CompactPolynomialInvariant (m+1) M)</span>
+<span id="L93">    (p : BinaryForm (m+1)) (hp : p ∈ M) : polynomialRaise m p ∈ M := by</span>
+<span id="L94">  have h := M.smul_mem (2⁻¹ : ℂ) (M.add_mem (hM.infinitesimal_mem p hp 1)</span>
+<span id="L95">    (M.smul_mem (-Complex.I) (hM.infinitesimal_mem p hp 2)))</span>
+<span id="L96">  convert h using 1</span>
+<span id="L97">  apply Subtype.ext</span>
+<span id="L98">  simp [imaginaryBasis, Fueter.coordinateBasis_eq, infinitesimalAction, infinitesimal,</span>
+<span id="L99">    substitution, quaternionMatrix, polynomialRaise, smul_eq_C_mul]</span>
+<span id="L100">  ring_nf</span>
+<span id="L101">  simp only [← map_pow, Complex.I_sq, map_neg, map_one, mul_neg, mul_one, sub_neg_eq_add]</span>
+<span id="L102">  ring_nf</span>
+<span id="L103">  have hh : (2:ComplexPoly2) * C (1/2:ℂ) = 1 := by</span>
+<span id="L104">    simpa only [map_mul, map_ofNat, map_one] using</span>
+<span id="L105">      congrArg (C : ℂ → ComplexPoly2) (show (2:ℂ)*(1/2)=1 by norm_num)</span>
+<span id="L106">  linear_combination -(X 0 * pderiv 1 (p:ComplexPoly2)) * hh</span>
+<span id="L107"></span>
+<span id="L108">theorem CompactPolynomialInvariant.lower_mem {m : ℕ}</span>
+<span id="L109">    {M : Submodule ℂ (BinaryForm (m+1))} (hM : CompactPolynomialInvariant (m+1) M)</span>
+<span id="L110">    (p : BinaryForm (m+1)) (hp : p ∈ M) : polynomialLower m p ∈ M := by</span>
+<span id="L111">  have h := M.smul_mem (2⁻¹ : ℂ) (M.sub_mem</span>
+<span id="L112">    (M.smul_mem (-Complex.I) (hM.infinitesimal_mem p hp 2)) (hM.infinitesimal_mem p hp 1))</span>
+<span id="L113">  convert h using 1</span>
+<span id="L114">  apply Subtype.ext</span>
+<span id="L115">  simp [imaginaryBasis, Fueter.coordinateBasis_eq, infinitesimalAction, infinitesimal,</span>
+<span id="L116">    substitution, quaternionMatrix, polynomialLower, smul_eq_C_mul]</span>
+<span id="L117">  ring_nf</span>
+<span id="L118">  simp only [← map_pow, Complex.I_sq, map_neg, map_one, mul_neg, mul_one, sub_neg_eq_add]</span>
+<span id="L119">  ring_nf</span>
+<span id="L120">  have hh : (2:ComplexPoly2) * C (1/2:ℂ) = 1 := by</span>
+<span id="L121">    simpa only [map_mul, map_ofNat, map_one] using</span>
+<span id="L122">      congrArg (C : ℂ → ComplexPoly2) (show (2:ℂ)*(1/2)=1 by norm_num)</span>
+<span id="L123">  linear_combination -(X 1 * pderiv 0 (p:ComplexPoly2)) * hh</span>
+<span id="L124"></span>
+<span id="L125">theorem polynomialWeight_monomial (m : ℕ) (k : Fin (m+2)) :</span>
+<span id="L126">    polynomialWeight m (monomialForm (m+1) k) =</span>
+<span id="L127">      ((m+1 : ℂ) - 2*(k.val : ℂ)) • monomialForm (m+1) k := by</span>
+<span id="L128">  apply Subtype.ext</span>
+<span id="L129">  rw [polynomialWeight_val]</span>
+<span id="L130">  simp only [monomialForm, X_mul_pderiv_monomial, exponent_zero, exponent_one,</span>
+<span id="L131">    Submodule.coe_smul, ← Nat.cast_smul_eq_nsmul ℂ]</span>
+<span id="L132">  rw [← sub_smul]</span>
+<span id="L133">  congr 1</span>
+<span id="L134">  rw [Nat.cast_sub (by omega)]</span>
+<span id="L135">  push_cast</span>
+<span id="L136">  ring</span>
+<span id="L137"></span>
+<span id="L138">theorem polynomialWeight_coefficients (m : ℕ) (p : BinaryForm (m+1)) (k : Fin (m+2)) :</span>
+<span id="L139">    coefficients (m+1) (polynomialWeight m p) k =</span>
+<span id="L140">      ((m+1 : ℂ) - 2*(k.val : ℂ)) * coefficients (m+1) p k := by</span>
+<span id="L141">  conv_lhs =&gt; rw [← monomialForm_expansion (m+1) p]</span>
+<span id="L142">  simp only [map_sum, map_smul, polynomialWeight_monomial, smul_smul,</span>
+<span id="L143">    Finset.sum_apply]</span>
+<span id="L144">  simp [coefficients, monomialForm, coeff_monomial, (exponent_injective (m+1)).eq_iff]</span>
+<span id="L145">  ring</span>
+<span id="L146"></span>
+<span id="L147">/-- Every weight eigenvector is a scalar multiple of a single monomial. -/</span>
+<span id="L148">theorem polynomialWeight_eigenvector (m : ℕ) {p : BinaryForm (m+1)} (hp : p ≠ 0)</span>
+<span id="L149">    {z : ℂ} (he : polynomialWeight m p = z • p) :</span>
+<span id="L150">    ∃ k : Fin (m+2), coefficients (m+1) p k ≠ 0 ∧</span>
+<span id="L151">      p = coefficients (m+1) p k • monomialForm (m+1) k := by</span>
+<span id="L152">  have hn : ∃ k, coefficients (m+1) p k ≠ 0 := by</span>
+<span id="L153">    by_contra h</span>
+<span id="L154">    apply hp</span>
+<span id="L155">    apply coefficients_injective (m+1)</span>
+<span id="L156">    ext k</span>
+<span id="L157">    simpa using (not_exists.mp h k)</span>
+<span id="L158">  obtain ⟨k, hk⟩ := hn</span>
+<span id="L159">  have hw (j : Fin (m+2)) : (((m+1:ℂ)-2*(j.val:ℂ)) - z) * coefficients (m+1) p j = 0 := by</span>
+<span id="L160">    have h := congrArg (fun f =&gt; coefficients (m+1) f j) he</span>
+<span id="L161">    rw [polynomialWeight_coefficients] at h</span>
+<span id="L162">    simpa only [map_smul, Pi.smul_apply, smul_eq_mul, sub_mul, sub_eq_zero] using h</span>
+<span id="L163">  have hz : (m+1:ℂ)-2*(k.val:ℂ) = z := sub_eq_zero.mp ((mul_eq_zero.mp (hw k)).resolve_right hk)</span>
+<span id="L164">  refine ⟨k, hk, ?_⟩</span>
+<span id="L165">  apply coefficients_injective (m+1)</span>
+<span id="L166">  ext j</span>
+<span id="L167">  by_cases hj : k = j</span>
+<span id="L168">  · subst j</span>
+<span id="L169">    simp [coefficients, monomialForm]</span>
+<span id="L170">  · have hne : (m+1:ℂ)-2*(j.val:ℂ) - z ≠ 0 := by</span>
+<span id="L171">      rw [← hz]</span>
+<span id="L172">      intro h</span>
+<span id="L173">      have : (j.val:ℂ) = k.val := by linear_combination -(1/2:ℂ)*h</span>
+<span id="L174">      exact hj (Fin.ext (Nat.cast_injective this.symm))</span>
+<span id="L175">    have hh := (mul_eq_zero.mp (hw j)).resolve_left hne</span>
+<span id="L176">    simp [coefficients, monomialForm, coeff_monomial, (exponent_injective (m+1)).eq_iff, hj] at *</span>
+<span id="L177">    exact hh</span>
+<span id="L178"></span>
+<span id="L179">theorem polynomialRaise_monomial (m : ℕ) (k : Fin (m+1)) :</span>
+<span id="L180">    polynomialRaise m (monomialForm (m+1) k.succ) =</span>
+<span id="L181">      ((k.val+1:ℕ):ℂ) • monomialForm (m+1) k.castSucc := by</span>
+<span id="L182">  apply Subtype.ext</span>
+<span id="L183">  rw [polynomialRaise_val]</span>
+<span id="L184">  have he : Finsupp.single (0 : Fin 2) 1 + (exponent (m+1) k.succ - Finsupp.single 1 1) =</span>
+<span id="L185">      exponent (m+1) k.castSucc := by</span>
+<span id="L186">    ext i</span>
+<span id="L187">    fin_cases i &lt;;&gt; simp [exponent]</span>
+<span id="L188">    all_goals omega</span>
+<span id="L189">  simp only [monomialForm, pderiv_monomial, X, monomial_mul_monomial,</span>
+<span id="L190">    exponent_one, one_mul, he, Submodule.coe_smul, smul_monomial, smul_eq_mul, mul_one]</span>
+<span id="L191">  rfl</span>
+<span id="L192"></span>
+<span id="L193">theorem polynomialLower_monomial (m : ℕ) (k : Fin (m+1)) :</span>
+<span id="L194">    polynomialLower m (monomialForm (m+1) k.castSucc) =</span>
+<span id="L195">      ((m+1-k.val:ℕ):ℂ) • monomialForm (m+1) k.succ := by</span>
+<span id="L196">  apply Subtype.ext</span>
+<span id="L197">  rw [polynomialLower_val]</span>
+<span id="L198">  have he : Finsupp.single (1 : Fin 2) 1 + (exponent (m+1) k.castSucc - Finsupp.single 0 1) =</span>
+<span id="L199">      exponent (m+1) k.succ := by</span>
+<span id="L200">    ext i</span>
+<span id="L201">    fin_cases i &lt;;&gt; simp [exponent] &lt;;&gt; omega</span>
+<span id="L202">  simp only [monomialForm, pderiv_monomial, X, monomial_mul_monomial,</span>
+<span id="L203">    exponent_zero, one_mul, he, Submodule.coe_smul, smul_monomial, smul_eq_mul, mul_one]</span>
+<span id="L204">  rfl</span>
+<span id="L205"></span>
+<span id="L206">/-- Every nonzero compact-invariant subspace contains a monomial weight vector. -/</span>
+<span id="L207">theorem CompactPolynomialInvariant.exists_monomial_mem {m : ℕ}</span>
+<span id="L208">    {M : Submodule ℂ (BinaryForm (m+1))} (hM : CompactPolynomialInvariant (m+1) M)</span>
+<span id="L209">    (hne : M ≠ ⊥) : ∃ k : Fin (m+2), monomialForm (m+1) k ∈ M := by</span>
+<span id="L210">  let : Nontrivial M := M.nontrivial_iff_ne_bot.mpr hne</span>
+<span id="L211">  let H : Module.End ℂ M := (polynomialWeight m).restrict (fun p hp =&gt; hM.weight_mem p hp)</span>
+<span id="L212">  obtain ⟨z, hz⟩ := H.exists_eigenvalue</span>
+<span id="L213">  obtain ⟨p, hp⟩ := hz.exists_hasEigenvector</span>
+<span id="L214">  have hp0 : (p : BinaryForm (m+1)) ≠ 0 := fun h =&gt; hp.2 (Subtype.ext h)</span>
+<span id="L215">  have he : polynomialWeight m p = z • (p : BinaryForm (m+1)) :=</span>
+<span id="L216">    congrArg Subtype.val hp.apply_eq_smul</span>
+<span id="L217">  obtain ⟨k, hk, heq⟩ := polynomialWeight_eigenvector m hp0 he</span>
+<span id="L218">  refine ⟨k, ?_⟩</span>
+<span id="L219">  have hmem : coefficients (m+1) p k • monomialForm (m+1) k ∈ M := heq ▸ p.property</span>
+<span id="L220">  simpa [smul_smul, hk] using M.smul_mem (coefficients (m+1) p k)⁻¹ hmem</span>
+<span id="L221"></span>
+<span id="L222">/-- The elementary compact polynomial irreducibility input, with no assumed representation theorem. -/</span>
+<span id="L223">theorem compactPolynomial_irreducible (m : ℕ) (M : Submodule ℂ (BinaryForm (m+1)))</span>
+<span id="L224">    (hM : CompactPolynomialInvariant (m+1) M) : M = ⊥ ∨ M = ⊤ := by</span>
+<span id="L225">  by_cases hne : M = ⊥</span>
+<span id="L226">  · exact Or.inl hne</span>
+<span id="L227">  right</span>
+<span id="L228">  obtain ⟨k, hk⟩ := hM.exists_monomial_mem hne</span>
+<span id="L229">  have hdown : ∀ k : Fin (m+2), monomialForm (m+1) k ∈ M → monomialForm (m+1) 0 ∈ M := by</span>
+<span id="L230">    apply Fin.induction</span>
+<span id="L231">    · exact id</span>
+<span id="L232">    · intro j ih hj</span>
+<span id="L233">      apply ih</span>
+<span id="L234">      have hr := hM.raise_mem _ hj</span>
+<span id="L235">      rw [polynomialRaise_monomial] at hr</span>
+<span id="L236">      have hc : (((j.val+1:ℕ):ℂ)) ≠ 0 := by exact_mod_cast (Nat.succ_ne_zero j.val)</span>
+<span id="L237">      simpa only [smul_smul, inv_mul_cancel₀ hc, one_smul] using M.smul_mem (((j.val+1:ℕ):ℂ))⁻¹ hr</span>
+<span id="L238">  have hall : ∀ j : Fin (m+2), monomialForm (m+1) j ∈ M := by</span>
+<span id="L239">    apply Fin.induction</span>
+<span id="L240">    · exact hdown k hk</span>
+<span id="L241">    · intro j ih</span>
+<span id="L242">      have hl := hM.lower_mem _ ih</span>
+<span id="L243">      rw [polynomialLower_monomial] at hl</span>
+<span id="L244">      have hc : (((m+1-j.val:ℕ):ℂ)) ≠ 0 := by exact_mod_cast (show m+1-j.val ≠ 0 by omega)</span>
+<span id="L245">      simpa only [smul_smul, inv_mul_cancel₀ hc, one_smul] using M.smul_mem (((m+1-j.val:ℕ):ℂ))⁻¹ hl</span>
+<span id="L246">  apply top_unique</span>
+<span id="L247">  intro p _</span>
+<span id="L248">  rw [← monomialForm_expansion (m+1) p]</span>
+<span id="L249">  exact M.sum_mem (fun j _ =&gt; M.smul_mem _ (hall j))</span>
+<span id="L250"></span>
+<span id="L251">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

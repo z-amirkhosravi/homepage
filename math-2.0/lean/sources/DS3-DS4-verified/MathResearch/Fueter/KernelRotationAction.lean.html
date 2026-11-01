@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Fueter/KernelRotationAction.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Fueter/KernelRotationAction.lean</h1><p><a href="KernelRotationAction.lean" download>Download exact source</a>. SHA-256: <code>1044bf3cfcf839dc7dea34ca9520d0a0345db876a4e83d9bc55b43dfc8bdbd20</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Fueter.PuncturedSmooth</span>
+<span id="L3"></span>
+<span id="L4">/-! The spin action preserves the right quaternion span of the spatial kernel derivatives. -/</span>
+<span id="L5">@[expose] public section</span>
+<span id="L6">noncomputable section</span>
+<span id="L7">open scoped Quaternion Topology BigOperators ContDiff</span>
+<span id="L8">namespace MathResearch.Fueter</span>
+<span id="L9"></span>
+<span id="L10">/-- `ρ(a,b) f(q) = b f(a⁻¹ q b)`, on the smooth punctured space. -/</span>
+<span id="L11">def smoothRho (k : QuaternionSpinPair) : SmoothPunctured →ₗ[ℍᵐᵒᵖ] SmoothPunctured where</span>
+<span id="L12">  toFun f := ⟨fun q =&gt; (k.2 : ℍ) * f (quaternionRotation k⁻¹ q), by</span>
+<span id="L13">    constructor</span>
+<span id="L14">    · exact contDiffOn_const.mul ((smoothPunctured_smooth f).comp</span>
+<span id="L15">        (quaternionRotation k⁻¹).toContinuousLinearEquiv.contDiff.contDiffOn</span>
+<span id="L16">        (fun q hq =&gt; (map_ne_zero_iff (quaternionRotation k⁻¹) (quaternionRotation k⁻¹).injective).mpr hq))</span>
+<span id="L17">    · simp⟩</span>
+<span id="L18">  map_add&#39; f g := by</span>
+<span id="L19">    apply SmoothPunctured.ext</span>
+<span id="L20">    intro q _</span>
+<span id="L21">    exact mul_add _ _ _</span>
+<span id="L22">  map_smul&#39; c f := by</span>
+<span id="L23">    apply SmoothPunctured.ext</span>
+<span id="L24">    intro q _</span>
+<span id="L25">    exact (mul_assoc _ _ _).symm</span>
+<span id="L26"></span>
+<span id="L27">@[simp] theorem smoothRho_apply (k : QuaternionSpinPair) (f : SmoothPunctured) (q : ℍ) :</span>
+<span id="L28">    smoothRho k f q = (k.2 : ℍ) * f (quaternionRotation k⁻¹ q) := rfl</span>
+<span id="L29"></span>
+<span id="L30">@[simp] theorem smoothRho_one : smoothRho 1 = LinearMap.id := by</span>
+<span id="L31">  apply LinearMap.ext</span>
+<span id="L32">  intro f</span>
+<span id="L33">  apply SmoothPunctured.ext</span>
+<span id="L34">  intro q _</span>
+<span id="L35">  simp [smoothRho_apply]</span>
+<span id="L36"></span>
+<span id="L37">theorem smoothRho_mul (k l : QuaternionSpinPair) (f : SmoothPunctured) :</span>
+<span id="L38">    smoothRho (k * l) f = smoothRho k (smoothRho l f) := by</span>
+<span id="L39">  apply SmoothPunctured.ext</span>
+<span id="L40">  intro q _</span>
+<span id="L41">  simp [smoothRho_apply, quaternionRotation, star_mul, mul_assoc]</span>
+<span id="L42"></span>
+<span id="L43">@[simp] theorem smoothRho_inv_cancel (k : QuaternionSpinPair) (f : SmoothPunctured) :</span>
+<span id="L44">    smoothRho k⁻¹ (smoothRho k f) = f := by rw [← smoothRho_mul]; simp</span>
+<span id="L45"></span>
+<span id="L46">@[simp] theorem smoothRho_cancel_inv (k : QuaternionSpinPair) (f : SmoothPunctured) :</span>
+<span id="L47">    smoothRho k (smoothRho k⁻¹ f) = f := by rw [← smoothRho_mul]; simp</span>
+<span id="L48"></span>
+<span id="L49">/-- Chain rule for the spin action, in an arbitrary real direction. -/</span>
+<span id="L50">theorem smoothRho_fderiv (k : QuaternionSpinPair) (f : SmoothPunctured) {q : ℍ}</span>
+<span id="L51">    (hq : q ≠ 0) (v : ℍ) :</span>
+<span id="L52">    fderiv ℝ (smoothRho k f) q v =</span>
+<span id="L53">      (k.2 : ℍ) * fderiv ℝ f (quaternionRotation k⁻¹ q) (quaternionRotation k⁻¹ v) := by</span>
+<span id="L54">  have hq&#39; : quaternionRotation k⁻¹ q ≠ 0 := (map_ne_zero_iff (quaternionRotation k⁻¹) (quaternionRotation k⁻¹).injective).mpr hq</span>
+<span id="L55">  have hd : DifferentiableAt ℝ (fun x =&gt; f (quaternionRotation k⁻¹ x)) q :=</span>
+<span id="L56">    (smoothPunctured_differentiable f hq&#39;).comp q</span>
+<span id="L57">    (quaternionRotation k⁻¹).toContinuousLinearEquiv.differentiableAt</span>
+<span id="L58">  change fderiv ℝ (fun q =&gt; (k.2 : ℍ) * f (quaternionRotation k⁻¹ q)) q v = _</span>
+<span id="L59">  rw [fderiv_const_mul hd]</span>
+<span id="L60">  change (k.2 : ℍ) * (fderiv ℝ (f ∘ quaternionRotation k⁻¹) q) v = _</span>
+<span id="L61">  rw [fderiv_comp q (smoothPunctured_differentiable f hq&#39;)</span>
+<span id="L62">    (quaternionRotation k⁻¹).toContinuousLinearEquiv.differentiableAt]</span>
+<span id="L63">  have hR : fderiv ℝ (quaternionRotation k⁻¹) q =</span>
+<span id="L64">      (quaternionRotation k⁻¹).toContinuousLinearEquiv.toContinuousLinearMap :=</span>
+<span id="L65">    (quaternionRotation k⁻¹).toContinuousLinearEquiv.fderiv</span>
+<span id="L66">  rw [hR]</span>
+<span id="L67">  rfl</span>
+<span id="L68"></span>
+<span id="L69">theorem smoothRho_derivative (k : QuaternionSpinPair) (v : ℍ) (f : SmoothPunctured) :</span>
+<span id="L70">    smoothRho k (smoothDerivative v f) =</span>
+<span id="L71">      smoothDerivative (quaternionRotation k v) (smoothRho k f) := by</span>
+<span id="L72">  apply SmoothPunctured.ext</span>
+<span id="L73">  intro q hq</span>
+<span id="L74">  have hq&#39; : quaternionRotation k⁻¹ q ≠ 0 := (map_ne_zero_iff (quaternionRotation k⁻¹) (quaternionRotation k⁻¹).injective).mpr hq</span>
+<span id="L75">  rw [smoothRho_apply, smoothDerivative_apply _ _ hq&#39;, smoothDerivative_apply _ _ hq]</span>
+<span id="L76">  unfold directional</span>
+<span id="L77">  rw [smoothRho_fderiv k f hq]</span>
+<span id="L78">  rw [quaternionRotation_inv, LinearIsometryEquiv.symm_apply_apply]</span>
+<span id="L79"></span>
+<span id="L80">/-- Direct covariance of the Fueter kernel, including its total value at zero. -/</span>
+<span id="L81">theorem kernel_rotation (k : QuaternionSpinPair) (q : ℍ) :</span>
+<span id="L82">    (k.2 : ℍ) * kernel (quaternionRotation k⁻¹ q) = kernel q * (k.1 : ℍ) := by</span>
+<span id="L83">  rw [kernel_eq, kernel_eq, (quaternionRotation k⁻¹).norm_map]</span>
+<span id="L84">  simp only [quaternionRotation_apply, Prod.fst_inv, Prod.snd_inv, unitQuaternion_coe_inv,</span>
+<span id="L85">    star_star, star_mul, mul_smul_comm, smul_mul_assoc]</span>
+<span id="L86">  congr 1</span>
+<span id="L87">  calc</span>
+<span id="L88">    _ = ((k.2 : ℍ) * star (k.2 : ℍ)) * star q * (k.1 : ℍ) := by noncomm_ring</span>
+<span id="L89">    _ = star q * (k.1 : ℍ) := by</span>
+<span id="L90">      simp only [← Unitary.coe_star, Unitary.coe_mul_star_self, one_mul]</span>
+<span id="L91"></span>
+<span id="L92">/-- Ordered real derivatives as smooth punctured functions. -/</span>
+<span id="L93">def smoothKernelPartial (l : List (Fin 4)) : SmoothPunctured :=</span>
+<span id="L94">  puncturedSmooth (iteratedPartial l kernel) (kernel_iteratedPartial_regular l).1</span>
+<span id="L95"></span>
+<span id="L96">@[simp] theorem smoothKernelPartial_apply (l : List (Fin 4)) {q : ℍ} (hq : q ≠ 0) :</span>
+<span id="L97">    smoothKernelPartial l q = iteratedPartial l kernel q := puncturedSmooth_apply hq</span>
+<span id="L98"></span>
+<span id="L99">@[simp] theorem smoothKernelPartial_nil : smoothKernelPartial [] = smoothHigherKernel 0 := by</span>
+<span id="L100">  apply SmoothPunctured.ext</span>
+<span id="L101">  intro q hq</span>
+<span id="L102">  rw [smoothKernelPartial_apply _ hq, smoothHigherKernel_apply _ hq]</span>
+<span id="L103">  rfl</span>
+<span id="L104"></span>
+<span id="L105">theorem smoothKernelPartial_cons (μ : Fin 4) (l : List (Fin 4)) :</span>
+<span id="L106">    smoothKernelPartial (μ :: l) = smoothDerivative (coordinateBasis μ) (smoothKernelPartial l) := by</span>
+<span id="L107">  apply SmoothPunctured.ext</span>
+<span id="L108">  intro q hq</span>
+<span id="L109">  rw [smoothKernelPartial_apply _ hq, smoothDerivative_apply _ _ hq]</span>
+<span id="L110">  exact congrArg (fun A : ℍ →L[ℝ] ℍ =&gt; A (coordinateBasis μ)) (puncturedSmooth_fderiv hq).symm</span>
+<span id="L111"></span>
+<span id="L112">theorem smoothHigherKernel_eq_partial (ν : Fin 3 → ℕ) :</span>
+<span id="L113">    smoothHigherKernel ν = smoothKernelPartial (spatialDerivativeList ν) := by</span>
+<span id="L114">  apply SmoothPunctured.ext</span>
+<span id="L115">  intro q hq</span>
+<span id="L116">  rw [smoothHigherKernel_apply _ hq, smoothKernelPartial_apply _ hq]</span>
+<span id="L117">  rfl</span>
+<span id="L118"></span>
+<span id="L119">theorem smoothRho_kernel (k : QuaternionSpinPair) :</span>
+<span id="L120">    smoothRho k (smoothKernelPartial []) = MulOpposite.op (k.1 : ℍ) • smoothKernelPartial [] := by</span>
+<span id="L121">  apply SmoothPunctured.ext</span>
+<span id="L122">  intro q hq</span>
+<span id="L123">  rw [smoothRho_apply, smoothPunctured_smul_apply,</span>
+<span id="L124">    smoothKernelPartial_apply _ ((map_ne_zero_iff (quaternionRotation k⁻¹) (quaternionRotation k⁻¹).injective).mpr hq), smoothKernelPartial_apply _ hq]</span>
+<span id="L125">  exact kernel_rotation k q</span>
+<span id="L126"></span>
+<span id="L127">/-- Every rotated ordered real derivative lies in the spatial derivative span. -/</span>
+<span id="L128">theorem smoothRho_partial_mem (k : QuaternionSpinPair) (l : List (Fin 4)) :</span>
+<span id="L129">    smoothRho k (smoothKernelPartial l) ∈ kernelDerivativeSpace l.length := by</span>
+<span id="L130">  induction l with</span>
+<span id="L131">  | nil =&gt;</span>
+<span id="L132">    rw [smoothRho_kernel, smoothKernelPartial_nil]</span>
+<span id="L133">    apply Submodule.smul_mem</span>
+<span id="L134">    simpa using smoothHigherKernel_mem 0</span>
+<span id="L135">  | cons μ l ih =&gt;</span>
+<span id="L136">    rw [smoothKernelPartial_cons, smoothRho_derivative]</span>
+<span id="L137">    exact smoothDerivative_mem _ ih</span>
+<span id="L138"></span>
+<span id="L139">/-- Invariance is proved for the actual right-H span, using F1 and the chain rule. -/</span>
+<span id="L140">theorem smoothRho_mem (r : ℕ) (k : QuaternionSpinPair) {f : SmoothPunctured}</span>
+<span id="L141">    (hf : f ∈ kernelDerivativeSpace r) : smoothRho k f ∈ kernelDerivativeSpace r := by</span>
+<span id="L142">  induction hf using Submodule.span_induction with</span>
+<span id="L143">  | mem x hx =&gt;</span>
+<span id="L144">    change x ∈ Set.range (fun ν : {ν : Fin 3 → ℕ // ∑ j, ν j = r} =&gt; smoothHigherKernel ν) at hx</span>
+<span id="L145">    obtain ⟨⟨ν, hν⟩, rfl⟩ := hx</span>
+<span id="L146">    change smoothRho k (smoothHigherKernel ν) ∈ kernelDerivativeSpace r</span>
+<span id="L147">    rw [smoothHigherKernel_eq_partial]</span>
+<span id="L148">    simpa only [spatialDerivativeList_length, hν] using smoothRho_partial_mem k (spatialDerivativeList ν)</span>
+<span id="L149">  | zero =&gt; simp</span>
+<span id="L150">  | add x y _ _ hx hy =&gt; simpa using (kernelDerivativeSpace r).add_mem hx hy</span>
+<span id="L151">  | smul c x _ hx =&gt; simpa using (kernelDerivativeSpace r).smul_mem c hx</span>
+<span id="L152"></span>
+<span id="L153">/-- EI7&#39;s input action, as a right quaternion linear equivalence on U. -/</span>
+<span id="L154">def kernelRho (r : ℕ) (k : QuaternionSpinPair) :</span>
+<span id="L155">    kernelDerivativeSpace r ≃ₗ[ℍᵐᵒᵖ] kernelDerivativeSpace r where</span>
+<span id="L156">  toFun f := ⟨smoothRho k f, smoothRho_mem r k f.property⟩</span>
+<span id="L157">  invFun f := ⟨smoothRho k⁻¹ f, smoothRho_mem r k⁻¹ f.property⟩</span>
+<span id="L158">  left_inv f := Subtype.ext (smoothRho_inv_cancel k f)</span>
+<span id="L159">  right_inv f := Subtype.ext (smoothRho_cancel_inv k f)</span>
+<span id="L160">  map_add&#39; f g := Subtype.ext (map_add (smoothRho k) (f : SmoothPunctured) (g : SmoothPunctured))</span>
+<span id="L161">  map_smul&#39; c f := Subtype.ext (map_smul (smoothRho k) c (f : SmoothPunctured))</span>
+<span id="L162"></span>
+<span id="L163">@[simp] theorem kernelRho_one (r : ℕ) : kernelRho r 1 = 1 := by</span>
+<span id="L164">  apply LinearEquiv.ext</span>
+<span id="L165">  intro f</span>
+<span id="L166">  exact Subtype.ext (congrArg (fun A =&gt; A (f : SmoothPunctured)) smoothRho_one)</span>
+<span id="L167"></span>
+<span id="L168">theorem kernelRho_mul (r : ℕ) (k l : QuaternionSpinPair) :</span>
+<span id="L169">    kernelRho r (k * l) = kernelRho r k * kernelRho r l := by</span>
+<span id="L170">  apply LinearEquiv.ext</span>
+<span id="L171">  intro f</span>
+<span id="L172">  exact Subtype.ext (smoothRho_mul k l f)</span>
+<span id="L173"></span>
+<span id="L174">@[simp] theorem kernelRho_inv (r : ℕ) (k : QuaternionSpinPair) :</span>
+<span id="L175">    kernelRho r k⁻¹ = (kernelRho r k).symm := by</span>
+<span id="L176">  apply LinearEquiv.ext</span>
+<span id="L177">  intro f</span>
+<span id="L178">  rfl</span>
+<span id="L179"></span>
+<span id="L180">/-- The central pair acts by minus the identity on the input space. -/</span>
+<span id="L181">theorem kernelRho_central (r : ℕ) (f : kernelDerivativeSpace r) :</span>
+<span id="L182">    kernelRho r (-1, -1) f = -f := by</span>
+<span id="L183">  apply Subtype.ext</span>
+<span id="L184">  apply SmoothPunctured.ext</span>
+<span id="L185">  intro q _</span>
+<span id="L186">  change smoothRho (-1, -1) (f : SmoothPunctured) q = -(f : SmoothPunctured) q</span>
+<span id="L187">  simp [quaternionRotation, Unitary.coe_neg]</span>
+<span id="L188"></span>
+<span id="L189">theorem smoothKernelPartial_mem (l : List (Fin 4)) :</span>
+<span id="L190">    smoothKernelPartial l ∈ kernelDerivativeSpace l.length := by</span>
+<span id="L191">  simpa using smoothRho_partial_mem 1 l</span>
+<span id="L192"></span>
+<span id="L193">/-- The spatial definition of U equals the span of all ordered real partials. -/</span>
+<span id="L194">theorem kernelDerivativeSpace_eq_real_span (r : ℕ) : kernelDerivativeSpace r =</span>
+<span id="L195">    Submodule.span ℍᵐᵒᵖ (Set.range (fun l : {l : List (Fin 4) // l.length = r} =&gt;</span>
+<span id="L196">      smoothKernelPartial l)) := by</span>
+<span id="L197">  apply le_antisymm</span>
+<span id="L198">  · apply Submodule.span_le.mpr</span>
+<span id="L199">    rintro _ ⟨⟨ν, hν⟩, rfl⟩</span>
+<span id="L200">    change smoothHigherKernel ν ∈ Submodule.span ℍᵐᵒᵖ</span>
+<span id="L201">      (Set.range (fun l : {l : List (Fin 4) // l.length = r} =&gt; smoothKernelPartial l))</span>
+<span id="L202">    rw [smoothHigherKernel_eq_partial]</span>
+<span id="L203">    exact Submodule.subset_span ⟨⟨spatialDerivativeList ν, (spatialDerivativeList_length ν).trans hν⟩, rfl⟩</span>
+<span id="L204">  · apply Submodule.span_le.mpr</span>
+<span id="L205">    rintro _ ⟨⟨l, hl⟩, rfl⟩</span>
+<span id="L206">    change smoothKernelPartial l ∈ kernelDerivativeSpace r</span>
+<span id="L207">    rw [← hl]</span>
+<span id="L208">    exact smoothKernelPartial_mem l</span>
+<span id="L209"></span>
+<span id="L210">end MathResearch.Fueter</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

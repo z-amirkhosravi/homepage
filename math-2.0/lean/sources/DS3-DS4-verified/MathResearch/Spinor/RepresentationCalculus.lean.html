@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/RepresentationCalculus.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/RepresentationCalculus.lean</h1><p><a href="RepresentationCalculus.lean" download>Download exact source</a>. SHA-256: <code>dc14b2fe14cad6250986b956a2f66d89b5108f6f0026bf6c8acba1be76256199</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.QuaternionMatrix</span>
+<span id="L3">public import Mathlib.Analysis.Calculus.ContDiff.Operations</span>
+<span id="L4">public import Mathlib.Analysis.Matrix.Normed</span>
+<span id="L5">public import Mathlib.Algebra.MvPolynomial.Basic</span>
+<span id="L6"></span>
+<span id="L7">/-! Smoothness and derivatives for varying polynomial representations. -/</span>
+<span id="L8">@[expose] public section</span>
+<span id="L9">noncomputable section</span>
+<span id="L10">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L11">set_option maxHeartbeats 800000</span>
+<span id="L12">open scoped Quaternion BigOperators Matrix.Norms.Elementwise ContDiff</span>
+<span id="L13">open MvPolynomial</span>
+<span id="L14">namespace MathResearch.Spinor</span>
+<span id="L15"></span>
+<span id="L16">instance (n : ℕ) : FiniteDimensional ℝ (BinaryForm n) :=</span>
+<span id="L17">  Module.Finite.trans ℂ (BinaryForm n)</span>
+<span id="L18"></span>
+<span id="L19">theorem contDiff_polynomialAction_coeff (p : ComplexPoly2) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L20">    ContDiff ℝ ∞ (fun M : Matrix2 =&gt; (polynomialAction M p).coeff d) := by</span>
+<span id="L21">  induction p using MvPolynomial.induction_on generalizing d with</span>
+<span id="L22">  | C z =&gt; simpa using (contDiff_const : ContDiff ℝ ∞ (fun _ : Matrix2 =&gt; (C z : ComplexPoly2).coeff d))</span>
+<span id="L23">  | add p q hp hq =&gt; simpa using (hp d).add (hq d)</span>
+<span id="L24">  | mul_X p i hp =&gt;</span>
+<span id="L25">    simp only [map_mul, polynomialAction_X, coeff_mul]</span>
+<span id="L26">    apply ContDiff.sum</span>
+<span id="L27">    intro a _</span>
+<span id="L28">    apply (hp a.1).mul</span>
+<span id="L29">    simp [substitution]</span>
+<span id="L30">    fun_prop</span>
+<span id="L31"></span>
+<span id="L32">/-- A continuous real coefficient chart for the weighted polynomial norm. -/</span>
+<span id="L33">def realCoefficientEquiv (n : ℕ) : BinaryForm n ≃L[ℝ] (Fin (n + 1) → ℂ) :=</span>
+<span id="L34">  ((coefficientEquiv n).restrictScalars ℝ).toContinuousLinearEquiv</span>
+<span id="L35"></span>
+<span id="L36">theorem contDiff_polynomialRepresentation_fixed (n : ℕ) (p : BinaryForm n) :</span>
+<span id="L37">    ContDiff ℝ ∞ (fun M : Matrix2 =&gt; polynomialRepresentation n M p) := by</span>
+<span id="L38">  have h : ContDiff ℝ ∞ (fun M : Matrix2 =&gt; realCoefficientEquiv n (polynomialRepresentation n M p)) := by</span>
+<span id="L39">    apply contDiff_pi.mpr</span>
+<span id="L40">    intro k</span>
+<span id="L41">    exact contDiff_polynomialAction_coeff p (exponent n k)</span>
+<span id="L42">  simpa only [Function.comp_def, ContinuousLinearEquiv.symm_apply_apply] using</span>
+<span id="L43">    (realCoefficientEquiv n).symm.contDiff.comp h</span>
+<span id="L44"></span>
+<span id="L45">/-- The usual monomial basis element X^(n-k)Y^k. -/</span>
+<span id="L46">def monomialForm (n : ℕ) (k : Fin (n + 1)) : BinaryForm n :=</span>
+<span id="L47">  ⟨monomial (exponent n k) 1, isHomogeneous_monomial 1 (exponent_degree n k)⟩</span>
+<span id="L48"></span>
+<span id="L49">theorem monomialForm_expansion (n : ℕ) (p : BinaryForm n) :</span>
+<span id="L50">    ∑ k, (coefficients n p k) • monomialForm n k = p := by</span>
+<span id="L51">  apply coefficients_injective n</span>
+<span id="L52">  ext k</span>
+<span id="L53">  simp [coefficients, monomialForm, coeff_monomial, (exponent_injective n).eq_iff]</span>
+<span id="L54"></span>
+<span id="L55">/-- Smoothness in both the matrix and the polynomial, not just along linear paths. -/</span>
+<span id="L56">theorem contDiff_polynomialRepresentation (n : ℕ) :</span>
+<span id="L57">    ContDiff ℝ ∞ (fun z : Matrix2 × BinaryForm n =&gt; polynomialRepresentation n z.1 z.2) := by</span>
+<span id="L58">  have he (z : Matrix2 × BinaryForm n) : polynomialRepresentation n z.1 z.2 =</span>
+<span id="L59">      ∑ k, (coefficients n z.2 k) • polynomialRepresentation n z.1 (monomialForm n k) := by</span>
+<span id="L60">    conv_lhs =&gt; rw [← monomialForm_expansion n z.2]</span>
+<span id="L61">    simp</span>
+<span id="L62">  simp_rw [he]</span>
+<span id="L63">  apply ContDiff.sum</span>
+<span id="L64">  intro k _</span>
+<span id="L65">  apply ContDiff.fun_smul</span>
+<span id="L66">  · exact (contDiff_apply ℝ (fun _ : Fin (n+1) =&gt; ℂ) k).comp ((realCoefficientEquiv n).contDiff.comp contDiff_snd)</span>
+<span id="L67">  · exact (contDiff_polynomialRepresentation_fixed n (monomialForm n k)).comp contDiff_fst</span>
+<span id="L68"></span>
+<span id="L69">/-- The quaternion matrix embedding as a real continuous linear map. -/</span>
+<span id="L70">def quaternionMatrixCLM : ℍ →L[ℝ] Matrix2 :=</span>
+<span id="L71">  LinearMap.toContinuousLinearMap</span>
+<span id="L72">    { toFun := quaternionMatrix</span>
+<span id="L73">      map_add&#39; := quaternionMatrix_add</span>
+<span id="L74">      map_smul&#39; := by</span>
+<span id="L75">        intro r q</span>
+<span id="L76">        apply Matrix.ext; intro i j</span>
+<span id="L77">        fin_cases i &lt;;&gt; fin_cases j &lt;;&gt; simp [quaternionMatrix] &lt;;&gt; ring }</span>
+<span id="L78"></span>
+<span id="L79">@[simp] theorem quaternionMatrixCLM_apply (q : ℍ) : quaternionMatrixCLM q = quaternionMatrix q := rfl</span>
+<span id="L80"></span>
+<span id="L81">/-- Smoothness in the quaternion and polynomial, via the actual matrix embedding. -/</span>
+<span id="L82">theorem contDiff_quaternionPolynomialRepresentation (n : ℕ) :</span>
+<span id="L83">    ContDiff ℝ ∞ (fun z : ℍ × BinaryForm n =&gt; polynomialRepresentation n (quaternionMatrix z.1) z.2) := by</span>
+<span id="L84">  have hq : ContDiff ℝ ∞ (fun z : ℍ × BinaryForm n =&gt; quaternionMatrixCLM z.1) :=</span>
+<span id="L85">    quaternionMatrixCLM.contDiff.comp (contDiff_fst : ContDiff ℝ ∞ (Prod.fst : ℍ × BinaryForm n → ℍ))</span>
+<span id="L86">  have hpair : ContDiff ℝ ∞ (fun z : ℍ × BinaryForm n =&gt; (quaternionMatrixCLM z.1, z.2)) :=</span>
+<span id="L87">    hq.prodMk (contDiff_snd : ContDiff ℝ ∞ (Prod.snd : ℍ × BinaryForm n → BinaryForm n))</span>
+<span id="L88">  simpa only [Function.comp_def, quaternionMatrixCLM_apply] using</span>
+<span id="L89">    (contDiff_polynomialRepresentation n).comp hpair</span>
+<span id="L90"></span>
+<span id="L91">/-- The real derivative at 1, now as a Fréchet derivative in arbitrary directions. -/</span>
+<span id="L92">theorem fderiv_quaternionPolynomialRepresentation_one (m : ℕ) (p : BinaryForm (m+1)) (v : ℍ) :</span>
+<span id="L93">    fderiv ℝ (fun a =&gt; polynomialRepresentation (m+1) (quaternionMatrix a) p) 1 v =</span>
+<span id="L94">      infinitesimalAction m (quaternionMatrix v) p := by</span>
+<span id="L95">  have hf : DifferentiableAt ℝ (fun a =&gt; polynomialRepresentation (m+1) (quaternionMatrix a) p) 1 :=</span>
+<span id="L96">    ((contDiff_quaternionPolynomialRepresentation (m+1)).comp</span>
+<span id="L97">      (contDiff_id.prodMk (contDiff_const (c := p)))).differentiable (by simp) 1</span>
+<span id="L98">  have hpath : HasDerivAt (fun t : ℝ =&gt; 1 + t • v) v 0 := by</span>
+<span id="L99">    simpa using ((hasDerivAt_id (0 : ℝ)).smul_const v).const_add (1 : ℍ)</span>
+<span id="L100">  have h := (show HasFDerivAt (fun a =&gt; polynomialRepresentation (m+1) (quaternionMatrix a) p) _ ((fun t : ℝ =&gt; 1 + t • v) 0) from (by simpa using hf.hasFDerivAt)).comp_hasDerivAt 0 hpath</span>
+<span id="L101">  simpa using h.unique (quaternionPolynomialRepresentation_hasDerivAt m v p)</span>
+<span id="L102"></span>
+<span id="L103">/-- The joint derivative at the identity: dτ(v)p + p&#39;. -/</span>
+<span id="L104">theorem fderiv_quaternionAction_pair (m : ℕ) (p dp : BinaryForm (m+1)) (v : ℍ) :</span>
+<span id="L105">    fderiv ℝ (fun z : ℍ × BinaryForm (m+1) =&gt; polynomialRepresentation (m+1) (quaternionMatrix z.1) z.2)</span>
+<span id="L106">      (1,p) (v,dp) = infinitesimalAction m (quaternionMatrix v) p + dp := by</span>
+<span id="L107">  let A := fun z : ℍ × BinaryForm (m+1) =&gt; polynomialRepresentation (m+1) (quaternionMatrix z.1) z.2</span>
+<span id="L108">  have hA : DifferentiableAt ℝ A (1,p) :=</span>
+<span id="L109">    (contDiff_quaternionPolynomialRepresentation (m+1)).differentiable (by simp) (1,p)</span>
+<span id="L110">  have hx : HasDerivAt (fun t : ℝ =&gt; 1 + t • v) v 0 := by</span>
+<span id="L111">    simpa using ((hasDerivAt_id (0 : ℝ)).smul_const v).const_add (1 : ℍ)</span>
+<span id="L112">  have hp : HasDerivAt (fun t : ℝ =&gt; p + t • dp) dp 0 := by</span>
+<span id="L113">    simpa using ((hasDerivAt_id (0 : ℝ)).smul_const dp).const_add p</span>
+<span id="L114">  have h1 : fderiv ℝ A (1,p) (v,0) = infinitesimalAction m (quaternionMatrix v) p := by</span>
+<span id="L115">    have hd : HasFDerivAt A (fderiv ℝ A (1,p)) ((fun t : ℝ =&gt; (1+t • v,p)) 0) := by</span>
+<span id="L116">      simpa using hA.hasFDerivAt</span>
+<span id="L117">    have hc := hd.comp_hasDerivAt 0 (hx.prodMk (hasDerivAt_const (0:ℝ) p))</span>
+<span id="L118">    exact hc.unique (by simpa only [A, Function.comp_def] using!</span>
+<span id="L119">      quaternionPolynomialRepresentation_hasDerivAt m v p)</span>
+<span id="L120">  have h2 : fderiv ℝ A (1,p) (0,dp) = dp := by</span>
+<span id="L121">    have hd : HasFDerivAt A (fderiv ℝ A (1,p)) ((fun t : ℝ =&gt; ((1:ℍ),p+t • dp)) 0) := by</span>
+<span id="L122">      simpa using hA.hasFDerivAt</span>
+<span id="L123">    have hc := hd.comp_hasDerivAt 0 ((hasDerivAt_const (0:ℝ) (1:ℍ)).prodMk hp)</span>
+<span id="L124">    exact hc.unique (by simpa [A, Function.comp_def] using hp)</span>
+<span id="L125">  change fderiv ℝ A (1,p) (v,dp) = _</span>
+<span id="L126">  rw [show (v,dp) = (v,0) + (0,dp) by simp, map_add, h1, h2]</span>
+<span id="L127"></span>
+<span id="L128">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

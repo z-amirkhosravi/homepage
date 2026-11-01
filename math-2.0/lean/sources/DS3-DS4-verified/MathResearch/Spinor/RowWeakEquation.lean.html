@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/RowWeakEquation.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/RowWeakEquation.lean</h1><p><a href="RowWeakEquation.lean" download>Download exact source</a>. SHA-256: <code>2c66b14b2b7ab733de36e6684dcaff22a9c9826d5f0e8cefed5648cc820e8f05</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.ClassicalRow</span>
+<span id="L3"></span>
+<span id="L4">/-! An independent distributional row equation, compared with the image model.</span>
+<span id="L5">The equation tests the actual quaternion coefficients of A-jB against ordinary</span>
+<span id="L6">Lebesgue derivatives of compactly supported smooth tests. -/</span>
+<span id="L7">@[expose] public section</span>
+<span id="L8">noncomputable section</span>
+<span id="L9">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L10">open scoped Quaternion Distributions BigOperators</span>
+<span id="L11">open MeasureTheory</span>
+<span id="L12">namespace MathResearch.Spinor</span>
+<span id="L13"></span>
+<span id="L14">def rowCoefficientCLM (m : ℕ) (d : Fin 2 →₀ ℕ) : CompatibleRow m →L[ℝ] ℍ :=</span>
+<span id="L15">  (m+1:ℝ)⁻¹ • (fueterCoefficientCLM (m+1) d).comp</span>
+<span id="L16">    ((spinorIsometry m).symm.toContinuousLinearEquiv.toContinuousLinearMap.restrictScalars ℝ)</span>
+<span id="L17"></span>
+<span id="L18">theorem rowCoefficientCLM_apply (m : ℕ) (d : Fin 2 →₀ ℕ) (h : CompatibleRow m) :</span>
+<span id="L19">    rowCoefficientCLM m d h = rowCoefficient m d h := by</span>
+<span id="L20">  change (m+1:ℝ)⁻¹ • fueterCoefficientCLM (m+1) d ((spinorIsometry m).symm h) = _</span>
+<span id="L21">  simpa only [LinearIsometryEquiv.apply_symm_apply] using</span>
+<span id="L22">    (rowCoefficient_spinorIsometry m d ((spinorIsometry m).symm h)).symm</span>
+<span id="L23"></span>
+<span id="L24">theorem compatibleBallL2_locallyIntegrableOn (m : ℕ) (hm : 1 ≤ m) (h : CompatibleBallL2 m) :</span>
+<span id="L25">    LocallyIntegrableOn (fun q =&gt; h q) Ball volume := by</span>
+<span id="L26">  obtain ⟨f, rfl⟩ := (spinorL2Isometry m).surjective h</span>
+<span id="L27">  have he : (spinorL2Isometry m f : ℍ → CompatibleRow m) =ᵐ[volume.restrict Ball]</span>
+<span id="L28">      (fun q =&gt; spinorIsometry m (f q)) :=</span>
+<span id="L29">    (ae_weightedBall_iff (m+1) (by omega) _).mp</span>
+<span id="L30">      (l2IsometryEquiv_ae (weightedBallMeasure (m+1)) (spinorIsometry m) f)</span>
+<span id="L31">  exact ((spinorIsometry m).toContinuousLinearEquiv.toContinuousLinearMap.locallyIntegrableOn_comp</span>
+<span id="L32">    (ballL2_locallyIntegrableOn (m+1) (by omega) f)).congr he.symm</span>
+<span id="L33"></span>
+<span id="L34">theorem rowCoefficient_locallyIntegrableOn (m : ℕ) (hm : 1 ≤ m)</span>
+<span id="L35">    (h : CompatibleBallL2 m) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L36">    LocallyIntegrableOn (fun q =&gt; rowCoefficient m d (h q)) Ball volume := by</span>
+<span id="L37">  simpa only [Function.comp_def, rowCoefficientCLM_apply] using</span>
+<span id="L38">    (rowCoefficientCLM m d).locallyIntegrableOn_comp (compatibleBallL2_locallyIntegrableOn m hm h)</span>
+<span id="L39"></span>
+<span id="L40">def rowWeakTest (m : ℕ) (h : CompatibleBallL2 m) (φ : BallTest) (d : Fin 2 →₀ ℕ) : ℍ :=</span>
+<span id="L41">  ∑ μ : Fin 4, Fueter.coordinateBasis μ *</span>
+<span id="L42">    ∫ q in Ball, testDirectional (Fueter.coordinateBasis μ) φ q • rowCoefficient m d (h q)</span>
+<span id="L43"></span>
+<span id="L44">/-- Independent weak form of D_l(A-jB)=0, coefficient by coefficient. -/</span>
+<span id="L45">def RowDistributionRegular (m : ℕ) (h : CompatibleBallL2 m) : Prop :=</span>
+<span id="L46">  ∀ φ d, rowWeakTest m h φ d = 0</span>
+<span id="L47"></span>
+<span id="L48">/-- The test integral is the negative ordinary distributional Fueter derivative. -/</span>
+<span id="L49">theorem rowWeakTest_eq_distribution (m : ℕ) (hm : 1 ≤ m) (h : CompatibleBallL2 m)</span>
+<span id="L50">    (φ : BallTest) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L51">    rowWeakTest m h φ d = - ∑ μ : Fin 4, Fueter.coordinateBasis μ *</span>
+<span id="L52">      (Distribution.lineDerivCLM (Fueter.coordinateBasis μ)</span>
+<span id="L53">        (Distribution.ofFun ballOpen (fun q =&gt; rowCoefficient m d (h q)) volume ⊤)) φ := by</span>
+<span id="L54">  simp only [Distribution.lineDerivCLM_apply, Distribution.ofFun_apply (Ω := ballOpen)</span>
+<span id="L55">    (rowCoefficient_locallyIntegrableOn m hm h d), mul_neg, Finset.sum_neg_distrib, neg_neg]</span>
+<span id="L56">  apply Finset.sum_congr rfl</span>
+<span id="L57">  intro μ _</span>
+<span id="L58">  congr 1</span>
+<span id="L59">  exact setIntegral_eq_integral_of_forall_compl_eq_zero fun q hq =&gt; by</span>
+<span id="L60">    change (testDirectional (Fueter.coordinateBasis μ) φ) q • rowCoefficient m d (h q) = 0</span>
+<span id="L61">    rw [(testDirectional (Fueter.coordinateBasis μ) φ).zero_on_compl hq]</span>
+<span id="L62">    simp</span>
+<span id="L63"></span>
+<span id="L64">theorem integral_rowCoefficient_spinorL2 (m : ℕ) (hm : 1 ≤ m)</span>
+<span id="L65">    (f : BallL2 (m+1)) (φ : BallTest) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L66">    (∫ q in Ball, φ q • rowCoefficient m d (spinorL2Isometry m f q)) =</span>
+<span id="L67">      (m+1:ℝ)⁻¹ • fueterCoefficientCLM (m+1) d (spinorDistribution (m+1) f φ) := by</span>
+<span id="L68">  have he := (ae_weightedBall_iff (m+1) (by omega) _).mp</span>
+<span id="L69">    (l2IsometryEquiv_ae (weightedBallMeasure (m+1)) (spinorIsometry m) f)</span>
+<span id="L70">  have hI : (∫ q in Ball, φ q • rowCoefficient m d (spinorL2Isometry m f q)) =</span>
+<span id="L71">      (m+1:ℝ)⁻¹ • ∫ q in Ball, φ q • fueterCoefficientCLM (m+1) d (f q) := by</span>
+<span id="L72">    rw [← integral_smul]</span>
+<span id="L73">    apply integral_congr_ae</span>
+<span id="L74">    filter_upwards [he] with q hq</span>
+<span id="L75">    change spinorL2Isometry m f q = _ at hq</span>
+<span id="L76">    rw [hq, rowCoefficient_spinorIsometry, smul_comm]</span>
+<span id="L77">  rw [hI, spinorDistribution_apply (m+1) (by omega)]</span>
+<span id="L78">  congr 1</span>
+<span id="L79">  have hi := (φ.integrable_smul (ballL2_locallyIntegrableOn (m+1) (by omega) f)).integrableOn (s := Ball)</span>
+<span id="L80">  simpa only [map_smul] using (fueterCoefficientCLM (m+1) d).integral_comp_comm hi</span>
+<span id="L81"></span>
+<span id="L82">theorem pack_weakTest (n : ℕ) (hn : 2 ≤ n) (f : BallL2 n) (φ : BallTest) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L83">    pack (weakTest n hn φ 0 d f) (weakTest n hn φ 1 d f) =</span>
+<span id="L84">      ∑ μ : Fin 4, Fueter.coordinateBasis μ *</span>
+<span id="L85">        fueterCoefficientCLM n d (spinorDistribution n f (testDirectional (Fueter.coordinateBasis μ) φ)) := by</span>
+<span id="L86">  rw [weakTest_distribution, weakTest_distribution, pack_sum]</span>
+<span id="L87">  apply Finset.sum_congr rfl</span>
+<span id="L88">  intro μ _</span>
+<span id="L89">  exact matrixColumn_pack_coeff (Fueter.coordinateBasis μ)</span>
+<span id="L90">    (fun i =&gt; MvPolynomial.pderiv i</span>
+<span id="L91">      (spinorDistribution n f (testDirectional (Fueter.coordinateBasis μ) φ) : ComplexPoly2)) d</span>
+<span id="L92"></span>
+<span id="L93">theorem rowWeakTest_spinorL2 (m : ℕ) (hm : 1 ≤ m) (f : BallL2 (m+1))</span>
+<span id="L94">    (φ : BallTest) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L95">    rowWeakTest m (spinorL2Isometry m f) φ d =</span>
+<span id="L96">      (m+1:ℝ)⁻¹ • pack (weakTest (m+1) (by omega) φ 0 d f) (weakTest (m+1) (by omega) φ 1 d f) := by</span>
+<span id="L97">  simp only [rowWeakTest, integral_rowCoefficient_spinorL2 m hm,</span>
+<span id="L98">    mul_smul_comm, ← Finset.smul_sum, pack_weakTest]</span>
+<span id="L99"></span>
+<span id="L100">/-- The image-defined kernel agrees with the independently written distributional row PDE. -/</span>
+<span id="L101">theorem mem_weakRowKernel_iff_distribution (m : ℕ) (hm : 1 ≤ m) (h : CompatibleBallL2 m) :</span>
+<span id="L102">    h ∈ weakRowKernel m hm ↔ RowDistributionRegular m h := by</span>
+<span id="L103">  obtain ⟨f, rfl⟩ := (spinorL2Isometry m).surjective h</span>
+<span id="L104">  have hmap : spinorL2Isometry m f ∈ weakRowKernel m hm ↔ f ∈ weakKernel (m+1) (by omega) := by</span>
+<span id="L105">    constructor</span>
+<span id="L106">    · rintro ⟨g, hg, he⟩</span>
+<span id="L107">      have hg&#39; : g = f := (spinorL2Isometry m).injective he</span>
+<span id="L108">      subst g</span>
+<span id="L109">      exact hg</span>
+<span id="L110">    · intro hf</span>
+<span id="L111">      exact ⟨f, hf, rfl⟩</span>
+<span id="L112">  rw [hmap, mem_weakKernel]</span>
+<span id="L113">  constructor</span>
+<span id="L114">  · intro hf φ d</span>
+<span id="L115">    rw [rowWeakTest_spinorL2 m hm, hf φ 0 d, hf φ 1 d]</span>
+<span id="L116">    simp [pack]</span>
+<span id="L117">  · intro hf φ j d</span>
+<span id="L118">    have hzero := hf φ d</span>
+<span id="L119">    rw [rowWeakTest_spinorL2 m hm] at hzero</span>
+<span id="L120">    have hp : pack (weakTest (m+1) (by omega) φ 0 d f) (weakTest (m+1) (by omega) φ 1 d f) = 0 :=</span>
+<span id="L121">      (smul_eq_zero.mp hzero).resolve_left (inv_ne_zero (by positivity))</span>
+<span id="L122">    have hpair : (weakTest (m+1) (by omega) φ 0 d f, weakTest (m+1) (by omega) φ 1 d f) = (0,0) :=</span>
+<span id="L123">      pack_injective (by simpa [pack] using hp)</span>
+<span id="L124">    fin_cases j</span>
+<span id="L125">    · exact congrArg Prod.fst hpair</span>
+<span id="L126">    · exact congrArg Prod.snd hpair</span>
+<span id="L127"></span>
+<span id="L128">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

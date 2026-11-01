@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/RadialLaplacian.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/RadialLaplacian.lean</h1><p><a href="RadialLaplacian.lean" download>Download exact source</a>. SHA-256: <code>a08c3d652f5b04423c1f27ae50cb2cb6fc211d6ade3697222d2183486a2f437e</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.WeakHarmonic</span>
+<span id="L3">public import Mathlib.Analysis.Calculus.ContDiff.Convolution</span>
+<span id="L4">public import Mathlib.Analysis.Calculus.ContDiff.Deriv</span>
+<span id="L5">public import Mathlib.Analysis.Calculus.BumpFunction.Convolution</span>
+<span id="L6">public import Mathlib.MeasureTheory.Constructions.HaarToSphere</span>
+<span id="L7"></span>
+<span id="L8">/-! Four-dimensional radial calculus for the Weyl regularity proof. -/</span>
+<span id="L9">@[expose] public section</span>
+<span id="L10">noncomputable section</span>
+<span id="L11">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L12">open scoped Quaternion ContDiff BigOperators</span>
+<span id="L13">open MeasureTheory InnerProductSpace Filter</span>
+<span id="L14">namespace MathResearch.Spinor</span>
+<span id="L15"></span>
+<span id="L16">variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]</span>
+<span id="L17"></span>
+<span id="L18">/-- The Euclidean Laplacian as iterated directional derivatives in our fixed basis. -/</span>
+<span id="L19">theorem laplacian_eq_sum_directional {f : ℍ → E} (hf : ContDiff ℝ ∞ f) (q : ℍ) :</span>
+<span id="L20">    Laplacian.laplacian f q = ∑ i : Fin 4,</span>
+<span id="L21">      fderiv ℝ (fun x =&gt; fderiv ℝ f x (Fueter.coordinateBasis i)) q</span>
+<span id="L22">        (Fueter.coordinateBasis i) := by</span>
+<span id="L23">  rw [laplacian_eq_iteratedFDeriv_orthonormalBasis f quaternionONB]</span>
+<span id="L24">  apply Finset.sum_congr rfl</span>
+<span id="L25">  intro i _</span>
+<span id="L26">  rw [iteratedFDeriv_two_apply]</span>
+<span id="L27">  rw [fderiv_clm_apply ((hf.fderiv_right (m := ∞) (by simp)).differentiable (by simp) q)</span>
+<span id="L28">    (differentiableAt_const _)]</span>
+<span id="L29">  simp</span>
+<span id="L30"></span>
+<span id="L31">/-- First derivative of a smooth function of squared radius. -/</span>
+<span id="L32">theorem fderiv_radial_sq (h : ℝ → ℝ) (hh : ContDiff ℝ ∞ h) (q v : ℍ) :</span>
+<span id="L33">    fderiv ℝ (fun x : ℍ =&gt; h (‖x‖ ^ 2)) q v =</span>
+<span id="L34">      2 * deriv h (‖q‖ ^ 2) * inner ℝ q v := by</span>
+<span id="L35">  have hd := (hh.differentiable (by simp) (‖q‖ ^ 2)).hasDerivAt.comp_hasFDerivAt q</span>
+<span id="L36">    (hasStrictFDerivAt_norm_sq q).hasFDerivAt</span>
+<span id="L37">  change HasFDerivAt (fun x : ℍ =&gt; h (‖x‖ ^ 2)) _ q at hd</span>
+<span id="L38">  rw [hd.fderiv]</span>
+<span id="L39">  simp only [smul_apply, innerSL_apply_apply, smul_eq_mul]</span>
+<span id="L40">  ring</span>
+<span id="L41"></span>
+<span id="L42">/-- In real dimension four, Δ(h(|q|²)) = 8h&#39;(|q|²)+4|q|²h&#39;&#39;(|q|²). -/</span>
+<span id="L43">theorem laplacian_radial_sq (h : ℝ → ℝ) (hh : ContDiff ℝ ∞ h) (q : ℍ) :</span>
+<span id="L44">    Laplacian.laplacian (fun x : ℍ =&gt; h (‖x‖ ^ 2)) q =</span>
+<span id="L45">      8 * deriv h (‖q‖ ^ 2) + 4 * ‖q‖ ^ 2 * deriv (deriv h) (‖q‖ ^ 2) := by</span>
+<span id="L46">  have hc : ContDiff ℝ ∞ (fun x : ℍ =&gt; h (‖x‖ ^ 2)) := hh.comp (contDiff_norm_sq ℝ)</span>
+<span id="L47">  rw [laplacian_eq_sum_directional hc]</span>
+<span id="L48">  have hh&#39; : ContDiff ℝ ∞ (deriv h) := hh.deriv&#39;</span>
+<span id="L49">  have H (v : ℍ) : fderiv ℝ (fun x : ℍ =&gt; fderiv ℝ (fun y : ℍ =&gt; h (‖y‖ ^ 2)) x v) q v =</span>
+<span id="L50">      4 * deriv (deriv h) (‖q‖ ^ 2) * (inner ℝ q v) ^ 2 +</span>
+<span id="L51">        2 * deriv h (‖q‖ ^ 2) * inner ℝ v v := by</span>
+<span id="L52">    simp_rw [fderiv_radial_sq h hh]</span>
+<span id="L53">    have hd := ((hh&#39;.differentiable (by simp) (‖q‖ ^ 2)).hasDerivAt.comp_hasFDerivAt q</span>
+<span id="L54">      (hasStrictFDerivAt_norm_sq q).hasFDerivAt).const_mul 2</span>
+<span id="L55">    have hi : HasFDerivAt (fun x : ℍ =&gt; inner ℝ x v) (innerSL ℝ v) q := by</span>
+<span id="L56">      simpa only [coe_innerSL_apply, real_inner_comm] using (innerSL ℝ v).hasFDerivAt (x := q)</span>
+<span id="L57">    have hp := hd.mul hi</span>
+<span id="L58">    change HasFDerivAt (fun x : ℍ =&gt; 2 * deriv h (‖x‖ ^ 2) * inner ℝ x v) _ q at hp</span>
+<span id="L59">    rw [hp.fderiv]</span>
+<span id="L60">    simp only [add_apply, smul_apply, innerSL_apply_apply, smul_eq_mul, Function.comp_apply]</span>
+<span id="L61">    ring</span>
+<span id="L62">  simp_rw [H]</span>
+<span id="L63">  simp [Fin.sum_univ_four, Fueter.coordinateBasis_eq, Quaternion.inner_def,</span>
+<span id="L64">    Quaternion.normSq_def&#39;, ← Quaternion.normSq_eq_norm_mul_self, pow_two]</span>
+<span id="L65">  ring</span>
+<span id="L66"></span>
+<span id="L67">/-- Translation does not alter the Laplacian. -/</span>
+<span id="L68">theorem laplacian_translate (f : ℍ → E) (a q : ℍ) :</span>
+<span id="L69">    Laplacian.laplacian (fun x =&gt; f (a + x)) q = Laplacian.laplacian f (a + q) := by</span>
+<span id="L70">  simp only [laplacian_eq_iteratedFDeriv_orthonormalBasis _ quaternionONB,</span>
+<span id="L71">    iteratedFDeriv_comp_add_left]</span>
+<span id="L72"></span>
+<span id="L73">/-- Real dilations multiply the Laplacian by the square of the dilation. -/</span>
+<span id="L74">theorem laplacian_dilate {f : ℍ → E} (hf : ContDiff ℝ ∞ f) (a : ℝ) (q : ℍ) :</span>
+<span id="L75">    Laplacian.laplacian (fun x =&gt; f (a • x)) q = a ^ 2 • Laplacian.laplacian f (a • q) := by</span>
+<span id="L76">  let L : ℍ →L[ℝ] ℍ := a • ContinuousLinearMap.id ℝ ℍ</span>
+<span id="L77">  change Laplacian.laplacian (f ∘ L) q = _</span>
+<span id="L78">  simp only [laplacian_eq_iteratedFDeriv_orthonormalBasis _ quaternionONB]</span>
+<span id="L79">  rw [L.iteratedFDeriv_comp_right hf q (by simp : (2 : ℕ) ≤ (∞ : ℕ∞ω))]</span>
+<span id="L80">  simp only [ContinuousMultilinearMap.compContinuousLinearMap_apply, L,</span>
+<span id="L81">    smul_apply, ContinuousLinearMap.id_apply]</span>
+<span id="L82">  simp_rw [ContinuousMultilinearMap.map_smul_univ]</span>
+<span id="L83">  simp [Finset.smul_sum]</span>
+<span id="L84"></span>
+<span id="L85">/-- Reflection and translation together preserve the Laplacian. -/</span>
+<span id="L86">theorem laplacian_reflect_translate {f : ℍ → E} (hf : ContDiff ℝ ∞ f) (a q : ℍ) :</span>
+<span id="L87">    Laplacian.laplacian (fun x =&gt; f (a - x)) q = Laplacian.laplacian f (a - q) := by</span>
+<span id="L88">  have h : ContDiff ℝ ∞ (fun x =&gt; f (a + x)) := hf.comp (contDiff_const.add contDiff_id)</span>
+<span id="L89">  have H := laplacian_dilate h (-1) q</span>
+<span id="L90">  simpa only [neg_one_smul, sub_eq_add_neg, neg_one_sq, one_smul, laplacian_translate] using H</span>
+<span id="L91"></span>
+<span id="L92">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

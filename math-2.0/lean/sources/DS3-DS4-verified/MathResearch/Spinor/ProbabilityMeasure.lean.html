@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/ProbabilityMeasure.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/ProbabilityMeasure.lean</h1><p><a href="ProbabilityMeasure.lean" download>Download exact source</a>. SHA-256: <code>b4bf2d6e65523c4aefac88465fda865992b3a4e0c3f1aa66eb58985b6d66092c</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.WeakConstants</span>
+<span id="L3">public import Mathlib.MeasureTheory.Measure.Lebesgue.VolumeOfBalls</span>
+<span id="L4">public import Mathlib.Analysis.SpecialFunctions.Integrals.Basic</span>
+<span id="L5">public import Mathlib.MeasureTheory.Constructions.HaarToSphere</span>
+<span id="L6"></span>
+<span id="L7">/-! The exact probability normalization in C6, by the canonical radial integral. -/</span>
+<span id="L8">@[expose] public section</span>
+<span id="L9">noncomputable section</span>
+<span id="L10">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L11">open scoped Quaternion ENNReal</span>
+<span id="L12">open MeasureTheory MeasureTheory.Measure Set Metric</span>
+<span id="L13">namespace MathResearch.Spinor</span>
+<span id="L14"></span>
+<span id="L15">theorem quaternion_unitBall_volume : volume.real (ball (0 : ℍ) 1) = Real.pi^2 / 2 := by</span>
+<span id="L16">  rw [Measure.real, InnerProductSpace.volume_ball_of_dim_even (k := 2)</span>
+<span id="L17">    (by simpa using Quaternion.finrank_eq_four)]</span>
+<span id="L18">  norm_num [ENNReal.toReal_ofReal (by positivity : 0 ≤ Real.pi^2 / 2)]</span>
+<span id="L19"></span>
+<span id="L20">theorem radial_weight_integral (k : ℕ) :</span>
+<span id="L21">    ∫ r in (0:ℝ)..1, r^3 * (1-r^2)^k = 1 / (2*(k+1:ℝ)*(k+2:ℝ)) := by</span>
+<span id="L22">  let A : ℝ → ℝ := fun r =&gt; (1-r^2)^(k+2)/(2*(k+2:ℝ)) - (1-r^2)^(k+1)/(2*(k+1:ℝ))</span>
+<span id="L23">  have hd (r : ℝ) : HasDerivAt A (r^3*(1-r^2)^k) r := by</span>
+<span id="L24">    have h : HasDerivAt (fun x : ℝ =&gt; 1-x^2) (-2*r) r := by</span>
+<span id="L25">      convert (hasDerivAt_const r (1:ℝ)).sub ((hasDerivAt_id r).pow 2) using 1</span>
+<span id="L26">      · rfl</span>
+<span id="L27">      · simp</span>
+<span id="L28">    have H := ((h.pow (k+2)).div_const (2*(k+2:ℝ))).sub</span>
+<span id="L29">      ((h.pow (k+1)).div_const (2*(k+1:ℝ)))</span>
+<span id="L30">    change HasDerivAt A _ r at H</span>
+<span id="L31">    convert H using 1</span>
+<span id="L32">    simp only [Nat.cast_add, Nat.cast_ofNat, Nat.cast_one,</span>
+<span id="L33">      show k+2-1=k+1 by omega, Nat.add_sub_cancel, pow_succ]</span>
+<span id="L34">    field_simp</span>
+<span id="L35">    ring</span>
+<span id="L36">  have hi : IntervalIntegrable (fun r : ℝ =&gt; r^3*(1-r^2)^k) volume 0 1 := by</span>
+<span id="L37">    apply Continuous.intervalIntegrable</span>
+<span id="L38">    fun_prop</span>
+<span id="L39">  rw [intervalIntegral.integral_eq_sub_of_hasDerivAt (fun r _ =&gt; hd r) hi]</span>
+<span id="L40">  norm_num [A, pow_succ]</span>
+<span id="L41">  field_simp</span>
+<span id="L42">  ring</span>
+<span id="L43"></span>
+<span id="L44">theorem integral_ballScale_pow (k : ℕ) :</span>
+<span id="L45">    ∫ q in Ball, ballScale q ^ k = Real.pi^2 / ((k+1:ℝ)*(k+2:ℝ)) := by</span>
+<span id="L46">  let w : ℝ → ℝ := (Iio 1).indicator (fun r =&gt; (1-r^2)^k)</span>
+<span id="L47">  have he : (∫ q in Ball, ballScale q^k) = ∫ q : ℍ, w ‖q‖ := by</span>
+<span id="L48">    rw [← integral_indicator ball_isOpen.measurableSet]</span>
+<span id="L49">    congr 1</span>
+<span id="L50">    funext q</span>
+<span id="L51">    by_cases hq : q ∈ Ball</span>
+<span id="L52">    · simp only [indicator_of_mem hq, w, indicator_of_mem (show ‖q‖ ∈ Iio 1 from (mem_ball_iff q).mp hq),</span>
+<span id="L53">        ballScale, Quaternion.normSq_eq_norm_mul_self, pow_two]</span>
+<span id="L54">    · have hn : ¬ ‖q‖ &lt; 1 := mt (mem_ball_iff q).mpr hq</span>
+<span id="L55">      simp [w, indicator_of_notMem hq, hn]</span>
+<span id="L56">  rw [he, integral_fun_norm_addHaar volume w]</span>
+<span id="L57">  simp only [Quaternion.finrank_eq_four, Nat.reduceSub, smul_eq_mul, nsmul_eq_mul, Nat.cast_ofNat]</span>
+<span id="L58">  have hr : (∫ r in Ioi (0:ℝ), r^3 * w r) = ∫ r in (0:ℝ)..1, r^3*(1-r^2)^k := by</span>
+<span id="L59">    have hw : (fun r : ℝ =&gt; r^3 * w r) = (Iio 1).indicator (fun r =&gt; r^3*(1-r^2)^k) := by</span>
+<span id="L60">      funext r</span>
+<span id="L61">      by_cases h : r &lt; 1 &lt;;&gt; simp [w, h]</span>
+<span id="L62">    rw [hw, setIntegral_indicator measurableSet_Iio, Ioi_inter_Iio,</span>
+<span id="L63">      ← integral_Ioc_eq_integral_Ioo, ← intervalIntegral.integral_of_le (by norm_num : (0:ℝ) ≤ 1)]</span>
+<span id="L64">  rw [hr, radial_weight_integral, quaternion_unitBall_volume]</span>
+<span id="L65">  field_simp</span>
+<span id="L66">  ring</span>
+<span id="L67"></span>
+<span id="L68">theorem integral_ballDensity (n : ℕ) (hn : 2 ≤ n) : ∫ q in Ball, ballDensity n q = 1 := by</span>
+<span id="L69">  simp only [ballDensity, integral_const_mul]</span>
+<span id="L70">  rw [integral_ballScale_pow]</span>
+<span id="L71">  have hn0 : (n:ℝ) ≠ 0 := by exact_mod_cast (show n ≠ 0 by omega)</span>
+<span id="L72">  have hn1 : (n:ℝ)-1 ≠ 0 := by</span>
+<span id="L73">    have : (2:ℝ) ≤ n := by exact_mod_cast hn</span>
+<span id="L74">    linarith</span>
+<span id="L75">  rw [weightConstant, Nat.cast_sub hn]</span>
+<span id="L76">  norm_num only [Nat.cast_ofNat]</span>
+<span id="L77">  rw [show (n:ℝ)-2+1=n-1 by ring, show (n:ℝ)-2+2=n by ring]</span>
+<span id="L78">  field_simp [Real.pi_ne_zero, hn0, hn1]</span>
+<span id="L79"></span>
+<span id="L80">/-- The actual previously defined weighted measure has total mass one. -/</span>
+<span id="L81">theorem weightedBallMeasure_univ (n : ℕ) (hn : 2 ≤ n) : weightedBallMeasure n univ = 1 := by</span>
+<span id="L82">  rw [weightedBallMeasure, withDensity_apply _ MeasurableSet.univ, Measure.restrict_univ,</span>
+<span id="L83">    ← ofReal_integral_eq_lintegral_ofReal (ballDensity_integrable n)]</span>
+<span id="L84">  · rw [integral_ballDensity n hn, ENNReal.ofReal_one]</span>
+<span id="L85">  · filter_upwards [ae_restrict_mem ball_isOpen.measurableSet] with q hq</span>
+<span id="L86">    exact (ballDensity_pos n hn hq).le</span>
+<span id="L87"></span>
+<span id="L88">theorem weightedBallMeasure_isProbability (n : ℕ) (hn : 2 ≤ n) :</span>
+<span id="L89">    IsProbabilityMeasure (weightedBallMeasure n) := ⟨weightedBallMeasure_univ n hn⟩</span>
+<span id="L90"></span>
+<span id="L91">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

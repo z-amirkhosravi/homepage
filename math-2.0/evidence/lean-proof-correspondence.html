@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Scope of the independent written-to-Lean comparison for the coefficient action, spinor connection, discrete series and background appendix.">
+<title>Review of the Quaternionic Formalizations · Math 2.0</title>
+<link rel="preload" href="../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../assets/theme/wiki.css?v=13">
+<script defer src="../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li></li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"><li><a href="#arguments-and-background-results">Arguments and Background Results</a></li><li><a href="#background-appendix">Background Appendix</a></li><li><a href="#checked-source">Checked Source</a></li><li><a href="#formal-scope">Formal Scope</a></li></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Scope of the independent written-to-Lean comparison for the coefficient action, spinor connection, discrete series and background appendix.</p>
+
+</div>
+<article>
+<h1 id="review-of-the-quaternionic-formalizations">Review of the Quaternionic Formalizations</h1>
+<p>An independent AI reviewer compared the written arguments with the Lean declarations for the <a href="../quaternionic-analysis/lattice-eisenstein-series.html#ei7">coefficient rotation action</a>, the <a href="../quaternionic-analysis/spinor-connection.html">spinor connection and Fueter correspondence</a>, and the <a href="../quaternionic-analysis/fueter-discrete-series.html">discrete-series realization</a>. The review concerns EI7, SC1–SC3 and DS1–DS4, each in formulation version 1. Compilation and the declaration-level axiom audit are recorded separately in the <a href="lean-DS3-DS4-verified.html">build log</a>.</p>
+<h2 id="arguments-and-background-results">Arguments and Background Results<a class="anchor" href="#arguments-and-background-results" aria-label="Link to Arguments and Background Results">#</a></h2>
+<p>The comparison checks the actual argument, including multiplication order, polynomial degree, group action, weights, analytic hypotheses and norm constants. A result used from the literature is invoked as a separately named theorem. Its supplied formal proof and corresponding written proof appear in the <a href="../quaternionic-analysis/lean-background-appendix.html">background appendix</a>. The compact-averaging argument establishing DS3 remains part of that theorem&#39;s proof.</p>
+<p>The reviewer found two differences in the initial formal proofs: the curvature was computed directly instead of deduced from Maurer–Cartan, and the second projected identity was recalculated instead of derived from the first. Both repairs passed independent review on 1 November 2026. The curvature proof now invokes the separately proved Maurer–Cartan theorem and the section formula, with its regularity and inverse hypotheses established. The second projected identity now invokes the first and subtracts the degree-dependent scalar contribution using basis reconstruction. The theorem statements and written arguments are unchanged.</p>
+<h2 id="background-appendix">Background Appendix<a class="anchor" href="#background-appendix" aria-label="Link to Background Appendix">#</a></h2>
+<p>The fixed twelve-section appendix, M000029–M000040 in formulation version 1, passed independent review on 1 November 2026. The reviewer read the article before consulting its evidence, then compared the precise hypotheses, statements and written proof steps with their mapped Lean declarations. This includes the Weyl argument, interior differentiation, polynomial norm, compact-support density and continuity, mean-value formulas, compact irreducibility and Schur calculation, invariant measure, section integration and quaternion rotations.</p>
+<p>The reviewed article has SHA-256 <code>269c6594c5f7d1729b1e4119176a62d28a266c2cda45530b683c3a1ec72d7347</code>; its correspondence inventory has SHA-256 <code>b4936b4057ce0a984caa13395bddd7fee2e641f6a0083d264c60c863256efa2e</code>. The comparison used cumulative Lean delivery <code>84b66cce3de6e5d9fee23838cb8657aae21592c3</code>, checked source <code>eacf12b04ae84543b128343fc56123f388017d8a</code>. The reviewer checked 53 source fingerprints, 38 declaration locations and five pinned mathlib inputs. The reviewer also checked transfer to the corrected delivery: all 38 primary declarations retain their source bytes and line locations. Of 53 supporting files, 52 are unchanged; the changed connection file preserves the section and inverse facts used by the appendix. The original evidence remains attached to its original revision.</p>
+<p>The thirteen-section revision adds <a href="../quaternionic-analysis/lean-background-appendix.html#m000041">Maurer–Cartan for a matrix-valued map</a>, with explicit local inverse and regularity hypotheses. Its new statement, proof and citations passed independent review on 1 November 2026. The reviewer checked all 54 mapped supporting files and nine named mathlib inputs, and confirmed that the earlier twelve sections, equations and bibliography entries are unchanged. The fixed revised article has SHA-256 <code>72459e6c5aeea7b00f43cb37c5444e05d6607a546c62d10bc987e60be40b29eb</code>; its mapping has SHA-256 <code>1b96891672b7f60bcf9b70fc1773bc43828d47539ca46703ea226a01b8651c5d</code>.</p>
+<h2 id="checked-source">Checked Source<a class="anchor" href="#checked-source" aria-label="Link to Checked Source">#</a></h2>
+<p>The corrected cumulative delivery is <code>ffb57ce0878663717056b44ebb7ac77ead6c2195</code>, checked source <code>978519602186b433be863cc02c20ad9a3e5677c5</code>, using Lean 4.35.0 and mathlib <code>56a005855ea17e0b0958f73ec801ae140b0a1679</code>. Its retained clean build covers 115 local modules and audits 2,388 declarations. The axiom audit reports only <code>propext</code>, <code>Classical.choice</code> and <code>Quot.sound</code>.</p>
+<h2 id="formal-scope">Formal Scope<a class="anchor" href="#formal-scope" aria-label="Link to Formal Scope">#</a></h2>
+<p>DS2–DS4 cover degrees at least two. The background mean-value results concern the quaternionic unit ball and complete real normed targets; the radial formula includes its weighted integrability hypothesis. The invariant-measure interface is specialized to the stated group and normalization. The compact representation results concern binary forms.</p>
+<p>The <a href="lean-SC3-correspondence.html">SC3 correspondence note</a> describes the ambient smooth representatives used by the formalization and the specified operator normalization. The check establishes the stated group-restricted identities; an intrinsic Lie-group manifold comparison and a derivation of the normalization from the Killing form are outside its scope.</p>
+<p>The independent reviewer checked source correspondence, retained successful build records, source fingerprints and axiom reports. During the repair review, the reviewer additionally ran fresh Lean checks on the three affected modules and reran the exact-statement and proof-dependency checks; all five commands passed. The reviewer did not repeat the entire clean library build or independently rebuild mathlib. This is an AI review of the identified claims, with separate Lean checking evidence; it does not certify other results in these articles or investigations.</p>
+
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

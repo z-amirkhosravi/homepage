@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Fueter/CoefficientRepresentation.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Fueter/CoefficientRepresentation.lean</h1><p><a href="CoefficientRepresentation.lean" download>Download exact source</a>. SHA-256: <code>b182b87a5dcf13e646776a73c5f80642dc5133b901ff5389a1bab7fab1cb5407</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Fueter.KernelRotationAction</span>
+<span id="L3">public import Mathlib.RepresentationTheory.Basic</span>
+<span id="L4"></span>
+<span id="L5">/-! The coefficient action is a real representation and descends to the actual</span>
+<span id="L6">special orthogonal group of quaternion space. -/</span>
+<span id="L7">@[expose] public section</span>
+<span id="L8">noncomputable section</span>
+<span id="L9">open scoped Quaternion</span>
+<span id="L10">namespace MathResearch.Fueter</span>
+<span id="L11"></span>
+<span id="L12">/-- Right-H-linear functionals on the order-r derivative space. -/</span>
+<span id="L13">abbrev CoefficientFunctional (r : ℕ) := kernelDerivativeSpace r →ₗ[ℍᵐᵒᵖ] ℍ</span>
+<span id="L14"></span>
+<span id="L15">/-- The output factor is on the left; precomposition uses the inverse input action. -/</span>
+<span id="L16">def coefficientSigmaLinear (r : ℕ) (k : QuaternionSpinPair) :</span>
+<span id="L17">    CoefficientFunctional r →ₗ[ℝ] CoefficientFunctional r where</span>
+<span id="L18">  toFun α :=</span>
+<span id="L19">    { toFun := fun f =&gt; (k.2 : ℍ) * α (kernelRho r k⁻¹ f)</span>
+<span id="L20">      map_add&#39; f g := by simp only [map_add, mul_add]</span>
+<span id="L21">      map_smul&#39; c f := by</span>
+<span id="L22">        simp only [map_smul, RingHom.id_apply]</span>
+<span id="L23">        change (k.2 : ℍ) * (α (kernelRho r k⁻¹ f) * c.unop) =</span>
+<span id="L24">          ((k.2 : ℍ) * α (kernelRho r k⁻¹ f)) * c.unop</span>
+<span id="L25">        exact (mul_assoc _ _ _).symm }</span>
+<span id="L26">  map_add&#39; α β := by</span>
+<span id="L27">    apply LinearMap.ext</span>
+<span id="L28">    intro f</span>
+<span id="L29">    exact mul_add _ _ _</span>
+<span id="L30">  map_smul&#39; t α := by</span>
+<span id="L31">    apply LinearMap.ext</span>
+<span id="L32">    intro f</span>
+<span id="L33">    change (k.2 : ℍ) * (t • α (kernelRho r k⁻¹ f)) = t • ((k.2 : ℍ) * α (kernelRho r k⁻¹ f))</span>
+<span id="L34">    simp only [mul_smul_comm]</span>
+<span id="L35"></span>
+<span id="L36">@[simp] theorem coefficientSigmaLinear_apply (r : ℕ) (k : QuaternionSpinPair)</span>
+<span id="L37">    (α : CoefficientFunctional r) (f : kernelDerivativeSpace r) :</span>
+<span id="L38">    coefficientSigmaLinear r k α f = (k.2 : ℍ) * α (kernelRho r k⁻¹ f) := rfl</span>
+<span id="L39"></span>
+<span id="L40">@[simp] theorem coefficientSigmaLinear_one (r : ℕ) :</span>
+<span id="L41">    coefficientSigmaLinear r 1 = LinearMap.id := by</span>
+<span id="L42">  apply LinearMap.ext</span>
+<span id="L43">  intro α</span>
+<span id="L44">  apply LinearMap.ext</span>
+<span id="L45">  intro f</span>
+<span id="L46">  simp</span>
+<span id="L47"></span>
+<span id="L48">theorem coefficientSigmaLinear_mul (r : ℕ) (k l : QuaternionSpinPair) (α : CoefficientFunctional r) :</span>
+<span id="L49">    coefficientSigmaLinear r (k * l) α = coefficientSigmaLinear r k (coefficientSigmaLinear r l α) := by</span>
+<span id="L50">  apply LinearMap.ext</span>
+<span id="L51">  intro f</span>
+<span id="L52">  simp only [coefficientSigmaLinear_apply, mul_inv_rev, kernelRho_mul,</span>
+<span id="L53">    LinearEquiv.mul_apply, Prod.snd_mul, Submonoid.coe_mul, mul_assoc]</span>
+<span id="L54"></span>
+<span id="L55">/-- Each coefficient transformation is an invertible real linear map. -/</span>
+<span id="L56">def coefficientSigma (r : ℕ) (k : QuaternionSpinPair) :</span>
+<span id="L57">    CoefficientFunctional r ≃ₗ[ℝ] CoefficientFunctional r where</span>
+<span id="L58">  __ := coefficientSigmaLinear r k</span>
+<span id="L59">  invFun := coefficientSigmaLinear r k⁻¹</span>
+<span id="L60">  left_inv α := by</span>
+<span id="L61">    change coefficientSigmaLinear r k⁻¹ (coefficientSigmaLinear r k α) = α</span>
+<span id="L62">    rw [← coefficientSigmaLinear_mul, inv_mul_cancel, coefficientSigmaLinear_one]</span>
+<span id="L63">    rfl</span>
+<span id="L64">  right_inv α := by</span>
+<span id="L65">    change coefficientSigmaLinear r k (coefficientSigmaLinear r k⁻¹ α) = α</span>
+<span id="L66">    rw [← coefficientSigmaLinear_mul, mul_inv_cancel, coefficientSigmaLinear_one]</span>
+<span id="L67">    rfl</span>
+<span id="L68"></span>
+<span id="L69">/-- The composition order in EI7 is the ordinary, forward group law. -/</span>
+<span id="L70">def coefficientSigmaHom (r : ℕ) : QuaternionSpinPair →*</span>
+<span id="L71">    (CoefficientFunctional r ≃ₗ[ℝ] CoefficientFunctional r) where</span>
+<span id="L72">  toFun := coefficientSigma r</span>
+<span id="L73">  map_one&#39; := LinearEquiv.toLinearMap_injective (coefficientSigmaLinear_one r)</span>
+<span id="L74">  map_mul&#39; k l := by</span>
+<span id="L75">    apply LinearEquiv.ext</span>
+<span id="L76">    intro α</span>
+<span id="L77">    exact coefficientSigmaLinear_mul r k l α</span>
+<span id="L78"></span>
+<span id="L79">/-- Mathlib&#39;s `Representation` formulation of the spin action. -/</span>
+<span id="L80">def coefficientSpinRepresentation (r : ℕ) : Representation ℝ QuaternionSpinPair (CoefficientFunctional r) where</span>
+<span id="L81">  toFun := coefficientSigmaLinear r</span>
+<span id="L82">  map_one&#39; := coefficientSigmaLinear_one r</span>
+<span id="L83">  map_mul&#39; k l := LinearMap.ext (coefficientSigmaLinear_mul r k l)</span>
+<span id="L84"></span>
+<span id="L85">/-- The two minus signs cancel on right-linear functionals. -/</span>
+<span id="L86">theorem coefficientSigma_central (r : ℕ) : coefficientSigma r (-1, -1) = 1 := by</span>
+<span id="L87">  apply LinearEquiv.ext</span>
+<span id="L88">  intro α</span>
+<span id="L89">  apply LinearMap.ext</span>
+<span id="L90">  intro f</span>
+<span id="L91">  change (-1 : ℍ) * α (kernelRho r ((-1, -1) : QuaternionSpinPair)⁻¹ f) = α f</span>
+<span id="L92">  have hi : ((-1, -1) : QuaternionSpinPair)⁻¹ = (-1, -1) := by</span>
+<span id="L93">    apply Prod.ext &lt;;&gt; apply Subtype.ext &lt;;&gt; change star (-1 : ℍ) = -1 &lt;;&gt; simp</span>
+<span id="L94">  rw [hi, kernelRho_central, map_neg α]</span>
+<span id="L95">  simp</span>
+<span id="L96"></span>
+<span id="L97">theorem coefficientSigma_kills_cover_kernel (r : ℕ) :</span>
+<span id="L98">    quaternionSpinCover.ker ≤ (coefficientSigmaHom r).ker := by</span>
+<span id="L99">  intro k hk</span>
+<span id="L100">  have hk&#39; : quaternionRotation k = 1 := congrArg Subtype.val hk</span>
+<span id="L101">  rcases quaternionRotation_kernel k hk&#39; with rfl | rfl</span>
+<span id="L102">  · exact (coefficientSigmaHom r).map_one</span>
+<span id="L103">  · exact coefficientSigma_central r</span>
+<span id="L104"></span>
+<span id="L105">/-- Descent to determinant-one real isometries, using the proved surjectivity of the spin cover. -/</span>
+<span id="L106">def coefficientSO4Action (r : ℕ) : QuaternionSO4 →*</span>
+<span id="L107">    (CoefficientFunctional r ≃ₗ[ℝ] CoefficientFunctional r) :=</span>
+<span id="L108">  quaternionSpinCover.liftOfSurjective quaternionSpinCover_surjective</span>
+<span id="L109">    ⟨coefficientSigmaHom r, coefficientSigma_kills_cover_kernel r⟩</span>
+<span id="L110"></span>
+<span id="L111">@[simp] theorem coefficientSO4Action_lift (r : ℕ) (k : QuaternionSpinPair) :</span>
+<span id="L112">    coefficientSO4Action r (quaternionSpinCover k) = coefficientSigma r k := by</span>
+<span id="L113">  exact MonoidHom.liftOfRightInverse_comp_apply _ _ _ _ k</span>
+<span id="L114"></span>
+<span id="L115">/-- Mathlib&#39;s real representation of the actual rotation group. -/</span>
+<span id="L116">def coefficientSO4Representation (r : ℕ) : Representation ℝ QuaternionSO4 (CoefficientFunctional r) where</span>
+<span id="L117">  toFun e := (coefficientSO4Action r e).toLinearMap</span>
+<span id="L118">  map_one&#39; := congrArg LinearEquiv.toLinearMap (map_one (coefficientSO4Action r))</span>
+<span id="L119">  map_mul&#39; e e&#39; := congrArg LinearEquiv.toLinearMap (map_mul (coefficientSO4Action r) e e&#39;)</span>
+<span id="L120"></span>
+<span id="L121">@[simp] theorem coefficientSO4Representation_lift (r : ℕ) (k : QuaternionSpinPair) :</span>
+<span id="L122">    coefficientSO4Representation r (quaternionSpinCover k) = coefficientSpinRepresentation r k :=</span>
+<span id="L123">  congrArg LinearEquiv.toLinearMap (coefficientSO4Action_lift r k)</span>
+<span id="L124"></span>
+<span id="L125">end MathResearch.Fueter</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

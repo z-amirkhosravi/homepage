@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/CompactContinuity.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/CompactContinuity.lean</h1><p><a href="CompactContinuity.lean" download>Download exact source</a>. SHA-256: <code>71a73e0594ee0032e00358797cb4f4e882e4f3e7fc3c26ed2133022fef4943ac</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.CompactDensity</span>
+<span id="L3">public import MathResearch.Spinor.RegularAction</span>
+<span id="L4"></span>
+<span id="L5">/-! The canonical compact-support proof of strong continuity.</span>
+<span id="L6">Change of variables gives the norm identity, so continuity of a compactly</span>
+<span id="L7">supported matrix coefficient implies norm continuity. Density and unitarity</span>
+<span id="L8">then extend it to the ambient L² space and its invariant regular kernel. -/</span>
+<span id="L9">@[expose] public section</span>
+<span id="L10">noncomputable section</span>
+<span id="L11">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L12">set_option maxHeartbeats 800000</span>
+<span id="L13">open scoped Quaternion Topology InnerProductSpace</span>
+<span id="L14">open MeasureTheory Filter Set</span>
+<span id="L15">namespace MathResearch.Spinor</span>
+<span id="L16"></span>
+<span id="L17">theorem continuous_sp11_mul : Continuous (fun p : Sp11 × Sp11 =&gt; p.1 * p.2) := by</span>
+<span id="L18">  apply Continuous.subtype_mk</span>
+<span id="L19">  change Continuous (fun p : Sp11 × Sp11 =&gt; (p.1 : QuaternionMatrix2) * (p.2 : QuaternionMatrix2))</span>
+<span id="L20">  exact (continuous_sp11_coe.comp continuous_fst).mul (continuous_sp11_coe.comp continuous_snd)</span>
+<span id="L21"></span>
+<span id="L22">/-- Continuity at the identity on the compact-support class. The dominating</span>
+<span id="L23">function is supported on the fixed compact support of F, not the whole ball. -/</span>
+<span id="L24">theorem continuousAt_one_weightedL2Action_compact (n : ℕ) (hn : 2 ≤ n)</span>
+<span id="L25">    {F : ℍ → BinaryForm n} (hF : Continuous F) (hc : HasCompactSupport F)</span>
+<span id="L26">    (hmem : MemLp F 2 (weightedBallMeasure n)) :</span>
+<span id="L27">    ContinuousAt (fun g : Sp11 =&gt; weightedL2Action n hn g (hmem.toLp F)) 1 := by</span>
+<span id="L28">  let f := hmem.toLp F</span>
+<span id="L29">  obtain ⟨L, hL⟩ := hc.exists_bound_of_continuous hF</span>
+<span id="L30">  let Fb := BoundedContinuousFunction.ofNormedAddCommGroup F hF L hL</span>
+<span id="L31">  let a := inverseMobiusGap (1 : Sp11) / 2</span>
+<span id="L32">  have ha : 0 &lt; a := half_pos (inverseMobiusGap_pos 1)</span>
+<span id="L33">  let M := a⁻¹ ^ (n+2) * ‖Fb‖</span>
+<span id="L34">  have hM : 0 ≤ M := by dsimp [M]; positivity</span>
+<span id="L35">  have hneigh : ∀ᶠ g in 𝓝 (1 : Sp11), a ≤ inverseMobiusGap g :=</span>
+<span id="L36">    continuous_inverseMobiusGap.continuousAt.eventually</span>
+<span id="L37">      (le_mem_nhds (half_lt_self (inverseMobiusGap_pos 1)))</span>
+<span id="L38">  let D : Sp11 → ℍ → ℂ := fun g q =&gt; inner ℂ (ballRepresentation n g F q) (F q)</span>
+<span id="L39">  let bound : ℍ → ℝ := (tsupport F).indicator (fun _ =&gt; M * ‖Fb‖)</span>
+<span id="L40">  have hmeas (g : Sp11) : AEStronglyMeasurable (D g) (weightedBallMeasure n) :=</span>
+<span id="L41">    (ballAction_aestronglyMeasurable n hn (isSp11_signatureAdjoint g.property)</span>
+<span id="L42">      hF.aestronglyMeasurable).inner hF.aestronglyMeasurable</span>
+<span id="L43">  have hbound : ∀ᶠ g in 𝓝 (1 : Sp11), ∀ᵐ q ∂weightedBallMeasure n, ‖D g q‖ ≤ bound q := by</span>
+<span id="L44">    filter_upwards [hneigh] with g hg</span>
+<span id="L45">    filter_upwards [ae_mem_ball n hn] with q hq</span>
+<span id="L46">    by_cases hs : q ∈ tsupport F</span>
+<span id="L47">    · rw [show bound q = M * ‖Fb‖ from indicator_of_mem hs _]</span>
+<span id="L48">      exact (norm_inner_le_norm _ _).trans (mul_le_mul</span>
+<span id="L49">        (ballRepresentation_bound n g Fb ha hg hq) (Fb.norm_coe_le_norm q) (norm_nonneg _) hM)</span>
+<span id="L50">    · have hz : F q = 0 := image_eq_zero_of_notMem_tsupport hs</span>
+<span id="L51">      simp [D, bound, hs, hz]</span>
+<span id="L52">  have hbint : Integrable bound (weightedBallMeasure n) :=</span>
+<span id="L53">    (integrable_indicator_iff hc.measurableSet).mpr (integrableOn_const hc.measure_lt_top.ne)</span>
+<span id="L54">  have hpoint : ∀ᵐ q ∂weightedBallMeasure n,</span>
+<span id="L55">      Tendsto (fun g =&gt; D g q) (𝓝 (1 : Sp11)) (𝓝 (inner ℂ (F q) (F q))) := by</span>
+<span id="L56">    filter_upwards [ae_mem_ball n hn] with q hq</span>
+<span id="L57">    simpa only [D, Sp11.coe_one, ballRepresentation_one] using</span>
+<span id="L58">      ((continuousAt_ballRepresentation_parameter n hF 1 hq).tendsto.inner (𝕜 := ℂ) (tendsto_const_nhds (x := F q)))</span>
+<span id="L59">  have hdct := tendsto_integral_filter_of_dominated_convergence bound</span>
+<span id="L60">    (Eventually.of_forall hmeas) hbound hbint hpoint</span>
+<span id="L61">  have he (g : Sp11) : inner ℂ (weightedL2Action n hn g f) f = ∫ q, D g q ∂weightedBallMeasure n := by</span>
+<span id="L62">    rw [L2.inner_def]</span>
+<span id="L63">    apply integral_congr_ae</span>
+<span id="L64">    filter_upwards [weightedL2Action_ae_of_representative n hn g f F hmem.coeFn_toLp,</span>
+<span id="L65">      hmem.coeFn_toLp] with q hg hf</span>
+<span id="L66">    rw [hg, hf]</span>
+<span id="L67">  have hself : inner ℂ f f = ∫ q, inner ℂ (F q) (F q) ∂weightedBallMeasure n := by</span>
+<span id="L68">    rw [L2.inner_def]</span>
+<span id="L69">    apply integral_congr_ae</span>
+<span id="L70">    filter_upwards [hmem.coeFn_toLp] with q hq</span>
+<span id="L71">    rw [hq]</span>
+<span id="L72">  have hi : Tendsto (fun g =&gt; inner ℂ (weightedL2Action n hn g f) f)</span>
+<span id="L73">      (𝓝 (1 : Sp11)) (𝓝 (inner ℂ f f)) := by simpa only [he, hself] using hdct</span>
+<span id="L74">  have hre : Tendsto (fun g =&gt; RCLike.re (inner ℂ (weightedL2Action n hn g f) f))</span>
+<span id="L75">      (𝓝 (1 : Sp11)) (𝓝 (‖f‖^2)) := by</span>
+<span id="L76">    rw [← inner_self_eq_norm_sq (𝕜 := ℂ) f]</span>
+<span id="L77">    exact Complex.continuous_re.continuousAt.tendsto.comp hi</span>
+<span id="L78">  have hsq : Tendsto (fun g =&gt; ‖weightedL2Action n hn g f - f‖^2) (𝓝 (1 : Sp11)) (𝓝 (0 : ℝ)) := by</span>
+<span id="L79">    have h := ((tendsto_const_nhds (x := ‖f‖^2)).sub</span>
+<span id="L80">      ((tendsto_const_nhds (x := (2:ℝ))).mul hre)).add (tendsto_const_nhds (x := ‖f‖^2))</span>
+<span id="L81">    simpa only [Function.comp_def, norm_sub_sq (𝕜 := ℂ), weightedL2Action_norm,</span>
+<span id="L82">      show ‖f‖^2 - 2 * ‖f‖^2 + ‖f‖^2 = 0 by ring] using h</span>
+<span id="L83">  rw [ContinuousAt, weightedL2Action_one]</span>
+<span id="L84">  apply tendsto_iff_norm_sub_tendsto_zero.mpr</span>
+<span id="L85">  simpa only [Function.comp_def, Real.sqrt_sq (norm_nonneg _), Real.sqrt_zero] using</span>
+<span id="L86">    (Real.continuous_sqrt.tendsto 0).comp hsq</span>
+<span id="L87"></span>
+<span id="L88">theorem continuous_weightedL2Action_compact (n : ℕ) (hn : 2 ≤ n)</span>
+<span id="L89">    {F : ℍ → BinaryForm n} (hF : Continuous F) (hc : HasCompactSupport F)</span>
+<span id="L90">    (hmem : MemLp F 2 (weightedBallMeasure n)) :</span>
+<span id="L91">    Continuous (fun g : Sp11 =&gt; weightedL2Action n hn g (hmem.toLp F)) := by</span>
+<span id="L92">  apply continuous_iff_continuousAt.mpr</span>
+<span id="L93">  intro g</span>
+<span id="L94">  have hm : Continuous (fun h : Sp11 =&gt; g⁻¹ * h) :=</span>
+<span id="L95">    continuous_sp11_mul.comp (continuous_const.prodMk continuous_id)</span>
+<span id="L96">  have ht := (continuousAt_one_weightedL2Action_compact n hn hF hc hmem).tendsto.comp</span>
+<span id="L97">    (by simpa only [inv_mul_cancel] using hm.tendsto g)</span>
+<span id="L98">  have hu := (weightedL2Unitary n hn g).continuous.continuousAt.tendsto.comp ht</span>
+<span id="L99">  change Tendsto (fun h =&gt; weightedL2Action n hn g (weightedL2Action n hn (g⁻¹*h) (hmem.toLp F)))</span>
+<span id="L100">    (𝓝 g) (𝓝 (weightedL2Action n hn g (weightedL2Action n hn 1 (hmem.toLp F)))) at hu</span>
+<span id="L101">  simpa only [ContinuousAt, weightedL2Action_one, ← weightedL2Action_mul, mul_inv_cancel_left] using hu</span>
+<span id="L102"></span>
+<span id="L103">/-- The dense-class extension uses exactly compactly supported continuous functions in B. -/</span>
+<span id="L104">theorem continuous_weightedL2Representation_by_compact (n : ℕ) (hn : 2 ≤ n) :</span>
+<span id="L105">    Continuous (fun z : BallL2 n × Sp11 =&gt; weightedL2Representation n hn z.2 z.1) := by</span>
+<span id="L106">  change Continuous (fun z : BallL2 n × Sp11 =&gt; weightedL2Action n hn z.2 z.1)</span>
+<span id="L107">  apply continuous_prod_of_dense_continuous_lipschitzWith _ 1 (dense_compactContinuousBallClasses n hn)</span>
+<span id="L108">  · rintro f ⟨F, hF, hc, _hs, hmem, rfl⟩</span>
+<span id="L109">    exact continuous_weightedL2Action_compact n hn hF hc hmem</span>
+<span id="L110">  · intro g</span>
+<span id="L111">    exact (weightedL2Unitary n hn g).isometry.lipschitzWith</span>
+<span id="L112"></span>
+<span id="L113">theorem stronglyContinuous_regularRepresentation_by_compact (n : ℕ) (hn : 2 ≤ n)</span>
+<span id="L114">    (f : WeakBallSpace n hn) : Continuous (fun g : Sp11 =&gt; regularRepresentation n hn g f) := by</span>
+<span id="L115">  apply Continuous.subtype_mk</span>
+<span id="L116">  have h := (continuous_weightedL2Representation_by_compact n hn).comp</span>
+<span id="L117">    (continuous_const.prodMk continuous_id : Continuous (fun g : Sp11 =&gt; (f.val, g)))</span>
+<span id="L118">  exact h</span>
+<span id="L119"></span>
+<span id="L120">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

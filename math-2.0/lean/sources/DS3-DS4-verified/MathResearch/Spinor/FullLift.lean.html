@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/FullLift.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/FullLift.lean</h1><p><a href="FullLift.lean" download>Download exact source</a>. SHA-256: <code>c09f6f614a4778c348e2184864d74eeca9063a27595de30896ef33ca6212641b</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.GroupKernel</span>
+<span id="L3"></span>
+<span id="L4">/-! The explicit L2 lift, section weights, and the ball action. -/</span>
+<span id="L5">@[expose] public section</span>
+<span id="L6">noncomputable section</span>
+<span id="L7">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L8">open scoped Quaternion BigOperators Matrix.Norms.Elementwise</span>
+<span id="L9">open MvPolynomial</span>
+<span id="L10">namespace MathResearch.Spinor</span>
+<span id="L11"></span>
+<span id="L12">theorem monomialForm_eq (n : ℕ) (k : Fin (n+1)) :</span>
+<span id="L13">    (monomialForm n k : ComplexPoly2) = X 0 ^ (n-k.val) * X 1 ^ k.val := by</span>
+<span id="L14">  simp [monomialForm, exponent, X_pow_eq_monomial ]</span>
+<span id="L15"></span>
+<span id="L16">theorem polynomialRepresentation_scalar (n : ℕ) (r : ℝ) (p : BinaryForm n) :</span>
+<span id="L17">    polynomialRepresentation n (quaternionMatrix (r : ℍ)) p = r^n • p := by</span>
+<span id="L18">  have hm (k : Fin (n+1)) :</span>
+<span id="L19">      polynomialRepresentation n (quaternionMatrix (r : ℍ)) (monomialForm n k) = r^n • monomialForm n k := by</span>
+<span id="L20">    apply Subtype.ext</span>
+<span id="L21">    change polynomialAction (quaternionMatrix (r : ℍ)) (monomialForm n k) = (r^n : ℝ) • (monomialForm n k : ComplexPoly2)</span>
+<span id="L22">    rw [monomialForm_eq]</span>
+<span id="L23">    simp only [map_mul, map_pow, polynomialAction_X]</span>
+<span id="L24">    have h0 : substitution (quaternionMatrix (r : ℍ)) 0 = C (r:ℂ) * X 0 := by simp [substitution, quaternionMatrix]</span>
+<span id="L25">    have h1 : substitution (quaternionMatrix (r : ℍ)) 1 = C (r:ℂ) * X 1 := by simp [substitution, quaternionMatrix]</span>
+<span id="L26">    rw [h0, h1, mul_pow, mul_pow]</span>
+<span id="L27">    rw [← IsScalarTower.algebraMap_smul ℂ (r^n), smul_eq_C_mul]</span>
+<span id="L28">    change _ = C ((r^n:ℝ):ℂ) * _</span>
+<span id="L29">    rw [Complex.ofReal_pow]</span>
+<span id="L30">    have he : (C (r:ℂ) : ComplexPoly2)^(n-k.val) * (C (r:ℂ))^k.val = C ((r:ℂ)^n) := by</span>
+<span id="L31">      rw [← pow_add, Nat.sub_add_cancel (by omega), map_pow]</span>
+<span id="L32">    rw [← he]</span>
+<span id="L33">    ring</span>
+<span id="L34">  conv_lhs =&gt; rw [← monomialForm_expansion n p]</span>
+<span id="L35">  simp only [map_sum, map_smul, hm]</span>
+<span id="L36">  calc</span>
+<span id="L37">    _ = r^n • (∑ k, coefficients n p k • monomialForm n k) := by</span>
+<span id="L38">      rw [Finset.smul_sum]</span>
+<span id="L39">      apply Finset.sum_congr rfl</span>
+<span id="L40">      intro k _</span>
+<span id="L41">      exact smul_comm _ _ _</span>
+<span id="L42">    _ = _ := by rw [monomialForm_expansion]</span>
+<span id="L43"></span>
+<span id="L44">theorem quaternionAction_real_smul (n : ℕ) (r : ℝ) (a : ℍ) (p : BinaryForm n) :</span>
+<span id="L45">    polynomialRepresentation n (quaternionMatrix (r • a)) p = r^n • polynomialRepresentation n (quaternionMatrix a) p := by</span>
+<span id="L46">  rw [show r • a = (r:ℍ)*a by rw [Algebra.smul_def]; rfl, quaternionMatrix_mul, map_mul]</span>
+<span id="L47">  exact polynomialRepresentation_scalar n r _</span>
+<span id="L48"></span>
+<span id="L49">/-- The exact lift (L2), since normSq d = |d|². -/</span>
+<span id="L50">def fullLift (n : ℕ) (f : ℍ → BinaryForm n) (g : QuaternionMatrix2) : BinaryForm n :=</span>
+<span id="L51">  (Quaternion.normSq (g 1 1))⁻¹ • polynomialRepresentation n (quaternionMatrix ((g 1 1)⁻¹)) (f (groupOrigin g))</span>
+<span id="L52"></span>
+<span id="L53">theorem sqrt_weight_cancel (n : ℕ) {s : ℝ} (hs : 0 &lt; s) :</span>
+<span id="L54">    (Real.sqrt s)⁻¹ ^ n * s ^ (((n:ℝ)+2)/2) = s := by</span>
+<span id="L55">  rw [Real.sqrt_eq_rpow, ← Real.rpow_neg hs.le, ← Real.rpow_mul_natCast hs.le, ← Real.rpow_add hs]</span>
+<span id="L56">  rw [show -(1/2:ℝ)*(n:ℝ)+((n:ℝ)+2)/2=1 by ring, Real.rpow_one]</span>
+<span id="L57"></span>
+<span id="L58">/-- The canonical frame lift is precisely the wiki&#39;s explicit lift on every point of G. -/</span>
+<span id="L59">theorem frameLift_weighted_eq_fullLift (n : ℕ) (f : ℍ → BinaryForm n)</span>
+<span id="L60">    {g : QuaternionMatrix2} (hg : IsSp11 g) : frameLift n (weightedSpinor n f) g = fullLift n f g := by</span>
+<span id="L61">  have hi : (compactRight g)⁻¹ = (Real.sqrt (ballScale (groupOrigin g)))⁻¹ • (g 1 1)⁻¹ := by</span>
+<span id="L62">    simp only [compactRight, Algebra.smul_def, mul_inv_rev]</span>
+<span id="L63">    change (g 1 1)⁻¹ * (Real.sqrt (ballScale (groupOrigin g)) : ℍ)⁻¹ =</span>
+<span id="L64">      ((Real.sqrt (ballScale (groupOrigin g)))⁻¹ : ℝ) * (g 1 1)⁻¹</span>
+<span id="L65">    rw [← Quaternion.coe_inv, Quaternion.coe_commutes]</span>
+<span id="L66">  simp only [frameLift, hi, quaternionAction_real_smul, weightedSpinor]</span>
+<span id="L67">  rw [LinearMap.map_smul_of_tower, smul_smul]</span>
+<span id="L68">  rw [ballWeight, sqrt_weight_cancel n (groupOrigin_mem_ball hg), groupOrigin_scale hg]</span>
+<span id="L69">  rfl</span>
+<span id="L70"></span>
+<span id="L71">/-- The section value of L2 is exactly L3. -/</span>
+<span id="L72">theorem fullLift_section (n : ℕ) (f : ℍ → BinaryForm n) (q : ℍ) (hq : q ∈ Ball) :</span>
+<span id="L73">    fullLift n f (ballSection q) = weightedSpinor n f q := by</span>
+<span id="L74">  rw [← frameLift_weighted_eq_fullLift n f (ballSection_isSp11 q hq), frameLift_section n _ q hq]</span>
+<span id="L75"></span>
+<span id="L76">theorem differentiableAt_normSq (q : ℍ) : DifferentiableAt ℝ Quaternion.normSq q := by</span>
+<span id="L77">  simpa only [id_eq, Quaternion.inner_self] using! (differentiableAt_id.inner ℝ differentiableAt_id :</span>
+<span id="L78">    DifferentiableAt ℝ (fun x : ℍ =&gt; inner ℝ x x) q)</span>
+<span id="L79"></span>
+<span id="L80">theorem differentiableAt_fullLift (n : ℕ) (f : ℍ → BinaryForm n) {g : QuaternionMatrix2}</span>
+<span id="L81">    (hg : IsSp11 g) (hf : DifferentiableAt ℝ f (groupOrigin g)) : DifferentiableAt ℝ (fullLift n f) g := by</span>
+<span id="L82">  have hd := (entryCLM 1 1).differentiableAt (x := g)</span>
+<span id="L83">  have hs := (hasFDerivAt_inv (Quaternion.normSq_ne_zero.mpr hg.lowerRight_ne_zero)).differentiableAt.comp g</span>
+<span id="L84">    ((differentiableAt_normSq (g 1 1)).comp g hd)</span>
+<span id="L85">  have hi := (hasFDerivAt_inv&#39; hg.lowerRight_ne_zero).differentiableAt.comp g hd</span>
+<span id="L86">  have hp := hi.prodMk (hf.comp g (differentiableAt_groupOrigin hg.lowerRight_ne_zero))</span>
+<span id="L87">  have hr : DifferentiableAt ℝ (fun z : QuaternionMatrix2 =&gt; polynomialRepresentation n (quaternionMatrix ((z 1 1)⁻¹)) (f (groupOrigin z))) g := by</span>
+<span id="L88">    simpa only [Function.comp_def, entryCLM_apply] using!</span>
+<span id="L89">      (((contDiff_quaternionPolynomialRepresentation n).differentiable (by simp)</span>
+<span id="L90">        ((g 1 1)⁻¹, f (groupOrigin g))).comp g hp)</span>
+<span id="L91">  exact hs.smul hr</span>
+<span id="L92"></span>
+<span id="L93">theorem differentiableAt_weightedSpinor (n : ℕ) (f : ℍ → BinaryForm n) {q : ℍ}</span>
+<span id="L94">    (hq : q ∈ Ball) (hf : DifferentiableAt ℝ f q) : DifferentiableAt ℝ (weightedSpinor n f) q :=</span>
+<span id="L95">  ((hasFDerivAt_ballWeight _ hq).smul hf.hasFDerivAt).differentiableAt</span>
+<span id="L96"></span>
+<span id="L97">/-- The verified SC3 statement for the exact L2 lift, rather than just its frame formula. -/</span>
+<span id="L98">theorem SC3_v1 (n : ℕ) (hn : 1 ≤ n) (f : ℍ → BinaryForm n)</span>
+<span id="L99">    (hf : ∀ q ∈ Ball, DifferentiableAt ℝ f q) :</span>
+<span id="L100">    (∀ q ∈ Ball, ∀ d, (24 : ℝ) • schmidOperator n (fullLift n f) (ballSection q) d =</span>
+<span id="L101">      ballWeight (((n:ℝ)+4)/2) q • Fueter.leftOperator (fun x =&gt; fueterCoefficientCLM n d (f x)) q) ∧</span>
+<span id="L102">    ((∀ g, IsSp11 g → ∀ d, schmidOperator n (fullLift n f) g d = 0) ↔</span>
+<span id="L103">      (∀ q ∈ Ball, ∀ d, Fueter.leftOperator (fun x =&gt; fueterCoefficientCLM n d (f x)) q = 0)) := by</span>
+<span id="L104">  have he (g : QuaternionMatrix2) (hg : IsSp11 g) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L105">      schmidOperator n (frameLift n (weightedSpinor n f)) g d = schmidOperator n (fullLift n f) g d := by</span>
+<span id="L106">    rw [schmidOperator, schmidOperator,</span>
+<span id="L107">      projectedGroupOperator_congr_on_group n _ _ (fun g hg =&gt; frameLift_weighted_eq_fullLift n f hg) hg</span>
+<span id="L108">        (differentiableAt_frameLift n _ hg (differentiableAt_weightedSpinor n f (groupOrigin_mem_ball hg)</span>
+<span id="L109">          (hf _ (groupOrigin_mem_ball hg)))) (differentiableAt_fullLift n f hg (hf _ (groupOrigin_mem_ball hg)))]</span>
+<span id="L110">  have h := SC3_frameLift_v1 n hn f hf</span>
+<span id="L111">  constructor</span>
+<span id="L112">  · intro q hq d</span>
+<span id="L113">    rw [← he _ (ballSection_isSp11 q hq) d]</span>
+<span id="L114">    exact h.1 q hq d</span>
+<span id="L115">  · rw [← h.2]</span>
+<span id="L116">    apply forall_congr&#39;; intro g</span>
+<span id="L117">    apply forall_congr&#39;; intro hg</span>
+<span id="L118">    simp only [he g hg]</span>
+<span id="L119"></span>
+<span id="L120">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

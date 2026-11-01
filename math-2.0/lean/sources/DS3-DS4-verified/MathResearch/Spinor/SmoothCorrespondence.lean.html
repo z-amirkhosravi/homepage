@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/SmoothCorrespondence.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/SmoothCorrespondence.lean</h1><p><a href="SmoothCorrespondence.lean" download>Download exact source</a>. SHA-256: <code>e13ae1ceabfb316eae6848b580a9ae0e6566a968a0b32c60f22e1434176c1dac</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.BallAction</span>
+<span id="L3"></span>
+<span id="L4">/-! Smoothness of the explicit mutually inverse section/lift formulas. -/</span>
+<span id="L5">@[expose] public section</span>
+<span id="L6">noncomputable section</span>
+<span id="L7">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L8">open scoped Quaternion BigOperators Matrix.Norms.Elementwise ContDiff</span>
+<span id="L9">namespace MathResearch.Spinor</span>
+<span id="L10"></span>
+<span id="L11">theorem contDiff_normSq : ContDiff ℝ ∞ (Quaternion.normSq : ℍ → ℝ) := by</span>
+<span id="L12">  simpa only [id_eq, Quaternion.inner_self] using!</span>
+<span id="L13">    (contDiff_id.inner ℝ contDiff_id : ContDiff ℝ ∞ (fun q : ℍ =&gt; inner ℝ q q))</span>
+<span id="L14"></span>
+<span id="L15">theorem contDiff_ballScale : ContDiff ℝ ∞ ballScale :=</span>
+<span id="L16">  contDiff_const.sub contDiff_normSq</span>
+<span id="L17"></span>
+<span id="L18">theorem contDiffAt_ballWeight (β : ℝ) {q : ℍ} (hq : q ∈ Ball) : ContDiffAt ℝ ∞ (ballWeight β) q :=</span>
+<span id="L19">  contDiff_ballScale.contDiffAt.rpow_const_of_ne (ne_of_gt hq)</span>
+<span id="L20"></span>
+<span id="L21">theorem contDiffAt_ballSection {q : ℍ} (hq : q ∈ Ball) : ContDiffAt ℝ ∞ ballSection q := by</span>
+<span id="L22">  have hr := (contDiff_ballScale.contDiffAt.sqrt (ne_of_gt hq)).inv (Real.sqrt_pos.mpr hq).ne&#39;</span>
+<span id="L23">  have hb : ContDiffAt ℝ ∞ (fun x : ℍ =&gt; (1 : QuaternionMatrix2) + tangentCLM x) q :=</span>
+<span id="L24">    contDiffAt_const.add tangentCLM.contDiff.contDiffAt</span>
+<span id="L25">  convert! hr.smul hb using 1</span>
+<span id="L26">  funext x</span>
+<span id="L27">  apply Matrix.ext; intro i j</span>
+<span id="L28">  fin_cases i &lt;;&gt; fin_cases j &lt;;&gt; simp [ballSection, tangentMatrix]</span>
+<span id="L29"></span>
+<span id="L30">theorem contDiffAt_quaternionInv {q : ℍ} (hq : q ≠ 0) : ContDiffAt ℝ ∞ (Inv.inv : ℍ → ℍ) q := by</span>
+<span id="L31">  simpa only [Ring.inverse_eq_inv&#39;] using! contDiffAt_ringInverse ℝ (Units.mk0 q hq)</span>
+<span id="L32"></span>
+<span id="L33">theorem contDiffAt_groupOrigin {g : QuaternionMatrix2} (hd : g 1 1 ≠ 0) : ContDiffAt ℝ ∞ groupOrigin g := by</span>
+<span id="L34">  have he : ContDiffAt ℝ ∞ (entryCLM 1 1) g := (entryCLM 1 1).contDiff.contDiffAt</span>
+<span id="L35">  simpa only [groupOrigin, entryCLM_apply] using!</span>
+<span id="L36">    (entryCLM 0 1).contDiff.contDiffAt.mul ((contDiffAt_quaternionInv hd).comp g he)</span>
+<span id="L37"></span>
+<span id="L38">theorem contDiffAt_fullLift (n : ℕ) (f : ℍ → BinaryForm n) {g : QuaternionMatrix2}</span>
+<span id="L39">    (hg : IsSp11 g) (hf : ContDiffAt ℝ ∞ f (groupOrigin g)) : ContDiffAt ℝ ∞ (fullLift n f) g := by</span>
+<span id="L40">  have hd : ContDiffAt ℝ ∞ (entryCLM 1 1) g := (entryCLM 1 1).contDiff.contDiffAt</span>
+<span id="L41">  have hs := (contDiff_normSq.contDiffAt.comp g hd).inv (Quaternion.normSq_ne_zero.mpr hg.lowerRight_ne_zero)</span>
+<span id="L42">  have hi := (contDiffAt_quaternionInv hg.lowerRight_ne_zero).comp g hd</span>
+<span id="L43">  have hp := hi.prodMk (hf.comp g (contDiffAt_groupOrigin hg.lowerRight_ne_zero))</span>
+<span id="L44">  have hr : ContDiffAt ℝ ∞ (fun x : QuaternionMatrix2 =&gt; polynomialRepresentation n (quaternionMatrix ((x 1 1)⁻¹)) (f (groupOrigin x))) g := by</span>
+<span id="L45">    simpa only [Function.comp_def, entryCLM_apply] using!</span>
+<span id="L46">      ((contDiff_quaternionPolynomialRepresentation n).contDiffAt.comp g hp)</span>
+<span id="L47">  exact hs.smul hr</span>
+<span id="L48"></span>
+<span id="L49">theorem contDiffAt_unweighted_section (n : ℕ) (F : QuaternionMatrix2 → BinaryForm n)</span>
+<span id="L50">    {q : ℍ} (hq : q ∈ Ball) (hF : ContDiffAt ℝ ∞ F (ballSection q)) :</span>
+<span id="L51">    ContDiffAt ℝ ∞ (unweightedSpinor n (fun x =&gt; F (ballSection x))) q :=</span>
+<span id="L52">  (contDiffAt_ballWeight _ hq).smul (hF.comp q (contDiffAt_ballSection hq))</span>
+<span id="L53"></span>
+<span id="L54">/-- The smooth lift and inverse section map are mutually inverse on their domains. -/</span>
+<span id="L55">theorem SC3_smooth_correspondence_v1 (n : ℕ) :</span>
+<span id="L56">    (∀ f : ℍ → BinaryForm n, (∀ q ∈ Ball, ContDiffAt ℝ ∞ f q) →</span>
+<span id="L57">      RightEquivariant n (fullLift n f) ∧</span>
+<span id="L58">      (∀ g, IsSp11 g → ContDiffAt ℝ ∞ (fullLift n f) g) ∧</span>
+<span id="L59">      (∀ q ∈ Ball, unweightedSpinor n (fun x =&gt; fullLift n f (ballSection x)) q = f q)) ∧</span>
+<span id="L60">    (∀ F : QuaternionMatrix2 → BinaryForm n, RightEquivariant n F →</span>
+<span id="L61">      (∀ g, IsSp11 g → ContDiffAt ℝ ∞ F g) →</span>
+<span id="L62">      (∀ q ∈ Ball, ContDiffAt ℝ ∞ (unweightedSpinor n (fun x =&gt; F (ballSection x))) q) ∧</span>
+<span id="L63">      (∀ g, IsSp11 g → fullLift n (unweightedSpinor n (fun x =&gt; F (ballSection x))) g = F g)) := by</span>
+<span id="L64">  constructor</span>
+<span id="L65">  · intro f hf</span>
+<span id="L66">    refine ⟨fullLift_rightEquivariant n f, fun g hg =&gt; contDiffAt_fullLift n f hg (hf _ (groupOrigin_mem_ball hg)), ?_⟩</span>
+<span id="L67">    intro q hq</span>
+<span id="L68">    change ballWeight _ q • fullLift n f (ballSection q) = f q</span>
+<span id="L69">    rw [fullLift_section n f q hq]</span>
+<span id="L70">    exact unweight_weight n f hq</span>
+<span id="L71">  · intro F hK hF</span>
+<span id="L72">    exact ⟨fun q hq =&gt; contDiffAt_unweighted_section n F hq (hF _ (ballSection_isSp11 q hq)),</span>
+<span id="L73">      fun _ hg =&gt; fullLift_recover n F hK hg⟩</span>
+<span id="L74"></span>
+<span id="L75">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/WeylBridge.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/WeylBridge.lean</h1><p><a href="WeylBridge.lean" download>Download exact source</a>. SHA-256: <code>10a157abf28070702d7de48c7cc341f5e227e6b5a0f56b73d6559a34b6fff40f</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.WeakHarmonic</span>
+<span id="L3"></span>
+<span id="L4">/-! The exact remaining Weyl input and its application in the written DS2</span>
+<span id="L5">argument. The input is an explicit proposition, not an axiom or an instance.</span>
+<span id="L6">No declaration here proves Weyl&#39;s lemma. -/</span>
+<span id="L7">@[expose] public section</span>
+<span id="L8">noncomputable section</span>
+<span id="L9">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L10">open scoped Quaternion Distributions ContDiff</span>
+<span id="L11">open MeasureTheory InnerProductSpace</span>
+<span id="L12">namespace MathResearch.Spinor</span>
+<span id="L13"></span>
+<span id="L14">/-- General local Weyl regularity on the quaternionic Euclidean ball.</span>
+<span id="L15">This is a missing analytic theorem, with no Fueter equation or weighted space</span>
+<span id="L16">in its assumptions. Supplying a value of this proposition is still required. -/</span>
+<span id="L17">def WeylRegularityOnBall (E : Type*) [NormedAddCommGroup E] [NormedSpace ℝ E]</span>
+<span id="L18">    [FiniteDimensional ℝ E] : Prop :=</span>
+<span id="L19">  ∀ u : ℍ → E, LocallyIntegrableOn u Ball volume →</span>
+<span id="L20">    distributionLaplacian (Distribution.ofFun ballOpen u volume ⊤) = 0 →</span>
+<span id="L21">    ∃ v : ℍ → E, ContDiffOn ℝ ∞ v Ball ∧ HarmonicOnNhd v Ball ∧</span>
+<span id="L22">      u =ᵐ[volume.restrict Ball] v</span>
+<span id="L23"></span>
+<span id="L24">/-- DS2&#39;s Weyl step, conditional only on the displayed general Laplace-regularity</span>
+<span id="L25">input. Weak harmonicity is proved, not assumed of the Fueter solution. -/</span>
+<span id="L26">theorem weakKernel_smoothRepresentative_of_weyl (n : ℕ) (hn : 2 ≤ n)</span>
+<span id="L27">    (hW : WeylRegularityOnBall (BinaryForm n)) (f : WeakBallSpace n hn) :</span>
+<span id="L28">    ∃ v : ℍ → BinaryForm n, ContDiffOn ℝ ∞ v Ball ∧ HarmonicOnNhd v Ball ∧</span>
+<span id="L29">      (f.val : ℍ → BinaryForm n) =ᵐ[weightedBallMeasure n] v := by</span>
+<span id="L30">  obtain ⟨v, hv, hH, he⟩ := hW f.val (ballL2_locallyIntegrableOn n hn f.val)</span>
+<span id="L31">    (weakKernel_distributionLaplacian_zero n hn f)</span>
+<span id="L32">  exact ⟨v, hv, hH, (ae_weightedBall_iff n hn _).mpr he⟩</span>
+<span id="L33"></span>
+<span id="L34">/-- Smooth representatives are unique on B, not outside B where the measure vanishes. -/</span>
+<span id="L35">theorem continuousRepresentative_unique (n : ℕ) (hn : 2 ≤ n)</span>
+<span id="L36">    {u v : ℍ → BinaryForm n} (hu : ContinuousOn u Ball) (hv : ContinuousOn v Ball)</span>
+<span id="L37">    (he : u =ᵐ[weightedBallMeasure n] v) : Set.EqOn u v Ball :=</span>
+<span id="L38">  Measure.eqOn_open_of_ae_eq ((ae_weightedBall_iff n hn _).mp he) ball_isOpen hu hv</span>
+<span id="L39"></span>
+<span id="L40">/-- Every real continuous linear coefficient of a harmonic spinor is harmonic. -/</span>
+<span id="L41">theorem harmonicRepresentative_coefficient (n : ℕ) {v : ℍ → BinaryForm n}</span>
+<span id="L42">    (hv : HarmonicOnNhd v Ball) (L : BinaryForm n →L[ℝ] ℝ) :</span>
+<span id="L43">    HarmonicOnNhd (fun q =&gt; L (v q)) Ball := hv.comp_CLM L</span>
+<span id="L44"></span>
+<span id="L45">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

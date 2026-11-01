@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/RegularAction.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/RegularAction.lean</h1><p><a href="RegularAction.lean" download>Download exact source</a>. SHA-256: <code>13eb95a5f9299f62c9bcceef63b12506ff96cdbfbb3fb7c4ff404b014b55f069</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.ClassicalWeak</span>
+<span id="L3">public import MathResearch.Spinor.L2StrongContinuity</span>
+<span id="L4">public import MathResearch.Spinor.SmoothCorrespondence</span>
+<span id="L5"></span>
+<span id="L6">/-! The actual regular kernel is invariant. Restricting the ambient unitary</span>
+<span id="L7">representation therefore gives a strongly continuous regular representation. -/</span>
+<span id="L8">@[expose] public section</span>
+<span id="L9">noncomputable section</span>
+<span id="L10">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L11">open scoped Quaternion ContDiff</span>
+<span id="L12">open MeasureTheory</span>
+<span id="L13">namespace MathResearch.Spinor</span>
+<span id="L14"></span>
+<span id="L15">theorem contDiffAt_ballAction (n : ℕ) {F : ℍ → BinaryForm n} {a : QuaternionMatrix2}</span>
+<span id="L16">    (ha : IsSp11 a) {q : ℍ} (hq : q ∈ Ball) (hF : ContDiffAt ℝ ∞ F (mobiusPoint a q)) :</span>
+<span id="L17">    ContDiffAt ℝ ∞ (ballAction n a F) q := by</span>
+<span id="L18">  have hJ : ContDiffAt ℝ ∞ (mobiusDenominator a) q :=</span>
+<span id="L19">    (contDiffAt_const.mul contDiffAt_id).add contDiffAt_const</span>
+<span id="L20">  have hi := (contDiffAt_quaternionInv (mobiusDenominator_ne_zero ha hq)).comp q hJ</span>
+<span id="L21">  have hp : ContDiffAt ℝ ∞ (mobiusPoint a) q :=</span>
+<span id="L22">    ((contDiffAt_const.mul contDiffAt_id).add contDiffAt_const).mul hi</span>
+<span id="L23">  have hs := (contDiff_normSq.contDiffAt.comp q hJ).inv</span>
+<span id="L24">    (Quaternion.normSq_ne_zero.mpr (mobiusDenominator_ne_zero ha hq))</span>
+<span id="L25">  have hpair := hi.prodMk (hF.comp q hp)</span>
+<span id="L26">  have hpol : ContDiffAt ℝ ∞ (fun x : ℍ =&gt;</span>
+<span id="L27">      polynomialRepresentation n (quaternionMatrix ((mobiusDenominator a x)⁻¹)) (F (mobiusPoint a x))) q := by</span>
+<span id="L28">    simpa only [Function.comp_def] using!</span>
+<span id="L29">      (contDiff_quaternionPolynomialRepresentation n).contDiffAt.comp q hpair</span>
+<span id="L30">  exact hs.smul hpol</span>
+<span id="L31"></span>
+<span id="L32">theorem contDiffOn_ballRepresentation (n : ℕ) {F : ℍ → BinaryForm n}</span>
+<span id="L33">    (hF : ContDiffOn ℝ ∞ F Ball) (g : Sp11) :</span>
+<span id="L34">    ContDiffOn ℝ ∞ (ballRepresentation n g F) Ball := by</span>
+<span id="L35">  intro q hq</span>
+<span id="L36">  exact (contDiffAt_ballAction n (isSp11_signatureAdjoint g.property) hq</span>
+<span id="L37">    ((hF _ (mobiusPoint_mem_ball (isSp11_signatureAdjoint g.property) hq)).contDiffAt</span>
+<span id="L38">      (ball_isOpen.mem_nhds (mobiusPoint_mem_ball (isSp11_signatureAdjoint g.property) hq)))).contDiffWithinAt</span>
+<span id="L39"></span>
+<span id="L40">/-- Invariance follows the written route: pass to the smooth representative,</span>
+<span id="L41">apply the already checked lift/Schmid covariance, and return to weak L² classes. -/</span>
+<span id="L42">theorem weightedL2Action_mem_weakKernel (n : ℕ) (hn : 2 ≤ n) (g : Sp11)</span>
+<span id="L43">    (f : WeakBallSpace n hn) : weightedL2Action n hn g f.val ∈ weakKernel n hn := by</span>
+<span id="L44">  obtain ⟨F, hF, hD, he⟩ := weakKernel_classicalRepresentative n hn f</span>
+<span id="L45">  apply (mem_weakKernel_iff_classicalFueter n hn _ (contDiffOn_ballRepresentation n hF g)</span>
+<span id="L46">    (weightedL2Action_ae_of_representative n hn g f.val F he)).mpr</span>
+<span id="L47">  exact SC3_representation_covariance_v1 n (by omega) F</span>
+<span id="L48">    (fun q hq =&gt; ((hF q hq).contDiffAt (ball_isOpen.mem_nhds hq)).differentiableAt (by simp))</span>
+<span id="L49">    hD g.property</span>
+<span id="L50"></span>
+<span id="L51">/-- The concrete unitary action restricted to actual Fueter-regular vectors. -/</span>
+<span id="L52">def regularUnitary (n : ℕ) (hn : 2 ≤ n) (g : Sp11) :</span>
+<span id="L53">    WeakBallSpace n hn ≃ₗᵢ[ℂ] WeakBallSpace n hn where</span>
+<span id="L54">  toFun f := ⟨weightedL2Action n hn g f.val, weightedL2Action_mem_weakKernel n hn g f⟩</span>
+<span id="L55">  invFun f := ⟨weightedL2Action n hn g⁻¹ f.val, weightedL2Action_mem_weakKernel n hn g⁻¹ f⟩</span>
+<span id="L56">  map_add&#39; f h := Subtype.ext (weightedL2Action_add n hn g f.val h.val)</span>
+<span id="L57">  map_smul&#39; c f := Subtype.ext (weightedL2Action_smul n hn g c f.val)</span>
+<span id="L58">  left_inv f := by</span>
+<span id="L59">    apply Subtype.ext</span>
+<span id="L60">    change weightedL2Action n hn g⁻¹ (weightedL2Action n hn g f.val) = f.val</span>
+<span id="L61">    rw [← weightedL2Action_mul, inv_mul_cancel, weightedL2Action_one]</span>
+<span id="L62">  right_inv f := by</span>
+<span id="L63">    apply Subtype.ext</span>
+<span id="L64">    change weightedL2Action n hn g (weightedL2Action n hn g⁻¹ f.val) = f.val</span>
+<span id="L65">    rw [← weightedL2Action_mul, mul_inv_cancel, weightedL2Action_one]</span>
+<span id="L66">  norm_map&#39; f := weightedL2Action_norm n hn g f.val</span>
+<span id="L67"></span>
+<span id="L68">def regularRepresentation (n : ℕ) (hn : 2 ≤ n) :</span>
+<span id="L69">    Sp11 →* (WeakBallSpace n hn ≃ₗᵢ[ℂ] WeakBallSpace n hn) where</span>
+<span id="L70">  toFun := regularUnitary n hn</span>
+<span id="L71">  map_one&#39; := by</span>
+<span id="L72">    ext f : 1</span>
+<span id="L73">    exact Subtype.ext (weightedL2Action_one n hn f.val)</span>
+<span id="L74">  map_mul&#39; g h := by</span>
+<span id="L75">    ext f : 1</span>
+<span id="L76">    exact Subtype.ext (weightedL2Action_mul n hn g h f.val)</span>
+<span id="L77"></span>
+<span id="L78">theorem stronglyContinuous_regularRepresentation (n : ℕ) (hn : 2 ≤ n)</span>
+<span id="L79">    (f : WeakBallSpace n hn) : Continuous (fun g : Sp11 =&gt; regularRepresentation n hn g f) := by</span>
+<span id="L80">  apply Continuous.subtype_mk</span>
+<span id="L81">  exact stronglyContinuous_weightedL2Representation n hn f.val</span>
+<span id="L82"></span>
+<span id="L83">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

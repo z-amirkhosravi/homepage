@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/DiscreteSeriesCoefficient.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/DiscreteSeriesCoefficient.lean</h1><p><a href="DiscreteSeriesCoefficient.lean" download>Download exact source</a>. SHA-256: <code>f861ab346723f983e6aeda5c597575d714f88b49657ee48c7afb906462c5c408</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.RegularSquareIntegrable</span>
+<span id="L3">public import MathResearch.Spinor.DiscreteSeriesIrreducible</span>
+<span id="L4">public import MathResearch.Analysis.LeftRegularL2</span>
+<span id="L5"></span>
+<span id="L6">/-! The conditional DS4 conclusion: C12/C13, a closed invariant coefficient</span>
+<span id="L7">image in the actual Haar L² space, and normalized isometric embeddings in both</span>
+<span id="L8">models. The unverified background theorems remain explicit parameters. -/</span>
+<span id="L9">@[expose] public section</span>
+<span id="L10">noncomputable section</span>
+<span id="L11">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L12">set_option maxHeartbeats 1000000</span>
+<span id="L13">set_option synthInstance.maxHeartbeats 200000</span>
+<span id="L14">open scoped Quaternion</span>
+<span id="L15">open MeasureTheory</span>
+<span id="L16">namespace MathResearch.Spinor</span>
+<span id="L17"></span>
+<span id="L18">section GeneralDegree</span>
+<span id="L19">variable (meanValue : RadialMeanValueOnBall) (n : ℕ) (hn : 2 ≤ n)</span>
+<span id="L20">    (μG : Measure Sp11) (haar : QuotientHaarIntegration μG)</span>
+<span id="L21">    (hSchur : CompactSchurInput n compactHaar) (v : BinaryForm n)</span>
+<span id="L22"></span>
+<span id="L23">/-- C12 intertwining after passage to genuine L² equivalence classes. -/</span>
+<span id="L24">theorem regularCoefficientMap_intertwines (a : Sp11) (f : WeakBallSpace n hn) :</span>
+<span id="L25">    let : μG.IsHaarMeasure := haar.isHaar</span>
+<span id="L26">    regularCoefficientMap meanValue n hn μG haar hSchur v (regularRepresentation n hn a f) =</span>
+<span id="L27">      leftL2Representation μG a (regularCoefficientMap meanValue n hn μG haar hSchur v f) := by</span>
+<span id="L28">  let : μG.IsHaarMeasure := haar.isHaar</span>
+<span id="L29">  apply Lp.ext</span>
+<span id="L30">  filter_upwards [regularCoefficientMap_ae meanValue n hn μG haar hSchur v (regularRepresentation n hn a f),</span>
+<span id="L31">    leftL2Translation_ae μG a (regularCoefficientMap meanValue n hn μG haar hSchur v f),</span>
+<span id="L32">    (measurePreserving_mul_left μG a⁻¹).quasiMeasurePreserving.ae</span>
+<span id="L33">      (regularCoefficientMap_ae meanValue n hn μG haar hSchur v f)] with g ha ht hf</span>
+<span id="L34">  change _ = leftL2Translation μG a (regularCoefficientMap meanValue n hn μG haar hSchur v f) g</span>
+<span id="L35">  rw [ha, ht, hf]</span>
+<span id="L36">  exact regularCoefficient_intertwines n hn v f a g</span>
+<span id="L37"></span>
+<span id="L38">/-- The fixed scalar normalization of the actual coefficient map. -/</span>
+<span id="L39">def regularCoefficientIsometry (hv : v ≠ 0) : WeakBallSpace n hn →ₗᵢ[ℂ] Lp ℂ 2 μG :=</span>
+<span id="L40">  normalizedCoefficientEmbedding μG (regularCoefficientMap meanValue n hn μG haar hSchur v)</span>
+<span id="L41">    (coefficientNormConstant n v) (coefficientNormConstant_pos n hn v hv)</span>
+<span id="L42">    (regularCoefficientMap_norm meanValue n hn μG haar hSchur v)</span>
+<span id="L43"></span>
+<span id="L44">theorem regularCoefficientIsometry_intertwines (hv : v ≠ 0) (a : Sp11) (f : WeakBallSpace n hn) :</span>
+<span id="L45">    let : μG.IsHaarMeasure := haar.isHaar</span>
+<span id="L46">    regularCoefficientIsometry meanValue n hn μG haar hSchur v hv (regularRepresentation n hn a f) =</span>
+<span id="L47">      leftL2Representation μG a (regularCoefficientIsometry meanValue n hn μG haar hSchur v hv f) := by</span>
+<span id="L48">  let : μG.IsHaarMeasure := haar.isHaar</span>
+<span id="L49">  change (Real.sqrt (coefficientNormConstant n v))⁻¹ •</span>
+<span id="L50">      regularCoefficientMap meanValue n hn μG haar hSchur v (regularRepresentation n hn a f) =</span>
+<span id="L51">    leftL2Representation μG a ((Real.sqrt (coefficientNormConstant n v))⁻¹ •</span>
+<span id="L52">      regularCoefficientMap meanValue n hn μG haar hSchur v f)</span>
+<span id="L53">  rw [regularCoefficientMap_intertwines]</span>
+<span id="L54">  exact ((leftL2Representation μG a).toLinearEquiv.toLinearMap.map_smul_of_tower _ _).symm</span>
+<span id="L55"></span>
+<span id="L56">end GeneralDegree</span>
+<span id="L57"></span>
+<span id="L58">/-- DS4&#39;s actual polynomial-model coefficient embedding, with only the two named</span>
+<span id="L59">unverified background statements. Schur orthogonality is supplied by its proof. -/</span>
+<span id="L60">theorem DS4_v1_of_background (meanValue : RadialMeanValueOnBall)</span>
+<span id="L61">    (m : ℕ) (hm : 1 ≤ m) (μG : Measure Sp11) (haar : QuotientHaarIntegration μG)</span>
+<span id="L62">    (v : BinaryForm (m+1)) (hv : v ≠ 0) :</span>
+<span id="L63">    let : μG.IsHaarMeasure := haar.isHaar</span>
+<span id="L64">    ∃ W : WeakBallSpace (m+1) (by omega) →ₗ[ℂ] Lp ℂ 2 μG,</span>
+<span id="L65">      (∀ f, (W f : Sp11 → ℂ) =ᵐ[μG] regularCoefficient (m+1) (by omega) v f) ∧</span>
+<span id="L66">      (∀ f, ‖W f‖^2 = coefficientNormConstant (m+1) v * ‖f‖^2) ∧</span>
+<span id="L67">      Function.Injective W ∧ IsClosed (Set.range W) ∧</span>
+<span id="L68">      (∀ a f, W (regularRepresentation (m+1) (by omega) a f) = leftL2Representation μG a (W f)) ∧</span>
+<span id="L69">      UnitaryInvariant (leftL2Representation μG) (LinearMap.range W) := by</span>
+<span id="L70">  let : μG.IsHaarMeasure := haar.isHaar</span>
+<span id="L71">  have hn : 2 ≤ m+1 := by omega</span>
+<span id="L72">  let W := regularCoefficientMap meanValue (m+1) hn μG haar (compactSchurInput_proved m) v</span>
+<span id="L73">  have hc := coefficientEmbedding_closed_range μG W (coefficientNormConstant (m+1) v)</span>
+<span id="L74">    (coefficientNormConstant_pos (m+1) hn v hv)</span>
+<span id="L75">    (regularCoefficientMap_norm meanValue (m+1) hn μG haar (compactSchurInput_proved m) v)</span>
+<span id="L76">  have he : ∀ a f, W (regularRepresentation (m+1) hn a f) = leftL2Representation μG a (W f) :=</span>
+<span id="L77">    regularCoefficientMap_intertwines meanValue (m+1) hn μG haar (compactSchurInput_proved m) v</span>
+<span id="L78">  refine ⟨W, regularCoefficientMap_ae meanValue (m+1) hn μG haar (compactSchurInput_proved m) v,</span>
+<span id="L79">    regularCoefficientMap_norm meanValue (m+1) hn μG haar (compactSchurInput_proved m) v,</span>
+<span id="L80">    hc.1, hc.2, he, ?_⟩</span>
+<span id="L81">  rintro a _ ⟨f, rfl⟩</span>
+<span id="L82">  exact ⟨regularRepresentation (m+1) hn a f, he a f⟩</span>
+<span id="L83"></span>
+<span id="L84">/-- The normalized DS4 embedding transported to the compatible-row model. -/</span>
+<span id="L85">def regularRowCoefficientIsometry (meanValue : RadialMeanValueOnBall)</span>
+<span id="L86">    (m : ℕ) (hm : 1 ≤ m) (μG : Measure Sp11) (haar : QuotientHaarIntegration μG)</span>
+<span id="L87">    (v : BinaryForm (m+1)) (hv : v ≠ 0) : weakRowKernel m hm →ₗᵢ[ℂ] Lp ℂ 2 μG :=</span>
+<span id="L88">  (regularCoefficientIsometry meanValue (m+1) (by omega) μG haar (compactSchurInput_proved m) v hv).comp</span>
+<span id="L89">    (weakSpinorIsometry m hm).symm.toLinearIsometry</span>
+<span id="L90"></span>
+<span id="L91">theorem regularRowCoefficientIsometry_intertwines (meanValue : RadialMeanValueOnBall)</span>
+<span id="L92">    (m : ℕ) (hm : 1 ≤ m) (μG : Measure Sp11) (haar : QuotientHaarIntegration μG)</span>
+<span id="L93">    (v : BinaryForm (m+1)) (hv : v ≠ 0) (a : Sp11) (f : weakRowKernel m hm) :</span>
+<span id="L94">    let : μG.IsHaarMeasure := haar.isHaar</span>
+<span id="L95">    regularRowCoefficientIsometry meanValue m hm μG haar v hv (regularRowRepresentation m hm a f) =</span>
+<span id="L96">      leftL2Representation μG a (regularRowCoefficientIsometry meanValue m hm μG haar v hv f) := by</span>
+<span id="L97">  let : μG.IsHaarMeasure := haar.isHaar</span>
+<span id="L98">  have hn : 2 ≤ m+1 := by omega</span>
+<span id="L99">  exact intertwiningIsometry_transport</span>
+<span id="L100">    (regularRepresentation (m+1) hn) (regularRowRepresentation m hm) (leftL2Representation μG)</span>
+<span id="L101">    (weakSpinorIsometry m hm)</span>
+<span id="L102">    (regularCoefficientIsometry meanValue (m+1) hn μG haar (compactSchurInput_proved m) v hv)</span>
+<span id="L103">    (regularRow_intertwining m hm)</span>
+<span id="L104">    (regularCoefficientIsometry_intertwines meanValue (m+1) hn μG haar (compactSchurInput_proved m) v hv) a f</span>
+<span id="L105"></span>
+<span id="L106">/-- Closed image of the actual normalized row embedding. -/</span>
+<span id="L107">theorem regularRowCoefficientIsometry_closed (meanValue : RadialMeanValueOnBall)</span>
+<span id="L108">    (m : ℕ) (hm : 1 ≤ m) (μG : Measure Sp11) (haar : QuotientHaarIntegration μG)</span>
+<span id="L109">    (v : BinaryForm (m+1)) (hv : v ≠ 0) :</span>
+<span id="L110">    IsClosed (Set.range (regularRowCoefficientIsometry meanValue m hm μG haar v hv)) :=</span>
+<span id="L111">  (regularRowCoefficientIsometry meanValue m hm μG haar v hv).isometry.isClosedEmbedding.isClosed_range</span>
+<span id="L112"></span>
+<span id="L113">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

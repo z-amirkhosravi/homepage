@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/WeylKernel.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/WeylKernel.lean</h1><p><a href="WeylKernel.lean" download>Download exact source</a>. SHA-256: <code>2cd0aef6e07464a624ffa5f0dc02eb396911170ccc5f48c94c2b637a9f04acd4</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Analysis.WeylProfile</span>
+<span id="L3"></span>
+<span id="L4">/-! Normalized scaled Weyl kernels and their compact potential differences. -/</span>
+<span id="L5">@[expose] public section</span>
+<span id="L6">noncomputable section</span>
+<span id="L7">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L8">open scoped Quaternion ContDiff Topology</span>
+<span id="L9">open MeasureTheory InnerProductSpace Filter Set Metric</span>
+<span id="L10">namespace MathResearch.Spinor</span>
+<span id="L11"></span>
+<span id="L12">def weylMass : ℝ := 2 * volume.real (ball (0 : ℍ) 1)</span>
+<span id="L13"></span>
+<span id="L14">theorem weylMass_pos : 0 &lt; weylMass := by</span>
+<span id="L15">  apply mul_pos (by norm_num)</span>
+<span id="L16">  exact ENNReal.toReal_pos (measure_ball_pos volume (0 : ℍ) (by norm_num)).ne&#39;</span>
+<span id="L17">    measure_ball_lt_top.ne</span>
+<span id="L18"></span>
+<span id="L19">def weylKernel (q : ℍ) : ℝ := weylRawKernel q / weylMass</span>
+<span id="L20"></span>
+<span id="L21">theorem contDiff_weylKernel : ContDiff ℝ ∞ weylKernel :=</span>
+<span id="L22">  contDiff_weylRawKernel.div_const _</span>
+<span id="L23"></span>
+<span id="L24">theorem weylKernel_zero {q : ℍ} (hq : 2 ≤ ‖q‖) : weylKernel q = 0 := by</span>
+<span id="L25">  simp [weylKernel, weylRawKernel_zero hq]</span>
+<span id="L26"></span>
+<span id="L27">theorem weylKernel_tsupport : tsupport weylKernel ⊆ closedBall (0 : ℍ) 2 :=</span>
+<span id="L28">  by</span>
+<span id="L29">    apply closure_minimal _ isClosed_closedBall</span>
+<span id="L30">    intro q hq</span>
+<span id="L31">    by_contra hn</span>
+<span id="L32">    exact hq (weylKernel_zero (le_of_lt (by simpa only [mem_closedBall, dist_zero_right, not_le] using hn)))</span>
+<span id="L33"></span>
+<span id="L34">theorem hasCompactSupport_weylKernel : HasCompactSupport weylKernel :=</span>
+<span id="L35">  (isCompact_closedBall (0 : ℍ) 2).of_isClosed_subset (isClosed_tsupport _) weylKernel_tsupport</span>
+<span id="L36"></span>
+<span id="L37">theorem integral_weylKernel : ∫ q, weylKernel q = 1 := by</span>
+<span id="L38">  change (∫ q, weylRawKernel q / weylMass) = _</span>
+<span id="L39">  rw [integral_div, integral_weylRawKernel]</span>
+<span id="L40">  exact div_self weylMass_pos.ne&#39;</span>
+<span id="L41"></span>
+<span id="L42">def weylScaledKernel (r : ℝ) (q : ℍ) : ℝ := r⁻¹ ^ 4 * weylKernel (r⁻¹ • q)</span>
+<span id="L43"></span>
+<span id="L44">def weylScaledPotential (r : ℝ) (q : ℍ) : ℝ := r⁻¹ ^ 2 * weylPotential (r⁻¹ • q)</span>
+<span id="L45"></span>
+<span id="L46">theorem contDiff_weylScaledKernel (r : ℝ) : ContDiff ℝ ∞ (weylScaledKernel r) :=</span>
+<span id="L47">  contDiff_const.mul (contDiff_weylKernel.comp (contDiff_id.const_smul r⁻¹))</span>
+<span id="L48"></span>
+<span id="L49">theorem contDiff_weylScaledPotential (r : ℝ) : ContDiff ℝ ∞ (weylScaledPotential r) :=</span>
+<span id="L50">  contDiff_const.mul (contDiff_weylPotential.comp (contDiff_id.const_smul r⁻¹))</span>
+<span id="L51"></span>
+<span id="L52">theorem weylScaledKernel_zero {r : ℝ} (hr : 0 &lt; r) {q : ℍ} (hq : 2 * r ≤ ‖q‖) :</span>
+<span id="L53">    weylScaledKernel r q = 0 := by</span>
+<span id="L54">  have hh : 2 ≤ ‖r⁻¹ • q‖ := by</span>
+<span id="L55">    rw [norm_smul, Real.norm_eq_abs, abs_of_pos (inv_pos.mpr hr), ← div_eq_inv_mul]</span>
+<span id="L56">    exact (le_div_iff₀ hr).mpr hq</span>
+<span id="L57">  simp [weylScaledKernel, weylKernel_zero hh]</span>
+<span id="L58"></span>
+<span id="L59">theorem weylScaledKernel_tsupport {r : ℝ} (hr : 0 &lt; r) :</span>
+<span id="L60">    tsupport (weylScaledKernel r) ⊆ closedBall (0 : ℍ) (2 * r) := by</span>
+<span id="L61">  apply closure_minimal _ isClosed_closedBall</span>
+<span id="L62">  intro q hq</span>
+<span id="L63">  by_contra hn</span>
+<span id="L64">  exact hq (weylScaledKernel_zero hr</span>
+<span id="L65">    (le_of_lt (by simpa only [mem_closedBall, dist_zero_right, not_le] using hn)))</span>
+<span id="L66"></span>
+<span id="L67">theorem hasCompactSupport_weylScaledKernel {r : ℝ} (hr : 0 &lt; r) :</span>
+<span id="L68">    HasCompactSupport (weylScaledKernel r) :=</span>
+<span id="L69">  (isCompact_closedBall (0 : ℍ) (2 * r)).of_isClosed_subset (isClosed_tsupport _)</span>
+<span id="L70">    (weylScaledKernel_tsupport hr)</span>
+<span id="L71"></span>
+<span id="L72">theorem integral_weylScaledKernel {r : ℝ} (hr : 0 &lt; r) : ∫ q, weylScaledKernel r q = 1 := by</span>
+<span id="L73">  change (∫ q, r⁻¹ ^ 4 * weylKernel (r⁻¹ • q)) = _</span>
+<span id="L74">  rw [integral_const_mul, volume.integral_comp_inv_smul]</span>
+<span id="L75">  simp [Quaternion.finrank_eq_four, integral_weylKernel, abs_of_nonneg (pow_nonneg hr.le _),</span>
+<span id="L76">    smul_eq_mul, hr.ne&#39;]</span>
+<span id="L77"></span>
+<span id="L78">theorem laplacian_weylScaledPotential (r : ℝ) (q : ℍ) :</span>
+<span id="L79">    Laplacian.laplacian (weylScaledPotential r) q =</span>
+<span id="L80">      (4 * weylMass) * weylScaledKernel r q := by</span>
+<span id="L81">  change Laplacian.laplacian (r⁻¹ ^ 2 • (fun x =&gt; weylPotential (r⁻¹ • x))) q = _</span>
+<span id="L82">  have hc : ContDiff ℝ ∞ (fun x : ℍ =&gt; weylPotential (r⁻¹ • x)) :=</span>
+<span id="L83">    contDiff_weylPotential.comp (contDiff_id.const_smul r⁻¹)</span>
+<span id="L84">  rw [laplacian_smul _ (hc.contDiffAt.of_le (by simp)),</span>
+<span id="L85">    laplacian_dilate contDiff_weylPotential, laplacian_weylPotential]</span>
+<span id="L86">  simp only [smul_eq_mul, weylScaledKernel, weylKernel]</span>
+<span id="L87">  field_simp [weylMass_pos.ne&#39;]</span>
+<span id="L88"></span>
+<span id="L89">/-- All scales have the same Newton tail. -/</span>
+<span id="L90">theorem weylScaledPotential_tail {r : ℝ} (hr : 0 &lt; r) {q : ℍ} (hq : 2 * r ≤ ‖q‖) :</span>
+<span id="L91">    weylScaledPotential r q = -(‖q‖ ^ 2)⁻¹ := by</span>
+<span id="L92">  have hqpos : 0 &lt; ‖q‖ := lt_of_lt_of_le (mul_pos (by norm_num) hr) hq</span>
+<span id="L93">  have hh : 2 ≤ ‖r⁻¹ • q‖ := by</span>
+<span id="L94">    rw [norm_smul, Real.norm_eq_abs, abs_of_pos (inv_pos.mpr hr), ← div_eq_inv_mul]</span>
+<span id="L95">    exact (le_div_iff₀ hr).mpr hq</span>
+<span id="L96">  have hχ : weylCutoff (‖r⁻¹ • q‖ ^ 2) = 0 :=</span>
+<span id="L97">    weylCutoff_zero (by rw [abs_of_nonneg (sq_nonneg _)]; nlinarith)</span>
+<span id="L98">  change r⁻¹ ^ 2 * ((weylCutoff (‖r⁻¹ • q‖ ^ 2) - 1) / ‖r⁻¹ • q‖ ^ 2) = _</span>
+<span id="L99">  rw [hχ]</span>
+<span id="L100">  simp only [zero_sub, norm_smul, Real.norm_eq_abs, abs_of_pos (inv_pos.mpr hr)]</span>
+<span id="L101">  field_simp</span>
+<span id="L102"></span>
+<span id="L103">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

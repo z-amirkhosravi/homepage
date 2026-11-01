@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/RegularRowAction.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/RegularRowAction.lean</h1><p><a href="RegularRowAction.lean" download>Download exact source</a>. SHA-256: <code>d2c4368a95ec4d3792b6ed87474f796bc2edfcef6016a837ca8a5e54f6571247</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.ClassicalRow</span>
+<span id="L3">public import MathResearch.Spinor.CompactContinuity</span>
+<span id="L4"></span>
+<span id="L5">/-! The complete compatible-row action, transferred by the normalized gradient</span>
+<span id="L6">and identified with the independently written C3 formula on L² representatives. -/</span>
+<span id="L7">@[expose] public section</span>
+<span id="L8">noncomputable section</span>
+<span id="L9">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L10">set_option maxHeartbeats 800000</span>
+<span id="L11">open scoped Quaternion</span>
+<span id="L12">open MeasureTheory</span>
+<span id="L13">namespace MathResearch.Spinor</span>
+<span id="L14"></span>
+<span id="L15">theorem quaternionCoefficients_spinorIsometry (m : ℕ) (p : BinaryForm (m+1)) (k : Fin (m+1)) :</span>
+<span id="L16">    quaternionCoefficients m (spinorIsometry m p).val k = normalizedFueterRow m p k := by</span>
+<span id="L17">  exact rowCoefficient_spinorIsometry m (exponent m k) p</span>
+<span id="L18"></span>
+<span id="L19">def regularRowUnitary (m : ℕ) (hm : 1 ≤ m) (g : Sp11) :</span>
+<span id="L20">    weakRowKernel m hm ≃ₗᵢ[ℂ] weakRowKernel m hm :=</span>
+<span id="L21">  ((weakSpinorIsometry m hm).symm.trans (regularRepresentation (m+1) (by omega) g)).trans</span>
+<span id="L22">    (weakSpinorIsometry m hm)</span>
+<span id="L23"></span>
+<span id="L24">def regularRowRepresentation (m : ℕ) (hm : 1 ≤ m) :</span>
+<span id="L25">    Sp11 →* (weakRowKernel m hm ≃ₗᵢ[ℂ] weakRowKernel m hm) where</span>
+<span id="L26">  toFun := regularRowUnitary m hm</span>
+<span id="L27">  map_one&#39; := by</span>
+<span id="L28">    ext h : 1</span>
+<span id="L29">    simp [regularRowUnitary]</span>
+<span id="L30">  map_mul&#39; g k := by</span>
+<span id="L31">    ext h : 1</span>
+<span id="L32">    simp [regularRowUnitary, map_mul]</span>
+<span id="L33"></span>
+<span id="L34">/-- The normalized L² isometry intertwines the actual two group representations. -/</span>
+<span id="L35">theorem regularRow_intertwining (m : ℕ) (hm : 1 ≤ m) (g : Sp11)</span>
+<span id="L36">    (f : WeakBallSpace (m+1) (by omega)) :</span>
+<span id="L37">    regularRowRepresentation m hm g (weakSpinorIsometry m hm f) =</span>
+<span id="L38">      weakSpinorIsometry m hm (regularRepresentation (m+1) (by omega) g f) := by</span>
+<span id="L39">  change weakSpinorIsometry m hm (regularRepresentation (m+1) (by omega) g</span>
+<span id="L40">    ((weakSpinorIsometry m hm).symm (weakSpinorIsometry m hm f))) = _</span>
+<span id="L41">  rw [LinearIsometryEquiv.symm_apply_apply]</span>
+<span id="L42"></span>
+<span id="L43">theorem stronglyContinuous_regularRowRepresentation (m : ℕ) (hm : 1 ≤ m)</span>
+<span id="L44">    (h : weakRowKernel m hm) : Continuous (fun g : Sp11 =&gt; regularRowRepresentation m hm g h) :=</span>
+<span id="L45">  (weakSpinorIsometry m hm).continuous.comp</span>
+<span id="L46">    (stronglyContinuous_regularRepresentation_by_compact (m+1) (by omega) ((weakSpinorIsometry m hm).symm h))</span>
+<span id="L47"></span>
+<span id="L48">theorem weakSpinorIsometry_ae (m : ℕ) (hm : 1 ≤ m)</span>
+<span id="L49">    (f : WeakBallSpace (m+1) (by omega)) :</span>
+<span id="L50">    ((weakSpinorIsometry m hm f).val : ℍ → CompatibleRow m) =ᵐ[weightedBallMeasure (m+1)]</span>
+<span id="L51">      fun q =&gt; spinorIsometry m (f.val q) :=</span>
+<span id="L52">  l2IsometryEquiv_ae (weightedBallMeasure (m+1)) (spinorIsometry m) f.val</span>
+<span id="L53"></span>
+<span id="L54">/-- The transported row action is exactly C3, including inverse, transpose,</span>
+<span id="L55">and right multiplication by complex coefficients, almost everywhere. -/</span>
+<span id="L56">theorem regularRowRepresentation_ae (m : ℕ) (hm : 1 ≤ m) (g : Sp11)</span>
+<span id="L57">    (h : weakRowKernel m hm) :</span>
+<span id="L58">    ∀ᵐ q ∂weightedBallMeasure (m+1), ∀ k,</span>
+<span id="L59">      quaternionCoefficients m (((regularRowRepresentation m hm g h).val q).val) k =</span>
+<span id="L60">        rowBallRepresentation m g (fun x =&gt; quaternionCoefficients m ((h.val x).val)) q k := by</span>
+<span id="L61">  let f := (weakSpinorIsometry m hm).symm h</span>
+<span id="L62">  have hin := weakSpinorIsometry_ae m hm f</span>
+<span id="L63">  rw [show weakSpinorIsometry m hm f = h from (weakSpinorIsometry m hm).apply_symm_apply h] at hin</span>
+<span id="L64">  have hpull := (mobius_quasiMeasurePreserving_weighted (m+1) (by omega)</span>
+<span id="L65">    (isSp11_signatureAdjoint g.property)).ae hin</span>
+<span id="L66">  have hout := weakSpinorIsometry_ae m hm (regularRepresentation (m+1) (by omega) g f)</span>
+<span id="L67">  have haction := weightedL2Action_ae (m+1) (by omega) g f.val</span>
+<span id="L68">  have he : regularRowRepresentation m hm g h =</span>
+<span id="L69">      weakSpinorIsometry m hm (regularRepresentation (m+1) (by omega) g f) := rfl</span>
+<span id="L70">  rw [he]</span>
+<span id="L71">  filter_upwards [hout, haction, hpull] with q hq hact hpre</span>
+<span id="L72">  intro k</span>
+<span id="L73">  rw [hq]</span>
+<span id="L74">  change quaternionCoefficients m (spinorIsometry m (weightedL2Action (m+1) (by omega) g f.val q)).val k = _</span>
+<span id="L75">  rw [hact, quaternionCoefficients_spinorIsometry, DS2_row_intertwining]</span>
+<span id="L76">  simp only [rowBallRepresentation, rowBallAction, hpre]</span>
+<span id="L77">  rw [show quaternionCoefficients m (spinorIsometry m (f.val (mobiusPoint (signatureAdjoint g) q))).val =</span>
+<span id="L78">    normalizedFueterRow m (f.val (mobiusPoint (signatureAdjoint g) q)) from</span>
+<span id="L79">      funext (quaternionCoefficients_spinorIsometry m _)]</span>
+<span id="L80"></span>
+<span id="L81">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

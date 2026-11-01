@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/GradientIsometry.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/GradientIsometry.lean</h1><p><a href="GradientIsometry.lean" download>Download exact source</a>. SHA-256: <code>0919891cbfe08218cc0694aa1dd9223af57ab5699115920e1424d07728d0d6fe</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.CompatibleRow</span>
+<span id="L3"></span>
+<span id="L4">/-! DS1: the normalized gradient is an isometric isomorphism, in every positive degree. -/</span>
+<span id="L5">@[expose] public section</span>
+<span id="L6">noncomputable section</span>
+<span id="L7">open scoped BigOperators Quaternion</span>
+<span id="L8">open MvPolynomial</span>
+<span id="L9">namespace MathResearch.Spinor</span>
+<span id="L10"></span>
+<span id="L11">theorem exponent_add_X (m : ℕ) (k : Fin (m + 1)) :</span>
+<span id="L12">    exponent m k + Finsupp.single 0 1 = exponent (m + 1) k.castSucc := by</span>
+<span id="L13">  ext i</span>
+<span id="L14">  fin_cases i &lt;;&gt; simp</span>
+<span id="L15">  omega</span>
+<span id="L16"></span>
+<span id="L17">theorem exponent_add_Y (m : ℕ) (k : Fin (m + 1)) :</span>
+<span id="L18">    exponent m k + Finsupp.single 1 1 = exponent (m + 1) k.succ := by</span>
+<span id="L19">  ext i</span>
+<span id="L20">  fin_cases i &lt;;&gt; simp</span>
+<span id="L21"></span>
+<span id="L22">theorem coefficient_derivative_X (m : ℕ) (p : BinaryForm (m + 1)) (k : Fin (m + 1)) :</span>
+<span id="L23">    coefficients m (derivative m 0 p) k =</span>
+<span id="L24">      ((m + 1 - k.val : ℕ) : ℂ) * coefficients (m + 1) p k.castSucc := by</span>
+<span id="L25">  change (pderiv 0 (p : MvPolynomial (Fin 2) ℂ)).coeff (exponent m k) = _</span>
+<span id="L26">  rw [coeff_pderiv, exponent_add_X, exponent_zero]</span>
+<span id="L27">  have hk : m - k.val + 1 = m + 1 - k.val := by omega</span>
+<span id="L28">  rw [← Nat.cast_add_one, hk]</span>
+<span id="L29">  exact mul_comm _ _</span>
+<span id="L30"></span>
+<span id="L31">theorem coefficient_derivative_Y (m : ℕ) (p : BinaryForm (m + 1)) (k : Fin (m + 1)) :</span>
+<span id="L32">    coefficients m (derivative m 1 p) k =</span>
+<span id="L33">      ((k.val + 1 : ℕ) : ℂ) * coefficients (m + 1) p k.succ := by</span>
+<span id="L34">  change (pderiv 1 (p : MvPolynomial (Fin 2) ℂ)).coeff (exponent m k) = _</span>
+<span id="L35">  rw [coeff_pderiv, exponent_add_Y, exponent_one, ← Nat.cast_add_one]</span>
+<span id="L36">  exact mul_comm _ _</span>
+<span id="L37"></span>
+<span id="L38">private theorem square_div_of_product (a b c d : ℝ) (hc : c ≠ 0) (hd : d ≠ 0)</span>
+<span id="L39">    (h : c * a = d * b) : b ^ 2 / c = a * b / d := by</span>
+<span id="L40">  field_simp</span>
+<span id="L41">  linear_combination -b * h</span>
+<span id="L42"></span>
+<span id="L43">theorem derivative_weight_X (m : ℕ) (k : Fin (m + 1)) :</span>
+<span id="L44">    ((m + 1 - k.val : ℕ) : ℝ) ^ 2 / (m.choose k : ℝ) =</span>
+<span id="L45">      (m + 1 : ℝ) * ((m + 1 : ℝ) - k.val) / ((m + 1).choose k : ℝ) := by</span>
+<span id="L46">  have h := Nat.choose_mul_succ_eq m k.val</span>
+<span id="L47">  have hk : k.val ≤ m + 1 := by omega</span>
+<span id="L48">  have hr : (m.choose k : ℝ) * (m + 1 : ℝ) =</span>
+<span id="L49">      ((m + 1).choose k : ℝ) * ((m + 1 : ℝ) - k.val) := by</span>
+<span id="L50">    have hc : (m.choose k : ℝ) * ((m + 1 : ℕ) : ℝ) =</span>
+<span id="L51">        ((m + 1).choose k : ℝ) * ((m + 1 - k.val : ℕ) : ℝ) := by exact_mod_cast h</span>
+<span id="L52">    simpa only [Nat.cast_sub hk, Nat.cast_add, Nat.cast_one] using hc</span>
+<span id="L53">  rw [Nat.cast_sub hk, Nat.cast_add, Nat.cast_one]</span>
+<span id="L54">  apply square_div_of_product _ _ _ _ (ne_of_gt (choose_pos m k))</span>
+<span id="L55">    (ne_of_gt (choose_pos (m + 1) k.castSucc)) hr</span>
+<span id="L56"></span>
+<span id="L57">theorem derivative_weight_Y (m : ℕ) (k : Fin (m + 1)) :</span>
+<span id="L58">    ((k.val + 1 : ℕ) : ℝ) ^ 2 / (m.choose k : ℝ) =</span>
+<span id="L59">      (m + 1 : ℝ) * (k.val + 1 : ℝ) / ((m + 1).choose (k.val + 1) : ℝ) := by</span>
+<span id="L60">  rw [Nat.cast_add, Nat.cast_one]</span>
+<span id="L61">  apply square_div_of_product _ _ _ _ (ne_of_gt (choose_pos m k))</span>
+<span id="L62">    (ne_of_gt (choose_pos (m + 1) k.succ))</span>
+<span id="L63">  have h : ((m + 1 : ℕ) : ℝ) * (m.choose k : ℝ) =</span>
+<span id="L64">      ((m + 1).choose (k.val + 1) : ℝ) * ((k.val + 1 : ℕ) : ℝ) := by</span>
+<span id="L65">    exact_mod_cast Nat.add_one_mul_choose_eq m k.val</span>
+<span id="L66">  simpa [mul_comm] using h</span>
+<span id="L67"></span>
+<span id="L68">/-- The unnormalized gradient multiplies squared norm by n². -/</span>
+<span id="L69">theorem derivative_norm_sq (m : ℕ) (p : BinaryForm (m + 1)) :</span>
+<span id="L70">    ‖derivative m 0 p‖ ^ 2 + ‖derivative m 1 p‖ ^ 2 = (m + 1 : ℝ) ^ 2 * ‖p‖ ^ 2 := by</span>
+<span id="L71">  let f : Fin (m + 2) → ℝ := fun k =&gt;</span>
+<span id="L72">    ‖coefficients (m + 1) p k‖ ^ 2 / ((m + 1).choose k : ℝ)</span>
+<span id="L73">  have hx : ‖derivative m 0 p‖ ^ 2 =</span>
+<span id="L74">      ∑ k : Fin (m + 1), (m + 1 : ℝ) * ((m + 1 : ℝ) - k.val) * f k.castSucc := by</span>
+<span id="L75">    rw [binaryForm_norm_sq]</span>
+<span id="L76">    apply Finset.sum_congr rfl</span>
+<span id="L77">    intro k _</span>
+<span id="L78">    rw [coefficient_derivative_X, norm_mul, mul_pow]</span>
+<span id="L79">    simp only [Complex.norm_natCast]</span>
+<span id="L80">    rw [mul_div_right_comm, derivative_weight_X]</span>
+<span id="L81">    dsimp [f]; ring</span>
+<span id="L82">  have hy : ‖derivative m 1 p‖ ^ 2 =</span>
+<span id="L83">      ∑ k : Fin (m + 1), (m + 1 : ℝ) * (k.val + 1 : ℝ) * f k.succ := by</span>
+<span id="L84">    rw [binaryForm_norm_sq]</span>
+<span id="L85">    apply Finset.sum_congr rfl</span>
+<span id="L86">    intro k _</span>
+<span id="L87">    rw [coefficient_derivative_Y, norm_mul, mul_pow]</span>
+<span id="L88">    simp only [Complex.norm_natCast]</span>
+<span id="L89">    rw [mul_div_right_comm, derivative_weight_Y]</span>
+<span id="L90">    dsimp [f]; ring</span>
+<span id="L91">  have hx&#39; : ‖derivative m 0 p‖ ^ 2 =</span>
+<span id="L92">      ∑ k : Fin (m + 2), (m + 1 : ℝ) * ((m + 1 : ℝ) - k.val) * f k := by</span>
+<span id="L93">    rw [Fin.sum_univ_castSucc]</span>
+<span id="L94">    simpa using hx</span>
+<span id="L95">  have hy&#39; : ‖derivative m 1 p‖ ^ 2 =</span>
+<span id="L96">      ∑ k : Fin (m + 2), (m + 1 : ℝ) * k.val * f k := by</span>
+<span id="L97">    rw [Fin.sum_univ_succ]</span>
+<span id="L98">    simpa using hy</span>
+<span id="L99">  rw [hx&#39;, hy&#39;, ← Finset.sum_add_distrib, binaryForm_norm_sq, Finset.mul_sum]</span>
+<span id="L100">  apply Finset.sum_congr rfl</span>
+<span id="L101">  intro k _</span>
+<span id="L102">  dsimp [f]; ring</span>
+<span id="L103"></span>
+<span id="L104">theorem normalizedGradient_norm (m : ℕ) (p : BinaryForm (m + 1)) :</span>
+<span id="L105">    ‖normalizedGradient m p‖ = ‖p‖ := by</span>
+<span id="L106">  apply (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).mp</span>
+<span id="L107">  change ‖(normalizedGradient m p).val‖ ^ 2 = _</span>
+<span id="L108">  rw [PiLp.norm_sq_eq_of_L2]</span>
+<span id="L109">  change (∑ i : Fin 2, ‖(m + 1 : ℂ)⁻¹ • derivative m i p‖ ^ 2) = _</span>
+<span id="L110">  simp only [Fin.sum_univ_two, norm_smul, mul_pow, ← mul_add]</span>
+<span id="L111">  rw [derivative_norm_sq]</span>
+<span id="L112">  have hn : (m + 1 : ℝ) ≠ 0 := by positivity</span>
+<span id="L113">  have he : ‖(m + 1 : ℂ)⁻¹‖ ^ 2 = ((m + 1 : ℝ)⁻¹) ^ 2 := by</span>
+<span id="L114">    congr 1</span>
+<span id="L115">    rw [norm_inv]</span>
+<span id="L116">    congr 1</span>
+<span id="L117">    norm_cast</span>
+<span id="L118">  rw [he]</span>
+<span id="L119">  field_simp</span>
+<span id="L120"></span>
+<span id="L121">/-- DS1&#39;s complex-linear isometric isomorphism, with n=m+1. -/</span>
+<span id="L122">def spinorIsometry (m : ℕ) : BinaryForm (m + 1) ≃ₗᵢ[ℂ] CompatibleRow m :=</span>
+<span id="L123">  { gradientEquiv m with norm_map&#39; := normalizedGradient_norm m }</span>
+<span id="L124"></span>
+<span id="L125">@[simp] theorem spinorIsometry_apply (m : ℕ) (p : BinaryForm (m + 1)) :</span>
+<span id="L126">    spinorIsometry m p = normalizedGradient m p := rfl</span>
+<span id="L127"></span>
+<span id="L128">@[simp] theorem spinorIsometry_symm_apply (m : ℕ) (h : CompatibleRow m) :</span>
+<span id="L129">    (spinorIsometry m).symm h = assemble m h := rfl</span>
+<span id="L130"></span>
+<span id="L131">instance (m : ℕ) : FiniteDimensional ℂ (CompatibleRow m) :=</span>
+<span id="L132">  (gradientEquiv m).finiteDimensional</span>
+<span id="L133"></span>
+<span id="L134">/-- The compatible degree-m rows have complex dimension m+2, i.e. n+1. -/</span>
+<span id="L135">theorem finrank_compatibleRow (m : ℕ) : Module.finrank ℂ (CompatibleRow m) = m + 2 := by</span>
+<span id="L136">  rw [← (gradientEquiv m).finrank_eq, finrank_binaryForm]</span>
+<span id="L137"></span>
+<span id="L138">/-- DS1/v1 for every n≥1: exact gradient, exact inverse and complex dimension. -/</span>
+<span id="L139">theorem DS1_v1 (n : ℕ) (hn : 1 ≤ n) :</span>
+<span id="L140">    ∃ e : BinaryForm n ≃ₗᵢ[ℂ] CompatibleRow (n - 1),</span>
+<span id="L141">      (∀ (p : BinaryForm n) (i : Fin 2),</span>
+<span id="L142">        ((e p).val i : MvPolynomial (Fin 2) ℂ) =</span>
+<span id="L143">          (n : ℂ)⁻¹ • pderiv i (p : MvPolynomial (Fin 2) ℂ)) ∧</span>
+<span id="L144">      (∀ h : CompatibleRow (n - 1),</span>
+<span id="L145">        (e.symm h : MvPolynomial (Fin 2) ℂ) =</span>
+<span id="L146">          X 0 * (h.val 0 : MvPolynomial (Fin 2) ℂ) +</span>
+<span id="L147">          X 1 * (h.val 1 : MvPolynomial (Fin 2) ℂ)) ∧</span>
+<span id="L148">      Module.finrank ℂ (CompatibleRow (n - 1)) = n + 1 := by</span>
+<span id="L149">  obtain ⟨m, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : n ≠ 0)</span>
+<span id="L150">  simp only [Nat.succ_sub_one]</span>
+<span id="L151">  refine ⟨spinorIsometry m, ?_, ?_, finrank_compatibleRow m⟩</span>
+<span id="L152">  · intro p i</span>
+<span id="L153">    simp [normalizedGradient, derivative]</span>
+<span id="L154">  · intro h</span>
+<span id="L155">    rfl</span>
+<span id="L156"></span>
+<span id="L157">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

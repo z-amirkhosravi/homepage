@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Fueter/PuncturedSmooth.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Fueter/PuncturedSmooth.lean</h1><p><a href="PuncturedSmooth.lean" download>Download exact source</a>. SHA-256: <code>78f9c6b4c55307b475e077a07d1db0f7e1ad05d50d2cb696f804694da607ad14</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Fueter.QuaternionRotations</span>
+<span id="L3">public import MathResearch.Fueter.PartialCommutation</span>
+<span id="L4"></span>
+<span id="L5">/-! Smooth quaternion-valued functions off zero, with a fixed zero extension.</span>
+<span id="L6">Right quaternion scalars use mathlib&#39;s opposite-ring module convention. -/</span>
+<span id="L7">@[expose] public section</span>
+<span id="L8">noncomputable section</span>
+<span id="L9">open scoped Quaternion Topology BigOperators ContDiff</span>
+<span id="L10">open Filter</span>
+<span id="L11">namespace MathResearch.Fueter</span>
+<span id="L12"></span>
+<span id="L13">/-- The zero extension makes equality of punctured functions ordinary equality. -/</span>
+<span id="L14">def smoothPuncturedSpace : Submodule ℍᵐᵒᵖ (ℍ → ℍ) where</span>
+<span id="L15">  carrier := {f | ContDiffOn ℝ ∞ f punctured ∧ f 0 = 0}</span>
+<span id="L16">  zero_mem&#39; := ⟨contDiffOn_const, rfl⟩</span>
+<span id="L17">  add_mem&#39; hf hg := ⟨hf.1.add hg.1, by simp only [Pi.add_apply, hf.2, hg.2, add_zero]⟩</span>
+<span id="L18">  smul_mem&#39; c f hf := by</span>
+<span id="L19">    refine ⟨?_, ?_⟩</span>
+<span id="L20">    · change ContDiffOn ℝ ∞ (fun q =&gt; f q * c.unop) punctured</span>
+<span id="L21">      exact hf.1.mul contDiffOn_const</span>
+<span id="L22">    · change f 0 * c.unop = 0</span>
+<span id="L23">      rw [hf.2, zero_mul]</span>
+<span id="L24"></span>
+<span id="L25">abbrev SmoothPunctured : Type := smoothPuncturedSpace</span>
+<span id="L26"></span>
+<span id="L27">instance : CoeFun SmoothPunctured (fun _ =&gt; ℍ → ℍ) := ⟨Subtype.val⟩</span>
+<span id="L28"></span>
+<span id="L29">@[simp] theorem smoothPunctured_add_apply (f g : SmoothPunctured) (q : ℍ) :</span>
+<span id="L30">    (f + g) q = f q + g q := rfl</span>
+<span id="L31">@[simp] theorem smoothPunctured_smul_apply (c : ℍᵐᵒᵖ) (f : SmoothPunctured) (q : ℍ) :</span>
+<span id="L32">    (c • f) q = f q * c.unop := rfl</span>
+<span id="L33">@[simp] theorem smoothPunctured_neg_apply (f : SmoothPunctured) (q : ℍ) :</span>
+<span id="L34">    (-f) q = -f q := rfl</span>
+<span id="L35">@[simp] theorem smoothPunctured_sum_apply {ι : Type*} (s : Finset ι)</span>
+<span id="L36">    (f : ι → SmoothPunctured) (q : ℍ) : (∑ i ∈ s, f i) q = ∑ i ∈ s, f i q := by</span>
+<span id="L37">  classical</span>
+<span id="L38">  induction s using Finset.induction_on with</span>
+<span id="L39">  | empty =&gt; rfl</span>
+<span id="L40">  | @insert a s ha ih =&gt; simp only [Finset.sum_insert ha, smoothPunctured_add_apply, ih]</span>
+<span id="L41"></span>
+<span id="L42">/-- Restrict a smooth function to the punctured domain and extend it by zero. -/</span>
+<span id="L43">def puncturedSmooth (f : ℍ → ℍ) (hf : ContDiffOn ℝ ∞ f punctured) : SmoothPunctured := by</span>
+<span id="L44">  classical</span>
+<span id="L45">  exact ⟨fun q =&gt; if q = 0 then 0 else f q,</span>
+<span id="L46">    hf.congr (fun q hq =&gt; by change q ≠ 0 at hq; simp [hq]),</span>
+<span id="L47">    by simp⟩</span>
+<span id="L48"></span>
+<span id="L49">@[simp] theorem puncturedSmooth_apply {f : ℍ → ℍ} {hf : ContDiffOn ℝ ∞ f punctured}</span>
+<span id="L50">    {q : ℍ} (hq : q ≠ 0) : puncturedSmooth f hf q = f q := by simp [puncturedSmooth, hq]</span>
+<span id="L51"></span>
+<span id="L52">@[simp] theorem smoothPunctured_zero (f : SmoothPunctured) : f 0 = 0 := f.property.2</span>
+<span id="L53"></span>
+<span id="L54">theorem smoothPunctured_smooth (f : SmoothPunctured) : ContDiffOn ℝ ∞ f punctured := f.property.1</span>
+<span id="L55"></span>
+<span id="L56">theorem smoothPunctured_differentiable (f : SmoothPunctured) {q : ℍ} (hq : q ≠ 0) :</span>
+<span id="L57">    DifferentiableAt ℝ f q :=</span>
+<span id="L58">  ((smoothPunctured_smooth f).contDiffAt (isOpen_punctured.mem_nhds hq)).differentiableAt (by simp)</span>
+<span id="L59"></span>
+<span id="L60">theorem puncturedSmooth_fderiv {f : ℍ → ℍ} {hf : ContDiffOn ℝ ∞ f punctured}</span>
+<span id="L61">    {q : ℍ} (hq : q ≠ 0) : fderiv ℝ (puncturedSmooth f hf) q = fderiv ℝ f q := by</span>
+<span id="L62">  apply Filter.EventuallyEq.fderiv_eq</span>
+<span id="L63">  exact eventually_of_mem (isOpen_punctured.mem_nhds hq) (fun _ hy =&gt; puncturedSmooth_apply hy)</span>
+<span id="L64"></span>
+<span id="L65">@[ext] theorem SmoothPunctured.ext {f g : SmoothPunctured}</span>
+<span id="L66">    (h : ∀ q ≠ 0, f q = g q) : f = g := by</span>
+<span id="L67">  apply Subtype.ext</span>
+<span id="L68">  funext q</span>
+<span id="L69">  by_cases hq : q = 0</span>
+<span id="L70">  · subst q; simp</span>
+<span id="L71">  · exact h q hq</span>
+<span id="L72"></span>
+<span id="L73">/-- Differentiation is right quaternion linear on the smooth punctured space. -/</span>
+<span id="L74">def smoothDerivative (v : ℍ) : SmoothPunctured →ₗ[ℍᵐᵒᵖ] SmoothPunctured where</span>
+<span id="L75">  toFun f := puncturedSmooth (directional v f)</span>
+<span id="L76">    (contDiffOn_directional isOpen_punctured (smoothPunctured_smooth f) v)</span>
+<span id="L77">  map_add&#39; f g := by</span>
+<span id="L78">    apply SmoothPunctured.ext</span>
+<span id="L79">    intro q hq</span>
+<span id="L80">    simp only [smoothPunctured_add_apply, puncturedSmooth_apply hq]</span>
+<span id="L81">    change fderiv ℝ (fun x =&gt; f x + g x) q v = fderiv ℝ f q v + fderiv ℝ g q v</span>
+<span id="L82">    rw [fderiv_fun_add (smoothPunctured_differentiable f hq) (smoothPunctured_differentiable g hq)]</span>
+<span id="L83">    rfl</span>
+<span id="L84">  map_smul&#39; c f := by</span>
+<span id="L85">    apply SmoothPunctured.ext</span>
+<span id="L86">    intro q hq</span>
+<span id="L87">    simp only [smoothPunctured_smul_apply, puncturedSmooth_apply hq, RingHom.id_apply]</span>
+<span id="L88">    change fderiv ℝ (fun x =&gt; f x * c.unop) q v = fderiv ℝ f q v * c.unop</span>
+<span id="L89">    rw [fderiv_mul_const&#39; (smoothPunctured_differentiable f hq)]</span>
+<span id="L90">    rfl</span>
+<span id="L91"></span>
+<span id="L92">@[simp] theorem smoothDerivative_apply (v : ℍ) (f : SmoothPunctured) {q : ℍ} (hq : q ≠ 0) :</span>
+<span id="L93">    smoothDerivative v f q = directional v f q := by</span>
+<span id="L94">  exact puncturedSmooth_apply (hf := contDiffOn_directional isOpen_punctured (smoothPunctured_smooth f) v) hq</span>
+<span id="L95"></span>
+<span id="L96">theorem higherKernel_smooth (ν : Fin 3 → ℕ) : ContDiffOn ℝ ∞ (higherKernel ν) punctured :=</span>
+<span id="L97">  (kernel_regular.multiIndexPartial isOpen_punctured _).1</span>
+<span id="L98"></span>
+<span id="L99">/-- The order-ν spatial derivative of the kernel, viewed on its natural domain. -/</span>
+<span id="L100">def smoothHigherKernel (ν : Fin 3 → ℕ) : SmoothPunctured :=</span>
+<span id="L101">  puncturedSmooth (higherKernel ν) (higherKernel_smooth ν)</span>
+<span id="L102"></span>
+<span id="L103">/-- The right-H span in EI7; r counts spatial derivatives, not radial degree. -/</span>
+<span id="L104">def kernelDerivativeSpace (r : ℕ) : Submodule ℍᵐᵒᵖ SmoothPunctured :=</span>
+<span id="L105">  Submodule.span ℍᵐᵒᵖ (Set.range (fun ν : {ν : Fin 3 → ℕ // ∑ j, ν j = r} =&gt; smoothHigherKernel ν))</span>
+<span id="L106"></span>
+<span id="L107">@[simp] theorem smoothHigherKernel_apply (ν : Fin 3 → ℕ) {q : ℍ} (hq : q ≠ 0) :</span>
+<span id="L108">    smoothHigherKernel ν q = higherKernel ν q := puncturedSmooth_apply hq</span>
+<span id="L109"></span>
+<span id="L110">theorem smoothHigherKernel_mem (ν : Fin 3 → ℕ) :</span>
+<span id="L111">    smoothHigherKernel ν ∈ kernelDerivativeSpace (∑ j, ν j) :=</span>
+<span id="L112">  Submodule.subset_span ⟨⟨ν, rfl⟩, rfl⟩</span>
+<span id="L113"></span>
+<span id="L114">theorem smoothDerivative_spatial (ν : Fin 3 → ℕ) (j : Fin 3) :</span>
+<span id="L115">    smoothDerivative (coordinateBasis j.succ) (smoothHigherKernel ν) =</span>
+<span id="L116">      smoothHigherKernel (ν + Pi.single j 1) := by</span>
+<span id="L117">  apply SmoothPunctured.ext</span>
+<span id="L118">  intro q hq</span>
+<span id="L119">  rw [smoothDerivative_apply _ _ hq, smoothHigherKernel_apply _ hq]</span>
+<span id="L120">  change fderiv ℝ (puncturedSmooth (higherKernel ν) _) q (coordinateBasis j.succ) = _</span>
+<span id="L121">  rw [puncturedSmooth_fderiv hq]</span>
+<span id="L122">  change iteratedPartial (j.succ :: spatialDerivativeList ν) kernel q =</span>
+<span id="L123">    iteratedPartial (spatialDerivativeList (ν + Pi.single j 1)) kernel q</span>
+<span id="L124">  exact iteratedPartial_perm isOpen_punctured kernel_smooth</span>
+<span id="L125">    ((List.perm_append_comm (l₁ := [j.succ]) (l₂ := spatialDerivativeList ν)).trans</span>
+<span id="L126">      (spatialDerivativeList_add_single ν j)) hq</span>
+<span id="L127"></span>
+<span id="L128">/-- Right regularity eliminates the time derivative, with coefficients on the right. -/</span>
+<span id="L129">theorem smoothDerivative_time (ν : Fin 3 → ℕ) :</span>
+<span id="L130">    smoothDerivative (coordinateBasis 0) (smoothHigherKernel ν) =</span>
+<span id="L131">      -∑ j : Fin 3, MulOpposite.op (coordinateBasis j.succ) •</span>
+<span id="L132">        smoothDerivative (coordinateBasis j.succ) (smoothHigherKernel ν) := by</span>
+<span id="L133">  apply SmoothPunctured.ext</span>
+<span id="L134">  intro q hq</span>
+<span id="L135">  have h := (kernel_regular.multiIndexPartial isOpen_punctured (spatialMultiIndex ν)).2.2 q hq</span>
+<span id="L136">  rw [rightOperator_eq, Fin.sum_univ_succ] at h</span>
+<span id="L137">  have he (μ : Fin 4) : smoothDerivative (coordinateBasis μ) (smoothHigherKernel ν) q =</span>
+<span id="L138">      coordPartial μ (higherKernel ν) q := by</span>
+<span id="L139">    rw [smoothDerivative_apply _ _ hq]</span>
+<span id="L140">    exact congrArg (fun A : ℍ →L[ℝ] ℍ =&gt; A (coordinateBasis μ)) (puncturedSmooth_fderiv hq)</span>
+<span id="L141">  simp only [smoothPunctured_neg_apply, smoothPunctured_sum_apply, smoothPunctured_smul_apply]</span>
+<span id="L142">  change _ = -(∑ j : Fin 3, (smoothDerivative (coordinateBasis j.succ) (smoothHigherKernel ν)) q *</span>
+<span id="L143">    coordinateBasis j.succ)</span>
+<span id="L144">  simp only [he]</span>
+<span id="L145">  have hb : coordinateBasis 0 = 1 := coordinateBasis_eq 0</span>
+<span id="L146">  rw [hb, mul_one] at h</span>
+<span id="L147">  exact eq_neg_of_add_eq_zero_left h</span>
+<span id="L148"></span>
+<span id="L149">/-- Arbitrary real directions are finite real combinations of coordinate derivatives. -/</span>
+<span id="L150">theorem smoothDerivative_coordinates (v : ℍ) (f : SmoothPunctured) :</span>
+<span id="L151">    smoothDerivative v f = ∑ μ : Fin 4,</span>
+<span id="L152">      MulOpposite.op ((coordinateBasis.repr v μ : ℝ) : ℍ) • smoothDerivative (coordinateBasis μ) f := by</span>
+<span id="L153">  apply SmoothPunctured.ext</span>
+<span id="L154">  intro q hq</span>
+<span id="L155">  simp only [smoothPunctured_sum_apply, smoothPunctured_smul_apply]</span>
+<span id="L156">  change smoothDerivative v f q = ∑ μ : Fin 4,</span>
+<span id="L157">    smoothDerivative (coordinateBasis μ) f q * ((coordinateBasis.repr v μ : ℝ) : ℍ)</span>
+<span id="L158">  simp only [smoothDerivative_apply _ _ hq, Quaternion.mul_coe_eq_smul, directional]</span>
+<span id="L159">  conv_lhs =&gt; rw [← coordinateBasis.sum_repr v]</span>
+<span id="L160">  simp only [map_sum, map_smul]</span>
+<span id="L161"></span>
+<span id="L162">theorem smoothDerivative_mem {r : ℕ} (v : ℍ) {f : SmoothPunctured}</span>
+<span id="L163">    (hf : f ∈ kernelDerivativeSpace r) : smoothDerivative v f ∈ kernelDerivativeSpace (r + 1) := by</span>
+<span id="L164">  induction hf using Submodule.span_induction with</span>
+<span id="L165">  | mem x hx =&gt;</span>
+<span id="L166">    change x ∈ Set.range (fun ν : {ν : Fin 3 → ℕ // ∑ j, ν j = r} =&gt; smoothHigherKernel ν) at hx</span>
+<span id="L167">    obtain ⟨⟨ν, hν⟩, rfl⟩ := hx</span>
+<span id="L168">    have hs (j : Fin 3) : smoothDerivative (coordinateBasis j.succ) (smoothHigherKernel ν) ∈</span>
+<span id="L169">        kernelDerivativeSpace (r + 1) := by</span>
+<span id="L170">      rw [smoothDerivative_spatial]</span>
+<span id="L171">      have hn : ∑ i : Fin 3, (ν + Pi.single j 1 : Fin 3 → ℕ) i = r + 1 := by</span>
+<span id="L172">        simp only [Pi.add_apply, Finset.sum_add_distrib, hν]</span>
+<span id="L173">        simp</span>
+<span id="L174">      rw [← hn]</span>
+<span id="L175">      exact smoothHigherKernel_mem _</span>
+<span id="L176">    rw [smoothDerivative_coordinates]</span>
+<span id="L177">    apply Submodule.sum_mem</span>
+<span id="L178">    intro μ _</span>
+<span id="L179">    apply Submodule.smul_mem</span>
+<span id="L180">    refine Fin.cases ?_ (fun j =&gt; hs j) μ</span>
+<span id="L181">    rw [smoothDerivative_time]</span>
+<span id="L182">    apply Submodule.neg_mem</span>
+<span id="L183">    exact Submodule.sum_mem _ (fun j _ =&gt; Submodule.smul_mem _ _ (hs j))</span>
+<span id="L184">  | zero =&gt; simp</span>
+<span id="L185">  | add x y _ _ hx hy =&gt; simpa using (kernelDerivativeSpace (r + 1)).add_mem hx hy</span>
+<span id="L186">  | smul c x _ hx =&gt; simpa using (kernelDerivativeSpace (r + 1)).smul_mem c hx</span>
+<span id="L187"></span>
+<span id="L188">end MathResearch.Fueter</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

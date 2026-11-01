@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/CompactAveraging.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/CompactAveraging.lean</h1><p><a href="CompactAveraging.lean" download>Download exact source</a>. SHA-256: <code>2ffb3650aabdd61b3f0bdc9a364276a08e401d6f32af3949b303b6dabfde1b33</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import Mathlib.Analysis.Convex.Integral</span>
+<span id="L3">public import Mathlib.Analysis.InnerProductSpace.Projection.Submodule</span>
+<span id="L4">public import Mathlib.Analysis.InnerProductSpace.LinearMap</span>
+<span id="L5"></span>
+<span id="L6">/-! The Hilbert-space argument in DS3, with its analytic and finite-dimensional</span>
+<span id="L7">inputs explicit. Irreducible here means closed invariant subspaces, not algebraic simplicity. -/</span>
+<span id="L8">@[expose] public section</span>
+<span id="L9">noncomputable section</span>
+<span id="L10">open MeasureTheory</span>
+<span id="L11">namespace MathResearch.Spinor</span>
+<span id="L12"></span>
+<span id="L13">variable {G H V K : Type*} [Group G] [NormedAddCommGroup H] [InnerProductSpace ℂ H]</span>
+<span id="L14">  [CompleteSpace H] [NormedAddCommGroup V] [InnerProductSpace ℂ V]</span>
+<span id="L15">  [MeasurableSpace K]</span>
+<span id="L16"></span>
+<span id="L17">/-- Invariance for the actual unitary group action. -/</span>
+<span id="L18">def UnitaryInvariant (ρ : G →* (H ≃ₗᵢ[ℂ] H)) (M : Submodule ℂ H) : Prop :=</span>
+<span id="L19">  ∀ g x, x ∈ M → ρ g x ∈ M</span>
+<span id="L20"></span>
+<span id="L21">/-- Hilbert/topological irreducibility; no assertion about nonclosed subspaces. -/</span>
+<span id="L22">def TopologicallyIrreducible (ρ : G →* (H ≃ₗᵢ[ℂ] H)) : Prop :=</span>
+<span id="L23">  ∀ M : Submodule ℂ H, IsClosed (M : Set H) → UnitaryInvariant ρ M → M = ⊥ ∨ M = ⊤</span>
+<span id="L24"></span>
+<span id="L25">omit [CompleteSpace H] in</span>
+<span id="L26">theorem UnitaryInvariant.orthogonal {ρ : G →* (H ≃ₗᵢ[ℂ] H)} {M : Submodule ℂ H}</span>
+<span id="L27">    (hM : UnitaryInvariant ρ M) : UnitaryInvariant ρ Mᗮ := by</span>
+<span id="L28">  intro g x hx</span>
+<span id="L29">  rw [Submodule.mem_orthogonal] at hx ⊢</span>
+<span id="L30">  intro y hy</span>
+<span id="L31">  have hi : ρ g (ρ g⁻¹ y) = y := by simp</span>
+<span id="L32">  rw [← hi, (ρ g).inner_map_map]</span>
+<span id="L33">  exact hx _ (hM g⁻¹ y hy)</span>
+<span id="L34"></span>
+<span id="L35">/-- Averaging stays in any closed invariant subspace, by mathlib&#39;s Bochner-integral theorem. -/</span>
+<span id="L36">theorem compact_average_mem (ρ : G →* (H ≃ₗᵢ[ℂ] H)) (μ : Measure K)</span>
+<span id="L37">    [IsProbabilityMeasure μ] (kL : K → G) (M : Submodule ℂ H)</span>
+<span id="L38">    (hclosed : IsClosed (M : Set H)) (hinv : UnitaryInvariant ρ M) (f : H) (hf : f ∈ M)</span>
+<span id="L39">    (hint : Integrable (fun k =&gt; ρ (kL k) f) μ) :</span>
+<span id="L40">    (∫ k, ρ (kL k) f ∂μ) ∈ M :=</span>
+<span id="L41">  (M.restrictScalars ℝ).convex.integral_mem hclosed (Filter.Eventually.of_forall fun _ =&gt; hinv _ _ hf) hint</span>
+<span id="L42"></span>
+<span id="L43">/-- Explicit hypotheses supplied, in DS3, by harmonic mean values, point evaluation,</span>
+<span id="L44">transitivity, and irreducibility of the compact polynomial representation. -/</span>
+<span id="L45">structure CompactAveragingInputs (ρ : G →* (H ≃ₗᵢ[ℂ] H)) (μ : Measure K)</span>
+<span id="L46">    (kL : K → G) (c : V →ₗᵢ[ℂ] H) (ev0 : H →L[ℂ] V) : Prop where</span>
+<span id="L47">  average_integrable : ∀ f : H, Integrable (fun k =&gt; ρ (kL k) f) μ</span>
+<span id="L48">  average_eq_constant : ∀ f : H, (∫ k, ρ (kL k) f ∂μ) = c (ev0 f)</span>
+<span id="L49">  translate_detects : ∀ f : H, f ≠ 0 → ∃ g : G, ev0 (ρ g f) ≠ 0</span>
+<span id="L50">  constant_orbit_spans : ∀ v : V, v ≠ 0 →</span>
+<span id="L51">    LinearMap.range c.toLinearMap ≤ Submodule.span ℂ (Set.range fun g : G =&gt; ρ g (c v))</span>
+<span id="L52"></span>
+<span id="L53">theorem constants_le_of_nonzero_invariant (ρ : G →* (H ≃ₗᵢ[ℂ] H)) (μ : Measure K)</span>
+<span id="L54">    [IsProbabilityMeasure μ] (kL : K → G) (c : V →ₗᵢ[ℂ] H) (ev0 : H →L[ℂ] V)</span>
+<span id="L55">    (h : CompactAveragingInputs ρ μ kL c ev0)</span>
+<span id="L56">    (M : Submodule ℂ H) (hclosed : IsClosed (M : Set H)) (hinv : UnitaryInvariant ρ M)</span>
+<span id="L57">    (hne : M ≠ ⊥) : LinearMap.range c.toLinearMap ≤ M := by</span>
+<span id="L58">  obtain ⟨f, hf, hf0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hne</span>
+<span id="L59">  obtain ⟨g, hg⟩ := h.translate_detects f hf0</span>
+<span id="L60">  have hc : c (ev0 (ρ g f)) ∈ M := by</span>
+<span id="L61">    rw [← h.average_eq_constant]</span>
+<span id="L62">    exact compact_average_mem ρ μ kL M hclosed hinv _ (hinv g f hf) (h.average_integrable _)</span>
+<span id="L63">  apply (h.constant_orbit_spans _ hg).trans</span>
+<span id="L64">  apply Submodule.span_le.mpr</span>
+<span id="L65">  rintro _ ⟨a, rfl⟩</span>
+<span id="L66">  exact hinv a _ hc</span>
+<span id="L67"></span>
+<span id="L68">/-- DS3&#39;s orthogonal-complement argument, conditional on the four displayed inputs. -/</span>
+<span id="L69">theorem DS3_irreducible_of_compactAveraging [Nontrivial V]</span>
+<span id="L70">    (ρ : G →* (H ≃ₗᵢ[ℂ] H)) (μ : Measure K) [IsProbabilityMeasure μ]</span>
+<span id="L71">    (kL : K → G) (c : V →ₗᵢ[ℂ] H) (ev0 : H →L[ℂ] V)</span>
+<span id="L72">    (h : CompactAveragingInputs ρ μ kL c ev0) : TopologicallyIrreducible ρ := by</span>
+<span id="L73">  intro M hclosed hinv</span>
+<span id="L74">  by_cases hM : M = ⊥</span>
+<span id="L75">  · exact Or.inl hM</span>
+<span id="L76">  right</span>
+<span id="L77">  let : CompleteSpace M := hclosed.completeSpace_coe</span>
+<span id="L78">  apply Submodule.orthogonal_eq_bot_iff.mp</span>
+<span id="L79">  by_contra hperp</span>
+<span id="L80">  have h₁ := constants_le_of_nonzero_invariant ρ μ kL c ev0 h M hclosed hinv hM</span>
+<span id="L81">  have h₂ := constants_le_of_nonzero_invariant ρ μ kL c ev0 h Mᗮ</span>
+<span id="L82">    M.isClosed_orthogonal hinv.orthogonal hperp</span>
+<span id="L83">  obtain ⟨v, hv⟩ := exists_ne (0 : V)</span>
+<span id="L84">  have hr : c v ∈ LinearMap.range c.toLinearMap := ⟨v, rfl⟩</span>
+<span id="L85">  have hz : c v = 0 := inner_self_eq_zero.mp (Submodule.inner_right_of_mem_orthogonal (h₁ hr) (h₂ hr))</span>
+<span id="L86">  exact hv (c.injective (hz.trans c.map_zero.symm))</span>
+<span id="L87"></span>
+<span id="L88">/-- The algebraic span of all translates of a subspace. -/</span>
+<span id="L89">def translateSpan (ρ : G →* (H ≃ₗᵢ[ℂ] H)) (C : Submodule ℂ H) : Submodule ℂ H :=</span>
+<span id="L90">  Submodule.span ℂ {x | ∃ g v, v ∈ C ∧ x = ρ g v}</span>
+<span id="L91"></span>
+<span id="L92">omit [CompleteSpace H] in</span>
+<span id="L93">theorem translateSpan_invariant (ρ : G →* (H ≃ₗᵢ[ℂ] H)) (C : Submodule ℂ H) :</span>
+<span id="L94">    UnitaryInvariant ρ (translateSpan ρ C) := by</span>
+<span id="L95">  intro g x hx</span>
+<span id="L96">  change x ∈ (translateSpan ρ C).comap (ρ g).toLinearEquiv.toLinearMap</span>
+<span id="L97">  apply Submodule.span_le.mpr _ hx</span>
+<span id="L98">  rintro y ⟨a, v, hv, rfl⟩</span>
+<span id="L99">  change ρ g (ρ a v) ∈ translateSpan ρ C</span>
+<span id="L100">  apply Submodule.subset_span</span>
+<span id="L101">  exact ⟨g*a, v, hv, by simp [map_mul]⟩</span>
+<span id="L102"></span>
+<span id="L103">omit [CompleteSpace H] in</span>
+<span id="L104">theorem UnitaryInvariant.topologicalClosure {ρ : G →* (H ≃ₗᵢ[ℂ] H)} {M : Submodule ℂ H}</span>
+<span id="L105">    (hM : UnitaryInvariant ρ M) : UnitaryInvariant ρ M.topologicalClosure := by</span>
+<span id="L106">  intro g x hx</span>
+<span id="L107">  have hle : M ≤ M.topologicalClosure.comap (ρ g).toLinearEquiv.toLinearMap :=</span>
+<span id="L108">    fun y hy =&gt; M.le_topologicalClosure (hM g y hy)</span>
+<span id="L109">  exact M.topologicalClosure_minimal hle</span>
+<span id="L110">    (M.isClosed_topologicalClosure.preimage (ρ g).continuous) hx</span>
+<span id="L111"></span>
+<span id="L112">omit [CompleteSpace H] in</span>
+<span id="L113">/-- The second conclusion of DS3 follows for every nonzero constant subspace. -/</span>
+<span id="L114">theorem DS3_dense_translateSpan {ρ : G →* (H ≃ₗᵢ[ℂ] H)}</span>
+<span id="L115">    (hirred : TopologicallyIrreducible ρ) (C : Submodule ℂ H) (hC : C ≠ ⊥) :</span>
+<span id="L116">    (translateSpan ρ C).topologicalClosure = ⊤ := by</span>
+<span id="L117">  have hd := hirred _ (translateSpan ρ C).isClosed_topologicalClosure</span>
+<span id="L118">    (translateSpan_invariant ρ C).topologicalClosure</span>
+<span id="L119">  rcases hd with hd | hd</span>
+<span id="L120">  · obtain ⟨v, hv, hv0⟩ := Submodule.exists_mem_ne_zero_of_ne_bot hC</span>
+<span id="L121">    have hm : v ∈ translateSpan ρ C := Submodule.subset_span ⟨1, v, hv, by simp⟩</span>
+<span id="L122">    have := (translateSpan ρ C).le_topologicalClosure hm</span>
+<span id="L123">    rw [hd, Submodule.mem_bot] at this</span>
+<span id="L124">    exact False.elim (hv0 this)</span>
+<span id="L125">  · exact hd</span>
+<span id="L126"></span>
+<span id="L127">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

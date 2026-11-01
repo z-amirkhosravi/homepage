@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/OrthonormalContraction.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/OrthonormalContraction.lean</h1><p><a href="OrthonormalContraction.lean" download>Download exact source</a>. SHA-256: <code>e3019d45d1526b96a60a762abf8e6b9e68c7028ff1393f32447c72edda4507b6</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.WeightedFueter</span>
+<span id="L3">public import MathResearch.Fueter.QuaternionRotations</span>
+<span id="L4"></span>
+<span id="L5">/-! Invariance of real bilinear contraction under a change of orthonormal frame. -/</span>
+<span id="L6">@[expose] public section</span>
+<span id="L7">noncomputable section</span>
+<span id="L8">open scoped Quaternion BigOperators</span>
+<span id="L9">namespace MathResearch.Spinor</span>
+<span id="L10"></span>
+<span id="L11">def quaternionONB : OrthonormalBasis (Fin 4) ℝ ℍ :=</span>
+<span id="L12">  Fueter.coordinateBasis.toOrthonormalBasis (by</span>
+<span id="L13">    rw [orthonormal_iff_ite]</span>
+<span id="L14">    intro i j</span>
+<span id="L15">    simp only [Fueter.coordinateBasis_eq, Quaternion.inner_def]</span>
+<span id="L16">    fin_cases i &lt;;&gt; fin_cases j &lt;;&gt; norm_num)</span>
+<span id="L17"></span>
+<span id="L18">@[simp] theorem quaternionONB_apply (i : Fin 4) : quaternionONB i = Fueter.coordinateBasis i := by</span>
+<span id="L19">  simp [quaternionONB, Module.Basis.coe_toOrthonormalBasis]</span>
+<span id="L20"></span>
+<span id="L21">theorem orthonormal_bilinear_contraction {W : Type*} [AddCommGroup W] [Module ℝ W]</span>
+<span id="L22">    (b c : OrthonormalBasis (Fin 4) ℝ ℍ) (B : ℍ →ₗ[ℝ] ℍ →ₗ[ℝ] W) :</span>
+<span id="L23">    ∑ i, B (c i) (c i) = ∑ j, B (b j) (b j) := by</span>
+<span id="L24">  have he (x y : ℍ) : B x y =</span>
+<span id="L25">      ∑ j, ∑ k, (inner ℝ (b j) x * inner ℝ (b k) y) • B (b j) (b k) := by</span>
+<span id="L26">    conv_lhs =&gt; rw [← b.sum_repr&#39; x, ← b.sum_repr&#39; y]</span>
+<span id="L27">    simp only [map_sum, map_smul, Finset.smul_sum, smul_smul, LinearMap.sum_apply, LinearMap.smul_apply]</span>
+<span id="L28">    rw [Finset.sum_comm]</span>
+<span id="L29">    apply Finset.sum_congr rfl</span>
+<span id="L30">    intro j _</span>
+<span id="L31">    apply Finset.sum_congr rfl</span>
+<span id="L32">    intro k _</span>
+<span id="L33">    rw [mul_comm]</span>
+<span id="L34">  simp_rw [he (c _) (c _)]</span>
+<span id="L35">  rw [Finset.sum_comm]</span>
+<span id="L36">  apply Finset.sum_congr rfl</span>
+<span id="L37">  intro j _</span>
+<span id="L38">  rw [Finset.sum_comm]</span>
+<span id="L39">  simp only [← Finset.sum_smul]</span>
+<span id="L40">  have hi (k : Fin 4) :</span>
+<span id="L41">      (∑ i, inner ℝ (b j) (c i) * inner ℝ (b k) (c i)) = if j = k then 1 else 0 := by</span>
+<span id="L42">    simpa only [real_inner_comm (b k), b.inner_eq_ite, eq_comm] using</span>
+<span id="L43">      c.sum_inner_mul_inner (b j) (b k)</span>
+<span id="L44">  simp [hi]</span>
+<span id="L45"></span>
+<span id="L46">/-- In particular the ordered real quaternion basis may be rotated before contraction. -/</span>
+<span id="L47">theorem quaternion_contraction_rotation {W : Type*} [AddCommGroup W] [Module ℝ W]</span>
+<span id="L48">    (R : ℍ ≃ₗᵢ[ℝ] ℍ) (B : ℍ →ₗ[ℝ] ℍ →ₗ[ℝ] W) :</span>
+<span id="L49">    ∑ i : Fin 4, B (R (Fueter.coordinateBasis i)) (R (Fueter.coordinateBasis i)) =</span>
+<span id="L50">      ∑ i : Fin 4, B (Fueter.coordinateBasis i) (Fueter.coordinateBasis i) := by</span>
+<span id="L51">  simpa using orthonormal_bilinear_contraction quaternionONB (quaternionONB.map R) B</span>
+<span id="L52"></span>
+<span id="L53">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

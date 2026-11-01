@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/HarmonicPartials.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/HarmonicPartials.lean</h1><p><a href="HarmonicPartials.lean" download>Download exact source</a>. SHA-256: <code>b523f4de032b724a489d5891bb39c909e10bd93fa486a9f6d3ea5dc8d7b54a79</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.WeylRegularity</span>
+<span id="L3"></span>
+<span id="L4">/-! Arbitrary finite strings of real directional derivatives preserve smooth</span>
+<span id="L5">weak harmonicity. Integration by parts moves each derivative onto an actual</span>
+<span id="L6">compactly supported test; the Weyl smoothing identity then estimates it. -/</span>
+<span id="L7">@[expose] public section</span>
+<span id="L8">noncomputable section</span>
+<span id="L9">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L10">open scoped Quaternion ContDiff Distributions</span>
+<span id="L11">open MeasureTheory</span>
+<span id="L12">namespace MathResearch.Spinor</span>
+<span id="L13"></span>
+<span id="L14">theorem testLaplacian_directional (v : ℍ) (φ : BallTest) :</span>
+<span id="L15">    testLaplacian (testDirectional v φ) = testDirectional v (testLaplacian φ) := by</span>
+<span id="L16">  simp only [testLaplacian, map_sum]</span>
+<span id="L17">  apply Finset.sum_congr rfl</span>
+<span id="L18">  intro i _</span>
+<span id="L19">  rw [testDirectional_comm _ v, testDirectional_comm _ v]</span>
+<span id="L20"></span>
+<span id="L21">variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]</span>
+<span id="L22"></span>
+<span id="L23">theorem distributionLaplacian_directional (v : ℍ) (T : 𝓓&#39;(ballOpen, E)) :</span>
+<span id="L24">    distributionLaplacian (Distribution.lineDerivCLM v T) =</span>
+<span id="L25">      Distribution.lineDerivCLM v (distributionLaplacian T) := by</span>
+<span id="L26">  ext φ : 1</span>
+<span id="L27">  simp only [distributionLaplacian_apply, Distribution.lineDerivCLM_apply]</span>
+<span id="L28">  change -T (testDirectional v (testLaplacian φ)) = -T (testLaplacian (testDirectional v φ))</span>
+<span id="L29">  rw [testLaplacian_directional]</span>
+<span id="L30"></span>
+<span id="L31">/-- Outer derivatives are listed first; each direction is an arbitrary real quaternion vector. -/</span>
+<span id="L32">def realDirectionalPartials : List ℍ → (ℍ → E) → ℍ → E</span>
+<span id="L33">  | [], u =&gt; u</span>
+<span id="L34">  | v :: vs, u =&gt; fun a =&gt; fderiv ℝ (realDirectionalPartials vs u) a v</span>
+<span id="L35"></span>
+<span id="L36">theorem contDiffOn_realDirectionalPartials {u : ℍ → E}</span>
+<span id="L37">    (hu : ContDiffOn ℝ ∞ u Ball) (vs : List ℍ) :</span>
+<span id="L38">    ContDiffOn ℝ ∞ (realDirectionalPartials vs u) Ball := by</span>
+<span id="L39">  induction vs with</span>
+<span id="L40">  | nil =&gt; exact hu</span>
+<span id="L41">  | cons v vs ih =&gt; exact contDiffOn_directional ih v</span>
+<span id="L42"></span>
+<span id="L43">theorem distributionLaplacian_realDirectionalPartials {u : ℍ → E}</span>
+<span id="L44">    (hu : ContDiffOn ℝ ∞ u Ball)</span>
+<span id="L45">    (hΔ : distributionLaplacian (Distribution.ofFun ballOpen u volume ⊤) = 0) (vs : List ℍ) :</span>
+<span id="L46">    distributionLaplacian (Distribution.ofFun ballOpen (realDirectionalPartials vs u) volume ⊤) = 0 := by</span>
+<span id="L47">  induction vs with</span>
+<span id="L48">  | nil =&gt; exact hΔ</span>
+<span id="L49">  | cons v vs ih =&gt;</span>
+<span id="L50">    change distributionLaplacian (Distribution.ofFun ballOpen</span>
+<span id="L51">      (fun a =&gt; fderiv ℝ (realDirectionalPartials vs u) a v) volume ⊤) = 0</span>
+<span id="L52">    rw [← distribution_directional_of_smooth (contDiffOn_realDirectionalPartials hu vs),</span>
+<span id="L53">      distributionLaplacian_directional, ih, map_zero]</span>
+<span id="L54"></span>
+<span id="L55">/-- The signed adjoint test, with reversal of derivative order implemented recursively. -/</span>
+<span id="L56">def partialAdjointTest : List ℍ → BallTest → BallTest</span>
+<span id="L57">  | [], φ =&gt; φ</span>
+<span id="L58">  | v :: vs, φ =&gt; partialAdjointTest vs (-testDirectional v φ)</span>
+<span id="L59"></span>
+<span id="L60">theorem integral_test_realDirectionalPartials {u : ℍ → E}</span>
+<span id="L61">    (hu : ContDiffOn ℝ ∞ u Ball) (vs : List ℍ) (φ : BallTest) :</span>
+<span id="L62">    (∫ a, φ a • realDirectionalPartials vs u a) = ∫ a, partialAdjointTest vs φ a • u a := by</span>
+<span id="L63">  induction vs generalizing φ with</span>
+<span id="L64">  | nil =&gt; rfl</span>
+<span id="L65">  | cons v vs ih =&gt;</span>
+<span id="L66">    change (∫ a, φ a • fderiv ℝ (realDirectionalPartials vs u) a v) = _</span>
+<span id="L67">    rw [integral_test_directional (contDiffOn_realDirectionalPartials hu vs)]</span>
+<span id="L68">    have h := ih (-testDirectional v φ)</span>
+<span id="L69">    simpa only [partialAdjointTest, FunLike.coe_neg, Pi.neg_apply, neg_smul, integral_neg] using h</span>
+<span id="L70"></span>
+<span id="L71">variable [CompleteSpace E]</span>
+<span id="L72"></span>
+<span id="L73">/-- The local smoothing formula holds pointwise for every smooth harmonic function. -/</span>
+<span id="L74">theorem smooth_harmonic_kernel_formula {u : ℍ → E}</span>
+<span id="L75">    (hu : ContDiffOn ℝ ∞ u Ball)</span>
+<span id="L76">    (hΔ : distributionLaplacian (Distribution.ofFun ballOpen u volume ⊤) = 0)</span>
+<span id="L77">    {a : ℍ} {r : ℝ} (hr : 0 &lt; r) (ha : ‖a‖ + 2*r &lt; 1) :</span>
+<span id="L78">    u a = weylSmooth r u a := by</span>
+<span id="L79">  have hi := hu.continuousOn.locallyIntegrableOn (μ := volume) ball_isOpen.measurableSet</span>
+<span id="L80">  have hW := smooth_harmonic_representative hi hΔ</span>
+<span id="L81">  have he := Measure.eqOn_open_of_ae_eq hW.2.2 ball_isOpen hu.continuousOn hW.1.continuousOn</span>
+<span id="L82">  rw [he ((mem_ball_iff a).mpr (by linarith))]</span>
+<span id="L83">  exact weylRepresentative_eq_smooth hi hΔ hr ha</span>
+<span id="L84"></span>
+<span id="L85">/-- All-order interior derivative formula; no differentiation of an L² representative occurs. -/</span>
+<span id="L86">theorem harmonicPartials_test_formula {u : ℍ → E}</span>
+<span id="L87">    (hu : ContDiffOn ℝ ∞ u Ball)</span>
+<span id="L88">    (hΔ : distributionLaplacian (Distribution.ofFun ballOpen u volume ⊤) = 0)</span>
+<span id="L89">    (vs : List ℍ) {a : ℍ} {r : ℝ} (hr : 0 &lt; r) (ha : ‖a‖ + 2*r &lt; 1) :</span>
+<span id="L90">    realDirectionalPartials vs u a = ∫ y, partialAdjointTest vs (weylKernelTest r a hr ha) y • u y := by</span>
+<span id="L91">  rw [smooth_harmonic_kernel_formula (contDiffOn_realDirectionalPartials hu vs)</span>
+<span id="L92">    (distributionLaplacian_realDirectionalPartials hu hΔ vs) hr ha]</span>
+<span id="L93">  exact integral_test_realDirectionalPartials hu vs (weylKernelTest r a hr ha)</span>
+<span id="L94"></span>
+<span id="L95">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

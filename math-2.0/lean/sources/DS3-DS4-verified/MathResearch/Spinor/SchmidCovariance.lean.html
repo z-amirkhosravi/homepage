@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/SchmidCovariance.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/SchmidCovariance.lean</h1><p><a href="SchmidCovariance.lean" download>Download exact source</a>. SHA-256: <code>9db06ab1975a44a6607a237323024fa05ee1988610c32ce56f4f8b6ec4235084</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.SchmidFueter</span>
+<span id="L3">public import MathResearch.Spinor.OrthonormalContraction</span>
+<span id="L4"></span>
+<span id="L5">/-! Compact-frame covariance and the global smooth kernel correspondence. -/</span>
+<span id="L6">@[expose] public section</span>
+<span id="L7">noncomputable section</span>
+<span id="L8">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L9">open scoped Quaternion BigOperators Matrix.Norms.Elementwise</span>
+<span id="L10">open MvPolynomial</span>
+<span id="L11">namespace MathResearch.Spinor</span>
+<span id="L12"></span>
+<span id="L13">abbrev PolynomialColumn := Fin 2 → ComplexPoly2</span>
+<span id="L14"></span>
+<span id="L15">def spinorProjection (n : ℕ) (v : ℍ) (p : BinaryForm n) : PolynomialColumn :=</span>
+<span id="L16">  matrixColumn (quaternionMatrix v) (fun i =&gt; pderiv i (p : ComplexPoly2))</span>
+<span id="L17"></span>
+<span id="L18">theorem matrixColumn_mul (M N : Matrix2) (h : PolynomialColumn) :</span>
+<span id="L19">    matrixColumn (M*N) h = matrixColumn M (matrixColumn N h) := by</span>
+<span id="L20">  funext i</span>
+<span id="L21">  simp [matrixColumn, Matrix.mul_apply, Fin.sum_univ_two]</span>
+<span id="L22">  ring</span>
+<span id="L23"></span>
+<span id="L24">@[simp] theorem matrixColumn_one (h : PolynomialColumn) : matrixColumn 1 h = h := by</span>
+<span id="L25">  funext i; fin_cases i &lt;;&gt; simp [matrixColumn, Matrix.one_apply]</span>
+<span id="L26"></span>
+<span id="L27">theorem spinorProjection_add_right (n : ℕ) (v : ℍ) (p r : BinaryForm n) :</span>
+<span id="L28">    spinorProjection n v (p+r) = spinorProjection n v p + spinorProjection n v r := by</span>
+<span id="L29">  funext i; simp [spinorProjection, matrixColumn]; ring</span>
+<span id="L30"></span>
+<span id="L31">theorem spinorProjection_smul_right (n : ℕ) (v : ℍ) (r : ℝ) (p : BinaryForm n) :</span>
+<span id="L32">    spinorProjection n v (r • p) = r • spinorProjection n v p := by</span>
+<span id="L33">  change spinorProjection n v ((r:ℂ) • p) = (r:ℂ) • spinorProjection n v p</span>
+<span id="L34">  funext i; simp [spinorProjection, matrixColumn, smul_add]</span>
+<span id="L35"></span>
+<span id="L36">theorem spinorProjection_add_left (n : ℕ) (v w : ℍ) (p : BinaryForm n) :</span>
+<span id="L37">    spinorProjection n (v+w) p = spinorProjection n v p + spinorProjection n w p := by</span>
+<span id="L38">  funext i; simp [spinorProjection, matrixColumn, quaternionMatrix_add]; ring</span>
+<span id="L39"></span>
+<span id="L40">theorem spinorProjection_smul_left (n : ℕ) (r : ℝ) (v : ℍ) (p : BinaryForm n) :</span>
+<span id="L41">    spinorProjection n (r • v) p = r • spinorProjection n v p := by</span>
+<span id="L42">  change spinorProjection n (r • v) p = (r:ℂ) • spinorProjection n v p</span>
+<span id="L43">  funext i; simp [spinorProjection, matrixColumn, quaternionMatrix_real_smul, smul_eq_C_mul]; ring</span>
+<span id="L44"></span>
+<span id="L45">/-- The real bilinear symbol v⊗p ↦ vT_np. -/</span>
+<span id="L46">def projectionSymbol (n : ℕ) : ℍ →ₗ[ℝ] BinaryForm n →ₗ[ℝ] PolynomialColumn where</span>
+<span id="L47">  toFun v :=</span>
+<span id="L48">    { toFun := spinorProjection n v</span>
+<span id="L49">      map_add&#39; := spinorProjection_add_right n v</span>
+<span id="L50">      map_smul&#39; := spinorProjection_smul_right n v }</span>
+<span id="L51">  map_add&#39; v w := by apply LinearMap.ext; intro p; exact spinorProjection_add_left n v w p</span>
+<span id="L52">  map_smul&#39; r v := by apply LinearMap.ext; intro p; exact spinorProjection_smul_left n r v p</span>
+<span id="L53"></span>
+<span id="L54">/-- Polynomial substitution on both components of a column. -/</span>
+<span id="L55">def columnSubstitution (u : ℍ) (h : PolynomialColumn) : PolynomialColumn :=</span>
+<span id="L56">  fun i =&gt; polynomialAction (quaternionMatrix u) (h i)</span>
+<span id="L57"></span>
+<span id="L58">theorem columnSubstitution_matrixColumn (u : ℍ) (M : Matrix2) (h : PolynomialColumn) :</span>
+<span id="L59">    columnSubstitution u (matrixColumn M h) = matrixColumn M (columnSubstitution u h) := by</span>
+<span id="L60">  funext i; simp [columnSubstitution, matrixColumn]</span>
+<span id="L61"></span>
+<span id="L62">/-- The exact chain rule for the projection and polynomial action. -/</span>
+<span id="L63">theorem spinorProjection_action (n : ℕ) (u v : ℍ) (p : BinaryForm n) :</span>
+<span id="L64">    spinorProjection n v (polynomialRepresentation n (quaternionMatrix u) p) =</span>
+<span id="L65">      columnSubstitution u (spinorProjection n (v*u) p) := by</span>
+<span id="L66">  change matrixColumn (quaternionMatrix v)</span>
+<span id="L67">      (fun i =&gt; pderiv i (polynomialAction (quaternionMatrix u) p)) = _</span>
+<span id="L68">  simp_rw [polynomialAction_chainRule]</span>
+<span id="L69">  change matrixColumn (quaternionMatrix v)</span>
+<span id="L70">      (matrixColumn (quaternionMatrix u) (columnSubstitution u (fun i =&gt; pderiv i (p : ComplexPoly2)))) = _</span>
+<span id="L71">  rw [← matrixColumn_mul, ← quaternionMatrix_mul]</span>
+<span id="L72">  exact (columnSubstitution_matrixColumn u _ _).symm</span>
+<span id="L73"></span>
+<span id="L74">/-- Projection of a real linear differential, as a polynomial column. -/</span>
+<span id="L75">def projectedLinear (n : ℕ) (L : ℍ →ₗ[ℝ] BinaryForm n) : PolynomialColumn :=</span>
+<span id="L76">  ∑ μ : Fin 4, spinorProjection n (Fueter.coordinateBasis μ) (L (Fueter.coordinateBasis μ))</span>
+<span id="L77"></span>
+<span id="L78">theorem projectedLinear_rotation (n : ℕ) (L : ℍ →ₗ[ℝ] BinaryForm n) (R : ℍ ≃ₗᵢ[ℝ] ℍ) :</span>
+<span id="L79">    (∑ μ : Fin 4, spinorProjection n (R (Fueter.coordinateBasis μ)) (L (R (Fueter.coordinateBasis μ)))) =</span>
+<span id="L80">      projectedLinear n L := by</span>
+<span id="L81">  let B : ℍ →ₗ[ℝ] ℍ →ₗ[ℝ] PolynomialColumn :=</span>
+<span id="L82">    { toFun := fun v =&gt; (projectionSymbol n v).comp L</span>
+<span id="L83">      map_add&#39; := by intro v w; apply LinearMap.ext; intro x; exact spinorProjection_add_left n v w (L x)</span>
+<span id="L84">      map_smul&#39; := by intro r v; apply LinearMap.ext; intro x; exact spinorProjection_smul_left n r v (L x) }</span>
+<span id="L85">  exact quaternion_contraction_rotation R B</span>
+<span id="L86"></span>
+<span id="L87">/-- Real continuous polynomial action for a fixed quaternion. -/</span>
+<span id="L88">def realQuaternionAction (n : ℕ) (a : ℍ) : BinaryForm n →L[ℝ] BinaryForm n :=</span>
+<span id="L89">  ((polynomialRepresentation n (quaternionMatrix a)).restrictScalars ℝ).toContinuousLinearMap</span>
+<span id="L90"></span>
+<span id="L91">@[simp] theorem realQuaternionAction_apply (n : ℕ) (a : ℍ) (p : BinaryForm n) :</span>
+<span id="L92">    realQuaternionAction n a p = polynomialRepresentation n (quaternionMatrix a) p := rfl</span>
+<span id="L93"></span>
+<span id="L94">theorem unitQuaternion_ne_zero (b : Fueter.UnitQuaternion) : (b : ℍ) ≠ 0 := by</span>
+<span id="L95">  intro h</span>
+<span id="L96">  have := Fueter.unitQuaternion_normSq b</span>
+<span id="L97">  simp [h] at this</span>
+<span id="L98"></span>
+<span id="L99">theorem unitQuaternion_inv (b : Fueter.UnitQuaternion) : (b : ℍ)⁻¹ = star (b : ℍ) := by</span>
+<span id="L100">  apply inv_eq_of_mul_eq_one_right</span>
+<span id="L101">  exact Unitary.coe_mul_star_self b</span>
+<span id="L102"></span>
+<span id="L103">/-- The adjoint action of diag(a,b) sends ξ_v to ξ_(avb⁻¹). -/</span>
+<span id="L104">theorem compact_tangent (k : Fueter.QuaternionSpinPair) (v : ℍ) :</span>
+<span id="L105">    compactMatrix k.1 k.2 * tangentMatrix v =</span>
+<span id="L106">      tangentMatrix (Fueter.quaternionRotation k v) * compactMatrix k.1 k.2 := by</span>
+<span id="L107">  apply Matrix.ext; intro i j</span>
+<span id="L108">  fin_cases i &lt;;&gt; fin_cases j &lt;;&gt;</span>
+<span id="L109">    simp [compactMatrix, tangentMatrix, Fueter.quaternionRotation_apply,</span>
+<span id="L110">      Matrix.mul_apply, Fin.sum_univ_two, mul_assoc]</span>
+<span id="L111"></span>
+<span id="L112">theorem rightAffinePath_compact (g : QuaternionMatrix2) (k : Fueter.QuaternionSpinPair) (v : ℍ) (t : ℝ) :</span>
+<span id="L113">    rightAffinePath (g * compactMatrix k.1 k.2) v t =</span>
+<span id="L114">      rightAffinePath g (Fueter.quaternionRotation k v) t * compactMatrix k.1 k.2 := by</span>
+<span id="L115">  simp only [rightAffinePath, add_mul, smul_mul_assoc]</span>
+<span id="L116">  congr 1</span>
+<span id="L117">  rw [mul_assoc, compact_tangent k v, ← mul_assoc]</span>
+<span id="L118"></span>
+<span id="L119">theorem rightLieDerivative_frameLift_compact (n : ℕ) (U : ℍ → BinaryForm n)</span>
+<span id="L120">    {g : QuaternionMatrix2} (hg : IsSp11 g) (hU : DifferentiableAt ℝ U (groupOrigin g))</span>
+<span id="L121">    (k : Fueter.QuaternionSpinPair) (v : ℍ) :</span>
+<span id="L122">    rightLieDerivative n (frameLift n U) (g * compactMatrix k.1 k.2) v =</span>
+<span id="L123">      realQuaternionAction n (star (k.2 : ℍ))</span>
+<span id="L124">        (rightLieDerivative n (frameLift n U) g (Fueter.quaternionRotation k v)) := by</span>
+<span id="L125">  have hf := differentiableAt_frameLift n U hg hU</span>
+<span id="L126">  have hd := (show HasFDerivAt (frameLift n U) (fderiv ℝ (frameLift n U) g)</span>
+<span id="L127">      (rightAffinePath g (Fueter.quaternionRotation k v) 0) from by simpa using hf.hasFDerivAt).comp_hasDerivAt 0</span>
+<span id="L128">        (rightAffinePath_hasDerivAt g (Fueter.quaternionRotation k v))</span>
+<span id="L129">  have he : (fun t =&gt; frameLift n U (rightAffinePath (g * compactMatrix k.1 k.2) v t)) =</span>
+<span id="L130">      fun t =&gt; realQuaternionAction n (star (k.2 : ℍ)) (frameLift n U (rightAffinePath g (Fueter.quaternionRotation k v) t)) := by</span>
+<span id="L131">    funext t</span>
+<span id="L132">    rw [rightAffinePath_compact, frameLift_equivariant n U _ _ _ (unitQuaternion_ne_zero k.2), unitQuaternion_inv]</span>
+<span id="L133">    rfl</span>
+<span id="L134">  rw [rightLieDerivative, he, rightLieDerivative_eq_fderiv n _ _ hf]</span>
+<span id="L135">  exact ((realQuaternionAction n (star (k.2 : ℍ))).hasFDerivAt.comp_hasDerivAt 0 hd).deriv</span>
+<span id="L136"></span>
+<span id="L137">/-- Target transformation associated with the compact frame change. -/</span>
+<span id="L138">def compactTarget (k : Fueter.QuaternionSpinPair) (h : PolynomialColumn) : PolynomialColumn :=</span>
+<span id="L139">  matrixColumn (quaternionMatrix (star (k.1 : ℍ))) (columnSubstitution (star (k.2 : ℍ)) h)</span>
+<span id="L140"></span>
+<span id="L141">@[simp] theorem compactTarget_zero (k : Fueter.QuaternionSpinPair) : compactTarget k 0 = 0 := by</span>
+<span id="L142">  funext i; simp [compactTarget, matrixColumn, columnSubstitution]</span>
+<span id="L143"></span>
+<span id="L144">theorem compactTarget_sum (k : Fueter.QuaternionSpinPair) {ι : Type*} (s : Finset ι)</span>
+<span id="L145">    (h : ι → PolynomialColumn) : compactTarget k (∑ i ∈ s, h i) = ∑ i ∈ s, compactTarget k (h i) := by</span>
+<span id="L146">  funext i</span>
+<span id="L147">  simp [compactTarget, columnSubstitution, matrixColumn, Finset.mul_sum, ← Finset.sum_add_distrib]</span>
+<span id="L148"></span>
+<span id="L149">/-- The symbol&#39;s K-equivariance, with the exact column and left/right conventions. -/</span>
+<span id="L150">theorem spinorProjection_compact (n : ℕ) (k : Fueter.QuaternionSpinPair) (v : ℍ) (p : BinaryForm n) :</span>
+<span id="L151">    spinorProjection n v (realQuaternionAction n (star (k.2 : ℍ)) p) =</span>
+<span id="L152">      compactTarget k (spinorProjection n (Fueter.quaternionRotation k v) p) := by</span>
+<span id="L153">  rw [realQuaternionAction_apply, spinorProjection_action, compactTarget]</span>
+<span id="L154">  simp only [spinorProjection, columnSubstitution_matrixColumn]</span>
+<span id="L155">  change matrixColumn (quaternionMatrix (v * star (k.2 : ℍ))) _ =</span>
+<span id="L156">      matrixColumn (quaternionMatrix (star (k.1 : ℍ)))</span>
+<span id="L157">        (matrixColumn (quaternionMatrix (Fueter.quaternionRotation k v)) _) </span>
+<span id="L158">  rw [← matrixColumn_mul, ← quaternionMatrix_mul]</span>
+<span id="L159">  congr 1</span>
+<span id="L160">  simp [Fueter.quaternionRotation_apply, ← mul_assoc]</span>
+<span id="L161"></span>
+<span id="L162">/-- The projected group derivative in complex polynomial columns. -/</span>
+<span id="L163">def projectedGroupColumn (n : ℕ) (F : QuaternionMatrix2 → BinaryForm n) (g : QuaternionMatrix2) : PolynomialColumn :=</span>
+<span id="L164">  ∑ μ : Fin 4, spinorProjection n (Fueter.coordinateBasis μ)</span>
+<span id="L165">    (rightLieDerivative n F g (Fueter.coordinateBasis μ))</span>
+<span id="L166"></span>
+<span id="L167">theorem projectedGroupColumn_compact (n : ℕ) (U : ℍ → BinaryForm n)</span>
+<span id="L168">    {g : QuaternionMatrix2} (hg : IsSp11 g) (hU : DifferentiableAt ℝ U (groupOrigin g))</span>
+<span id="L169">    (k : Fueter.QuaternionSpinPair) :</span>
+<span id="L170">    projectedGroupColumn n (frameLift n U) (g * compactMatrix k.1 k.2) =</span>
+<span id="L171">      compactTarget k (projectedGroupColumn n (frameLift n U) g) := by</span>
+<span id="L172">  have hf := differentiableAt_frameLift n U hg hU</span>
+<span id="L173">  let L : ℍ →ₗ[ℝ] BinaryForm n :=</span>
+<span id="L174">    (fderiv ℝ (frameLift n U) g).toLinearMap.comp</span>
+<span id="L175">      ((LinearMap.mulLeft ℝ g).comp tangentCLM.toLinearMap)</span>
+<span id="L176">  have hL (v : ℍ) : L v = rightLieDerivative n (frameLift n U) g v := by</span>
+<span id="L177">    rw [rightLieDerivative_eq_fderiv n _ _ hf]</span>
+<span id="L178">    rfl</span>
+<span id="L179">  simp only [projectedGroupColumn, rightLieDerivative_frameLift_compact n U hg hU,</span>
+<span id="L180">    spinorProjection_compact, ← compactTarget_sum]</span>
+<span id="L181">  congr 1</span>
+<span id="L182">  simpa only [hL, projectedLinear] using projectedLinear_rotation n L (Fueter.quaternionRotation k)</span>
+<span id="L183"></span>
+<span id="L184">/-- The column and quaternion coefficient versions of the projected operator agree. -/</span>
+<span id="L185">theorem projectedGroupOperator_pack (n : ℕ) (F : QuaternionMatrix2 → BinaryForm n)</span>
+<span id="L186">    (g : QuaternionMatrix2) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L187">    projectedGroupOperator n F g d =</span>
+<span id="L188">      pack ((projectedGroupColumn n F g 0).coeff d) ((projectedGroupColumn n F g 1).coeff d) := by</span>
+<span id="L189">  simp [projectedGroupOperator, projectedGroupColumn, spinorProjection,</span>
+<span id="L190">    pack_sum, matrixColumn_pack_coeff, polynomialFueterCoefficients]</span>
+<span id="L191"></span>
+<span id="L192">theorem projectedGroupColumn_zero_iff (n : ℕ) (F : QuaternionMatrix2 → BinaryForm n)</span>
+<span id="L193">    (g : QuaternionMatrix2) : projectedGroupColumn n F g = 0 ↔ ∀ d, projectedGroupOperator n F g d = 0 := by</span>
+<span id="L194">  constructor</span>
+<span id="L195">  · intro h d; simp [projectedGroupOperator_pack, h, pack]</span>
+<span id="L196">  · intro h</span>
+<span id="L197">    funext i</span>
+<span id="L198">    apply MvPolynomial.ext</span>
+<span id="L199">    intro d</span>
+<span id="L200">    have he : (((projectedGroupColumn n F g 0).coeff d), ((projectedGroupColumn n F g 1).coeff d)) = (0,0) := by</span>
+<span id="L201">      apply pack_injective</span>
+<span id="L202">      simpa [projectedGroupOperator_pack, pack] using h d</span>
+<span id="L203">    fin_cases i</span>
+<span id="L204">    · exact congrArg Prod.fst he</span>
+<span id="L205">    · exact congrArg Prod.snd he</span>
+<span id="L206"></span>
+<span id="L207">/-- Convert the proved norm equation into mathlib&#39;s unit quaternion group. -/</span>
+<span id="L208">def unitOfNormSq (a : ℍ) (ha : Quaternion.normSq a = 1) : Fueter.UnitQuaternion :=</span>
+<span id="L209">  ⟨a, by constructor &lt;;&gt; simp [Quaternion.star_mul_self, Quaternion.self_mul_star, ha]⟩</span>
+<span id="L210"></span>
+<span id="L211">/-- Vanishing on the section extends to all of G by the proved K-covariance. -/</span>
+<span id="L212">theorem group_kernel_iff_section (n : ℕ) (U : ℍ → BinaryForm n)</span>
+<span id="L213">    (hU : ∀ q ∈ Ball, DifferentiableAt ℝ U q) :</span>
+<span id="L214">    (∀ g, IsSp11 g → ∀ d, projectedGroupOperator n (frameLift n U) g d = 0) ↔</span>
+<span id="L215">    (∀ q ∈ Ball, ∀ d, projectedGroupOperator n (frameLift n U) (ballSection q) d = 0) := by</span>
+<span id="L216">  constructor</span>
+<span id="L217">  · intro h q hq; exact h (ballSection q) (ballSection_isSp11 q hq)</span>
+<span id="L218">  · intro h g hg</span>
+<span id="L219">    let k : Fueter.QuaternionSpinPair :=</span>
+<span id="L220">      (unitOfNormSq (compactLeft g) (compactLeft_unit hg), unitOfNormSq (compactRight g) (compactRight_unit hg))</span>
+<span id="L221">    have hq := groupOrigin_mem_ball hg</span>
+<span id="L222">    have hd : DifferentiableAt ℝ U (groupOrigin (ballSection (groupOrigin g))) := by</span>
+<span id="L223">      simpa [groupOrigin_ballSection _ hq] using hU (groupOrigin g) hq</span>
+<span id="L224">    have he := projectedGroupColumn_compact n U (ballSection_isSp11 _ hq) hd k</span>
+<span id="L225">    have hz := (projectedGroupColumn_zero_iff n (frameLift n U) (ballSection (groupOrigin g))).mpr (h _ hq)</span>
+<span id="L226">    rw [hz, compactTarget_zero] at he</span>
+<span id="L227">    change projectedGroupColumn n (frameLift n U)</span>
+<span id="L228">      (ballSection (groupOrigin g) * compactMatrix (compactLeft g) (compactRight g)) = 0 at he</span>
+<span id="L229">    rw [← section_compact_decomposition hg] at he</span>
+<span id="L230">    exact (projectedGroupColumn_zero_iff n (frameLift n U) g).mp he</span>
+<span id="L231"></span>
+<span id="L232">/-- SC3/v1: the exact weighted formula and global group/ball kernel equivalence, all n≥1. -/</span>
+<span id="L233">theorem SC3_frameLift_v1 (n : ℕ) (hn : 1 ≤ n) (f : ℍ → BinaryForm n)</span>
+<span id="L234">    (hf : ∀ q ∈ Ball, DifferentiableAt ℝ f q) :</span>
+<span id="L235">    (∀ q ∈ Ball, ∀ d,</span>
+<span id="L236">      (24 : ℝ) • schmidOperator n (frameLift n (weightedSpinor n f)) (ballSection q) d =</span>
+<span id="L237">        ballWeight (((n:ℝ)+4)/2) q •</span>
+<span id="L238">          Fueter.leftOperator (fun x =&gt; fueterCoefficientCLM n d (f x)) q) ∧</span>
+<span id="L239">    ((∀ g, IsSp11 g → ∀ d, schmidOperator n (frameLift n (weightedSpinor n f)) g d = 0) ↔</span>
+<span id="L240">      (∀ q ∈ Ball, ∀ d, Fueter.leftOperator (fun x =&gt; fueterCoefficientCLM n d (f x)) q = 0)) := by</span>
+<span id="L241">  obtain ⟨m, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : n ≠ 0)</span>
+<span id="L242">  have hU : ∀ q ∈ Ball, DifferentiableAt ℝ (weightedSpinor (m+1) f) q := by</span>
+<span id="L243">    intro q hq</span>
+<span id="L244">    exact ((hasFDerivAt_ballWeight _ hq).smul (hf q hq).hasFDerivAt).differentiableAt</span>
+<span id="L245">  have hs (q : ℍ) (hq : q ∈ Ball) (d : Fin 2 →₀ ℕ) := SC3_v1_coefficients m f q hq (hf q hq) d</span>
+<span id="L246">  constructor</span>
+<span id="L247">  · intro q hq d</span>
+<span id="L248">    rw [schmidOperator_normalization]</span>
+<span id="L249">    exact hs q hq d</span>
+<span id="L250">  · simp only [schmidOperator, smul_eq_zero, inv_eq_zero, OfNat.ofNat_ne_zero, false_or]</span>
+<span id="L251">    rw [group_kernel_iff_section (m+1) _ hU]</span>
+<span id="L252">    apply forall_congr&#39;; intro q</span>
+<span id="L253">    apply forall_congr&#39;; intro hq</span>
+<span id="L254">    apply forall_congr&#39;; intro d</span>
+<span id="L255">    rw [hs q hq d]</span>
+<span id="L256">    exact smul_eq_zero_iff_right (ne_of_gt (ballWeight_pos _ hq))</span>
+<span id="L257"></span>
+<span id="L258">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

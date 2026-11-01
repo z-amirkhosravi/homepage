@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/MaurerCartan.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/MaurerCartan.lean</h1><p><a href="MaurerCartan.lean" download>Download exact source</a>. SHA-256: <code>baa734b423130e7fcf4e7b85de0c02f55479d7ade4232a66237102ea64954aea</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import Mathlib.Analysis.Calculus.FDeriv.Symmetric</span>
+<span id="L3">public import Mathlib.Analysis.Calculus.FDeriv.Mul</span>
+<span id="L4">public import Mathlib.Analysis.Normed.Module.FiniteDimension</span>
+<span id="L5">public import Mathlib.Algebra.Algebra.Bilinear</span>
+<span id="L6">public import Mathlib.Analysis.Matrix.Normed</span>
+<span id="L7">public import Mathlib.Tactic</span>
+<span id="L8"></span>
+<span id="L9">/-! Maurer–Cartan for the logarithmic derivative of a matrix-valued map over a</span>
+<span id="L10">finite-dimensional real normed associative algebra. The inverse is supplied as a</span>
+<span id="L11">function, with its differentiability and the two inverse identities explicit.</span>
+<span id="L12">This background theorem is independent of the quaternionic ball calculation. -/</span>
+<span id="L13">@[expose] public section</span>
+<span id="L14">noncomputable section</span>
+<span id="L15">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L16">open scoped Topology Matrix.Norms.Elementwise</span>
+<span id="L17">namespace MathResearch.Analysis</span>
+<span id="L18"></span>
+<span id="L19">variable {E A ι : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]</span>
+<span id="L20">  [NormedRing A] [NormedAlgebra ℝ A] [FiniteDimensional ℝ A]</span>
+<span id="L21">  [Fintype ι] [DecidableEq ι]</span>
+<span id="L22"></span>
+<span id="L23">local notation &quot;M&quot; =&gt; Matrix ι ι A</span>
+<span id="L24"></span>
+<span id="L25">/-- Multiplication as a continuous bilinear map, without choosing an algebra norm. -/</span>
+<span id="L26">def algebraMulCLM : M →L[ℝ] M →L[ℝ] M :=</span>
+<span id="L27">  (LinearMap.toContinuousLinearMap.toLinearMap.comp (LinearMap.mul ℝ M)).toContinuousLinearMap</span>
+<span id="L28"></span>
+<span id="L29">@[simp] theorem algebraMulCLM_apply (a b : M) : algebraMulCLM a b = a * b := rfl</span>
+<span id="L30"></span>
+<span id="L31">theorem fderiv_algebra_mul {f g : E → M} {x : E}</span>
+<span id="L32">    (hf : DifferentiableAt ℝ f x) (hg : DifferentiableAt ℝ g x) (v : E) :</span>
+<span id="L33">    fderiv ℝ (fun y =&gt; f y * g y) x v =</span>
+<span id="L34">      f x * fderiv ℝ g x v + fderiv ℝ f x v * g x := by</span>
+<span id="L35">  exact congrArg (fun L : E →L[ℝ] M =&gt; L v) (algebraMulCLM.fderiv_of_bilinear hf hg)</span>
+<span id="L36"></span>
+<span id="L37">/-- The Maurer–Cartan equation dθ(v,w)+[θ(v),θ(w)]=0 for θ=g df.</span>
+<span id="L38">The hypotheses say that f is C², g is differentiable, gf=1 near x and fg=1 at x. -/</span>
+<span id="L39">theorem maurerCartan {f g : E → M} {x : E}</span>
+<span id="L40">    (hf : ContDiffAt ℝ 2 f x) (hg : DifferentiableAt ℝ g x)</span>
+<span id="L41">    (hgf : (fun y =&gt; g y * f y) =ᶠ[𝓝 x] (fun _ =&gt; 1))</span>
+<span id="L42">    (hfg : f x * g x = 1) (v w : E) :</span>
+<span id="L43">    fderiv ℝ (fun y =&gt; g y * fderiv ℝ f y w) x v -</span>
+<span id="L44">      fderiv ℝ (fun y =&gt; g y * fderiv ℝ f y v) x w +</span>
+<span id="L45">      (g x * fderiv ℝ f x v * (g x * fderiv ℝ f x w) -</span>
+<span id="L46">       g x * fderiv ℝ f x w * (g x * fderiv ℝ f x v)) = 0 := by</span>
+<span id="L47">  have hf1 : DifferentiableAt ℝ f x := hf.differentiableAt (by norm_num)</span>
+<span id="L48">  have hf2 : DifferentiableAt ℝ (fderiv ℝ f) x :=</span>
+<span id="L49">    (hf.fderiv_right (m := 1) (by norm_num)).differentiableAt (by norm_num)</span>
+<span id="L50">  have hi (u : E) : fderiv ℝ g x u = -(g x * fderiv ℝ f x u * g x) := by</span>
+<span id="L51">    have hz : g x * fderiv ℝ f x u + fderiv ℝ g x u * f x = 0 := by</span>
+<span id="L52">      rw [← fderiv_algebra_mul hg hf1 u, hgf.fderiv_eq]</span>
+<span id="L53">      simp</span>
+<span id="L54">    have h := congrArg (fun a : M =&gt; a * g x) hz</span>
+<span id="L55">    simp only [add_mul, mul_assoc, hfg, mul_one, zero_mul] at h</span>
+<span id="L56">    simpa only [mul_assoc] using eq_neg_of_add_eq_zero_right h</span>
+<span id="L57">  rw [fderiv_algebra_mul hg (hf2.clm_apply (differentiableAt_const w)),</span>
+<span id="L58">    fderiv_algebra_mul hg (hf2.clm_apply (differentiableAt_const v)),</span>
+<span id="L59">    fderiv_clm_apply hf2 (differentiableAt_const w),</span>
+<span id="L60">    fderiv_clm_apply hf2 (differentiableAt_const v)]</span>
+<span id="L61">  simp only [add_apply, ContinuousLinearMap.comp_apply,</span>
+<span id="L62">    fderiv_fun_const, Pi.zero_apply, zero_apply, map_zero, zero_add, ContinuousLinearMap.flip_apply]</span>
+<span id="L63">  rw [hi v, hi w, (hf.isSymmSndFDerivAt (by norm_num)).eq v w]</span>
+<span id="L64">  noncomm_ring</span>
+<span id="L65"></span>
+<span id="L66">end MathResearch.Analysis</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

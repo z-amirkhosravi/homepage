@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/RadialHarmonic.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/RadialHarmonic.lean</h1><p><a href="RadialHarmonic.lean" download>Download exact source</a>. SHA-256: <code>bc3ec2e9e1e61d4f41692787e7f04e4ae61bdb5aee85d18eca11512b181c0918</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Analysis.RadialHessian</span>
+<span id="L3">public import MathResearch.Analysis.RadialMeanODE</span>
+<span id="L4"></span>
+<span id="L5">/-! A regular radial harmonic function on the four-dimensional ball is constant.</span>
+<span id="L6">The proof computes its radial and three tangential Hessian entries, then uses</span>
+<span id="L7">the separate elementary radial ODE lemma. -/</span>
+<span id="L8">@[expose] public section</span>
+<span id="L9">noncomputable section</span>
+<span id="L10">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L11">set_option maxHeartbeats 1200000</span>
+<span id="L12">open scoped Quaternion ContDiff Topology</span>
+<span id="L13">open InnerProductSpace Set Filter</span>
+<span id="L14">namespace MathResearch.Spinor</span>
+<span id="L15">local instance radialHarmonicLocalInstance0 : NormedAddCommGroup ℍ := inferInstance</span>
+<span id="L16">local instance radialHarmonicLocalInstance1 : NormedSpace ℝ ℍ := inferInstance</span>
+<span id="L17">variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]</span>
+<span id="L18">local instance radialHarmonicLocalInstance2 : NormedAddCommGroup (ℍ →L[ℝ] E) := inferInstance</span>
+<span id="L19">local instance radialHarmonicLocalInstance3 : NormedSpace ℝ (ℍ →L[ℝ] E) := inferInstance</span>
+<span id="L20"></span>
+<span id="L21">def radialAxis (A : ℍ → E) (r : ℝ) : E := A (r • (1:ℍ))</span>
+<span id="L22">def radialAxisFirst (A : ℍ → E) (r : ℝ) : E := fderiv ℝ A (r • (1:ℍ)) 1</span>
+<span id="L23">def radialAxisSecond (A : ℍ → E) (r : ℝ) : E :=</span>
+<span id="L24">  fderiv ℝ (fderiv ℝ A) (r • (1:ℍ)) 1 1</span>
+<span id="L25"></span>
+<span id="L26">theorem norm_axisPoint {r : ℝ} (hr : 0 ≤ r) : ‖r • (1:ℍ)‖ = r := by</span>
+<span id="L27">  simp [norm_smul, Real.norm_eq_abs, abs_of_nonneg hr]</span>
+<span id="L28"></span>
+<span id="L29">theorem axisPoint_mem_ball {r : ℝ} (hr : r ∈ Ico (0:ℝ) 1) : r • (1:ℍ) ∈ Ball := by</span>
+<span id="L30">  rw [mem_ball_iff, norm_axisPoint hr.1]</span>
+<span id="L31">  exact hr.2</span>
+<span id="L32"></span>
+<span id="L33">theorem hasDerivAt_radialAxis {A : ℍ → E} {r : ℝ}</span>
+<span id="L34">    (hA : DifferentiableAt ℝ A (r • (1:ℍ))) :</span>
+<span id="L35">    HasDerivAt (radialAxis A) (radialAxisFirst A r) r := by</span>
+<span id="L36">  simpa [radialAxis, radialAxisFirst] using!</span>
+<span id="L37">    hA.hasFDerivAt.comp_hasDerivAt r ((hasDerivAt_id r).smul_const (1:ℍ))</span>
+<span id="L38"></span>
+<span id="L39">theorem hasDerivAt_radialAxisFirst {A : ℍ → E} {r : ℝ}</span>
+<span id="L40">    (hDA : DifferentiableAt ℝ (fderiv ℝ A) (r • (1:ℍ))) :</span>
+<span id="L41">    HasDerivAt (radialAxisFirst A) (radialAxisSecond A r) r := by</span>
+<span id="L42">  have h := hDA.hasFDerivAt.clm_apply (hasFDerivAt_const (1:ℍ) (r • (1:ℍ)))</span>
+<span id="L43">  simpa [radialAxisFirst, radialAxisSecond] using!</span>
+<span id="L44">    h.comp_hasDerivAt r ((hasDerivAt_id r).smul_const (1:ℍ))</span>
+<span id="L45"></span>
+<span id="L46">/-- The Laplacian of a radial function is M&#39;&#39;(r)+3M&#39;(r)/r away from the center. -/</span>
+<span id="L47">theorem laplacian_radial_axis {A : ℍ → E}</span>
+<span id="L48">    (hA : ∀ q ∈ Ball, DifferentiableAt ℝ A q)</span>
+<span id="L49">    (hDA : ∀ q ∈ Ball, DifferentiableAt ℝ (fderiv ℝ A) q)</span>
+<span id="L50">    (hrad : ∀ q ∈ Ball, A q = A (‖q‖ • (1:ℍ)))</span>
+<span id="L51">    {r : ℝ} (hr : r ∈ Ioo (0:ℝ) 1) :</span>
+<span id="L52">    Laplacian.laplacian A (r • (1:ℍ)) =</span>
+<span id="L53">      radialAxisSecond A r + (3/r) • radialAxisFirst A r := by</span>
+<span id="L54">  have hq := axisPoint_mem_ball ⟨hr.1.le,hr.2⟩</span>
+<span id="L55">  have hq0 : r • (1:ℍ) ≠ 0 := by</span>
+<span id="L56">    exact smul_ne_zero hr.1.ne&#39; one_ne_zero</span>
+<span id="L57">  have hM (t : ℝ) (ht : t ∈ Ioo (0:ℝ) 1) :=</span>
+<span id="L58">    hasDerivAt_radialAxis (hA _ (axisPoint_mem_ball ⟨ht.1.le,ht.2⟩))</span>
+<span id="L59">  have hM&#39; (t : ℝ) (ht : t ∈ Ioo (0:ℝ) 1) :=</span>
+<span id="L60">    hasDerivAt_radialAxisFirst (hDA _ (axisPoint_mem_ball ⟨ht.1.le,ht.2⟩))</span>
+<span id="L61">  have hi (i : Fin 4) (hi : i ≠ 0) : inner ℝ (r • (1:ℍ)) (quaternionONB i) = 0 := by</span>
+<span id="L62">    fin_cases i &lt;;&gt; simp_all [quaternionONB_apply, Fueter.coordinateBasis_eq, Quaternion.inner_def]</span>
+<span id="L63">  have H (i : Fin 4) (hi0 : i ≠ 0) :</span>
+<span id="L64">      fderiv ℝ (fderiv ℝ A) (r • (1:ℍ)) (quaternionONB i) (quaternionONB i) =</span>
+<span id="L65">        r⁻¹ • radialAxisFirst A r := by</span>
+<span id="L66">    simpa only [quaternionONB.orthonormal.norm_eq_one, one_pow, norm_axisPoint hr.1.le,</span>
+<span id="L67">      one_div] using radial_hessian_tangent hrad hM hM&#39; hq hq0 (hDA _ hq) (quaternionONB i) (hi i hi0)</span>
+<span id="L68">  rw [InnerProductSpace.laplacian_eq_iteratedFDeriv_orthonormalBasis _ quaternionONB]</span>
+<span id="L69">  simp only [iteratedFDeriv_two_apply, Matrix.cons_val_zero, Matrix.cons_val_one,</span>
+<span id="L70">    Matrix.cons_val_fin_one, Fin.sum_univ_four]</span>
+<span id="L71">  rw [H 1 (by decide), H 2 (by decide), H 3 (by decide)]</span>
+<span id="L72">  have hb : quaternionONB 0 = (1:ℍ) := by simp [Fueter.coordinateBasis_eq]</span>
+<span id="L73">  rw [hb]</span>
+<span id="L74">  change radialAxisSecond A r + _ + _ + _ = _</span>
+<span id="L75">  module</span>
+<span id="L76"></span>
+<span id="L77">/-- Radial harmonicity and regularity at the center force constancy. -/</span>
+<span id="L78">theorem radial_harmonic_constant {A : ℍ → E}</span>
+<span id="L79">    (hA : ∀ q ∈ Ball, DifferentiableAt ℝ A q)</span>
+<span id="L80">    (hDA : ∀ q ∈ Ball, DifferentiableAt ℝ (fderiv ℝ A) q)</span>
+<span id="L81">    (hrad : ∀ q ∈ Ball, A q = A (‖q‖ • (1:ℍ)))</span>
+<span id="L82">    (hzero : fderiv ℝ A 0 1 = 0)</span>
+<span id="L83">    (hΔ : ∀ q ∈ Ball, Laplacian.laplacian A q = 0)</span>
+<span id="L84">    {q : ℍ} (hq : q ∈ Ball) : A q = A 0 := by</span>
+<span id="L85">  have hODE (r : ℝ) (hr : r ∈ Ioo (0:ℝ) 1) :</span>
+<span id="L86">      r • radialAxisSecond A r + (3:ℝ) • radialAxisFirst A r = 0 := by</span>
+<span id="L87">    have he := congrArg (fun v : E =&gt; r • v) ((laplacian_radial_axis hA hDA hrad hr).symm.trans</span>
+<span id="L88">      (hΔ _ (axisPoint_mem_ball ⟨hr.1.le,hr.2⟩)))</span>
+<span id="L89">    simpa only [smul_add, smul_smul, smul_zero, mul_div_cancel₀ _ hr.1.ne&#39;] using he</span>
+<span id="L90">  have H := MathResearch.Analysis.radialMeanODE_constant</span>
+<span id="L91">    (M := radialAxis A) (M&#39; := radialAxisFirst A) (M&#39;&#39; := radialAxisSecond A)</span>
+<span id="L92">    (fun t ht =&gt; hasDerivAt_radialAxis (hA _ (axisPoint_mem_ball ht)))</span>
+<span id="L93">    (fun t ht =&gt; hasDerivAt_radialAxisFirst (hDA _ (axisPoint_mem_ball ht)))</span>
+<span id="L94">    (by simpa [radialAxisFirst] using hzero) hODE</span>
+<span id="L95">    (r := ‖q‖) ⟨norm_nonneg q, (mem_ball_iff q).mp hq⟩</span>
+<span id="L96">  rw [hrad q hq]</span>
+<span id="L97">  simpa only [radialAxis, zero_smul] using H</span>
+<span id="L98"></span>
+<span id="L99">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

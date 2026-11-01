@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/QuaternionicMeanValue.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/QuaternionicMeanValue.lean</h1><p><a href="QuaternionicMeanValue.lean" download>Download exact source</a>. SHA-256: <code>ee32e3f288bd39d5500c12df53cfa10d5bb0fe066fe8ecebdae0826c131b3f9b</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Analysis.QuaternionicSphericalAverage</span>
+<span id="L3">public import MathResearch.Analysis.RadialHarmonic</span>
+<span id="L4"></span>
+<span id="L5">/-! The four-dimensional spherical mean-value theorem, proved separately from</span>
+<span id="L6">DS3 and DS4. The compact average is radial and harmonic; its regular radial ODE</span>
+<span id="L7">then makes it constant. -/</span>
+<span id="L8">@[expose] public section</span>
+<span id="L9">noncomputable section</span>
+<span id="L10">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L11">set_option maxHeartbeats 1200000</span>
+<span id="L12">open scoped Quaternion ContDiff Topology</span>
+<span id="L13">open MeasureTheory InnerProductSpace Set Filter</span>
+<span id="L14">namespace MathResearch.Spinor</span>
+<span id="L15">local instance meanValueLocalInstance0 : NormedAddCommGroup ℍ := inferInstance</span>
+<span id="L16">local instance meanValueLocalInstance1 : NormedSpace ℝ ℍ := inferInstance</span>
+<span id="L17">variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]</span>
+<span id="L18">local instance meanValueLocalInstance2 : NormedAddCommGroup (ℍ →L[ℝ] E) := inferInstance</span>
+<span id="L19">local instance meanValueLocalInstance3 : NormedSpace ℝ (ℍ →L[ℝ] E) := inferInstance</span>
+<span id="L20"></span>
+<span id="L21">/-- Spherical means of a smooth harmonic Banach-valued function equal its central value. -/</span>
+<span id="L22">theorem sphericalAverage_harmonic {f : ℍ → E} (hf : ContDiffOn ℝ ∞ f Ball)</span>
+<span id="L23">    (hH : HarmonicOnNhd f Ball) {q : ℍ} (hq : q ∈ Ball) : sphericalAverage f q = f 0 := by</span>
+<span id="L24">  have hΔ (x : ℍ) (hx : x ∈ Ball) : Laplacian.laplacian (sphericalAverage f) x = 0 := by</span>
+<span id="L25">    rw [laplacian_sphericalAverage hf hx]</span>
+<span id="L26">    have he : (fun a : Fueter.UnitQuaternion =&gt; Laplacian.laplacian f ((a:ℍ)*x)) = 0 := by</span>
+<span id="L27">      funext a</span>
+<span id="L28">      exact (hH _ (unit_mul_mem_ball a hx)).2.self_of_nhds</span>
+<span id="L29">    rw [he]</span>
+<span id="L30">    change (∫ _ : Fueter.UnitQuaternion, (0:E) ∂unitQuaternionHaar) = 0</span>
+<span id="L31">    exact integral_zero _ _</span>
+<span id="L32">  have h := radial_harmonic_constant</span>
+<span id="L33">    (fun x hx =&gt; (hasFDerivAt_sphericalAverage hf hx).differentiableAt)</span>
+<span id="L34">    (fun x hx =&gt; (hasFDerivAt_fderiv_sphericalAverage hf hx).differentiableAt)</span>
+<span id="L35">    (fun x _ =&gt; sphericalAverage_radial f x)</span>
+<span id="L36">    (fderiv_sphericalAverage_zero hf 1) hΔ hq</span>
+<span id="L37">  simpa only [sphericalAverage_zero] using h</span>
+<span id="L38"></span>
+<span id="L39">/-- The exact spherical mean-value dependency of DS3, now proved independently. -/</span>
+<span id="L40">theorem sphericalMeanValueOnBall_proved : SphericalMeanValueOnBall := by</span>
+<span id="L41">  intro E _ _ _ f hf hH q hq</span>
+<span id="L42">  have he := integral_inv_eq_self (fun a : Fueter.UnitQuaternion =&gt; f ((a:ℍ)*q)) unitQuaternionHaar</span>
+<span id="L43">  simp only [Unitary.coe_inv] at he</span>
+<span id="L44">  exact he.trans (sphericalAverage_harmonic hf hH hq)</span>
+<span id="L45"></span>
+<span id="L46">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

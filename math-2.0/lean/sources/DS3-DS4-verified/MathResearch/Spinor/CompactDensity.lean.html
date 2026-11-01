@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/CompactDensity.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/CompactDensity.lean</h1><p><a href="CompactDensity.lean" download>Download exact source</a>. SHA-256: <code>5d3e2466cf4c9b58f29d285af9ca5916449faf19b7523c7074666c92ffe8ea82</code>.</p><p><a href="../../mathlib-LICENSE.txt" download>Apache 2.0 license</a></p><pre class="lean-source" translate="no"><code><span id="L1">/-</span>
+<span id="L2">Copyright (c) 2021 Heather Macbeth. All rights reserved.</span>
+<span id="L3">Released under Apache 2.0 license as described in the file LICENSE.</span>
+<span id="L4">The compact approximation proof below adapts mathlib&#39;s ContinuousMapDense</span>
+<span id="L5">argument, adding support strictly inside the open ball.</span>
+<span id="L6">-/</span>
+<span id="L7">module</span>
+<span id="L8">public import MathResearch.Spinor.L2StrongContinuity</span>
+<span id="L9"></span>
+<span id="L10">/-! Density of continuous functions whose compact support lies strictly inside B.</span>
+<span id="L11">The proof specializes mathlib&#39;s simple-function approximation and Urysohn argument</span>
+<span id="L12">to a measure carried by B; it does not use bounded-continuous density. -/</span>
+<span id="L13">@[expose] public section</span>
+<span id="L14">noncomputable section</span>
+<span id="L15">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L16">open scoped Quaternion ENNReal NNReal Topology</span>
+<span id="L17">open MeasureTheory Set Filter</span>
+<span id="L18">namespace MathResearch.Spinor</span>
+<span id="L19"></span>
+<span id="L20">theorem ae_mem_ball (n : ℕ) (hn : 2 ≤ n) : ∀ᵐ q ∂weightedBallMeasure n, q ∈ Ball :=</span>
+<span id="L21">  (ae_weightedBall_iff n hn _).mpr (ae_restrict_mem ball_isOpen.measurableSet)</span>
+<span id="L22"></span>
+<span id="L23">theorem exists_compactContinuous_ball_approx (n : ℕ) (hn : 2 ≤ n)</span>
+<span id="L24">    {f : ℍ → BinaryForm n} (hf : MemLp f 2 (weightedBallMeasure n))</span>
+<span id="L25">    {ε : ℝ≥0∞} (hε : ε ≠ 0) :</span>
+<span id="L26">    ∃ F : ℍ → BinaryForm n, eLpNorm (f-F) 2 (weightedBallMeasure n) ≤ ε ∧</span>
+<span id="L27">      Continuous F ∧ MemLp F 2 (weightedBallMeasure n) ∧</span>
+<span id="L28">      HasCompactSupport F ∧ tsupport F ⊆ Ball := by</span>
+<span id="L29">  let μ := weightedBallMeasure n</span>
+<span id="L30">  apply hf.induction_dense (by norm_num) _ _ _ hε</span>
+<span id="L31">  · intro c t ht htμ ε hε</span>
+<span id="L32">    obtain ⟨δ, hδ, hhalf⟩ := exists_Lp_half (BinaryForm n) μ 2 hε</span>
+<span id="L33">    obtain ⟨η, hη, hsmall⟩ : ∃ η : ℝ≥0, 0 &lt; η ∧ ∀ s : Set ℍ,</span>
+<span id="L34">        μ s ≤ η → NullMeasurableSet s μ → eLpNorm (s.indicator fun _ =&gt; c) 2 μ ≤ δ :=</span>
+<span id="L35">      exists_eLpNorm_indicator_le (p := 2) (μ := μ) (by norm_num) c hδ.ne&#39;</span>
+<span id="L36">    obtain ⟨s, hst, hsc, hclosed, hdiff⟩ :=</span>
+<span id="L37">      (ht.inter ball_isOpen.measurableSet).exists_isCompact_isClosed_sdiff_lt</span>
+<span id="L38">        ((measure_mono inter_subset_left).trans_lt htμ).ne</span>
+<span id="L39">        (show (η : ℝ≥0∞) ≠ 0 by exact_mod_cast hη.ne&#39;)</span>
+<span id="L40">    have hsB : s ⊆ Ball := hst.trans inter_subset_right</span>
+<span id="L41">    have hst&#39; : s ⊆ t := hst.trans inter_subset_left</span>
+<span id="L42">    have hdiff&#39; : μ (t \ s) &lt; η := by</span>
+<span id="L43">      have he : t \ s =ᵐ[μ] (t ∩ Ball) \ s := by</span>
+<span id="L44">        filter_upwards [ae_mem_ball n hn] with q hq</span>
+<span id="L45">        simp [hq]</span>
+<span id="L46">      rw [measure_congr he]</span>
+<span id="L47">      exact hdiff</span>
+<span id="L48">    have hI : eLpNorm ((s.indicator fun _ =&gt; c) - t.indicator (fun _ =&gt; c)) 2 μ ≤ δ := by</span>
+<span id="L49">      rw [← eLpNorm_neg, neg_sub, ← indicator_sdiff hst&#39;]</span>
+<span id="L50">      exact hsmall _ hdiff&#39;.le (ht.diff hclosed.measurableSet).nullMeasurableSet</span>
+<span id="L51">    obtain ⟨v, hv, hsv, hvB⟩ := hsc.exists_isOpen_closure_subset (ball_isOpen.mem_nhdsSet.mpr hsB)</span>
+<span id="L52">    obtain ⟨k, hk, hsk⟩ := exists_compact_superset hsc</span>
+<span id="L53">    obtain ⟨F, hF, hclose, hbound, hsupp, hmem⟩ :=</span>
+<span id="L54">      exists_continuous_eLpNorm_sub_le_of_closed (by norm_num : (2:ℝ≥0∞) ≠ ∞)</span>
+<span id="L55">        hclosed (hv.inter isOpen_interior) (subset_inter hsv hsk)</span>
+<span id="L56">        ((measure_mono hst&#39;).trans_lt htμ).ne c hδ.ne&#39;</span>
+<span id="L57">    refine ⟨F, ?_, hF, hmem, ?_, ?_⟩</span>
+<span id="L58">    · convert (hhalf _ _ hclose hI).le using 2</span>
+<span id="L59">      ext q</span>
+<span id="L60">      simp</span>
+<span id="L61">    · apply hk.of_isClosed_subset (isClosed_tsupport F)</span>
+<span id="L62">      exact closure_minimal (hsupp.trans (inter_subset_right.trans interior_subset)) hk.isClosed</span>
+<span id="L63">    · exact (closure_mono (hsupp.trans inter_subset_left)).trans hvB</span>
+<span id="L64">  · rintro F G ⟨hF, hmF, hcF, hsF⟩ ⟨hG, hmG, hcG, hsG⟩</span>
+<span id="L65">    refine ⟨hF.add hG, hmF.add hmG, hcF.add hcG, ?_⟩</span>
+<span id="L66">    exact (tsupport_add F G).trans (union_subset hsF hsG)</span>
+<span id="L67"></span>
+<span id="L68">/-- The dense set used in the canonical proof: support is compact in the open ball. -/</span>
+<span id="L69">def compactContinuousBallClasses (n : ℕ) : Set (BallL2 n) :=</span>
+<span id="L70">  {f | ∃ F : ℍ → BinaryForm n, Continuous F ∧ HasCompactSupport F ∧ tsupport F ⊆ Ball ∧</span>
+<span id="L71">    ∃ hF : MemLp F 2 (weightedBallMeasure n), f = hF.toLp F}</span>
+<span id="L72"></span>
+<span id="L73">theorem dense_compactContinuousBallClasses (n : ℕ) (hn : 2 ≤ n) :</span>
+<span id="L74">    Dense (compactContinuousBallClasses n) := by</span>
+<span id="L75">  intro f</span>
+<span id="L76">  refine (mem_closure_iff_nhds_basis Metric.nhds_basis_closedEBall).2 fun ε hε =&gt; ?_</span>
+<span id="L77">  obtain ⟨F, hclose, hcont, hmem, hc, hs⟩ :=</span>
+<span id="L78">    exists_compactContinuous_ball_approx n hn (Lp.memLp f) hε.ne&#39;</span>
+<span id="L79">  refine ⟨hmem.toLp F, ⟨F, hcont, hc, hs, hmem, rfl⟩, ?_⟩</span>
+<span id="L80">  rwa [Metric.mem_closedEBall&#39;, ← Lp.toLp_coeFn f (Lp.memLp f), Lp.edist_toLp_toLp]</span>
+<span id="L81"></span>
+<span id="L82">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Analysis/WeylRepresentative.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Analysis/WeylRepresentative.lean</h1><p><a href="WeylRepresentative.lean" download>Download exact source</a>. SHA-256: <code>13130b1f399dd7244f7eb329fe58d6636c5702c1d5e9669b421263a3758b9770</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Analysis.WeylApproximation</span>
+<span id="L3"></span>
+<span id="L4">/-! Construction of a smooth representative of a distributionally harmonic</span>
+<span id="L5">locally integrable function on the quaternionic unit ball. -/</span>
+<span id="L6">@[expose] public section</span>
+<span id="L7">noncomputable section</span>
+<span id="L8">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L9">open scoped Quaternion ContDiff Topology Distributions</span>
+<span id="L10">open MeasureTheory Filter Set Metric</span>
+<span id="L11">namespace MathResearch.Spinor</span>
+<span id="L12"></span>
+<span id="L13">variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]</span>
+<span id="L14"></span>
+<span id="L15">/-- Choose one allowable scale at each interior point; local scale independence</span>
+<span id="L16">will prove smoothness, despite the nonsmooth norm used to choose this scale. -/</span>
+<span id="L17">def weylRepresentative (u : ℍ → E) (a : ℍ) : E :=</span>
+<span id="L18">  weylSmooth ((1 - ‖a‖) / 4) u a</span>
+<span id="L19"></span>
+<span id="L20">theorem weylRepresentative_eq_smooth {u : ℍ → E}</span>
+<span id="L21">    (hu : LocallyIntegrableOn u Ball volume)</span>
+<span id="L22">    (hΔ : distributionLaplacian (Distribution.ofFun ballOpen u volume ⊤) = 0)</span>
+<span id="L23">    {r : ℝ} (hr : 0 &lt; r) {a : ℍ} (ha : ‖a‖ + 2 * r &lt; 1) :</span>
+<span id="L24">    weylRepresentative u a = weylSmooth r u a := by</span>
+<span id="L25">  have haB : ‖a‖ &lt; 1 := by linarith</span>
+<span id="L26">  apply weylSmooth_eq_of_distributionLaplacian_zero hu hΔ (by linarith) hr</span>
+<span id="L27">  rcases le_total ((1 - ‖a‖) / 4) r with h | h</span>
+<span id="L28">  · rw [max_eq_right h]; exact ha</span>
+<span id="L29">  · rw [max_eq_left h]; linarith</span>
+<span id="L30"></span>
+<span id="L31">theorem weylSmooth_cutoff_eq (u : ℍ → E) {r R : ℝ} (hr : 0 &lt; r) {a : ℍ}</span>
+<span id="L32">    (ha : ‖a‖ + 2 * r ≤ R) :</span>
+<span id="L33">    weylSmooth r ((closedBall (0 : ℍ) R).indicator u) a = weylSmooth r u a := by</span>
+<span id="L34">  apply integral_congr_ae</span>
+<span id="L35">  filter_upwards with y</span>
+<span id="L36">  by_cases hy : y ∈ closedBall (0 : ℍ) R</span>
+<span id="L37">  · rw [indicator_of_mem hy]</span>
+<span id="L38">  · rw [indicator_of_notMem hy]</span>
+<span id="L39">    have hny : R &lt; ‖y‖ := by simpa [mem_closedBall, dist_zero_right] using hy</span>
+<span id="L40">    have ht := norm_le_insert a y</span>
+<span id="L41">    have hz : 2 * r ≤ ‖a - y‖ := by linarith</span>
+<span id="L42">    rw [weylScaledKernel_zero hr hz]</span>
+<span id="L43">    simp</span>
+<span id="L44"></span>
+<span id="L45">omit [NormedSpace ℝ E] in</span>
+<span id="L46">theorem integrable_ball_cutoff {u : ℍ → E} (hu : LocallyIntegrableOn u Ball volume)</span>
+<span id="L47">    {R : ℝ} (hR : R &lt; 1) : Integrable ((closedBall (0 : ℍ) R).indicator u) := by</span>
+<span id="L48">  rw [integrable_indicator_iff measurableSet_closedBall]</span>
+<span id="L49">  exact hu.integrableOn_compact_subset</span>
+<span id="L50">    (closedBall_subset_Ball (a := 0) (by simpa using hR)) (isCompact_closedBall _ _)</span>
+<span id="L51"></span>
+<span id="L52">/-- Every fixed smaller ball has a single globally smooth convolution expression. -/</span>
+<span id="L53">theorem weylRepresentative_eq_on_ball {u : ℍ → E}</span>
+<span id="L54">    (hu : LocallyIntegrableOn u Ball volume)</span>
+<span id="L55">    (hΔ : distributionLaplacian (Distribution.ofFun ballOpen u volume ⊤) = 0)</span>
+<span id="L56">    {S R : ℝ} (hSR : S &lt; R) (hR : R &lt; 1) :</span>
+<span id="L57">    Set.EqOn (weylRepresentative u)</span>
+<span id="L58">      (weylSmooth ((R - S) / 4) ((closedBall (0 : ℍ) R).indicator u)) (ball 0 S) := by</span>
+<span id="L59">  intro a ha</span>
+<span id="L60">  have hna : ‖a‖ &lt; S := by simpa [mem_ball, dist_zero_right] using ha</span>
+<span id="L61">  have hr : 0 &lt; (R - S) / 4 := by linarith</span>
+<span id="L62">  rw [weylSmooth_cutoff_eq u hr (by linarith)]</span>
+<span id="L63">  exact weylRepresentative_eq_smooth hu hΔ hr (by linarith)</span>
+<span id="L64"></span>
+<span id="L65">/-- Smoothness is established by equality to one fixed-radius convolution</span>
+<span id="L66">on each smaller ball. -/</span>
+<span id="L67">theorem contDiffOn_weylRepresentative {u : ℍ → E}</span>
+<span id="L68">    (hu : LocallyIntegrableOn u Ball volume)</span>
+<span id="L69">    (hΔ : distributionLaplacian (Distribution.ofFun ballOpen u volume ⊤) = 0) :</span>
+<span id="L70">    ContDiffOn ℝ ∞ (weylRepresentative u) Ball := by</span>
+<span id="L71">  intro a ha</span>
+<span id="L72">  obtain ⟨S, haS, hS⟩ := exists_between ((mem_ball_iff a).mp ha)</span>
+<span id="L73">  obtain ⟨R, hSR, hR⟩ := exists_between hS</span>
+<span id="L74">  have hg := contDiff_weylSmooth (integrable_ball_cutoff hu hR).locallyIntegrable</span>
+<span id="L75">    (show 0 &lt; (R - S) / 4 by linarith)</span>
+<span id="L76">  apply (hg.contDiffAt.congr_of_eventuallyEq ?_).contDiffWithinAt</span>
+<span id="L77">  filter_upwards [isOpen_ball.mem_nhds (show a ∈ ball (0 : ℍ) S by simpa [mem_ball] using haS)] with x hx</span>
+<span id="L78">  exact weylRepresentative_eq_on_ball hu hΔ hSR hR hx</span>
+<span id="L79"></span>
+<span id="L80">variable [CompleteSpace E]</span>
+<span id="L81"></span>
+<span id="L82">/-- The smooth representative agrees almost everywhere with u on each smaller ball. -/</span>
+<span id="L83">theorem ae_weylRepresentative_on_ball {u : ℍ → E}</span>
+<span id="L84">    (hu : LocallyIntegrableOn u Ball volume)</span>
+<span id="L85">    (hΔ : distributionLaplacian (Distribution.ofFun ballOpen u volume ⊤) = 0)</span>
+<span id="L86">    {S R : ℝ} (hSR : S &lt; R) (hR : R &lt; 1) :</span>
+<span id="L87">    u =ᵐ[volume.restrict (ball (0 : ℍ) S)] weylRepresentative u := by</span>
+<span id="L88">  apply (ae_restrict_iff&#39; measurableSet_ball).mpr</span>
+<span id="L89">  filter_upwards [ae_tendsto_weylSmooth (integrable_ball_cutoff hu hR).locallyIntegrable] with a ha</span>
+<span id="L90">  intro haS</span>
+<span id="L91">  have hna : ‖a‖ &lt; S := by simpa [mem_ball] using haS</span>
+<span id="L92">  have ht : Tendsto (fun k =&gt; weylSmooth (weylRadius k) ((closedBall (0 : ℍ) R).indicator u) a)</span>
+<span id="L93">      atTop (𝓝 (weylRepresentative u a)) := by</span>
+<span id="L94">    apply tendsto_const_nhds.congr&#39;</span>
+<span id="L95">    filter_upwards [(tendsto_order.mp weylRadius_tendsto).2 ((R - S) / 2) (by linarith)] with k hk</span>
+<span id="L96">    rw [weylSmooth_cutoff_eq u (weylRadius_pos k) (by linarith)]</span>
+<span id="L97">    exact weylRepresentative_eq_smooth hu hΔ (weylRadius_pos k) (by linarith)</span>
+<span id="L98">  have he := tendsto_nhds_unique ha ht</span>
+<span id="L99">  rwa [indicator_of_mem (show a ∈ closedBall (0 : ℍ) R by simp only [mem_closedBall, dist_zero_right]; linarith)] at he</span>
+<span id="L100"></span>
+<span id="L101">/-- Countably many rational radii pass the local almost-everywhere equality to B. -/</span>
+<span id="L102">theorem ae_weylRepresentative {u : ℍ → E}</span>
+<span id="L103">    (hu : LocallyIntegrableOn u Ball volume)</span>
+<span id="L104">    (hΔ : distributionLaplacian (Distribution.ofFun ballOpen u volume ⊤) = 0) :</span>
+<span id="L105">    u =ᵐ[volume.restrict Ball] weylRepresentative u := by</span>
+<span id="L106">  have hcover : Ball = ⋃ S : {s : ℚ // (s : ℝ) &lt; 1}, ball (0 : ℍ) (S.val : ℝ) := by</span>
+<span id="L107">    ext a</span>
+<span id="L108">    constructor</span>
+<span id="L109">    · intro ha</span>
+<span id="L110">      obtain ⟨r, har, hr⟩ := exists_rat_btwn ((mem_ball_iff a).mp ha)</span>
+<span id="L111">      exact mem_iUnion.mpr ⟨⟨r, hr⟩, by simpa [mem_ball] using har⟩</span>
+<span id="L112">    · intro ha</span>
+<span id="L113">      obtain ⟨r, hr⟩ := mem_iUnion.mp ha</span>
+<span id="L114">      apply (mem_ball_iff a).mpr</span>
+<span id="L115">      exact (show ‖a‖ &lt; (r.val : ℝ) by simpa [mem_ball] using hr).trans r.property</span>
+<span id="L116">  rw [hcover]</span>
+<span id="L117">  apply (ae_restrict_iUnion_iff _ _).mpr</span>
+<span id="L118">  intro S</span>
+<span id="L119">  obtain ⟨R, hSR, hR⟩ := exists_between S.property</span>
+<span id="L120">  exact ae_weylRepresentative_on_ball hu hΔ hSR hR</span>
+<span id="L121"></span>
+<span id="L122">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

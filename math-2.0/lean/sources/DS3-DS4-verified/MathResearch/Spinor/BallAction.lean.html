@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/BallAction.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/BallAction.lean</h1><p><a href="BallAction.lean" download>Download exact source</a>. SHA-256: <code>bebcfd4fcdcc5c380ef5f889b6a8d5753169c002aeb6485f8377f53b41f59d71</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.FullLift</span>
+<span id="L3"></span>
+<span id="L4">/-! The explicit polynomial-spinor Möbius action preserves the Fueter kernel. -/</span>
+<span id="L5">@[expose] public section</span>
+<span id="L6">noncomputable section</span>
+<span id="L7">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L8">open scoped Quaternion BigOperators Matrix.Norms.Elementwise Topology</span>
+<span id="L9">namespace MathResearch.Spinor</span>
+<span id="L10"></span>
+<span id="L11">/-- The denominator cq+d, for the matrix actually acting on the ball. -/</span>
+<span id="L12">def mobiusDenominator (a : QuaternionMatrix2) (q : ℍ) : ℍ := a 1 0*q+a 1 1</span>
+<span id="L13"></span>
+<span id="L14">def mobiusPoint (a : QuaternionMatrix2) (q : ℍ) : ℍ :=</span>
+<span id="L15">  (a 0 0*q+a 0 1)*(mobiusDenominator a q)⁻¹</span>
+<span id="L16"></span>
+<span id="L17">/-- C7 with the inverse element supplied as a. `ballRepresentation` below inserts γ⁻¹. -/</span>
+<span id="L18">def ballAction (n : ℕ) (a : QuaternionMatrix2) (f : ℍ → BinaryForm n) (q : ℍ) : BinaryForm n :=</span>
+<span id="L19">  (Quaternion.normSq (mobiusDenominator a q))⁻¹ •</span>
+<span id="L20">    polynomialRepresentation n (quaternionMatrix ((mobiusDenominator a q)⁻¹)) (f (mobiusPoint a q))</span>
+<span id="L21"></span>
+<span id="L22">def ballRepresentation (n : ℕ) (γ : QuaternionMatrix2) (f : ℍ → BinaryForm n) : ℍ → BinaryForm n :=</span>
+<span id="L23">  ballAction n (signatureAdjoint γ) f</span>
+<span id="L24"></span>
+<span id="L25">theorem section_product_entry (a : QuaternionMatrix2) (q : ℍ) (i : Fin 2) :</span>
+<span id="L26">    (a*ballSection q) i 1 = (Real.sqrt (ballScale q))⁻¹ • (a i 0*q+a i 1) := by</span>
+<span id="L27">  simp [ballSection, Matrix.mul_apply, Fin.sum_univ_two, smul_add]</span>
+<span id="L28"></span>
+<span id="L29">theorem inverse_real_smul (r : ℝ) (q : ℍ) : (r • q)⁻¹ = r⁻¹ • q⁻¹ := by</span>
+<span id="L30">  simp only [Algebra.smul_def, mul_inv_rev]</span>
+<span id="L31">  change q⁻¹ * (r:ℍ)⁻¹ = (r⁻¹:ℝ) * q⁻¹</span>
+<span id="L32">  rw [← Quaternion.coe_inv, Quaternion.coe_commutes]</span>
+<span id="L33"></span>
+<span id="L34">theorem groupOrigin_section_product (a : QuaternionMatrix2) (q : ℍ) (hq : q ∈ Ball) :</span>
+<span id="L35">    groupOrigin (a*ballSection q) = mobiusPoint a q := by</span>
+<span id="L36">  have hs := (Real.sqrt_pos.mpr hq).ne&#39;</span>
+<span id="L37">  simp only [groupOrigin, section_product_entry, inverse_real_smul, inv_inv,</span>
+<span id="L38">    smul_mul_assoc, mul_smul_comm, smul_smul, mul_inv_cancel₀ hs, one_smul]</span>
+<span id="L39">  rfl</span>
+<span id="L40"></span>
+<span id="L41">theorem mobiusDenominator_ne_zero {a : QuaternionMatrix2} (ha : IsSp11 a) {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L42">    mobiusDenominator a q ≠ 0 := by</span>
+<span id="L43">  have h := (ha.mul (ballSection_isSp11 q hq)).lowerRight_ne_zero</span>
+<span id="L44">  rw [section_product_entry] at h</span>
+<span id="L45">  intro hz</span>
+<span id="L46">  exact h (by change (Real.sqrt (ballScale q))⁻¹ • mobiusDenominator a q = 0; rw [hz, smul_zero])</span>
+<span id="L47"></span>
+<span id="L48">theorem mobiusPoint_mem_ball {a : QuaternionMatrix2} (ha : IsSp11 a) {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L49">    mobiusPoint a q ∈ Ball := by</span>
+<span id="L50">  rw [← groupOrigin_section_product a q hq]</span>
+<span id="L51">  exact groupOrigin_mem_ball (ha.mul (ballSection_isSp11 q hq))</span>
+<span id="L52"></span>
+<span id="L53">theorem sqrt_pow_scale (n : ℕ) {s : ℝ} (hs : 0 &lt; s) : s * Real.sqrt s ^ n = s ^ (((n:ℝ)+2)/2) := by</span>
+<span id="L54">  calc</span>
+<span id="L55">    _ = s^((1:ℝ)) * s^((1/2:ℝ)*(n:ℝ)) := by rw [Real.rpow_one, Real.rpow_mul_natCast hs.le, ← Real.sqrt_eq_rpow]</span>
+<span id="L56">    _ = _ := by rw [← Real.rpow_add hs]; congr 1; ring</span>
+<span id="L57"></span>
+<span id="L58">/-- Left translation of L2 gives precisely the explicit ball formula C7. -/</span>
+<span id="L59">theorem fullLift_section_translate (n : ℕ) (a : QuaternionMatrix2) (f : ℍ → BinaryForm n)</span>
+<span id="L60">    (q : ℍ) (hq : q ∈ Ball) :</span>
+<span id="L61">    fullLift n f (a*ballSection q) = weightedSpinor n (ballAction n a f) q := by</span>
+<span id="L62">  simp only [fullLift, section_product_entry, groupOrigin_section_product a q hq,</span>
+<span id="L63">    Quaternion.normSq_smul, inverse_real_smul, inv_inv, quaternionAction_real_smul,</span>
+<span id="L64">    mul_inv_rev, inv_pow, inv_inv, smul_smul]</span>
+<span id="L65">  rw [Real.sq_sqrt hq.le]</span>
+<span id="L66">  simp only [weightedSpinor, ballAction, ballWeight, smul_smul]</span>
+<span id="L67">  congr 1</span>
+<span id="L68">  rw [← sqrt_pow_scale n hq]</span>
+<span id="L69">  unfold mobiusDenominator</span>
+<span id="L70">  ring</span>
+<span id="L71"></span>
+<span id="L72">/-- Removing the positive scalar section weight. -/</span>
+<span id="L73">def unweightedSpinor (n : ℕ) (U : ℍ → BinaryForm n) (q : ℍ) : BinaryForm n :=</span>
+<span id="L74">  ballWeight (-((n:ℝ)+2)/2) q • U q</span>
+<span id="L75"></span>
+<span id="L76">theorem weight_unweight (n : ℕ) (U : ℍ → BinaryForm n) {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L77">    weightedSpinor n (unweightedSpinor n U) q = U q := by</span>
+<span id="L78">  simp only [weightedSpinor, unweightedSpinor, ballWeight, smul_smul]</span>
+<span id="L79">  rw [← Real.rpow_add hq, show ((n:ℝ)+2)/2+(-((n:ℝ)+2)/2)=0 by ring, Real.rpow_zero, one_smul]</span>
+<span id="L80"></span>
+<span id="L81">theorem unweight_weight (n : ℕ) (f : ℍ → BinaryForm n) {q : ℍ} (hq : q ∈ Ball) :</span>
+<span id="L82">    unweightedSpinor n (weightedSpinor n f) q = f q := by</span>
+<span id="L83">  simp only [weightedSpinor, unweightedSpinor, ballWeight, smul_smul]</span>
+<span id="L84">  rw [← Real.rpow_add hq, show (-((n:ℝ)+2)/2)+((n:ℝ)+2)/2=0 by ring, Real.rpow_zero, one_smul]</span>
+<span id="L85"></span>
+<span id="L86">/-- L2 and restriction to the section with the inverse weight are inverse on G. -/</span>
+<span id="L87">theorem fullLift_recover (n : ℕ) (F : QuaternionMatrix2 → BinaryForm n)</span>
+<span id="L88">    (hF : RightEquivariant n F) {g : QuaternionMatrix2} (hg : IsSp11 g) :</span>
+<span id="L89">    fullLift n (unweightedSpinor n (fun q =&gt; F (ballSection q))) g = F g := by</span>
+<span id="L90">  rw [← frameLift_weighted_eq_fullLift n _ hg]</span>
+<span id="L91">  unfold frameLift</span>
+<span id="L92">  rw [weight_unweight n _ (groupOrigin_mem_ball hg)]</span>
+<span id="L93">  exact frameLift_recover n F hF hg</span>
+<span id="L94"></span>
+<span id="L95">theorem fullLift_rightEquivariant (n : ℕ) (f : ℍ → BinaryForm n) : RightEquivariant n (fullLift n f) := by</span>
+<span id="L96">  intro g hg a b ha hb</span>
+<span id="L97">  rw [← frameLift_weighted_eq_fullLift n f (hg.mul (compactMatrix_isSp11 a b ha hb)),</span>
+<span id="L98">    ← frameLift_weighted_eq_fullLift n f hg, frameLift_equivariant n _ g a b]</span>
+<span id="L99">  intro h; simp [h] at hb</span>
+<span id="L100"></span>
+<span id="L101">theorem rightEquivariant_left_translate (n : ℕ) (F : QuaternionMatrix2 → BinaryForm n)</span>
+<span id="L102">    (hF : RightEquivariant n F) {a : QuaternionMatrix2} (ha : IsSp11 a) :</span>
+<span id="L103">    RightEquivariant n (fun g =&gt; F (a*g)) := by</span>
+<span id="L104">  intro g hg kL kR hL hR</span>
+<span id="L105">  simpa only [← mul_assoc] using hF (a*g) (ha.mul hg) kL kR hL hR</span>
+<span id="L106"></span>
+<span id="L107">/-- L2 intertwines the explicit ball action and left translation, on all of G. -/</span>
+<span id="L108">theorem fullLift_ballAction (n : ℕ) (f : ℍ → BinaryForm n) {a : QuaternionMatrix2} (ha : IsSp11 a)</span>
+<span id="L109">    {g : QuaternionMatrix2} (hg : IsSp11 g) : fullLift n (ballAction n a f) g = fullLift n f (a*g) := by</span>
+<span id="L110">  have hK := rightEquivariant_left_translate n (fullLift n f) (fullLift_rightEquivariant n f) ha</span>
+<span id="L111">  rw [← frameLift_weighted_eq_fullLift n _ hg]</span>
+<span id="L112">  have he : frameLift n (weightedSpinor n (ballAction n a f)) g =</span>
+<span id="L113">      frameLift n (fun q =&gt; fullLift n f (a*ballSection q)) g := by</span>
+<span id="L114">    unfold frameLift</span>
+<span id="L115">    exact congrArg _ (fullLift_section_translate n a f _ (groupOrigin_mem_ball hg)).symm</span>
+<span id="L116">  rw [he]</span>
+<span id="L117">  exact frameLift_recover n _ hK hg</span>
+<span id="L118"></span>
+<span id="L119">theorem differentiableAt_ballAction (n : ℕ) (f : ℍ → BinaryForm n) {a : QuaternionMatrix2}</span>
+<span id="L120">    (ha : IsSp11 a) {q : ℍ} (hq : q ∈ Ball) (hf : DifferentiableAt ℝ f (mobiusPoint a q)) :</span>
+<span id="L121">    DifferentiableAt ℝ (ballAction n a f) q := by</span>
+<span id="L122">  have hJ : DifferentiableAt ℝ (mobiusDenominator a) q :=</span>
+<span id="L123">    (differentiableAt_id.const_mul (a 1 0)).add_const (a 1 1)</span>
+<span id="L124">  have hi := (hasFDerivAt_inv&#39; (mobiusDenominator_ne_zero ha hq)).differentiableAt.comp q hJ</span>
+<span id="L125">  have hpoint : DifferentiableAt ℝ (mobiusPoint a) q :=</span>
+<span id="L126">    ((differentiableAt_id.const_mul (a 0 0)).add_const (a 0 1)).mul hi</span>
+<span id="L127">  have hs := (hasFDerivAt_inv (Quaternion.normSq_ne_zero.mpr (mobiusDenominator_ne_zero ha hq))).differentiableAt.comp q</span>
+<span id="L128">    ((differentiableAt_normSq _).comp q hJ)</span>
+<span id="L129">  have hp := hi.prodMk (hf.comp q hpoint)</span>
+<span id="L130">  have hr : DifferentiableAt ℝ (fun x : ℍ =&gt; polynomialRepresentation n (quaternionMatrix ((mobiusDenominator a x)⁻¹)) (f (mobiusPoint a x))) q := by</span>
+<span id="L131">    simpa only [Function.comp_def] using!</span>
+<span id="L132">      (((contDiff_quaternionPolynomialRepresentation n).differentiable (by simp)</span>
+<span id="L133">        ((mobiusDenominator a q)⁻¹, f (mobiusPoint a q))).comp q hp)</span>
+<span id="L134">  exact hs.smul hr</span>
+<span id="L135"></span>
+<span id="L136">/-- SC3&#39;s covariance conclusion, for every coefficient and every degree n≥1. -/</span>
+<span id="L137">theorem SC3_ball_covariance_v1 (n : ℕ) (hn : 1 ≤ n) (f : ℍ → BinaryForm n)</span>
+<span id="L138">    (hf : ∀ q ∈ Ball, DifferentiableAt ℝ f q)</span>
+<span id="L139">    (hkernel : ∀ q ∈ Ball, ∀ d, Fueter.leftOperator (fun x =&gt; fueterCoefficientCLM n d (f x)) q = 0)</span>
+<span id="L140">    {a : QuaternionMatrix2} (ha : IsSp11 a) :</span>
+<span id="L141">    ∀ q ∈ Ball, ∀ d, Fueter.leftOperator (fun x =&gt; fueterCoefficientCLM n d (ballAction n a f x)) q = 0 := by</span>
+<span id="L142">  have hb : ∀ q ∈ Ball, DifferentiableAt ℝ (ballAction n a f) q := fun q hq =&gt;</span>
+<span id="L143">    differentiableAt_ballAction n f ha hq (hf _ (mobiusPoint_mem_ball ha hq))</span>
+<span id="L144">  apply (SC3_v1 n hn (ballAction n a f) hb).2.mp</span>
+<span id="L145">  have hG := (SC3_v1 n hn f hf).2.mpr hkernel</span>
+<span id="L146">  intro g hg d</span>
+<span id="L147">  have hnew := differentiableAt_fullLift n (ballAction n a f) hg (hb _ (groupOrigin_mem_ball hg))</span>
+<span id="L148">  have hold := (differentiableAt_fullLift n f (ha.mul hg) (hf _ (groupOrigin_mem_ball (ha.mul hg)))).comp g</span>
+<span id="L149">    (matrixLeftCLM a).differentiableAt</span>
+<span id="L150">  rw [schmidOperator, projectedGroupOperator_congr_on_group n _ (fun x =&gt; fullLift n f (a*x))</span>
+<span id="L151">    (fun x hx =&gt; fullLift_ballAction n f ha hx) hg hnew hold,</span>
+<span id="L152">    projectedGroupOperator_left_translate]</span>
+<span id="L153">  exact hG (a*g) (ha.mul hg) d</span>
+<span id="L154"></span>
+<span id="L155">/-- The standard inverse-element convention of C7 preserves the kernel. -/</span>
+<span id="L156">theorem SC3_representation_covariance_v1 (n : ℕ) (hn : 1 ≤ n) (f : ℍ → BinaryForm n)</span>
+<span id="L157">    (hf : ∀ q ∈ Ball, DifferentiableAt ℝ f q)</span>
+<span id="L158">    (hkernel : ∀ q ∈ Ball, ∀ d, Fueter.leftOperator (fun x =&gt; fueterCoefficientCLM n d (f x)) q = 0)</span>
+<span id="L159">    {γ : QuaternionMatrix2} (hγ : IsSp11 γ) :</span>
+<span id="L160">    ∀ q ∈ Ball, ∀ d, Fueter.leftOperator (fun x =&gt; fueterCoefficientCLM n d (ballRepresentation n γ f x)) q = 0 :=</span>
+<span id="L161">  SC3_ball_covariance_v1 n hn f hf hkernel (isSp11_signatureAdjoint hγ)</span>
+<span id="L162"></span>
+<span id="L163">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

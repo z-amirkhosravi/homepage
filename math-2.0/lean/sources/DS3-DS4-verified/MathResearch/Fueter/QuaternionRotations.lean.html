@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Fueter/QuaternionRotations.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Fueter/QuaternionRotations.lean</h1><p><a href="QuaternionRotations.lean" download>Download exact source</a>. SHA-256: <code>6c90b2d8d6688cfebb63b8f4b4b4b3e967a363e7450da1d87391123666ec0d5e</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Fueter.PolynomialCalculus</span>
+<span id="L3">public import Mathlib.Algebra.Star.Unitary</span>
+<span id="L4">public import Mathlib.Algebra.Module.Opposite</span>
+<span id="L5">public import Mathlib.Analysis.InnerProductSpace.Projection.FiniteDimensional</span>
+<span id="L6">public import Mathlib.LinearAlgebra.UnitaryGroup</span>
+<span id="L7">public import Mathlib.LinearAlgebra.Matrix.Determinant.Basic</span>
+<span id="L8"></span>
+<span id="L9">/-! Unit quaternion pairs and the real rotation group of quaternion space. -/</span>
+<span id="L10">@[expose] public section</span>
+<span id="L11">noncomputable section</span>
+<span id="L12">open scoped Quaternion BigOperators</span>
+<span id="L13">namespace MathResearch.Fueter</span>
+<span id="L14"></span>
+<span id="L15">abbrev UnitQuaternion := unitary ℍ</span>
+<span id="L16">abbrev QuaternionSpinPair := UnitQuaternion × UnitQuaternion</span>
+<span id="L17"></span>
+<span id="L18">theorem unitQuaternion_normSq (a : UnitQuaternion) : Quaternion.normSq (a : ℍ) = 1 := by</span>
+<span id="L19">  have h := congrArg (fun q : ℍ =&gt; q.re) (Unitary.coe_star_mul_self a)</span>
+<span id="L20">  simpa only [Quaternion.star_mul_self, Quaternion.re_coe, Quaternion.re_one] using h</span>
+<span id="L21"></span>
+<span id="L22">theorem unitQuaternion_norm (a : UnitQuaternion) : ‖(a : ℍ)‖ = 1 := by</span>
+<span id="L23">  have h := unitQuaternion_normSq a</span>
+<span id="L24">  rw [Quaternion.normSq_eq_norm_mul_self] at h</span>
+<span id="L25">  nlinarith [norm_nonneg (a : ℍ)]</span>
+<span id="L26"></span>
+<span id="L27">@[simp] theorem unitQuaternion_coe_inv (a : UnitQuaternion) :</span>
+<span id="L28">    ((a⁻¹ : UnitQuaternion) : ℍ) = star (a : ℍ) := rfl</span>
+<span id="L29"></span>
+<span id="L30">/-- The forward rotation `(a,b) : q ↦ a q b⁻¹`. -/</span>
+<span id="L31">def quaternionRotation (k : QuaternionSpinPair) : ℍ ≃ₗᵢ[ℝ] ℍ where</span>
+<span id="L32">  toFun q := (k.1 : ℍ) * q * star (k.2 : ℍ)</span>
+<span id="L33">  invFun q := star (k.1 : ℍ) * q * (k.2 : ℍ)</span>
+<span id="L34">  map_add&#39; x y := by simp only [mul_add, add_mul]</span>
+<span id="L35">  map_smul&#39; t x := by simp only [RingHom.id_apply, mul_smul_comm, smul_mul_assoc]</span>
+<span id="L36">  left_inv q := by</span>
+<span id="L37">    change star (k.1 : ℍ) * ((k.1 : ℍ) * q * star (k.2 : ℍ)) * (k.2 : ℍ) = q</span>
+<span id="L38">    calc</span>
+<span id="L39">      _ = (star (k.1 : ℍ) * (k.1 : ℍ)) * q * (star (k.2 : ℍ) * (k.2 : ℍ)) := by noncomm_ring</span>
+<span id="L40">      _ = q := by rw [Unitary.coe_star_mul_self, Unitary.coe_star_mul_self, one_mul, mul_one]</span>
+<span id="L41">  right_inv q := by</span>
+<span id="L42">    change (k.1 : ℍ) * (star (k.1 : ℍ) * q * (k.2 : ℍ)) * star (k.2 : ℍ) = q</span>
+<span id="L43">    calc</span>
+<span id="L44">      _ = ((k.1 : ℍ) * star (k.1 : ℍ)) * q * ((k.2 : ℍ) * star (k.2 : ℍ)) := by noncomm_ring</span>
+<span id="L45">      _ = q := by simp only [← Unitary.coe_star, Unitary.coe_mul_star_self, one_mul, mul_one]</span>
+<span id="L46">  norm_map&#39; q := by</span>
+<span id="L47">    change ‖(k.1 : ℍ) * q * star (k.2 : ℍ)‖ = ‖q‖</span>
+<span id="L48">    simp only [norm_mul, norm_star, unitQuaternion_norm, one_mul, mul_one]</span>
+<span id="L49"></span>
+<span id="L50">@[simp] theorem quaternionRotation_apply (k : QuaternionSpinPair) (q : ℍ) :</span>
+<span id="L51">    quaternionRotation k q = (k.1 : ℍ) * q * star (k.2 : ℍ) := rfl</span>
+<span id="L52"></span>
+<span id="L53">@[simp] theorem quaternionRotation_one : quaternionRotation 1 = 1 := by</span>
+<span id="L54">  apply LinearIsometryEquiv.ext</span>
+<span id="L55">  intro q</span>
+<span id="L56">  simp [quaternionRotation]</span>
+<span id="L57"></span>
+<span id="L58">theorem quaternionRotation_mul (k l : QuaternionSpinPair) :</span>
+<span id="L59">    quaternionRotation (k * l) = quaternionRotation k * quaternionRotation l := by</span>
+<span id="L60">  apply LinearIsometryEquiv.ext</span>
+<span id="L61">  intro q</span>
+<span id="L62">  simp [quaternionRotation, star_mul, mul_assoc]</span>
+<span id="L63"></span>
+<span id="L64">def quaternionRotationHom : QuaternionSpinPair →* (ℍ ≃ₗᵢ[ℝ] ℍ) where</span>
+<span id="L65">  toFun := quaternionRotation</span>
+<span id="L66">  map_one&#39; := quaternionRotation_one</span>
+<span id="L67">  map_mul&#39; := quaternionRotation_mul</span>
+<span id="L68"></span>
+<span id="L69">@[simp] theorem quaternionRotation_inv (k : QuaternionSpinPair) :</span>
+<span id="L70">    quaternionRotation k⁻¹ = (quaternionRotation k).symm :=</span>
+<span id="L71">  map_inv quaternionRotationHom k</span>
+<span id="L72"></span>
+<span id="L73">/-- SO(4) in its basis-independent realization on the four-dimensional real</span>
+<span id="L74">quaternion inner-product space: the isometries of determinant one. -/</span>
+<span id="L75">def quaternionIsometryDet : (ℍ ≃ₗᵢ[ℝ] ℍ) →* ℝˣ where</span>
+<span id="L76">  toFun e := LinearEquiv.det e.toLinearEquiv</span>
+<span id="L77">  map_one&#39; := map_one LinearEquiv.det</span>
+<span id="L78">  map_mul&#39; e f := by</span>
+<span id="L79">    change LinearEquiv.det (e.toLinearEquiv * f.toLinearEquiv) = _</span>
+<span id="L80">    exact map_mul LinearEquiv.det _ _</span>
+<span id="L81"></span>
+<span id="L82">abbrev QuaternionSO4 := quaternionIsometryDet.ker</span>
+<span id="L83"></span>
+<span id="L84">def quaternionMulLeft (a : ℍ) : ℍ →ₗ[ℝ] ℍ where</span>
+<span id="L85">  toFun q := a * q</span>
+<span id="L86">  map_add&#39; := mul_add a</span>
+<span id="L87">  map_smul&#39; t q := by simp only [RingHom.id_apply, mul_smul_comm]</span>
+<span id="L88"></span>
+<span id="L89">def quaternionMulRight (a : ℍ) : ℍ →ₗ[ℝ] ℍ where</span>
+<span id="L90">  toFun q := q * a</span>
+<span id="L91">  map_add&#39; x y := add_mul x y a</span>
+<span id="L92">  map_smul&#39; t q := by simp only [RingHom.id_apply, smul_mul_assoc]</span>
+<span id="L93"></span>
+<span id="L94">def quaternionConj : ℍ ≃ₗᵢ[ℝ] ℍ where</span>
+<span id="L95">  toFun := star</span>
+<span id="L96">  invFun := star</span>
+<span id="L97">  left_inv := star_star</span>
+<span id="L98">  right_inv := star_star</span>
+<span id="L99">  map_add&#39; := star_add</span>
+<span id="L100">  map_smul&#39; t q := Quaternion.star_smul t q</span>
+<span id="L101">  norm_map&#39; := norm_star</span>
+<span id="L102"></span>
+<span id="L103">set_option maxRecDepth 2000 in</span>
+<span id="L104">set_option maxHeartbeats 800000 in</span>
+<span id="L105">theorem det_quaternionMulLeft (a : ℍ) :</span>
+<span id="L106">    LinearMap.det (quaternionMulLeft a) = Quaternion.normSq a ^ 2 := by</span>
+<span id="L107">  rw [← LinearMap.det_toMatrix coordinateBasis, Matrix.det_succ_row_zero]</span>
+<span id="L108">  simp only [Matrix.det_fin_three, Fin.sum_univ_succ, Matrix.submatrix_apply,</span>
+<span id="L109">    LinearMap.toMatrix_apply, coordinateBasis_eq]</span>
+<span id="L110">  norm_num [Fin.succAbove, quaternionMulLeft, coordinateBasis,</span>
+<span id="L111">    QuaternionAlgebra.coe_basisOneIJK_repr, Quaternion.normSq_def&#39;]</span>
+<span id="L112">  ring</span>
+<span id="L113"></span>
+<span id="L114">set_option maxRecDepth 2000 in</span>
+<span id="L115">set_option maxHeartbeats 800000 in</span>
+<span id="L116">theorem det_quaternionMulRight (a : ℍ) :</span>
+<span id="L117">    LinearMap.det (quaternionMulRight a) = Quaternion.normSq a ^ 2 := by</span>
+<span id="L118">  rw [← LinearMap.det_toMatrix coordinateBasis, Matrix.det_succ_row_zero]</span>
+<span id="L119">  simp only [Matrix.det_fin_three, Fin.sum_univ_succ, Matrix.submatrix_apply,</span>
+<span id="L120">    LinearMap.toMatrix_apply, coordinateBasis_eq]</span>
+<span id="L121">  norm_num [Fin.succAbove, quaternionMulRight, coordinateBasis,</span>
+<span id="L122">    QuaternionAlgebra.coe_basisOneIJK_repr, Quaternion.normSq_def&#39;]</span>
+<span id="L123">  ring</span>
+<span id="L124"></span>
+<span id="L125">theorem det_quaternionConj : LinearMap.det quaternionConj.toLinearEquiv.toLinearMap = -1 := by</span>
+<span id="L126">  rw [← LinearMap.det_toMatrix coordinateBasis, Matrix.det_succ_row_zero]</span>
+<span id="L127">  simp only [Matrix.det_fin_three, Fin.sum_univ_succ, Matrix.submatrix_apply,</span>
+<span id="L128">    LinearMap.toMatrix_apply, coordinateBasis_eq]</span>
+<span id="L129">  norm_num [Fin.succAbove, quaternionConj, coordinateBasis,</span>
+<span id="L130">    QuaternionAlgebra.coe_basisOneIJK_repr]</span>
+<span id="L131"></span>
+<span id="L132">theorem quaternionRotation_det (k : QuaternionSpinPair) :</span>
+<span id="L133">    quaternionIsometryDet (quaternionRotation k) = 1 := by</span>
+<span id="L134">  apply Units.ext</span>
+<span id="L135">  change ↑(LinearEquiv.det (quaternionRotation k).toLinearEquiv) = (1 : ℝ)</span>
+<span id="L136">  rw [LinearEquiv.coe_det]</span>
+<span id="L137">  have h : (quaternionRotation k).toLinearEquiv.toLinearMap =</span>
+<span id="L138">      (quaternionMulRight (star (k.2 : ℍ))).comp (quaternionMulLeft (k.1 : ℍ)) := rfl</span>
+<span id="L139">  rw [h, LinearMap.det_comp, det_quaternionMulLeft, det_quaternionMulRight,</span>
+<span id="L140">    Quaternion.normSq_star, unitQuaternion_normSq, unitQuaternion_normSq]</span>
+<span id="L141">  norm_num</span>
+<span id="L142"></span>
+<span id="L143">/-- The usual homomorphism Spin(4) → SO(4). Surjectivity is proved below. -/</span>
+<span id="L144">def quaternionSpinCover : QuaternionSpinPair →* QuaternionSO4 :=</span>
+<span id="L145">  quaternionRotationHom.codRestrict _ quaternionRotation_det</span>
+<span id="L146"></span>
+<span id="L147">@[simp] theorem quaternionSpinCover_coe (k : QuaternionSpinPair) :</span>
+<span id="L148">    (quaternionSpinCover k : ℍ ≃ₗᵢ[ℝ] ℍ) = quaternionRotation k := rfl</span>
+<span id="L149"></span>
+<span id="L150">theorem unitQuaternion_reflection (u : UnitQuaternion) (q : ℍ) :</span>
+<span id="L151">    (ℝ ∙ (u : ℍ))ᗮ.reflection q = -(u : ℍ) * star q * (u : ℍ) := by</span>
+<span id="L152">  rw [Submodule.reflection_orthogonal_apply, Submodule.reflection_singleton_apply,</span>
+<span id="L153">    unitQuaternion_norm]</span>
+<span id="L154">  norm_num</span>
+<span id="L155">  have h := congrArg (fun x : ℍ =&gt; x * (u : ℍ)) (Quaternion.self_add_star&#39; ((u : ℍ) * star q))</span>
+<span id="L156">  simp only [add_mul, star_mul, star_star, mul_assoc, Unitary.coe_star_mul_self, mul_one,</span>
+<span id="L157">    Quaternion.coe_mul_eq_smul, ← Quaternion.inner_def] at h</span>
+<span id="L158">  simp only [mul_smul, two_smul, ← mul_assoc] at h</span>
+<span id="L159">  rw [two_mul, smul_add, ← h]</span>
+<span id="L160">  abel</span>
+<span id="L161"></span>
+<span id="L162">/-- Normalize a nonzero quaternion to a unit quaternion. -/</span>
+<span id="L163">def normalizeQuaternion (v : ℍ) (hv : v ≠ 0) : UnitQuaternion := by</span>
+<span id="L164">  refine ⟨‖v‖⁻¹ • v, ?_⟩</span>
+<span id="L165">  have hn : Quaternion.normSq (‖v‖⁻¹ • v) = 1 := by</span>
+<span id="L166">    rw [Quaternion.normSq_smul, Quaternion.normSq_eq_norm_mul_self]</span>
+<span id="L167">    field_simp</span>
+<span id="L168">  constructor</span>
+<span id="L169">  · rw [Quaternion.star_mul_self, hn, Quaternion.coe_one]</span>
+<span id="L170">  · rw [Quaternion.self_mul_star, hn, Quaternion.coe_one]</span>
+<span id="L171"></span>
+<span id="L172">theorem reflection_as_rotation_conj (v : ℍ) (hv : v ≠ 0) :</span>
+<span id="L173">    (ℝ ∙ v)ᗮ.reflection =</span>
+<span id="L174">      quaternionRotation (-normalizeQuaternion v hv, (normalizeQuaternion v hv)⁻¹) *</span>
+<span id="L175">        quaternionConj := by</span>
+<span id="L176">  have hspan : ℝ ∙ (normalizeQuaternion v hv : ℍ) = ℝ ∙ v :=</span>
+<span id="L177">    Submodule.span_singleton_smul_eq (isUnit_iff_ne_zero.mpr (inv_ne_zero (norm_ne_zero_iff.mpr hv))) v</span>
+<span id="L178">  apply LinearIsometryEquiv.ext</span>
+<span id="L179">  intro q</span>
+<span id="L180">  have h := unitQuaternion_reflection (normalizeQuaternion v hv) q</span>
+<span id="L181">  simpa [hspan, quaternionRotation, quaternionConj, Unitary.coe_neg] using h</span>
+<span id="L182"></span>
+<span id="L183">theorem quaternionConj_rotation (k : QuaternionSpinPair) :</span>
+<span id="L184">    quaternionConj * quaternionRotation k = quaternionRotation (k.2, k.1) * quaternionConj := by</span>
+<span id="L185">  apply LinearIsometryEquiv.ext</span>
+<span id="L186">  intro q</span>
+<span id="L187">  simp [quaternionConj, quaternionRotation, star_mul, mul_assoc]</span>
+<span id="L188"></span>
+<span id="L189">@[simp] theorem quaternionConj_sq : quaternionConj * quaternionConj = 1 := by</span>
+<span id="L190">  apply LinearIsometryEquiv.ext</span>
+<span id="L191">  intro q</span>
+<span id="L192">  exact star_star q</span>
+<span id="L193"></span>
+<span id="L194">/-- Cartan–Dieudonné gives the quaternionic forms of every orthogonal transformation. -/</span>
+<span id="L195">theorem quaternionIsometry_forms (e : ℍ ≃ₗᵢ[ℝ] ℍ) :</span>
+<span id="L196">    (∃ k, e = quaternionRotation k) ∨</span>
+<span id="L197">      (∃ k, e = quaternionRotation k * quaternionConj) := by</span>
+<span id="L198">  obtain ⟨l, hlen, rfl⟩ := e.reflections_generate_dim</span>
+<span id="L199">  clear hlen</span>
+<span id="L200">  induction l with</span>
+<span id="L201">  | nil =&gt; exact Or.inl ⟨1, quaternionRotation_one.symm⟩</span>
+<span id="L202">  | cons v l ih =&gt;</span>
+<span id="L203">    rw [List.map_cons, List.prod_cons]</span>
+<span id="L204">    by_cases hv : v = 0</span>
+<span id="L205">    · subst v</span>
+<span id="L206">      have hz : (ℝ ∙ (0 : ℍ))ᗮ.reflection = 1 := by</span>
+<span id="L207">        apply LinearIsometryEquiv.ext</span>
+<span id="L208">        intro q</span>
+<span id="L209">        simp only [Submodule.reflection_orthogonal_apply, Submodule.reflection_singleton_apply]</span>
+<span id="L210">        norm_num</span>
+<span id="L211">      rw [hz, one_mul]</span>
+<span id="L212">      exact ih</span>
+<span id="L213">    rw [reflection_as_rotation_conj v hv]</span>
+<span id="L214">    rcases ih with ⟨k, hk⟩ | ⟨k, hk⟩</span>
+<span id="L215">    · right</span>
+<span id="L216">      refine ⟨(-normalizeQuaternion v hv, (normalizeQuaternion v hv)⁻¹) * (k.2, k.1), ?_⟩</span>
+<span id="L217">      rw [hk, mul_assoc, quaternionConj_rotation, ← mul_assoc, ← quaternionRotation_mul]</span>
+<span id="L218">    · left</span>
+<span id="L219">      refine ⟨(-normalizeQuaternion v hv, (normalizeQuaternion v hv)⁻¹) * (k.2, k.1), ?_⟩</span>
+<span id="L220">      rw [hk, ← mul_assoc, mul_assoc (quaternionRotation _), quaternionConj_rotation]</span>
+<span id="L221">      simp only [← mul_assoc, ← quaternionRotation_mul]</span>
+<span id="L222">      rw [mul_assoc, quaternionConj_sq, mul_one]</span>
+<span id="L223"></span>
+<span id="L224">theorem quaternionSpinCover_surjective : Function.Surjective quaternionSpinCover := by</span>
+<span id="L225">  intro e</span>
+<span id="L226">  rcases quaternionIsometry_forms e.val with ⟨k, hk⟩ | ⟨k, hk⟩</span>
+<span id="L227">  · exact ⟨k, Subtype.ext hk.symm⟩</span>
+<span id="L228">  · have hd := e.property</span>
+<span id="L229">    change quaternionIsometryDet e.val = 1 at hd</span>
+<span id="L230">    rw [hk, map_mul, quaternionRotation_det, one_mul] at hd</span>
+<span id="L231">    have hc := congrArg (fun u : ℝˣ =&gt; (u : ℝ)) hd</span>
+<span id="L232">    change ↑(LinearEquiv.det quaternionConj.toLinearEquiv) = (1 : ℝ) at hc</span>
+<span id="L233">    rw [LinearEquiv.coe_det, det_quaternionConj] at hc</span>
+<span id="L234">    norm_num at hc</span>
+<span id="L235"></span>
+<span id="L236">/-- The kernel of the spin covering consists of the simultaneous signs. -/</span>
+<span id="L237">theorem quaternionRotation_kernel (k : QuaternionSpinPair)</span>
+<span id="L238">    (hk : quaternionRotation k = 1) : k = 1 ∨ k = (-1, -1) := by</span>
+<span id="L239">  have hq (q : ℍ) : (k.1 : ℍ) * q * star (k.2 : ℍ) = q :=</span>
+<span id="L240">    congrArg (fun e : ℍ ≃ₗᵢ[ℝ] ℍ =&gt; e q) hk</span>
+<span id="L241">  have hab : (k.1 : ℍ) = (k.2 : ℍ) := by</span>
+<span id="L242">    have h := congrArg (fun q : ℍ =&gt; q * (k.2 : ℍ)) (hq 1)</span>
+<span id="L243">    simpa only [mul_one,</span>
+<span id="L244">      mul_assoc, Unitary.coe_star_mul_self, one_mul] using h</span>
+<span id="L245">  have hcomm (q : ℍ) : (k.1 : ℍ) * q = q * (k.1 : ℍ) := by</span>
+<span id="L246">    have h := congrArg (fun p : ℍ =&gt; p * (k.2 : ℍ)) (hq q)</span>
+<span id="L247">    simpa only [mul_assoc,</span>
+<span id="L248">      Unitary.coe_star_mul_self, mul_one, ← hab] using h</span>
+<span id="L249">  have hj : (k.1 : ℍ).imJ = 0 := by</span>
+<span id="L250">    have h := congrArg (fun q : ℍ =&gt; q.imK) (hcomm ⟨0, 1, 0, 0⟩)</span>
+<span id="L251">    simp at h</span>
+<span id="L252">    linarith</span>
+<span id="L253">  have hk&#39; : (k.1 : ℍ).imK = 0 := by</span>
+<span id="L254">    have h := congrArg (fun q : ℍ =&gt; q.imJ) (hcomm ⟨0, 1, 0, 0⟩)</span>
+<span id="L255">    simp at h</span>
+<span id="L256">    linarith</span>
+<span id="L257">  have hi : (k.1 : ℍ).imI = 0 := by</span>
+<span id="L258">    have h := congrArg (fun q : ℍ =&gt; q.imK) (hcomm ⟨0, 0, 1, 0⟩)</span>
+<span id="L259">    simp at h</span>
+<span id="L260">    linarith</span>
+<span id="L261">  have hn := unitQuaternion_normSq k.1</span>
+<span id="L262">  rw [Quaternion.normSq_def&#39;, hi, hj, hk&#39;] at hn</span>
+<span id="L263">  have hre : (k.1 : ℍ).re = 1 ∨ (k.1 : ℍ).re = -1 := by</span>
+<span id="L264">    have hsq : ((k.1 : ℍ).re - 1) * ((k.1 : ℍ).re + 1) = 0 := by nlinarith [hn]</span>
+<span id="L265">    rcases mul_eq_zero.mp hsq with h | h</span>
+<span id="L266">    · left; linarith</span>
+<span id="L267">    · right; linarith</span>
+<span id="L268">  rcases hre with hre | hre</span>
+<span id="L269">  · left</span>
+<span id="L270">    have ha : k.1 = 1 := Subtype.ext (by ext &lt;;&gt; simp [hre, hi, hj, hk&#39;])</span>
+<span id="L271">    have hb : k.2 = 1 := Subtype.ext (by rw [← hab]; exact congrArg Subtype.val ha)</span>
+<span id="L272">    exact Prod.ext ha hb</span>
+<span id="L273">  · right</span>
+<span id="L274">    have ha : k.1 = -1 := Subtype.ext (by change (k.1 : ℍ) = (-1 : ℍ); ext &lt;;&gt; simp [hre, hi, hj, hk&#39;])</span>
+<span id="L275">    have hb : k.2 = -1 := Subtype.ext (by rw [← hab]; exact congrArg Subtype.val ha)</span>
+<span id="L276">    exact Prod.ext ha hb</span>
+<span id="L277"></span>
+<span id="L278">end MathResearch.Fueter</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

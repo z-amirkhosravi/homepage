@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/Sp11.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/Sp11.lean</h1><p><a href="Sp11.lean" download>Download exact source</a>. SHA-256: <code>d2a98783458d3fac906773ba02a44e821f985e46f5de0dd3a5016b141209b78b</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.BallConnection</span>
+<span id="L3">public import Mathlib.Tactic.NoncommRing</span>
+<span id="L4"></span>
+<span id="L5">/-! The quaternionic matrix group and its ball/compact decomposition. -/</span>
+<span id="L6">@[expose] public section</span>
+<span id="L7">noncomputable section</span>
+<span id="L8">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L9">open scoped Quaternion BigOperators Matrix.Norms.Elementwise</span>
+<span id="L10">namespace MathResearch.Spinor</span>
+<span id="L11"></span>
+<span id="L12">/-- Jg*J, the adjoint for the Hermitian form of signature (1,1). -/</span>
+<span id="L13">def signatureAdjoint (g : QuaternionMatrix2) : QuaternionMatrix2 :=</span>
+<span id="L14">  !![star (g 0 0), -star (g 1 0); -star (g 0 1), star (g 1 1)]</span>
+<span id="L15"></span>
+<span id="L16">def signatureMatrix : QuaternionMatrix2 := !![1, 0; 0, -1]</span>
+<span id="L17"></span>
+<span id="L18">theorem signatureAdjoint_eq (g : QuaternionMatrix2) :</span>
+<span id="L19">    signatureAdjoint g = signatureMatrix * g.conjTranspose * signatureMatrix := by</span>
+<span id="L20">  apply Matrix.ext; intro i j</span>
+<span id="L21">  fin_cases i &lt;;&gt; fin_cases j &lt;;&gt;</span>
+<span id="L22">    simp [signatureAdjoint, signatureMatrix, Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two]</span>
+<span id="L23"></span>
+<span id="L24">@[simp] theorem signatureAdjoint_one : signatureAdjoint 1 = 1 := by</span>
+<span id="L25">  apply Matrix.ext; intro i j</span>
+<span id="L26">  fin_cases i &lt;;&gt; fin_cases j &lt;;&gt; simp [signatureAdjoint]</span>
+<span id="L27"></span>
+<span id="L28">@[simp] theorem signatureAdjoint_involutive (g : QuaternionMatrix2) :</span>
+<span id="L29">    signatureAdjoint (signatureAdjoint g) = g := by</span>
+<span id="L30">  apply Matrix.ext; intro i j</span>
+<span id="L31">  fin_cases i &lt;;&gt; fin_cases j &lt;;&gt; simp [signatureAdjoint]</span>
+<span id="L32"></span>
+<span id="L33">@[simp] theorem signatureAdjoint_mul (g h : QuaternionMatrix2) :</span>
+<span id="L34">    signatureAdjoint (g*h) = signatureAdjoint h * signatureAdjoint g := by</span>
+<span id="L35">  apply Matrix.ext; intro i j</span>
+<span id="L36">  fin_cases i &lt;;&gt; fin_cases j &lt;;&gt;</span>
+<span id="L37">    simp [signatureAdjoint, Matrix.mul_apply, Fin.sum_univ_two] &lt;;&gt; abel</span>
+<span id="L38"></span>
+<span id="L39">/-- The actual matrix equations defining Sp(1,1); both inverse identities are explicit. -/</span>
+<span id="L40">def IsSp11 (g : QuaternionMatrix2) : Prop :=</span>
+<span id="L41">  signatureAdjoint g * g = 1 ∧ g * signatureAdjoint g = 1</span>
+<span id="L42"></span>
+<span id="L43">theorem IsSp11.mul {g h : QuaternionMatrix2} (hg : IsSp11 g) (hh : IsSp11 h) :</span>
+<span id="L44">    IsSp11 (g*h) := by</span>
+<span id="L45">  constructor</span>
+<span id="L46">  · simp only [signatureAdjoint_mul]</span>
+<span id="L47">    calc _ = signatureAdjoint h * (signatureAdjoint g * g) * h := by noncomm_ring</span>
+<span id="L48">         _ = 1 := by rw [hg.1]; simpa using hh.1</span>
+<span id="L49">  · simp only [signatureAdjoint_mul]</span>
+<span id="L50">    calc _ = g * (h * signatureAdjoint h) * signatureAdjoint g := by noncomm_ring</span>
+<span id="L51">         _ = 1 := by rw [hh.2]; simpa using hg.2</span>
+<span id="L52"></span>
+<span id="L53">theorem isSp11_signatureAdjoint {g : QuaternionMatrix2} (hg : IsSp11 g) :</span>
+<span id="L54">    IsSp11 (signatureAdjoint g) := by simpa [IsSp11] using And.intro hg.2 hg.1</span>
+<span id="L55"></span>
+<span id="L56">theorem ballSection_isSp11 (q : ℍ) (hq : q ∈ Ball) : IsSp11 (ballSection q) := by</span>
+<span id="L57">  have he : signatureAdjoint (ballSection q) = ballSectionInverse q := by</span>
+<span id="L58">    apply Matrix.ext; intro i j</span>
+<span id="L59">    fin_cases i &lt;;&gt; fin_cases j &lt;;&gt;</span>
+<span id="L60">      ext &lt;;&gt; simp [signatureAdjoint, ballSection, ballSectionInverse]</span>
+<span id="L61">  simpa [IsSp11, he] using ballSection_inverse q hq</span>
+<span id="L62"></span>
+<span id="L63">/-- Compact block-diagonal matrices. -/</span>
+<span id="L64">def compactMatrix (a b : ℍ) : QuaternionMatrix2 := !![a, 0; 0, b]</span>
+<span id="L65"></span>
+<span id="L66">theorem compactMatrix_mul (a b c d : ℍ) :</span>
+<span id="L67">    compactMatrix a b * compactMatrix c d = compactMatrix (a*c) (b*d) := by</span>
+<span id="L68">  apply Matrix.ext; intro i j</span>
+<span id="L69">  fin_cases i &lt;;&gt; fin_cases j &lt;;&gt; simp [compactMatrix, Matrix.mul_apply, Fin.sum_univ_two]</span>
+<span id="L70"></span>
+<span id="L71">theorem compactMatrix_isSp11 (a b : ℍ) (ha : Quaternion.normSq a = 1)</span>
+<span id="L72">    (hb : Quaternion.normSq b = 1) : IsSp11 (compactMatrix a b) := by</span>
+<span id="L73">  constructor &lt;;&gt; apply Matrix.ext &lt;;&gt; intro i j &lt;;&gt; fin_cases i &lt;;&gt; fin_cases j &lt;;&gt;</span>
+<span id="L74">    simp [signatureAdjoint, compactMatrix, Matrix.mul_apply, Fin.sum_univ_two,</span>
+<span id="L75">      Quaternion.star_mul_self, Quaternion.self_mul_star, ha, hb]</span>
+<span id="L76"></span>
+<span id="L77">/-- The ball coordinate g·0=b d⁻¹. -/</span>
+<span id="L78">def groupOrigin (g : QuaternionMatrix2) : ℍ := g 0 1 * (g 1 1)⁻¹</span>
+<span id="L79"></span>
+<span id="L80">theorem IsSp11.column_norms {g : QuaternionMatrix2} (hg : IsSp11 g) :</span>
+<span id="L81">    Quaternion.normSq (g 0 0) - Quaternion.normSq (g 1 0) = 1 ∧</span>
+<span id="L82">    Quaternion.normSq (g 1 1) - Quaternion.normSq (g 0 1) = 1 := by</span>
+<span id="L83">  have h0 := congrArg (fun M : QuaternionMatrix2 =&gt; (M 0 0).re) hg.1</span>
+<span id="L84">  have h1 := congrArg (fun M : QuaternionMatrix2 =&gt; (M 1 1).re) hg.1</span>
+<span id="L85">  constructor</span>
+<span id="L86">  · simpa [signatureAdjoint, Matrix.mul_apply, Fin.sum_univ_two,</span>
+<span id="L87">      Quaternion.normSq_def&#39;, pow_two, sub_eq_add_neg, mul_comm] using h0</span>
+<span id="L88">  · simpa [signatureAdjoint, Matrix.mul_apply, Fin.sum_univ_two,</span>
+<span id="L89">      Quaternion.normSq_def&#39;, pow_two, sub_eq_add_neg, mul_comm, add_comm] using h1</span>
+<span id="L90"></span>
+<span id="L91">theorem IsSp11.lowerRight_ne_zero {g : QuaternionMatrix2} (hg : IsSp11 g) : g 1 1 ≠ 0 := by</span>
+<span id="L92">  intro h</span>
+<span id="L93">  have := hg.column_norms.2</span>
+<span id="L94">  rw [h, map_zero] at this</span>
+<span id="L95">  nlinarith [(Quaternion.normSq_nonneg (a := g 0 1))]</span>
+<span id="L96"></span>
+<span id="L97">theorem groupOrigin_scale {g : QuaternionMatrix2} (hg : IsSp11 g) :</span>
+<span id="L98">    ballScale (groupOrigin g) = (Quaternion.normSq (g 1 1))⁻¹ := by</span>
+<span id="L99">  have hd := Quaternion.normSq_ne_zero.mpr hg.lowerRight_ne_zero</span>
+<span id="L100">  simp only [ballScale, groupOrigin, map_mul, map_inv₀]</span>
+<span id="L101">  field_simp</span>
+<span id="L102">  linarith [hg.column_norms.2]</span>
+<span id="L103"></span>
+<span id="L104">theorem groupOrigin_mem_ball {g : QuaternionMatrix2} (hg : IsSp11 g) : groupOrigin g ∈ Ball := by</span>
+<span id="L105">  change 0 &lt; ballScale (groupOrigin g)</span>
+<span id="L106">  rw [groupOrigin_scale hg]</span>
+<span id="L107">  exact inv_pos.mpr (lt_of_le_of_ne (Quaternion.normSq_nonneg (a := g 1 1)) (Ne.symm (Quaternion.normSq_ne_zero.mpr hg.lowerRight_ne_zero)))</span>
+<span id="L108"></span>
+<span id="L109">/-- The first column is (a,conj(q)a) in the ball chart. -/</span>
+<span id="L110">theorem IsSp11.lowerLeft_eq {g : QuaternionMatrix2} (hg : IsSp11 g) :</span>
+<span id="L111">    g 1 0 = star (groupOrigin g) * g 0 0 := by</span>
+<span id="L112">  have hc : star (g 0 1) * g 0 0 = star (g 1 1) * g 1 0 := by</span>
+<span id="L113">    have h := congrArg (fun M : QuaternionMatrix2 =&gt; M 1 0) hg.1</span>
+<span id="L114">    have he : star (g 1 1) * g 1 0 - star (g 0 1) * g 0 0 = 0 := by</span>
+<span id="L115">      simpa [signatureAdjoint, Matrix.mul_apply, Fin.sum_univ_two, sub_eq_add_neg, add_comm] using h</span>
+<span id="L116">    exact (sub_eq_zero.mp he).symm</span>
+<span id="L117">  simp only [groupOrigin, star_mul, star_inv₀, mul_assoc, hc]</span>
+<span id="L118">  rw [inv_mul_cancel_left₀ (star_ne_zero.mpr hg.lowerRight_ne_zero)]</span>
+<span id="L119"></span>
+<span id="L120">/-- The two compact coordinates of g=σ(q)diag(kL,kR). -/</span>
+<span id="L121">def compactLeft (g : QuaternionMatrix2) : ℍ := Real.sqrt (ballScale (groupOrigin g)) • g 0 0</span>
+<span id="L122"></span>
+<span id="L123">def compactRight (g : QuaternionMatrix2) : ℍ := Real.sqrt (ballScale (groupOrigin g)) • g 1 1</span>
+<span id="L124"></span>
+<span id="L125">theorem compactRight_unit {g : QuaternionMatrix2} (hg : IsSp11 g) :</span>
+<span id="L126">    Quaternion.normSq (compactRight g) = 1 := by</span>
+<span id="L127">  rw [compactRight, Quaternion.normSq_smul, Real.sq_sqrt (le_of_lt (groupOrigin_mem_ball hg)), groupOrigin_scale hg]</span>
+<span id="L128">  exact inv_mul_cancel₀ (Quaternion.normSq_ne_zero.mpr hg.lowerRight_ne_zero)</span>
+<span id="L129"></span>
+<span id="L130">theorem compactLeft_unit {g : QuaternionMatrix2} (hg : IsSp11 g) :</span>
+<span id="L131">    Quaternion.normSq (compactLeft g) = 1 := by</span>
+<span id="L132">  have h := hg.column_norms.1</span>
+<span id="L133">  rw [hg.lowerLeft_eq, map_mul, Quaternion.normSq_star] at h</span>
+<span id="L134">  rw [compactLeft, Quaternion.normSq_smul, Real.sq_sqrt (le_of_lt (groupOrigin_mem_ball hg)), ballScale]</span>
+<span id="L135">  nlinarith</span>
+<span id="L136"></span>
+<span id="L137">/-- Every actual Sp(1,1) matrix has the section/compact factorization used by the wiki. -/</span>
+<span id="L138">theorem section_compact_decomposition {g : QuaternionMatrix2} (hg : IsSp11 g) :</span>
+<span id="L139">    g = ballSection (groupOrigin g) * compactMatrix (compactLeft g) (compactRight g) := by</span>
+<span id="L140">  have hs : Real.sqrt (ballScale (groupOrigin g)) ≠ 0 := (Real.sqrt_pos.mpr (groupOrigin_mem_ball hg)).ne&#39;</span>
+<span id="L141">  apply Matrix.ext; intro i j</span>
+<span id="L142">  fin_cases i &lt;;&gt; fin_cases j &lt;;&gt;</span>
+<span id="L143">    simp [ballSection, compactMatrix, compactLeft, compactRight, Matrix.mul_apply,</span>
+<span id="L144">      Fin.sum_univ_two, smul_smul, hs]</span>
+<span id="L145">  · simp [groupOrigin, hg.lowerRight_ne_zero]</span>
+<span id="L146">  · exact hg.lowerLeft_eq</span>
+<span id="L147"></span>
+<span id="L148">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>

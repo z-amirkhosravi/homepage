@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Exact source file used in the DS3/v1 verification.">
+<title>MathResearch/Spinor/WeakHarmonic.lean · Math 2.0</title>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../../../../../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../../../../../assets/theme/temml.css?v=13">
+<link rel="stylesheet" href="../../../../../assets/theme/wiki.css?v=13">
+<script defer src="../../../../../assets/theme/wiki.js?v=13"></script>
+</head>
+<body data-root="../../../../../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../../../../../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../../../../../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Lean source</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"></div>
+<div class="page-intro">
+<p class="page-description">Exact source file used in the DS3/v1 verification.</p>
+
+</div>
+<article>
+<h1>MathResearch/Spinor/WeakHarmonic.lean</h1><p><a href="WeakHarmonic.lean" download>Download exact source</a>. SHA-256: <code>ab12315a0f74fe2121c478600f7fb5aa7ddd6927c6281bcd2fc24c5b3d601ce9</code>.</p><pre class="lean-source" translate="no"><code><span id="L1">module</span>
+<span id="L2">public import MathResearch.Spinor.WeightedLocalization</span>
+<span id="L3">public import Mathlib.Analysis.InnerProductSpace.Harmonic.Basic</span>
+<span id="L4"></span>
+<span id="L5">/-! The first step of the written DS2 regularity argument: conjugate Fueter</span>
+<span id="L6">factorization on actual mathlib distributions. No Weyl lemma is assumed here. -/</span>
+<span id="L7">@[expose] public section</span>
+<span id="L8">noncomputable section</span>
+<span id="L9">set_option backward.isDefEq.respectTransparency false</span>
+<span id="L10">set_option maxHeartbeats 800000</span>
+<span id="L11">open scoped Quaternion BigOperators Distributions ContDiff</span>
+<span id="L12">open MeasureTheory</span>
+<span id="L13">namespace MathResearch.Spinor</span>
+<span id="L14"></span>
+<span id="L15">def testDirectional (v : ℍ) : BallTest →L[ℝ] BallTest := TestFunction.lineDerivCLM ℝ v</span>
+<span id="L16"></span>
+<span id="L17">@[simp] theorem testDirectional_apply (v : ℍ) (φ : BallTest) (q : ℍ) :</span>
+<span id="L18">    testDirectional v φ q = fderiv ℝ φ q v := by</span>
+<span id="L19">  rw [testDirectional, TestFunction.lineDerivCLM_apply_of_le (by simp)]</span>
+<span id="L20">  exact (φ.contDiff.differentiable (by simp) q).lineDeriv_eq_fderiv</span>
+<span id="L21"></span>
+<span id="L22">theorem testDirectional_comm (v w : ℍ) (φ : BallTest) :</span>
+<span id="L23">    testDirectional v (testDirectional w φ) = testDirectional w (testDirectional v φ) := by</span>
+<span id="L24">  apply TestFunction.ext</span>
+<span id="L25">  intro q</span>
+<span id="L26">  simp only [testDirectional_apply]</span>
+<span id="L27">  have he (u : ℍ) : (⇑(testDirectional u φ) : ℍ → ℝ) = fun x =&gt; fderiv ℝ φ x u := by</span>
+<span id="L28">    funext x; exact testDirectional_apply u φ x</span>
+<span id="L29">  rw [he w, he v]</span>
+<span id="L30">  have hd : DifferentiableAt ℝ (fderiv ℝ φ) q :=</span>
+<span id="L31">    (φ.contDiff.fderiv_right (m := ∞) (by simp)).differentiable (by simp) q</span>
+<span id="L32">  rw [fderiv_clm_apply hd (differentiableAt_const w),</span>
+<span id="L33">    fderiv_clm_apply hd (differentiableAt_const v)]</span>
+<span id="L34">  simpa using (φ.contDiff.contDiffAt.isSymmSndFDerivAt (by simp)).eq v w</span>
+<span id="L35"></span>
+<span id="L36">/-- The sum of the four ordinary second coordinate derivatives of a test. -/</span>
+<span id="L37">def testLaplacian (φ : BallTest) : BallTest :=</span>
+<span id="L38">  ∑ μ : Fin 4, testDirectional (Fueter.coordinateBasis μ)</span>
+<span id="L39">    (testDirectional (Fueter.coordinateBasis μ) φ)</span>
+<span id="L40"></span>
+<span id="L41">/-- Our test-function Laplacian is mathlib&#39;s Euclidean Laplacian, in the</span>
+<span id="L42">already verified orthonormal quaternion basis. -/</span>
+<span id="L43">theorem testLaplacian_eq (φ : BallTest) :</span>
+<span id="L44">    (⇑(testLaplacian φ) : ℍ → ℝ) = Laplacian.laplacian (⇑φ : ℍ → ℝ) := by</span>
+<span id="L45">  rw [InnerProductSpace.laplacian_eq_iteratedFDeriv_orthonormalBasis φ quaternionONB]</span>
+<span id="L46">  funext q</span>
+<span id="L47">  simp only [testLaplacian, FunLike.coe_sum, Finset.sum_apply,</span>
+<span id="L48">    testDirectional_apply, iteratedFDeriv_two_apply, Matrix.cons_val_zero,</span>
+<span id="L49">    Matrix.cons_val_one, quaternionONB_apply]</span>
+<span id="L50">  apply Finset.sum_congr rfl</span>
+<span id="L51">  intro μ _</span>
+<span id="L52">  have he : (⇑(testDirectional (Fueter.coordinateBasis μ) φ) : ℍ → ℝ) =</span>
+<span id="L53">      fun x =&gt; fderiv ℝ φ x (Fueter.coordinateBasis μ) := by</span>
+<span id="L54">    funext x; exact testDirectional_apply _ φ x</span>
+<span id="L55">  rw [he, fderiv_clm_apply</span>
+<span id="L56">    ((φ.contDiff.fderiv_right (m := ∞) (by simp)).differentiable (by simp) q)</span>
+<span id="L57">    (differentiableAt_const _)]</span>
+<span id="L58">  simp</span>
+<span id="L59"></span>
+<span id="L60">/-- The Laplacian on distributions is the sum of mathlib distribution derivatives. -/</span>
+<span id="L61">def distributionLaplacian {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]</span>
+<span id="L62">    (T : 𝓓&#39;(ballOpen, F)) : 𝓓&#39;(ballOpen, F) :=</span>
+<span id="L63">  ∑ μ : Fin 4, Distribution.lineDerivCLM (k := ⊤) (Fueter.coordinateBasis μ)</span>
+<span id="L64">    (Distribution.lineDerivCLM (Fueter.coordinateBasis μ) T)</span>
+<span id="L65"></span>
+<span id="L66">theorem distributionLaplacian_apply {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]</span>
+<span id="L67">    (T : 𝓓&#39;(ballOpen, F)) (φ : BallTest) :</span>
+<span id="L68">    distributionLaplacian T φ = T (testLaplacian φ) := by</span>
+<span id="L69">  simp [distributionLaplacian, Distribution.lineDerivCLM_apply,</span>
+<span id="L70">    testLaplacian, testDirectional]</span>
+<span id="L71"></span>
+<span id="L72">theorem weakTest_distribution (n : ℕ) (hn : 2 ≤ n) (φ : BallTest)</span>
+<span id="L73">    (j : Fin 2) (d : Fin 2 →₀ ℕ) (f : BallL2 n) :</span>
+<span id="L74">    weakTest n hn φ j d f = ∑ μ : Fin 4,</span>
+<span id="L75">      weakSymbol n μ j d (spinorDistribution n f (testDirectional (Fueter.coordinateBasis μ) φ)) := by</span>
+<span id="L76">  have hi (μ : Fin 4) : IntegrableOn</span>
+<span id="L77">      (fun q =&gt; testDirectional (Fueter.coordinateBasis μ) φ q • f q) Ball volume :=</span>
+<span id="L78">    ((testDirectional (Fueter.coordinateBasis μ) φ).integrable_smul</span>
+<span id="L79">      (ballL2_locallyIntegrableOn n hn f)).integrableOn</span>
+<span id="L80">  have his (μ : Fin 4) : IntegrableOn</span>
+<span id="L81">      (fun q =&gt; (fderiv ℝ φ q (Fueter.coordinateBasis μ) : ℂ) * weakSymbol n μ j d (f q)) Ball := by</span>
+<span id="L82">    change Integrable _ (volume.restrict Ball)</span>
+<span id="L83">    simpa [Complex.real_smul] using ((weakSymbol n μ j d).restrictScalars ℝ).integrable_comp (hi μ)</span>
+<span id="L84">  rw [← Lp.toLp_coeFn f (Lp.memLp f), weakTest_toLp]</span>
+<span id="L85">  simp only [Lp.toLp_coeFn]</span>
+<span id="L86">  rw [integral_finsetSum _ (fun μ _ =&gt; his μ)]</span>
+<span id="L87">  apply Finset.sum_congr rfl</span>
+<span id="L88">  intro μ _</span>
+<span id="L89">  rw [spinorDistribution_apply n hn]</span>
+<span id="L90">  simpa [Complex.real_smul] using</span>
+<span id="L91">    ((weakSymbol n μ j d).restrictScalars ℝ).integral_comp_comm (hi μ)</span>
+<span id="L92"></span>
+<span id="L93">/-- The weak polynomial test equations are the coefficientwise quaternion Fueter equation. -/</span>
+<span id="L94">theorem weakKernel_distribution_fueter (n : ℕ) (hn : 2 ≤ n) (f : WeakBallSpace n hn)</span>
+<span id="L95">    (φ : BallTest) (d : Fin 2 →₀ ℕ) :</span>
+<span id="L96">    (∑ μ : Fin 4, Fueter.coordinateBasis μ * fueterCoefficientCLM n d</span>
+<span id="L97">      (spinorDistribution n f.val (testDirectional (Fueter.coordinateBasis μ) φ))) = 0 := by</span>
+<span id="L98">  have h (j : Fin 2) := (mem_weakKernel n hn f.val).mp f.property φ j d</span>
+<span id="L99">  simp only [weakTest_distribution] at h</span>
+<span id="L100">  have hh := congrArg₂ pack (h 0) (h 1)</span>
+<span id="L101">  have hpack (μ : Fin 4) (p : BinaryForm n) :</span>
+<span id="L102">      pack (weakSymbol n μ 0 d p) (weakSymbol n μ 1 d p) =</span>
+<span id="L103">        Fueter.coordinateBasis μ * fueterCoefficientCLM n d p := by</span>
+<span id="L104">    change pack ((matrixColumn (quaternionMatrix (Fueter.coordinateBasis μ))</span>
+<span id="L105">      (fun i =&gt; MvPolynomial.pderiv i (p : ComplexPoly2)) 0).coeff d)</span>
+<span id="L106">      ((matrixColumn (quaternionMatrix (Fueter.coordinateBasis μ))</span>
+<span id="L107">      (fun i =&gt; MvPolynomial.pderiv i (p : ComplexPoly2)) 1).coeff d) =</span>
+<span id="L108">      Fueter.coordinateBasis μ * pack ((MvPolynomial.pderiv 0 (p : ComplexPoly2)).coeff d)</span>
+<span id="L109">        ((MvPolynomial.pderiv 1 (p : ComplexPoly2)).coeff d)</span>
+<span id="L110">    exact matrixColumn_pack_coeff _ _ d</span>
+<span id="L111">  simpa only [pack_sum, hpack, show pack 0 0 = 0 by simp [pack]] using hh</span>
+<span id="L112"></span>
+<span id="L113">/-- Algebraic Clifford cancellation, with the symmetry of second derivatives explicit. -/</span>
+<span id="L114">theorem quaternion_laplacian_contraction (S : Fin 4 → Fin 4 → ℍ)</span>
+<span id="L115">    (hs : ∀ μ ν, S μ ν = S ν μ) :</span>
+<span id="L116">    (∑ ν : Fin 4, star (Fueter.coordinateBasis ν) *</span>
+<span id="L117">      (∑ μ : Fin 4, Fueter.coordinateBasis μ * S ν μ)) = ∑ μ : Fin 4, S μ μ := by</span>
+<span id="L118">  simp only [Fin.sum_univ_four]</span>
+<span id="L119">  rw [hs 1 0, hs 2 0, hs 3 0, hs 2 1, hs 3 1, hs 3 2]</span>
+<span id="L120">  ext &lt;;&gt; simp [Fueter.coordinateBasis_eq] &lt;;&gt; ring</span>
+<span id="L121"></span>
+<span id="L122">theorem fueterCoefficient_jointly_injective (n : ℕ) (hn : 0 &lt; n) (p : BinaryForm n)</span>
+<span id="L123">    (hp : ∀ d, fueterCoefficientCLM n d p = 0) : p = 0 := by</span>
+<span id="L124">  have hz (i : Fin 2) : MvPolynomial.pderiv i (p : ComplexPoly2) = 0 := by</span>
+<span id="L125">    ext d</span>
+<span id="L126">    have hh : (((MvPolynomial.pderiv 0 (p : ComplexPoly2)).coeff d),</span>
+<span id="L127">        ((MvPolynomial.pderiv 1 (p : ComplexPoly2)).coeff d)) = (0, 0) := by</span>
+<span id="L128">      apply pack_injective</span>
+<span id="L129">      simpa [fueterCoefficientCLM_apply, polynomialFueterCoefficients, pack] using hp d</span>
+<span id="L130">    fin_cases i</span>
+<span id="L131">    · exact congrArg Prod.fst hh</span>
+<span id="L132">    · exact congrArg Prod.snd hh</span>
+<span id="L133">  have he := euler_homogeneous n p</span>
+<span id="L134">  simp only [euler, hz, mul_zero, zero_add] at he</span>
+<span id="L135">  have hn&#39; : (n : ℂ) ≠ 0 := by exact_mod_cast hn.ne&#39;</span>
+<span id="L136">  have hp&#39; : (p : ComplexPoly2) = 0 := (smul_eq_zero.mp he.symm).resolve_left hn&#39;</span>
+<span id="L137">  exact Subtype.ext hp&#39;</span>
+<span id="L138"></span>
+<span id="L139">/-- Every actual weighted weak solution has zero distributional Laplacian.</span>
+<span id="L140">This is the factorization/injectivity step of DS2, before Weyl regularity. -/</span>
+<span id="L141">theorem weakKernel_distribution_harmonic (n : ℕ) (hn : 2 ≤ n) (f : WeakBallSpace n hn)</span>
+<span id="L142">    (φ : BallTest) : spinorDistribution n f.val (testLaplacian φ) = 0 := by</span>
+<span id="L143">  apply fueterCoefficient_jointly_injective n (by omega)</span>
+<span id="L144">  intro d</span>
+<span id="L145">  let S : Fin 4 → Fin 4 → ℍ := fun ν μ =&gt; fueterCoefficientCLM n d</span>
+<span id="L146">    (spinorDistribution n f.val (testDirectional (Fueter.coordinateBasis μ)</span>
+<span id="L147">      (testDirectional (Fueter.coordinateBasis ν) φ)))</span>
+<span id="L148">  have hs : ∀ μ ν, S μ ν = S ν μ := by</span>
+<span id="L149">    intro μ ν</span>
+<span id="L150">    dsimp [S]</span>
+<span id="L151">    rw [testDirectional_comm]</span>
+<span id="L152">  have hh := quaternion_laplacian_contraction S hs</span>
+<span id="L153">  have hz (ν : Fin 4) : (∑ μ : Fin 4, Fueter.coordinateBasis μ * S ν μ) = 0 :=</span>
+<span id="L154">    weakKernel_distribution_fueter n hn f (testDirectional (Fueter.coordinateBasis ν) φ) d</span>
+<span id="L155">  rw [show (∑ ν : Fin 4, star (Fueter.coordinateBasis ν) *</span>
+<span id="L156">    (∑ μ : Fin 4, Fueter.coordinateBasis μ * S ν μ)) = 0 by simp [hz]] at hh</span>
+<span id="L157">  simpa only [testLaplacian, map_sum, S] using hh.symm</span>
+<span id="L158"></span>
+<span id="L159">theorem weakKernel_distributionLaplacian_zero (n : ℕ) (hn : 2 ≤ n)</span>
+<span id="L160">    (f : WeakBallSpace n hn) : distributionLaplacian (spinorDistribution n f.val) = 0 := by</span>
+<span id="L161">  ext φ : 1</span>
+<span id="L162">  simpa only [distributionLaplacian_apply, zero_apply] using</span>
+<span id="L163">    weakKernel_distribution_harmonic n hn f φ</span>
+<span id="L164"></span>
+<span id="L165">end MathResearch.Spinor</span></code></pre>
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../../../../../about.html">About this wiki</a>
+</footer>
+</body>
+</html>
