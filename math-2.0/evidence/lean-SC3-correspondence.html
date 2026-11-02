@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Exact scope of the checked smooth lift correspondence, kernel equivalence and ball covariance in SC3.">
+<meta name="description" content="Exact scope of the checked smooth lift correspondence, kernel equivalence and ball covariance of the spinor–Fueter correspondence.">
 <title>Formal Correspondence for the Spinor–Fueter Lift · Math 2.0</title>
 <link rel="preload" href="../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
@@ -51,12 +51,12 @@
 <main id="main">
 <div class="page-head"></div>
 <div class="page-intro">
-<p class="page-description">Exact scope of the checked smooth lift correspondence, kernel equivalence and ball covariance in SC3.</p>
+<p class="page-description">Exact scope of the checked smooth lift correspondence, kernel equivalence and ball covariance of the spinor–Fueter correspondence.</p>
 
 </div>
 <article>
 <h1 id="formal-correspondence-for-the-spinor-fueter-lift">Formal Correspondence for the Spinor–Fueter Lift</h1>
-<p>The <a href="../quaternionic-analysis/spinor-connection.html#lean-sc3">SC3 formalization</a> uses three checked statements from cumulative Lean revision <code>ffb57ce0878663717056b44ebb7ac77ead6c2195</code>:</p>
+<p>The <a href="../quaternionic-analysis/spinor-connection.html#lean-sc3">spinor–Fueter lift formalization</a> uses three checked statements from cumulative Lean revision <code>ffb57ce0878663717056b44ebb7ac77ead6c2195</code>:</p>
 <ul>
 <li><a href="../quaternionic-analysis/spinor-connection.html#lean-MathResearch.Spinor.SC3_v1">SC3_v1</a> gives the weighted differential identity and equivalence of the lifted group kernel with the ball Fueter equation.</li>
 <li><a href="../quaternionic-analysis/spinor-connection.html#lean-MathResearch.Spinor.SC3_smooth_correspondence_v1">SC3_smooth_correspondence_v1</a> gives smoothness and the mutually inverse lift and section formulas on their stated domains.</li>
@@ -66,7 +66,7 @@
 <p>Group functions are represented by functions on the ambient quaternion matrix space. The smooth correspondence requires <code>ContDiffAt</code> at points satisfying <code>IsSp11</code>; its inverse identities are restricted to the group and the open ball. The formalization supplies smooth ambient representatives. It does not supply an intrinsic Lie-group <code>ContMDiff</code> comparison theorem or a quotient identifying all representatives that agree on the group.</p>
 <p>The separately checked <a href="../lean/sources/DS3-DS4-verified/MathResearch/Spinor/GroupKernel.lean.html">group-derivative identities</a> identify the right derivative with the exponential-path derivative and prove independence of the off-group representative. These are the group-restricted assertions used by the kernel argument.</p>
 <h2 id="operator-normalization">Operator Normalization<a class="anchor" href="#operator-normalization" aria-label="Link to Operator Normalization">#</a></h2>
-<p>The factor <math><mrow><mn>1</mn><mi>/</mi><mn>24</mn></mrow></math> is the chosen normalization of the <a href="../quaternionic-analysis/spinor-connection.html#lean-MathResearch.Spinor.schmidOperator">Schmid operator</a>, corresponding to formula (L12). The formal calculation checks the differential identity with this definition; it does not independently derive the numerical factor from a construction of the Killing form.</p>
+<p>The factor <math><mrow><mn>1</mn><mi>/</mi><mn>24</mn></mrow></math> is the chosen normalization of the <a href="../quaternionic-analysis/spinor-connection.html#lean-MathResearch.Spinor.schmidOperator">Schmid operator</a>, corresponding to the <a href="../quaternionic-analysis/spinor-connection.html#tag-00F4">operator normalization in the article</a>. The formal calculation checks the differential identity with this definition; it does not independently derive the numerical factor from a construction of the Killing form.</p>
 <p>The <a href="lean-DS3-DS4-verified.html#MathResearch.Spinor.SC3_v1">build log</a> records compilation and the axiom audit for the exact declarations. The qualifications above specify their mathematical scope.</p>
 
 </article>
