@@ -9184,7 +9184,7 @@
     {
       "tag": "009B",
       "kind": "lemma",
-      "title": "Harmonic numerators in every derivative order",
+      "title": "Harmonic Numerators in Every Derivative Order",
       "article": "quaternionic-analysis/lattice-eisenstein-series.md",
       "url": "quaternionic-analysis/lattice-eisenstein-series.html",
       "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
@@ -9241,7 +9241,7 @@
     {
       "tag": "009D",
       "kind": "context",
-      "title": "Homogeneous sections and Eisenstein summation",
+      "title": "Homogeneous Sections and Eisenstein Summation",
       "article": "quaternionic-analysis/lattice-eisenstein-series.md",
       "url": "quaternionic-analysis/lattice-eisenstein-series.html",
       "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
@@ -9265,14 +9265,14 @@
       ],
       "number": null,
       "numberText": null,
-      "displayLabel": "Homogeneous sections and Eisenstein summation",
+      "displayLabel": "Homogeneous Sections and Eisenstein Summation",
       "statementName": null,
-      "navigationLabel": "Homogeneous sections and Eisenstein summation"
+      "navigationLabel": "Homogeneous Sections and Eisenstein Summation"
     },
     {
       "tag": "009E",
       "kind": "construction",
-      "title": "The lattice Eisenstein function",
+      "title": "The Lattice Eisenstein Function",
       "article": "quaternionic-analysis/lattice-eisenstein-series.md",
       "url": "quaternionic-analysis/lattice-eisenstein-series.html",
       "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
@@ -9303,7 +9303,7 @@
     {
       "tag": "009F",
       "kind": "context",
-      "title": "Homogeneous sections and Eisenstein summation",
+      "title": "Homogeneous Sections and Eisenstein Summation",
       "article": "quaternionic-analysis/lattice-eisenstein-series.md",
       "url": "quaternionic-analysis/lattice-eisenstein-series.html",
       "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
@@ -9322,14 +9322,14 @@
       ],
       "number": null,
       "numberText": null,
-      "displayLabel": "Homogeneous sections and Eisenstein summation",
+      "displayLabel": "Homogeneous Sections and Eisenstein Summation",
       "statementName": null,
-      "navigationLabel": "Homogeneous sections and Eisenstein summation"
+      "navigationLabel": "Homogeneous Sections and Eisenstein Summation"
     },
     {
       "tag": "009G",
-      "kind": "theorem",
-      "title": "A maximal-parabolic Eisenstein series",
+      "kind": "proposition",
+      "title": "Eisenstein Summation and the Inducing Character",
       "article": "quaternionic-analysis/lattice-eisenstein-series.md",
       "url": "quaternionic-analysis/lattice-eisenstein-series.html",
       "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
@@ -9353,9 +9353,9 @@
       ],
       "number": 3,
       "numberText": "EM.3",
-      "displayLabel": "Theorem EM.3",
+      "displayLabel": "Proposition EM.3",
       "statementName": null,
-      "navigationLabel": "Theorem EM.3"
+      "navigationLabel": "Proposition EM.3"
     },
     {
       "tag": "009H",
@@ -9464,7 +9464,7 @@
     {
       "tag": "009L",
       "kind": "context",
-      "title": "The irreducible module selected by the coefficients",
+      "title": "The Moment Kernel and Its Compact Types",
       "article": "quaternionic-analysis/lattice-eisenstein-series.md",
       "url": "quaternionic-analysis/lattice-eisenstein-series.html",
       "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
@@ -9483,9 +9483,9 @@
       ],
       "number": null,
       "numberText": null,
-      "displayLabel": "The irreducible module selected by the coefficients",
+      "displayLabel": "The Moment Kernel and Its Compact Types",
       "statementName": null,
-      "navigationLabel": "The irreducible module selected by the coefficients"
+      "navigationLabel": "The Moment Kernel and Its Compact Types"
     },
     {
       "tag": "009M",
@@ -9547,7 +9547,7 @@
     {
       "tag": "009P",
       "kind": "proposition",
-      "title": "Moment kernel and finite-dimensional quotient",
+      "title": "Moment Kernel and Finite-Dimensional Quotient",
       "article": "quaternionic-analysis/lattice-eisenstein-series.md",
       "url": "quaternionic-analysis/lattice-eisenstein-series.html",
       "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
@@ -9629,8 +9629,8 @@
     },
     {
       "tag": "009S",
-      "kind": "theorem",
-      "title": "Irreducibility and harmonic transitions",
+      "kind": "proposition",
+      "title": "Irreducibility of the Moment Kernel",
       "article": "quaternionic-analysis/lattice-eisenstein-series.md",
       "url": "quaternionic-analysis/lattice-eisenstein-series.html",
       "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
@@ -9654,9 +9654,9 @@
       ],
       "number": 6,
       "numberText": "EM.6",
-      "displayLabel": "Theorem EM.6",
+      "displayLabel": "Proposition EM.6",
       "statementName": null,
-      "navigationLabel": "Theorem EM.6"
+      "navigationLabel": "Proposition EM.6"
     },
     {
       "tag": "009T",
@@ -9713,7 +9713,7 @@
     {
       "tag": "009V",
       "kind": "theorem",
-      "title": "The coefficient-generated automorphic module",
+      "title": "The Coefficient-Generated Automorphic Module",
       "article": "quaternionic-analysis/lattice-eisenstein-series.md",
       "url": "quaternionic-analysis/lattice-eisenstein-series.html",
       "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
@@ -9770,7 +9770,7 @@
     {
       "tag": "009X",
       "kind": "corollary",
-      "title": "The first nonzero derivative order",
+      "title": "The First Potentially Nonzero Order",
       "article": "quaternionic-analysis/lattice-eisenstein-series.md",
       "url": "quaternionic-analysis/lattice-eisenstein-series.html",
       "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
@@ -9801,7 +9801,7 @@
     {
       "tag": "009Y",
       "kind": "proposition",
-      "title": "The coefficient action descends to the rotation group",
+      "title": "Rotation Covariance and Descent to $\\mathrm{SO}(4)$",
       "article": "quaternionic-analysis/lattice-eisenstein-series.md",
       "url": "quaternionic-analysis/lattice-eisenstein-series.html",
       "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
@@ -9831,8 +9831,8 @@
     },
     {
       "tag": "009Z",
-      "kind": "definition",
-      "title": "Harmonic Theta Functions",
+      "kind": "context",
+      "title": "Harmonic Theta Series and Mellin Integration",
       "article": "quaternionic-analysis/lattice-eisenstein-series.md",
       "url": "quaternionic-analysis/lattice-eisenstein-series.html",
       "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
@@ -9854,16 +9854,42 @@
           "kind": "canonical"
         }
       ],
-      "number": 10,
-      "numberText": "EM.10",
-      "displayLabel": "Definition EM.10",
+      "number": null,
+      "numberText": null,
+      "displayLabel": "Harmonic Theta Series and Mellin Integration",
       "statementName": null,
-      "navigationLabel": "Definition EM.10"
+      "navigationLabel": "Harmonic Theta Series and Mellin Integration"
+    },
+    {
+      "tag": "00A6",
+      "kind": "context",
+      "title": "Harmonic Theta Series and Mellin Integration",
+      "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+      "url": "quaternionic-analysis/lattice-eisenstein-series.html",
+      "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
+      "anchor": "tag-00A6",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+          "anchor": "th2",
+          "kind": "context"
+        },
+        {
+          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+          "anchor": "tag-00A6",
+          "kind": "canonical"
+        }
+      ],
+      "number": null,
+      "numberText": null,
+      "displayLabel": "Harmonic Theta Series and Mellin Integration",
+      "statementName": null,
+      "navigationLabel": "Harmonic Theta Series and Mellin Integration"
     },
     {
       "tag": "00A0",
-      "kind": "theorem",
-      "title": "A convergent Mellin formula for each elliptic coefficient",
+      "kind": "proposition",
+      "title": "A Mellin Formula for Each Scalar Component",
       "article": "quaternionic-analysis/lattice-eisenstein-series.md",
       "url": "quaternionic-analysis/lattice-eisenstein-series.html",
       "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
@@ -9885,16 +9911,16 @@
           "kind": "canonical"
         }
       ],
-      "number": 11,
-      "numberText": "EM.11",
-      "displayLabel": "Theorem EM.11",
+      "number": 10,
+      "numberText": "EM.10",
+      "displayLabel": "Proposition EM.10",
       "statementName": null,
-      "navigationLabel": "Theorem EM.11"
+      "navigationLabel": "Proposition EM.10"
     },
     {
       "tag": "00A1",
       "kind": "corollary",
-      "title": "Critical values with all normalizing factors fixed",
+      "title": "The Upper Critical Value",
       "article": "quaternionic-analysis/lattice-eisenstein-series.md",
       "url": "quaternionic-analysis/lattice-eisenstein-series.html",
       "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
@@ -9916,16 +9942,16 @@
           "kind": "canonical"
         }
       ],
-      "number": 12,
-      "numberText": "EM.12",
-      "displayLabel": "Corollary EM.12",
+      "number": 11,
+      "numberText": "EM.11",
+      "displayLabel": "Corollary EM.11",
       "statementName": null,
-      "navigationLabel": "Corollary EM.12"
+      "navigationLabel": "Corollary EM.11"
     },
     {
       "tag": "00A2",
       "kind": "context",
-      "title": "The cubic lattice and a weight-six newform",
+      "title": "The Cubic Lattice and a Weight-Six Newform",
       "article": "quaternionic-analysis/lattice-eisenstein-series.md",
       "url": "quaternionic-analysis/lattice-eisenstein-series.html",
       "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
@@ -9949,14 +9975,14 @@
       ],
       "number": null,
       "numberText": null,
-      "displayLabel": "The cubic lattice and a weight-six newform",
+      "displayLabel": "The Cubic Lattice and a Weight-Six Newform",
       "statementName": null,
-      "navigationLabel": "The cubic lattice and a weight-six newform"
+      "navigationLabel": "The Cubic Lattice and a Weight-Six Newform"
     },
     {
       "tag": "00A3",
       "kind": "theorem",
-      "title": "The exact harmonic theta identity",
+      "title": "The Cubic Harmonic Theta Identity",
       "article": "quaternionic-analysis/lattice-eisenstein-series.md",
       "url": "quaternionic-analysis/lattice-eisenstein-series.html",
       "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
@@ -9978,16 +10004,16 @@
           "kind": "canonical"
         }
       ],
-      "number": 13,
-      "numberText": "EM.13",
-      "displayLabel": "Theorem EM.13",
+      "number": 12,
+      "numberText": "EM.12",
+      "displayLabel": "Theorem EM.12",
       "statementName": null,
-      "navigationLabel": "Theorem EM.13"
+      "navigationLabel": "Theorem EM.12"
     },
     {
       "tag": "00A4",
       "kind": "theorem",
-      "title": "An individual quaternionic elliptic coefficient",
+      "title": "An Individual Quaternionic Elliptic Coefficient",
       "article": "quaternionic-analysis/lattice-eisenstein-series.md",
       "url": "quaternionic-analysis/lattice-eisenstein-series.html",
       "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
@@ -10009,16 +10035,16 @@
           "kind": "canonical"
         }
       ],
-      "number": 14,
-      "numberText": "EM.14",
-      "displayLabel": "Theorem EM.14",
+      "number": 13,
+      "numberText": "EM.13",
+      "displayLabel": "Theorem EM.13",
       "statementName": null,
-      "navigationLabel": "Theorem EM.14"
+      "navigationLabel": "Theorem EM.13"
     },
     {
       "tag": "00A5",
       "kind": "context",
-      "title": "The cubic lattice and a weight-six newform",
+      "title": "The Automorphic Representation of the Cubic Example",
       "article": "quaternionic-analysis/lattice-eisenstein-series.md",
       "url": "quaternionic-analysis/lattice-eisenstein-series.html",
       "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
@@ -10042,35 +10068,9 @@
       ],
       "number": null,
       "numberText": null,
-      "displayLabel": "The cubic lattice and a weight-six newform",
+      "displayLabel": "The Automorphic Representation of the Cubic Example",
       "statementName": null,
-      "navigationLabel": "The cubic lattice and a weight-six newform"
-    },
-    {
-      "tag": "00A6",
-      "kind": "context",
-      "title": "Related Results",
-      "article": "quaternionic-analysis/lattice-eisenstein-series.md",
-      "url": "quaternionic-analysis/lattice-eisenstein-series.html",
-      "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
-      "anchor": "tag-00A6",
-      "aliases": [
-        {
-          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
-          "anchor": "th2",
-          "kind": "context"
-        },
-        {
-          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
-          "anchor": "tag-00A6",
-          "kind": "canonical"
-        }
-      ],
-      "number": null,
-      "numberText": null,
-      "displayLabel": "Related Results",
-      "statementName": null,
-      "navigationLabel": "Related Results"
+      "navigationLabel": "The Automorphic Representation of the Cubic Example"
     },
     {
       "tag": "00A7",
