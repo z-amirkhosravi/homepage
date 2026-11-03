@@ -130,6 +130,8 @@ math.too-wide { display: inline-block; max-width: 100%; overflow-x: auto; overfl
     radial-gradient(farthest-side at 0 50%, rgba(38, 38, 38, 0.16), transparent) left / 12px 100% no-repeat scroll,
     radial-gradient(farthest-side at 100% 50%, rgba(38, 38, 38, 0.16), transparent) right / 12px 100% no-repeat scroll; }
 math { font-family: "Libertinus Math", math; font-size: 1em; }
+/* TeX's italic correction after an italic letter (--ic, from the wiki build). Gecko applies it itself; Chromium omits it. */
+@supports not (-moz-appearance: none) { mi[style*="--ic"] { padding-inline-end: var(--ic); } }
 
 /* Statements: text column with metadata in the margin, proof beneath */
 .math-item { display: grid; grid-template-columns: minmax(0, var(--measure)) minmax(140px, 1fr); column-gap: var(--col-gap); align-items: start; margin: 18px 0; }

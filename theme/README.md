@@ -87,3 +87,5 @@ Since `theme-v11` the page always reserves the scrollbar's width (`scrollbar-gut
 Since `theme-v12` an empty section crumb is hidden together with the separator before it, so a page whose `section` is empty (the wiki's front page) shows only "Wiki" in the breadcrumb.
 
 Since `theme-v13` a proof opens and closes with a disclosure triangle before "Proof" (hung in the margin on wide screens) instead of "Show proof" and "Hide proof" labels, so no interface words sit in the mathematical text.
+
+Since `theme-v14` an italic letter that the wiki build marks with `--ic` (its italic correction from Libertinus Math) gets that much space after it, so it no longer runs into a following bracket, bar or letter. Firefox applies italic correction itself, so the rule is skipped there. Superscripts keep Temml's own correction.
