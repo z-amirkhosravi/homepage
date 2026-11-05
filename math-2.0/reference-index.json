@@ -2,6 +2,258 @@
   "schema_version": 1,
   "units": [
     {
+      "tag": "00G4",
+      "kind": "context",
+      "title": "Harmonic Theta Kernels and Quaternionic Coefficient Relations at Discriminant Five",
+      "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+      "url": "quaternionic-analysis/arithmetic-theta-kernels.html",
+      "articleTitle": "Harmonic Theta Kernels and Quaternionic Coefficient Relations at Discriminant Five",
+      "anchor": "tag-00G4",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+          "anchor": "tag-00G4",
+          "kind": "canonical"
+        }
+      ],
+      "number": null,
+      "numberText": null,
+      "displayLabel": "Harmonic Theta Kernels and Quaternionic Coefficient Relations at Discriminant Five",
+      "statementName": null,
+      "navigationLabel": "Harmonic Theta Kernels and Quaternionic Coefficient Relations at Discriminant Five"
+    },
+    {
+      "tag": "00G5",
+      "kind": "equation",
+      "title": "Equation",
+      "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+      "url": "quaternionic-analysis/arithmetic-theta-kernels.html",
+      "articleTitle": "Harmonic Theta Kernels and Quaternionic Coefficient Relations at Discriminant Five",
+      "anchor": "tag-00G5",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+          "anchor": "tag-00G5",
+          "kind": "canonical"
+        }
+      ],
+      "number": 1,
+      "numberText": "AT.1",
+      "displayLabel": "Equation AT.1",
+      "statementName": null,
+      "navigationLabel": "Equation AT.1"
+    },
+    {
+      "tag": "00G6",
+      "kind": "theorem",
+      "title": "A Mixed Coefficient Relation",
+      "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+      "url": "quaternionic-analysis/arithmetic-theta-kernels.html",
+      "articleTitle": "Harmonic Theta Kernels and Quaternionic Coefficient Relations at Discriminant Five",
+      "anchor": "tag-00G6",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+          "anchor": "tag-00G6",
+          "kind": "canonical"
+        }
+      ],
+      "number": 1,
+      "numberText": "AT.1",
+      "displayLabel": "Theorem AT.1",
+      "statementName": null,
+      "navigationLabel": "Theorem AT.1"
+    },
+    {
+      "tag": "00G7",
+      "kind": "equation",
+      "title": "Equation",
+      "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+      "url": "quaternionic-analysis/arithmetic-theta-kernels.html",
+      "articleTitle": "Harmonic Theta Kernels and Quaternionic Coefficient Relations at Discriminant Five",
+      "anchor": "tag-00G7",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+          "anchor": "tag-00G7",
+          "kind": "canonical"
+        }
+      ],
+      "number": 2,
+      "numberText": "AT.2",
+      "displayLabel": "Equation AT.2",
+      "statementName": null,
+      "navigationLabel": "Equation AT.2"
+    },
+    {
+      "tag": "00G8",
+      "kind": "equation",
+      "title": "Equation",
+      "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+      "url": "quaternionic-analysis/arithmetic-theta-kernels.html",
+      "articleTitle": "Harmonic Theta Kernels and Quaternionic Coefficient Relations at Discriminant Five",
+      "anchor": "tag-00G8",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+          "anchor": "tag-00G8",
+          "kind": "canonical"
+        }
+      ],
+      "number": 3,
+      "numberText": "AT.3",
+      "displayLabel": "Equation AT.3",
+      "statementName": null,
+      "navigationLabel": "Equation AT.3"
+    },
+    {
+      "tag": "00G9",
+      "kind": "proposition",
+      "title": "An Exact Mixed Coefficient in Weight Six",
+      "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+      "url": "quaternionic-analysis/arithmetic-theta-kernels.html",
+      "articleTitle": "Harmonic Theta Kernels and Quaternionic Coefficient Relations at Discriminant Five",
+      "anchor": "tag-00G9",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+          "anchor": "tag-00G9",
+          "kind": "canonical"
+        }
+      ],
+      "number": 2,
+      "numberText": "AT.2",
+      "displayLabel": "Proposition AT.2",
+      "statementName": null,
+      "navigationLabel": "Proposition AT.2"
+    },
+    {
+      "tag": "00GA",
+      "kind": "theorem",
+      "title": "The Kernel and Its Isometry Parity",
+      "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+      "url": "quaternionic-analysis/arithmetic-theta-kernels.html",
+      "articleTitle": "Harmonic Theta Kernels and Quaternionic Coefficient Relations at Discriminant Five",
+      "anchor": "tag-00GA",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+          "anchor": "tag-00GA",
+          "kind": "canonical"
+        }
+      ],
+      "number": 3,
+      "numberText": "AT.3",
+      "displayLabel": "Theorem AT.3",
+      "statementName": null,
+      "navigationLabel": "Theorem AT.3"
+    },
+    {
+      "tag": "00GB",
+      "kind": "equation",
+      "title": "Equation",
+      "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+      "url": "quaternionic-analysis/arithmetic-theta-kernels.html",
+      "articleTitle": "Harmonic Theta Kernels and Quaternionic Coefficient Relations at Discriminant Five",
+      "anchor": "tag-00GB",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+          "anchor": "tag-00GB",
+          "kind": "canonical"
+        }
+      ],
+      "number": 4,
+      "numberText": "AT.4",
+      "displayLabel": "Equation AT.4",
+      "statementName": null,
+      "navigationLabel": "Equation AT.4"
+    },
+    {
+      "tag": "00GC",
+      "kind": "proposition",
+      "title": "The Brandt Description of the Kernel",
+      "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+      "url": "quaternionic-analysis/arithmetic-theta-kernels.html",
+      "articleTitle": "Harmonic Theta Kernels and Quaternionic Coefficient Relations at Discriminant Five",
+      "anchor": "tag-00GC",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+          "anchor": "tag-00GC",
+          "kind": "canonical"
+        }
+      ],
+      "number": 4,
+      "numberText": "AT.4",
+      "displayLabel": "Proposition AT.4",
+      "statementName": null,
+      "navigationLabel": "Proposition AT.4"
+    },
+    {
+      "tag": "00GD",
+      "kind": "equation",
+      "title": "Equation",
+      "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+      "url": "quaternionic-analysis/arithmetic-theta-kernels.html",
+      "articleTitle": "Harmonic Theta Kernels and Quaternionic Coefficient Relations at Discriminant Five",
+      "anchor": "tag-00GD",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+          "anchor": "tag-00GD",
+          "kind": "canonical"
+        }
+      ],
+      "number": 5,
+      "numberText": "AT.5",
+      "displayLabel": "Equation AT.5",
+      "statementName": null,
+      "navigationLabel": "Equation AT.5"
+    },
+    {
+      "tag": "00GE",
+      "kind": "proposition",
+      "title": "The Averaged Numerator Identity",
+      "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+      "url": "quaternionic-analysis/arithmetic-theta-kernels.html",
+      "articleTitle": "Harmonic Theta Kernels and Quaternionic Coefficient Relations at Discriminant Five",
+      "anchor": "tag-00GE",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+          "anchor": "tag-00GE",
+          "kind": "canonical"
+        }
+      ],
+      "number": 5,
+      "numberText": "AT.5",
+      "displayLabel": "Proposition AT.5",
+      "statementName": null,
+      "navigationLabel": "Proposition AT.5"
+    },
+    {
+      "tag": "00GF",
+      "kind": "equation",
+      "title": "Equation",
+      "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+      "url": "quaternionic-analysis/arithmetic-theta-kernels.html",
+      "articleTitle": "Harmonic Theta Kernels and Quaternionic Coefficient Relations at Discriminant Five",
+      "anchor": "tag-00GF",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/arithmetic-theta-kernels.md",
+          "anchor": "tag-00GF",
+          "kind": "canonical"
+        }
+      ],
+      "number": 6,
+      "numberText": "AT.6",
+      "displayLabel": "Equation AT.6",
+      "statementName": null,
+      "navigationLabel": "Equation AT.6"
+    },
+    {
       "tag": "0001",
       "kind": "context",
       "title": "A Two-Form Construction for Regular Automorphic Spinors on the Quaternionic Ball",
@@ -9334,6 +9586,111 @@
       "navigationLabel": "Equation EM.1"
     },
     {
+      "tag": "00FN",
+      "kind": "equation",
+      "title": "Equation",
+      "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+      "url": "quaternionic-analysis/lattice-eisenstein-series.html",
+      "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
+      "anchor": "tag-00FN",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+          "anchor": "tag-00FN",
+          "kind": "canonical"
+        }
+      ],
+      "number": 2,
+      "numberText": "EM.2",
+      "displayLabel": "Equation EM.2",
+      "statementName": null,
+      "navigationLabel": "Equation EM.2"
+    },
+    {
+      "tag": "00FP",
+      "kind": "proposition",
+      "title": "The Tensor and Its Quaternionic Coordinates",
+      "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+      "url": "quaternionic-analysis/lattice-eisenstein-series.html",
+      "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
+      "anchor": "tag-00FP",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+          "anchor": "tag-00FP",
+          "kind": "canonical"
+        }
+      ],
+      "number": 2,
+      "numberText": "EM.2",
+      "displayLabel": "Proposition EM.2",
+      "statementName": null,
+      "navigationLabel": "Proposition EM.2"
+    },
+    {
+      "tag": "00FQ",
+      "kind": "equation",
+      "title": "Equation",
+      "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+      "url": "quaternionic-analysis/lattice-eisenstein-series.html",
+      "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
+      "anchor": "tag-00FQ",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+          "anchor": "tag-00FQ",
+          "kind": "canonical"
+        }
+      ],
+      "number": 3,
+      "numberText": "EM.3",
+      "displayLabel": "Equation EM.3",
+      "statementName": null,
+      "navigationLabel": "Equation EM.3"
+    },
+    {
+      "tag": "00FR",
+      "kind": "equation",
+      "title": "Equation",
+      "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+      "url": "quaternionic-analysis/lattice-eisenstein-series.html",
+      "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
+      "anchor": "tag-00FR",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+          "anchor": "tag-00FR",
+          "kind": "canonical"
+        }
+      ],
+      "number": 4,
+      "numberText": "EM.4",
+      "displayLabel": "Equation EM.4",
+      "statementName": null,
+      "navigationLabel": "Equation EM.4"
+    },
+    {
+      "tag": "00FS",
+      "kind": "equation",
+      "title": "Equation",
+      "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+      "url": "quaternionic-analysis/lattice-eisenstein-series.html",
+      "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
+      "anchor": "tag-00FS",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+          "anchor": "tag-00FS",
+          "kind": "canonical"
+        }
+      ],
+      "number": 5,
+      "numberText": "EM.5",
+      "displayLabel": "Equation EM.5",
+      "statementName": null,
+      "navigationLabel": "Equation EM.5"
+    },
+    {
       "tag": "009D",
       "kind": "context",
       "title": "Homogeneous Sections and Eisenstein Summation",
@@ -9389,11 +9746,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 2,
-      "numberText": "EM.2",
-      "displayLabel": "Construction EM.2",
+      "number": 3,
+      "numberText": "EM.3",
+      "displayLabel": "Construction EM.3",
       "statementName": null,
-      "navigationLabel": "Construction EM.2"
+      "navigationLabel": "Construction EM.3"
     },
     {
       "tag": "009F",
@@ -9446,11 +9803,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 3,
-      "numberText": "EM.3",
-      "displayLabel": "Proposition EM.3",
+      "number": 4,
+      "numberText": "EM.4",
+      "displayLabel": "Proposition EM.4",
       "statementName": null,
-      "navigationLabel": "Proposition EM.3"
+      "navigationLabel": "Proposition EM.4"
     },
     {
       "tag": "009H",
@@ -9472,11 +9829,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 2,
-      "numberText": "EM.2",
-      "displayLabel": "Equation EM.2",
+      "number": 6,
+      "numberText": "EM.6",
+      "displayLabel": "Equation EM.6",
       "statementName": null,
-      "navigationLabel": "Equation EM.2"
+      "navigationLabel": "Equation EM.6"
     },
     {
       "tag": "009I",
@@ -9498,11 +9855,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 3,
-      "numberText": "EM.3",
-      "displayLabel": "Equation EM.3",
+      "number": 7,
+      "numberText": "EM.7",
+      "displayLabel": "Equation EM.7",
       "statementName": null,
-      "navigationLabel": "Equation EM.3"
+      "navigationLabel": "Equation EM.7"
     },
     {
       "tag": "009J",
@@ -9524,11 +9881,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 4,
-      "numberText": "EM.4",
-      "displayLabel": "Equation EM.4",
+      "number": 8,
+      "numberText": "EM.8",
+      "displayLabel": "Equation EM.8",
       "statementName": null,
-      "navigationLabel": "Equation EM.4"
+      "navigationLabel": "Equation EM.8"
     },
     {
       "tag": "009K",
@@ -9550,11 +9907,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 5,
-      "numberText": "EM.5",
-      "displayLabel": "Equation EM.5",
+      "number": 9,
+      "numberText": "EM.9",
+      "displayLabel": "Equation EM.9",
       "statementName": null,
-      "navigationLabel": "Equation EM.5"
+      "navigationLabel": "Equation EM.9"
     },
     {
       "tag": "009L",
@@ -9607,11 +9964,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 4,
-      "numberText": "EM.4",
-      "displayLabel": "Definition EM.4",
+      "number": 5,
+      "numberText": "EM.5",
+      "displayLabel": "Definition EM.5",
       "statementName": null,
-      "navigationLabel": "Definition EM.4"
+      "navigationLabel": "Definition EM.5"
     },
     {
       "tag": "009N",
@@ -9633,11 +9990,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 6,
-      "numberText": "EM.6",
-      "displayLabel": "Equation EM.6",
+      "number": 10,
+      "numberText": "EM.10",
+      "displayLabel": "Equation EM.10",
       "statementName": null,
-      "navigationLabel": "Equation EM.6"
+      "navigationLabel": "Equation EM.10"
     },
     {
       "tag": "009P",
@@ -9664,11 +10021,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 5,
-      "numberText": "EM.5",
-      "displayLabel": "Proposition EM.5",
+      "number": 6,
+      "numberText": "EM.6",
+      "displayLabel": "Proposition EM.6",
       "statementName": null,
-      "navigationLabel": "Proposition EM.5"
+      "navigationLabel": "Proposition EM.6"
     },
     {
       "tag": "009Q",
@@ -9690,11 +10047,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 7,
-      "numberText": "EM.7",
-      "displayLabel": "Equation EM.7",
+      "number": 11,
+      "numberText": "EM.11",
+      "displayLabel": "Equation EM.11",
       "statementName": null,
-      "navigationLabel": "Equation EM.7"
+      "navigationLabel": "Equation EM.11"
     },
     {
       "tag": "009R",
@@ -9716,11 +10073,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 8,
-      "numberText": "EM.8",
-      "displayLabel": "Equation EM.8",
+      "number": 12,
+      "numberText": "EM.12",
+      "displayLabel": "Equation EM.12",
       "statementName": null,
-      "navigationLabel": "Equation EM.8"
+      "navigationLabel": "Equation EM.12"
     },
     {
       "tag": "009S",
@@ -9747,11 +10104,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 6,
-      "numberText": "EM.6",
-      "displayLabel": "Proposition EM.6",
+      "number": 7,
+      "numberText": "EM.7",
+      "displayLabel": "Proposition EM.7",
       "statementName": null,
-      "navigationLabel": "Proposition EM.6"
+      "navigationLabel": "Proposition EM.7"
     },
     {
       "tag": "009T",
@@ -9773,11 +10130,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 9,
-      "numberText": "EM.9",
-      "displayLabel": "Equation EM.9",
+      "number": 13,
+      "numberText": "EM.13",
+      "displayLabel": "Equation EM.13",
       "statementName": null,
-      "navigationLabel": "Equation EM.9"
+      "navigationLabel": "Equation EM.13"
     },
     {
       "tag": "009U",
@@ -9799,11 +10156,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 10,
-      "numberText": "EM.10",
-      "displayLabel": "Equation EM.10",
+      "number": 14,
+      "numberText": "EM.14",
+      "displayLabel": "Equation EM.14",
       "statementName": null,
-      "navigationLabel": "Equation EM.10"
+      "navigationLabel": "Equation EM.14"
     },
     {
       "tag": "009V",
@@ -9830,11 +10187,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 7,
-      "numberText": "EM.7",
-      "displayLabel": "Theorem EM.7",
+      "number": 8,
+      "numberText": "EM.8",
+      "displayLabel": "Theorem EM.8",
       "statementName": null,
-      "navigationLabel": "Theorem EM.7"
+      "navigationLabel": "Theorem EM.8"
     },
     {
       "tag": "009W",
@@ -9856,11 +10213,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 11,
-      "numberText": "EM.11",
-      "displayLabel": "Equation EM.11",
+      "number": 15,
+      "numberText": "EM.15",
+      "displayLabel": "Equation EM.15",
       "statementName": null,
-      "navigationLabel": "Equation EM.11"
+      "navigationLabel": "Equation EM.15"
     },
     {
       "tag": "009X",
@@ -9887,11 +10244,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 8,
-      "numberText": "EM.8",
-      "displayLabel": "Corollary EM.8",
+      "number": 9,
+      "numberText": "EM.9",
+      "displayLabel": "Corollary EM.9",
       "statementName": null,
-      "navigationLabel": "Corollary EM.8"
+      "navigationLabel": "Corollary EM.9"
     },
     {
       "tag": "009Y",
@@ -9918,11 +10275,116 @@
           "kind": "canonical"
         }
       ],
-      "number": 9,
-      "numberText": "EM.9",
-      "displayLabel": "Proposition EM.9",
+      "number": 10,
+      "numberText": "EM.10",
+      "displayLabel": "Proposition EM.10",
       "statementName": null,
-      "navigationLabel": "Proposition EM.9"
+      "navigationLabel": "Proposition EM.10"
+    },
+    {
+      "tag": "00FT",
+      "kind": "proposition",
+      "title": "Similarity and Scale",
+      "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+      "url": "quaternionic-analysis/lattice-eisenstein-series.html",
+      "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
+      "anchor": "tag-00FT",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+          "anchor": "tag-00FT",
+          "kind": "canonical"
+        }
+      ],
+      "number": 11,
+      "numberText": "EM.11",
+      "displayLabel": "Proposition EM.11",
+      "statementName": null,
+      "navigationLabel": "Proposition EM.11"
+    },
+    {
+      "tag": "00FU",
+      "kind": "equation",
+      "title": "Equation",
+      "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+      "url": "quaternionic-analysis/lattice-eisenstein-series.html",
+      "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
+      "anchor": "tag-00FU",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+          "anchor": "tag-00FU",
+          "kind": "canonical"
+        }
+      ],
+      "number": 16,
+      "numberText": "EM.16",
+      "displayLabel": "Equation EM.16",
+      "statementName": null,
+      "navigationLabel": "Equation EM.16"
+    },
+    {
+      "tag": "00FV",
+      "kind": "equation",
+      "title": "Equation",
+      "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+      "url": "quaternionic-analysis/lattice-eisenstein-series.html",
+      "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
+      "anchor": "tag-00FV",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+          "anchor": "tag-00FV",
+          "kind": "canonical"
+        }
+      ],
+      "number": 17,
+      "numberText": "EM.17",
+      "displayLabel": "Equation EM.17",
+      "statementName": null,
+      "navigationLabel": "Equation EM.17"
+    },
+    {
+      "tag": "00FW",
+      "kind": "proposition",
+      "title": "Descent and Vertical Regularity",
+      "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+      "url": "quaternionic-analysis/lattice-eisenstein-series.html",
+      "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
+      "anchor": "tag-00FW",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+          "anchor": "tag-00FW",
+          "kind": "canonical"
+        }
+      ],
+      "number": 12,
+      "numberText": "EM.12",
+      "displayLabel": "Proposition EM.12",
+      "statementName": null,
+      "navigationLabel": "Proposition EM.12"
+    },
+    {
+      "tag": "00FX",
+      "kind": "proposition",
+      "title": "The Coefficients as Regular Jets",
+      "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+      "url": "quaternionic-analysis/lattice-eisenstein-series.html",
+      "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
+      "anchor": "tag-00FX",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+          "anchor": "tag-00FX",
+          "kind": "canonical"
+        }
+      ],
+      "number": 13,
+      "numberText": "EM.13",
+      "displayLabel": "Proposition EM.13",
+      "statementName": null,
+      "navigationLabel": "Proposition EM.13"
     },
     {
       "tag": "009Z",
@@ -10006,11 +10468,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 10,
-      "numberText": "EM.10",
-      "displayLabel": "Proposition EM.10",
+      "number": 14,
+      "numberText": "EM.14",
+      "displayLabel": "Proposition EM.14",
       "statementName": null,
-      "navigationLabel": "Proposition EM.10"
+      "navigationLabel": "Proposition EM.14"
     },
     {
       "tag": "00A1",
@@ -10037,11 +10499,137 @@
           "kind": "canonical"
         }
       ],
-      "number": 11,
-      "numberText": "EM.11",
-      "displayLabel": "Corollary EM.11",
+      "number": 15,
+      "numberText": "EM.15",
+      "displayLabel": "Corollary EM.15",
       "statementName": null,
-      "navigationLabel": "Corollary EM.11"
+      "navigationLabel": "Corollary EM.15"
+    },
+    {
+      "tag": "00FY",
+      "kind": "equation",
+      "title": "Equation",
+      "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+      "url": "quaternionic-analysis/lattice-eisenstein-series.html",
+      "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
+      "anchor": "tag-00FY",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+          "anchor": "tag-00FY",
+          "kind": "canonical"
+        }
+      ],
+      "number": 18,
+      "numberText": "EM.18",
+      "displayLabel": "Equation EM.18",
+      "statementName": null,
+      "navigationLabel": "Equation EM.18"
+    },
+    {
+      "tag": "00FZ",
+      "kind": "equation",
+      "title": "Equation",
+      "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+      "url": "quaternionic-analysis/lattice-eisenstein-series.html",
+      "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
+      "anchor": "tag-00FZ",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+          "anchor": "tag-00FZ",
+          "kind": "canonical"
+        }
+      ],
+      "number": 19,
+      "numberText": "EM.19",
+      "displayLabel": "Equation EM.19",
+      "statementName": null,
+      "navigationLabel": "Equation EM.19"
+    },
+    {
+      "tag": "00G0",
+      "kind": "proposition",
+      "title": "The Full Coefficient Mellin Identity",
+      "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+      "url": "quaternionic-analysis/lattice-eisenstein-series.html",
+      "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
+      "anchor": "tag-00G0",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+          "anchor": "tag-00G0",
+          "kind": "canonical"
+        }
+      ],
+      "number": 16,
+      "numberText": "EM.16",
+      "displayLabel": "Proposition EM.16",
+      "statementName": null,
+      "navigationLabel": "Proposition EM.16"
+    },
+    {
+      "tag": "00G1",
+      "kind": "equation",
+      "title": "Equation",
+      "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+      "url": "quaternionic-analysis/lattice-eisenstein-series.html",
+      "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
+      "anchor": "tag-00G1",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+          "anchor": "tag-00G1",
+          "kind": "canonical"
+        }
+      ],
+      "number": 20,
+      "numberText": "EM.20",
+      "displayLabel": "Equation EM.20",
+      "statementName": null,
+      "navigationLabel": "Equation EM.20"
+    },
+    {
+      "tag": "00G2",
+      "kind": "equation",
+      "title": "Equation",
+      "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+      "url": "quaternionic-analysis/lattice-eisenstein-series.html",
+      "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
+      "anchor": "tag-00G2",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+          "anchor": "tag-00G2",
+          "kind": "canonical"
+        }
+      ],
+      "number": 21,
+      "numberText": "EM.21",
+      "displayLabel": "Equation EM.21",
+      "statementName": null,
+      "navigationLabel": "Equation EM.21"
+    },
+    {
+      "tag": "00G3",
+      "kind": "equation",
+      "title": "Equation",
+      "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+      "url": "quaternionic-analysis/lattice-eisenstein-series.html",
+      "articleTitle": "Eisenstein and Mellin Formulas for Quaternionic Elliptic Coefficients",
+      "anchor": "tag-00G3",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/lattice-eisenstein-series.md",
+          "anchor": "tag-00G3",
+          "kind": "canonical"
+        }
+      ],
+      "number": 22,
+      "numberText": "EM.22",
+      "displayLabel": "Equation EM.22",
+      "statementName": null,
+      "navigationLabel": "Equation EM.22"
     },
     {
       "tag": "00A2",
@@ -10099,11 +10687,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 12,
-      "numberText": "EM.12",
-      "displayLabel": "Theorem EM.12",
+      "number": 17,
+      "numberText": "EM.17",
+      "displayLabel": "Theorem EM.17",
       "statementName": null,
-      "navigationLabel": "Theorem EM.12"
+      "navigationLabel": "Theorem EM.17"
     },
     {
       "tag": "00A4",
@@ -10130,11 +10718,11 @@
           "kind": "canonical"
         }
       ],
-      "number": 13,
-      "numberText": "EM.13",
-      "displayLabel": "Theorem EM.13",
+      "number": 18,
+      "numberText": "EM.18",
+      "displayLabel": "Theorem EM.18",
       "statementName": null,
-      "navigationLabel": "Theorem EM.13"
+      "navigationLabel": "Theorem EM.18"
     },
     {
       "tag": "00A5",

@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Rational polynomial data, finite norm-shell sums and a standalone verifier for the arithmetic companion.">
+<title>Exact Certificate for the Discriminant-Five Theta Kernel · Math 2.0</title>
+<link rel="preload" href="../assets/theme/fonts/LibertinusSerif-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../assets/theme/fonts/LibertinusMath-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../assets/theme/temml.css?v=14">
+<link rel="stylesheet" href="../assets/theme/wiki.css?v=14">
+<script defer src="../assets/theme/wiki.js?v=14"></script>
+</head>
+<body data-root="../">
+<a class="skip-link" href="#main">Skip to content</a>
+<a class="banner" href="https://z-amirkhosravi.github.io/homepage/" aria-label="Home"><img src="../assets/theme/banner.jpg" alt="Geometric constructions on five triangles: inscribed and circumscribed circles, altitudes and medians"></a>
+<div class="frame">
+<header class="site-header">
+<nav aria-label="Sections">
+<ul>
+<li><a href="https://z-amirkhosravi.github.io/homepage/">About</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/code/">Code</a></li>
+<li><a href="https://z-amirkhosravi.github.io/homepage/math/" aria-current="true">Math</a></li>
+</ul>
+</nav>
+</header>
+<div class="wiki-strip">
+<nav aria-label="Breadcrumb">
+<ol>
+<li><a href="../index.html">Wiki</a></li>
+<li aria-hidden="true">/</li>
+<li>Quaternionic analysis</li>
+</ol>
+</nav>
+<div class="search" role="search">
+<label class="visually-hidden" for="wiki-search">Search the wiki</label>
+<input id="wiki-search" type="search" autocomplete="off" placeholder="Search statements and articles" aria-controls="search-results" aria-describedby="search-status">
+<div class="search-panel" hidden>
+<p id="search-status" role="status"></p>
+<ul id="search-results"></ul>
+</div>
+</div>
+</div>
+<div class="wiki-body">
+<details class="toc" open>
+<summary>On this page</summary>
+<nav aria-label="On this page">
+<ol class="toc-list"><li><a href="#coordinate-and-norm-conventions">Coordinate and Norm Conventions</a></li><li><a href="#isometries-and-the-invariant-basis">Isometries and the Invariant Basis</a></li><li><a href="#shell-sums-and-mixed-numerator-span">Shell Sums and Mixed Numerator Span</a></li><li><a href="#brandt-and-averaging-checks">Brandt and Averaging Checks</a></li></ol>
+</nav>
+</details>
+<main id="main">
+<div class="page-head"><div class="article-kind" data-article-kind="research">Research</div></div>
+<div class="page-intro">
+<p class="page-description">Rational polynomial data, finite norm-shell sums and a standalone verifier for the arithmetic companion.</p>
+
+</div>
+<article>
+<h1 id="exact-certificate-for-the-discriminant-five-theta-kernel">Exact Certificate for the Discriminant-Five Theta Kernel</h1>
+<p>This supplement supplies the finite data in the <a href="arithmetic-theta-kernels.html">arithmetic theta-kernel article</a>. The infinite conclusions use harmonic theta modularity and the coefficient bounds used there. The calculations below use rational arithmetic, with explicitly extracted factors in <math><mrow><mi>ℚ</mi><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><msqrt><mn>2</mn></msqrt><mo separator="true">,</mo><msqrt><mn>5</mn></msqrt><mo fence="true" form="postfix" stretchy="false">)</mo></mrow></mrow></math> for the Euclidean Fueter numerators.</p>
+<p>The <a href="arithmetic-data/arithmetic-certificate.json">data file</a> contains the integer/rational coefficient arrays. The <a href="arithmetic-data/verify-certificate.py">standalone verifier</a>, together with its <a href="arithmetic-data/certificate-polynomials.py">polynomial operations</a>, checks them using Python 3 and SymPy. Place these three files in one directory and run:</p>
+<pre><code class="language-sh">python3 verify-certificate.py
+</code></pre>
+<p>The verifier needs no network, PARI installation or project files. It writes its results to certificate-checks.json. Its checks are finite polynomial and lattice computations; the main article supplies their modular interpretation.</p>
+<h2 id="coordinate-and-norm-conventions">Coordinate and Norm Conventions<a class="anchor" href="#coordinate-and-norm-conventions" aria-label="Link to Coordinate and Norm Conventions">#</a></h2>
+<p>The rational coordinates are <math><mrow><mi style="--ic:0.026em">a</mi><mo>=</mo><mi style="--ic:0.076em">t</mi><mo>+</mo><mi style="--ic:0.081em">x</mi><mi style="--ic:0.036em">u</mi><mo>+</mo><mi style="--ic:0.096em">y</mi><mi style="--ic:0.097em">v</mi><mo>+</mo><mi style="--ic:0.051em">z</mi><mi style="--ic:0.036em">u</mi><mi style="--ic:0.097em">v</mi></mrow></math>, with norm <math><mrow><msup><mi>t</mi><mn class="tml-med-pad">2</mn></msup><mo>+</mo><mn>2</mn><msup><mi>x</mi><mn class="tml-sml-pad">2</mn></msup><mo>+</mo><mn>5</mn><msup><mi>y</mi><mn class="tml-sml-pad">2</mn></msup><mo>+</mo><mn>10</mn><msup><mi>z</mi><mn class="tml-sml-pad">2</mn></msup></mrow></math>. The Euclidean coordinates used in <math><msub><mi>G</mi><mi style="--ic:0.08em">ν</mi></msub></math> are <math><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi style="--ic:0.076em">t</mi><mo separator="true">,</mo><msqrt><mn>2</mn></msqrt><mi style="--ic:0.081em">x</mi><mo separator="true">,</mo><msqrt><mn>5</mn></msqrt><mi style="--ic:0.096em">y</mi><mo separator="true">,</mo><msqrt><mn>10</mn></msqrt><mi style="--ic:0.051em">z</mi><mo fence="true" form="postfix" stretchy="false">)</mo></mrow></math>. Let <math><msub><mi>S</mi><mi style="--ic:0.058em">O</mi></msub></math> have as columns the specified order basis in rational quaternion coordinates. Then</p>
+<div class="equation"><math display="block" class="tml-display" style="display:block math;"><mrow><msub><mi>S</mi><mi style="--ic:0.058em">O</mi></msub><mo>=</mo><mrow><mo fence="true" form="prefix" stretchy="true">(</mo><mtable><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>1</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>1</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mrow><mn>1</mn><mi>/</mi><mn>4</mn></mrow></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>0</mn></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>1</mn><mi>/</mi><mn>4</mn></mrow></mtd></mtr></mtable><mo fence="true" form="postfix" stretchy="true">)</mo></mrow><mi>.</mi></mrow></math></div>
+<p>Order-coordinate vectors are columns. The order Gram matrix is
+<math><mrow><msub><mi>A</mi><mi style="--ic:0.058em">O</mi></msub><mo>=</mo><mn>2</mn><msubsup><mi>S</mi><mi style="--ic:0.058em">O</mi><mi class="tml-med-pad" style="--ic:0.076em">t</mi></msubsup><mi>diag</mi><mo>⁡</mo><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mn>1,2,5,10</mn><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><msub><mi>S</mi><mi style="--ic:0.058em">O</mi></msub></mrow></math>.
+If <math><msub><mi>S</mi><mi style="--ic:0.127em">I</mi></msub></math> is the ideal basis matrix in the main article, its normalized Gram matrix is
+<math><mrow><msub><mi>A</mi><mi style="--ic:0.127em">I</mi></msub><mo>=</mo><msubsup><mi>S</mi><mi style="--ic:0.127em">I</mi><mi class="tml-med-pad" style="--ic:0.076em">t</mi></msubsup><mi>diag</mi><mo>⁡</mo><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mn>1,2,5,10</mn><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><msub><mi>S</mi><mi style="--ic:0.127em">I</mi></msub></mrow></math>.
+The missing factor two in the latter is exactly <math><mrow><msub><mi>n</mi><mi style="--ic:0.127em">I</mi></msub><mo>=</mo><mn>2</mn></mrow></math>.</p>
+<p>The verifier checks multiplication closure of the order, right-ideal closure, the unimodular change from <math><mrow><mi style="--ic:0.086em">α</mi><mi class="mathcal">𝒪</mi></mrow></math> to the displayed ideal, both Gram determinants and levels, and <math><mrow><mn>1</mn><mo>∉</mo><mi style="--ic:0.127em">I</mi></mrow></math>. The algebra is ramified at five and infinity: the Hilbert symbol <math><mrow><msub><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mo form="prefix" stretchy="false">−</mo><mn>2</mn><mo separator="true">,</mo><mo form="prefix" stretchy="false">−</mo><mn>5</mn><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mn>5</mn></msub><mo>=</mo><mo form="prefix" stretchy="false">−</mo><mn>1</mn></mrow></math>, while <math><mrow><msub><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mo form="prefix" stretchy="false">−</mo><mn>2</mn><mo separator="true">,</mo><mo form="prefix" stretchy="false">−</mo><mn>5</mn><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mn>2</mn></msub><mo>=</mo><mn>1</mn></mrow></math>; other finite primes do not divide <math><mrow><mn>2</mn><mo>⋅</mo><mn>2</mn><mo>⋅</mo><mn>5</mn></mrow></math>. The definite real place has symbol <math><mrow><mo form="prefix" stretchy="false">−</mo><mn>1</mn></mrow></math>. Reduced discriminant five then proves maximality of the closed order.</p>
+<h2 id="isometries-and-the-invariant-basis">Isometries and the Invariant Basis<a class="anchor" href="#isometries-and-the-invariant-basis" aria-label="Link to Isometries and the Invariant Basis">#</a></h2>
+<p>The following matrices generate the proper order isometries, in order coordinates:</p>
+<div class="equation"><math display="block" class="tml-display" style="display:block math;"><mrow><msub><mi>s</mi><mn>1</mn></msub><mo>=</mo><mrow><mo fence="true" form="prefix" stretchy="true">(</mo><mtable><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>1</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>0</mn></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>1</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>0</mn></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>1</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>0</mn></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>1</mn></mrow></mtd></mtr></mtable><mo fence="true" form="postfix" stretchy="true">)</mo></mrow><mi>.</mi></mrow></math></div>
+<div class="equation"><math display="block" class="tml-display" style="display:block math;"><mrow><msub><mi>s</mi><mn>2</mn></msub><mo>=</mo><mrow><mo fence="true" form="prefix" stretchy="true">(</mo><mtable><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>1</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>0</mn></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>1</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>0</mn></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>1</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>0</mn></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>1</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>1</mn></mtd></mtr></mtable><mo fence="true" form="postfix" stretchy="true">)</mo></mrow><mi>.</mi></mrow></math></div>
+<div class="equation"><math display="block" class="tml-display" style="display:block math;"><mrow><msub><mi>s</mi><mn>3</mn></msub><mo>=</mo><mrow><mo fence="true" form="prefix" stretchy="true">(</mo><mtable><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>1</mn></mrow></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>1</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>0</mn></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>1</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>1</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>0</mn></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>1</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>0</mn></mtd></mtr></mtable><mo fence="true" form="postfix" stretchy="true">)</mo></mrow><mi>.</mi></mrow></math></div>
+<div class="equation"><math display="block" class="tml-display" style="display:block math;"><mrow><msub><mi>s</mi><mn>4</mn></msub><mo>=</mo><mrow><mo fence="true" form="prefix" stretchy="true">(</mo><mtable><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>1</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>1</mn></mrow></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>1</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>0</mn></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>1</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>0</mn></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>1</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>1</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>0</mn></mtd></mtr></mtable><mo fence="true" form="postfix" stretchy="true">)</mo></mrow><mi>.</mi></mrow></math></div>
+<p>Conjugation in the same basis is</p>
+<div class="equation"><math display="block" class="tml-display" style="display:block math;"><mrow><msub><mi>C</mi><mi style="--ic:0.058em">O</mi></msub><mo>=</mo><mrow><mo fence="true" form="prefix" stretchy="true">(</mo><mtable><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>1</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>1</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>1</mn></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>1</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>0</mn></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>1</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>0</mn></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>1</mn></mrow></mtd></mtr></mtable><mo fence="true" form="postfix" stretchy="true">)</mo></mrow><mi>.</mi></mrow></math></div>
+<p>The first group has order <math><mn>36</mn></math>; adjoining <math><msub><mi>C</mi><mi style="--ic:0.058em">O</mi></msub></math> gives order <math><mn>72</mn></math>. To prove exhaustiveness, each column <math><mi style="--ic:0.051em">z</mi></math> of an integral isometry must satisfy <math><mrow><msup><mi>z</mi><mi class="tml-sml-pad" style="--ic:0.076em">t</mi></msup><msub><mi>A</mi><mi style="--ic:0.058em">O</mi></msub><mi style="--ic:0.051em">z</mi><mo>=</mo><msub><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><msub><mi>A</mi><mi style="--ic:0.058em">O</mi></msub><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mrow><mi style="--ic:0.063em">j</mi><mi style="--ic:0.063em">j</mi></mrow></msub></mrow></math>. Such vectors obey
+<math><mrow><msubsup><mi>z</mi><mi>i</mi><mn class="tml-sml-pad">2</mn></msubsup><mo>≤</mo><msub><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><msub><mi>A</mi><mi style="--ic:0.058em">O</mi></msub><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mrow><mi style="--ic:0.063em">j</mi><mi style="--ic:0.063em">j</mi></mrow></msub><msub><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><msubsup><mi>A</mi><mi style="--ic:0.058em">O</mi><mrow class="tml-lrg-pad"><mo form="prefix" stretchy="false" lspace="0em" rspace="0em">−</mo><mn>1</mn></mrow></msubsup><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mrow><mi>i</mi><mi>i</mi></mrow></msub></mrow></math>.
+Enumeration in these finite boxes, followed by the pairwise Gram constraints, gives precisely the 72 generated matrices. Thus this checks the full group rather than only a subgroup.</p>
+<p>For sextics in order coordinates <math><mrow><msub><mi>z</mi><mn>0</mn></msub><mo separator="true">,</mo><msub><mi>z</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>z</mi><mn>2</mn></msub><mo separator="true">,</mo><msub><mi>z</mi><mn>3</mn></msub></mrow></math>, use all monomials of total degree six, in lexicographic order of their exponent tuple. The next table defines the five polynomials <math><mrow><msub><mi>P</mi><mn>1</mn></msub><mo separator="true">,</mo><mi>…</mi><mo separator="true">,</mo><msub><mi>P</mi><mn>5</mn></msub></mrow></math>: each row gives their coefficients on one monomial. Unlisted monomials have zero coefficients. The same full 84-by-5 matrix is the invariant_basis_columns field of the kernel data.</p>
+<div class="article-table" role="region" aria-label="Table" tabindex="0"><table><thead><tr>
+<th>Exponents <math><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><msub><mi>a</mi><mn>0</mn></msub><mo separator="true">,</mo><msub><mi>a</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>a</mi><mn>2</mn></msub><mo separator="true">,</mo><msub><mi>a</mi><mn>3</mn></msub><mo fence="true" form="postfix" stretchy="false">)</mo></mrow></math></th>
+<th align="right"><math><msub><mi>P</mi><mn>1</mn></msub></math></th>
+<th align="right"><math><msub><mi>P</mi><mn>2</mn></msub></math></th>
+<th align="right"><math><msub><mi>P</mi><mn>3</mn></msub></math></th>
+<th align="right"><math><msub><mi>P</mi><mn>4</mn></msub></math></th>
+<th align="right"><math><msub><mi>P</mi><mn>5</mn></msub></math></th>
+</tr>
+</thead><tbody><tr>
+<td>(0, 0, 0, 6)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td>(0, 0, 1, 5)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>(0, 0, 2, 4)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">6</td>
+<td align="right">10</td>
+</tr>
+<tr>
+<td>(0, 0, 3, 3)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">12</td>
+<td align="right">15</td>
+</tr>
+<tr>
+<td>(0, 0, 4, 2)</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">-4</td>
+<td align="right">-5</td>
+</tr>
+<tr>
+<td>(0, 0, 5, 1)</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">-10</td>
+<td align="right">-12</td>
+</tr>
+<tr>
+<td>(0, 0, 6, 0)</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>(0, 1, 0, 5)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>(0, 1, 1, 4)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">8</td>
+<td align="right">20</td>
+</tr>
+<tr>
+<td>(0, 1, 2, 3)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">36</td>
+<td align="right">45</td>
+</tr>
+<tr>
+<td>(0, 1, 3, 2)</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">17</td>
+<td align="right">10</td>
+</tr>
+<tr>
+<td>(0, 1, 4, 1)</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">-21</td>
+<td align="right">-30</td>
+</tr>
+<tr>
+<td>(0, 1, 5, 0)</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>(0, 2, 0, 4)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">6</td>
+<td align="right">10</td>
+</tr>
+<tr>
+<td>(0, 2, 1, 3)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">36</td>
+<td align="right">45</td>
+</tr>
+<tr>
+<td>(0, 2, 2, 2)</td>
+<td align="right">0</td>
+<td align="right">-6</td>
+<td align="right">6</td>
+<td align="right">42</td>
+<td align="right">30</td>
+</tr>
+<tr>
+<td>(0, 2, 3, 1)</td>
+<td align="right">0</td>
+<td align="right">-5</td>
+<td align="right">5</td>
+<td align="right">-5</td>
+<td align="right">-30</td>
+</tr>
+<tr>
+<td>(0, 2, 4, 0)</td>
+<td align="right">-15</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">-13</td>
+<td align="right">-20</td>
+</tr>
+<tr>
+<td>(0, 3, 0, 3)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">12</td>
+<td align="right">15</td>
+</tr>
+<tr>
+<td>(0, 3, 1, 2)</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">17</td>
+<td align="right">10</td>
+</tr>
+<tr>
+<td>(0, 3, 2, 1)</td>
+<td align="right">0</td>
+<td align="right">-5</td>
+<td align="right">5</td>
+<td align="right">-5</td>
+<td align="right">-30</td>
+</tr>
+<tr>
+<td>(0, 3, 3, 0)</td>
+<td align="right">-40</td>
+<td align="right">6</td>
+<td align="right">2</td>
+<td align="right">-26</td>
+<td align="right">-40</td>
+</tr>
+<tr>
+<td>(0, 4, 0, 2)</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">-4</td>
+<td align="right">-5</td>
+</tr>
+<tr>
+<td>(0, 4, 1, 1)</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">-21</td>
+<td align="right">-30</td>
+</tr>
+<tr>
+<td>(0, 4, 2, 0)</td>
+<td align="right">-15</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">-13</td>
+<td align="right">-20</td>
+</tr>
+<tr>
+<td>(0, 5, 0, 1)</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">-10</td>
+<td align="right">-12</td>
+</tr>
+<tr>
+<td>(0, 5, 1, 0)</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>(0, 6, 0, 0)</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>(1, 0, 0, 5)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>(1, 0, 1, 4)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-4</td>
+<td align="right">-5</td>
+</tr>
+<tr>
+<td>(1, 0, 2, 3)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">4</td>
+<td align="right">-5</td>
+</tr>
+<tr>
+<td>(1, 0, 3, 2)</td>
+<td align="right">0</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">10</td>
+<td align="right">5</td>
+</tr>
+<tr>
+<td>(1, 0, 4, 1)</td>
+<td align="right">0</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">-8</td>
+<td align="right">-10</td>
+</tr>
+<tr>
+<td>(1, 0, 5, 0)</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">-10</td>
+<td align="right">-12</td>
+</tr>
+<tr>
+<td>(1, 1, 0, 4)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">4</td>
+<td align="right">20</td>
+</tr>
+<tr>
+<td>(1, 1, 1, 3)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">16</td>
+<td align="right">40</td>
+</tr>
+<tr>
+<td>(1, 1, 2, 2)</td>
+<td align="right">0</td>
+<td align="right">9</td>
+<td align="right">3</td>
+<td align="right">33</td>
+<td align="right">30</td>
+</tr>
+<tr>
+<td>(1, 1, 3, 1)</td>
+<td align="right">0</td>
+<td align="right">16</td>
+<td align="right">0</td>
+<td align="right">-16</td>
+<td align="right">-20</td>
+</tr>
+<tr>
+<td>(1, 1, 4, 0)</td>
+<td align="right">0</td>
+<td align="right">7</td>
+<td align="right">-1</td>
+<td align="right">-29</td>
+<td align="right">-30</td>
+</tr>
+<tr>
+<td>(1, 2, 0, 3)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">20</td>
+<td align="right">45</td>
+</tr>
+<tr>
+<td>(1, 2, 1, 2)</td>
+<td align="right">0</td>
+<td align="right">-9</td>
+<td align="right">3</td>
+<td align="right">75</td>
+<td align="right">105</td>
+</tr>
+<tr>
+<td>(1, 2, 2, 1)</td>
+<td align="right">0</td>
+<td align="right">-6</td>
+<td align="right">6</td>
+<td align="right">42</td>
+<td align="right">30</td>
+</tr>
+<tr>
+<td>(1, 2, 3, 0)</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">1</td>
+<td align="right">-21</td>
+<td align="right">-30</td>
+</tr>
+<tr>
+<td>(1, 3, 0, 2)</td>
+<td align="right">0</td>
+<td align="right">-6</td>
+<td align="right">0</td>
+<td align="right">26</td>
+<td align="right">40</td>
+</tr>
+<tr>
+<td>(1, 3, 1, 1)</td>
+<td align="right">0</td>
+<td align="right">-14</td>
+<td align="right">6</td>
+<td align="right">50</td>
+<td align="right">40</td>
+</tr>
+<tr>
+<td>(1, 3, 2, 0)</td>
+<td align="right">0</td>
+<td align="right">-8</td>
+<td align="right">4</td>
+<td align="right">16</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>(1, 4, 0, 1)</td>
+<td align="right">0</td>
+<td align="right">-4</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>(1, 4, 1, 0)</td>
+<td align="right">0</td>
+<td align="right">-4</td>
+<td align="right">2</td>
+<td align="right">8</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>(2, 0, 0, 4)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-6</td>
+<td align="right">-15</td>
+</tr>
+<tr>
+<td>(2, 0, 1, 3)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-20</td>
+<td align="right">-55</td>
+</tr>
+<tr>
+<td>(2, 0, 2, 2)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-30</td>
+</tr>
+<tr>
+<td>(2, 0, 3, 1)</td>
+<td align="right">0</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">10</td>
+<td align="right">5</td>
+</tr>
+<tr>
+<td>(2, 0, 4, 0)</td>
+<td align="right">0</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">-4</td>
+<td align="right">-5</td>
+</tr>
+<tr>
+<td>(2, 1, 0, 3)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-4</td>
+<td align="right">-5</td>
+</tr>
+<tr>
+<td>(2, 1, 1, 2)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-30</td>
+</tr>
+<tr>
+<td>(2, 1, 2, 1)</td>
+<td align="right">0</td>
+<td align="right">9</td>
+<td align="right">-3</td>
+<td align="right">-3</td>
+<td align="right">-15</td>
+</tr>
+<tr>
+<td>(2, 1, 3, 0)</td>
+<td align="right">0</td>
+<td align="right">7</td>
+<td align="right">-3</td>
+<td align="right">-33</td>
+<td align="right">-30</td>
+</tr>
+<tr>
+<td>(2, 2, 0, 2)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">24</td>
+<td align="right">45</td>
+</tr>
+<tr>
+<td>(2, 2, 1, 1)</td>
+<td align="right">0</td>
+<td align="right">-9</td>
+<td align="right">-3</td>
+<td align="right">39</td>
+<td align="right">60</td>
+</tr>
+<tr>
+<td>(2, 2, 2, 0)</td>
+<td align="right">0</td>
+<td align="right">3</td>
+<td align="right">-3</td>
+<td align="right">-33</td>
+<td align="right">-30</td>
+</tr>
+<tr>
+<td>(2, 3, 0, 1)</td>
+<td align="right">0</td>
+<td align="right">-6</td>
+<td align="right">0</td>
+<td align="right">26</td>
+<td align="right">40</td>
+</tr>
+<tr>
+<td>(2, 3, 1, 0)</td>
+<td align="right">0</td>
+<td align="right">-8</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>(2, 4, 0, 0)</td>
+<td align="right">0</td>
+<td align="right">-4</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>(3, 0, 0, 3)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-12</td>
+<td align="right">-35</td>
+</tr>
+<tr>
+<td>(3, 0, 1, 2)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-20</td>
+<td align="right">-55</td>
+</tr>
+<tr>
+<td>(3, 0, 2, 1)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">4</td>
+<td align="right">-5</td>
+</tr>
+<tr>
+<td>(3, 0, 3, 0)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">12</td>
+<td align="right">15</td>
+</tr>
+<tr>
+<td>(3, 1, 0, 2)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-16</td>
+<td align="right">-50</td>
+</tr>
+<tr>
+<td>(3, 1, 1, 1)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-8</td>
+<td align="right">-50</td>
+</tr>
+<tr>
+<td>(3, 1, 2, 0)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>(3, 2, 0, 1)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">8</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>(3, 2, 1, 0)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>(4, 0, 0, 2)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-6</td>
+<td align="right">-15</td>
+</tr>
+<tr>
+<td>(4, 0, 1, 1)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-4</td>
+<td align="right">-5</td>
+</tr>
+<tr>
+<td>(4, 0, 2, 0)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">6</td>
+<td align="right">10</td>
+</tr>
+<tr>
+<td>(4, 1, 0, 1)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">-8</td>
+<td align="right">-25</td>
+</tr>
+<tr>
+<td>(4, 1, 1, 0)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">4</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>(4, 2, 0, 0)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">4</td>
+<td align="right">0</td>
+</tr>
+<tr>
+<td>(5, 0, 0, 1)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>(5, 0, 1, 0)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">3</td>
+</tr>
+<tr>
+<td>(6, 0, 0, 0)</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+</tbody></table></div>
+<p>The harmonicity operator is <math><mrow><msub><mo movablelimits="false">∑</mo><mrow><mi>i</mi><mo separator="true">,</mo><mi style="--ic:0.063em">j</mi></mrow></msub><msub><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><msubsup><mi>A</mi><mi style="--ic:0.058em">O</mi><mrow class="tml-lrg-pad"><mo form="prefix" stretchy="false" lspace="0em" rspace="0em">−</mo><mn>1</mn></mrow></msubsup><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mrow><mi>i</mi><mi style="--ic:0.063em">j</mi></mrow></msub><msub><mi>∂</mi><mi>i</mi></msub><msub><mi>∂</mi><mi style="--ic:0.063em">j</mi></msub></mrow></math>; its scalar factor relative to the Euclidean Laplacian does not change its kernel. Appending the generator invariance equations gives rank <math><mn>79</mn></math> in the 84-dimensional sextic space. The displayed five columns are independent and solve all the equations. Appending conjugation gives rank <math><mn>80</mn></math>. The corresponding degree-four calculation gives a one-dimensional proper-invariant space.</p>
+<h2 id="shell-sums-and-mixed-numerator-span">Shell Sums and Mixed Numerator Span<a class="anchor" href="#shell-sums-and-mixed-numerator-span" aria-label="Link to Shell Sums and Mixed Numerator Span">#</a></h2>
+<p>The norm shells on the order, for <math><mrow><mi style="--ic:0.142em">N</mi><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi style="--ic:0.026em">a</mi><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mo>=</mo><mn>1,2,3,4,5</mn></mrow></math>, have sizes <math><mn>6,18,24,42,6</mn></math>. In the basis above their first four sextic sum rows are</p>
+<div class="equation"><math display="block" class="tml-display" style="display:block math;"><mrow><mrow><mo fence="true" form="prefix" stretchy="true">(</mo><mtable><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>6</mn></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>36</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>0</mn></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>36</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>72</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>72</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>324</mn></mrow></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mn>72</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>144</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>0</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mn>144</mn></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>816</mn></mtd></mtr></mtable><mo fence="true" form="postfix" stretchy="true">)</mo></mrow><mi>.</mi></mrow></math></div>
+<p>Rows one to three have rank three. The nullspace is generated by <math><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mn>0,0,1,0,0</mn><mo fence="true" form="postfix" stretchy="false">)</mo></mrow></math> and <math><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mn>0</mn><mo separator="true">,</mo><mo form="prefix" stretchy="false">−</mo><mn>1,0,1,0</mn><mo fence="true" form="postfix" stretchy="false">)</mo></mrow></math>. The four-coefficient bound makes both theta series zero. Conjugation splits this two-dimensional kernel into its even and odd lines.</p>
+<p>The mixed numerators are pulled back from <math><mi style="--ic:0.127em">I</mi></math> by <math><mrow><mi style="--ic:0.036em">q</mi><mo>=</mo><mi style="--ic:0.086em">α</mi><mi style="--ic:0.026em">a</mi></mrow></math>, converted to order coordinates and averaged over the proper group. For each real component first divide by the common radical <math><msqrt><mrow><msup><mn>2</mn><mi style="--ic:0.062em">ϵ</mi></msup><msup><mn>5</mn><mi style="--ic:0.087em">δ</mi></msup></mrow></msqrt></math>, where</p>
+<div class="equation"><math display="block" class="tml-display" style="display:block math;"><mrow><mi style="--ic:0.062em">ϵ</mi><mo>=</mo><msub><mi>ν</mi><mn>1</mn></msub><mo>+</mo><msub><mi>ν</mi><mn>3</mn></msub><mo>+</mo><msub><mn>𝟏</mn><mrow><mtext>component </mtext><mi>i</mi><mtext> or </mtext><mi style="--ic:0.054em">k</mi></mrow></msub><mo></mo><mspace width="1em"></mspace><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mpadded lspace="0"><mi>mod</mi></mpadded><mspace width="0.3333em"></mspace><mn>2</mn><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mo separator="true">,</mo><mspace width="2em"></mspace><mi style="--ic:0.087em">δ</mi><mo>=</mo><msub><mi>ν</mi><mn>2</mn></msub><mo>+</mo><msub><mi>ν</mi><mn>3</mn></msub><mo>+</mo><msub><mn>𝟏</mn><mrow><mtext>component </mtext><mi style="--ic:0.063em">j</mi><mtext> or </mtext><mi style="--ic:0.054em">k</mi></mrow></msub><mo></mo><mspace width="1em"></mspace><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mpadded lspace="0"><mi>mod</mi></mpadded><mspace width="0.3333em"></mspace><mn>2</mn><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mi>.</mi></mrow></math></div>
+<p>The following five averaged polynomials have the given coordinates in <math><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><msub><mi>P</mi><mn>1</mn></msub><mo separator="true">,</mo><mi>…</mi><mo separator="true">,</mo><msub><mi>P</mi><mn>5</mn></msub><mo fence="true" form="postfix" stretchy="false">)</mo></mrow></math>. Their coordinate matrix is nonsingular.</p>
+<div class="article-table" role="region" aria-label="Table" tabindex="0"><table><thead><tr>
+<th>Derivative index</th>
+<th>Component</th>
+<th>Coordinates</th>
+</tr>
+</thead><tbody><tr>
+<td>(0, 1, 4)</td>
+<td>real</td>
+<td>912, 1111, -8688, 297, -192</td>
+</tr>
+<tr>
+<td>(0, 1, 4)</td>
+<td>i</td>
+<td>569, 1203/4, -756, -2619/4, 321</td>
+</tr>
+<tr>
+<td>(0, 1, 4)</td>
+<td>j</td>
+<td>3238/3, 44053/6, -7304, 1777/2, 14</td>
+</tr>
+<tr>
+<td>(0, 1, 4)</td>
+<td>k</td>
+<td>1075/3, -28975/12, 36400, -8275/4, 725</td>
+</tr>
+<tr>
+<td>(0, 2, 3)</td>
+<td>real</td>
+<td>1568/3, 10283/6, -694, 347/2, 4</td>
+</tr>
+</tbody></table></div>
+<p>For the mixed order-three numerator <math><msub><mi>H</mi><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mn>1,2,0</mn><mo fence="true" form="postfix" stretchy="false">)</mo></mrow></msub></math>, its first three shell sums in the real, <math><mrow><mi>i</mi><mo separator="true">,</mo><mi style="--ic:0.063em">j</mi><mo separator="true">,</mo><mi style="--ic:0.054em">k</mi></mrow></math> coordinates are</p>
+<div class="equation"><math display="block" class="tml-display" style="display:block math;"><mrow><mrow><mo fence="true" form="prefix" stretchy="true">(</mo><mtable><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>60</mn><msqrt><mn>2</mn></msqrt></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>120</mn><msqrt><mn>2</mn></msqrt></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mrow><mn>240</mn><msqrt><mn>2</mn></msqrt></mrow></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>12</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>24</mn></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mn>48</mn></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mrow><mn>24</mn><msqrt><mn>10</mn></msqrt></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mrow><mn>48</mn><msqrt><mn>10</mn></msqrt></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>96</mn><msqrt><mn>10</mn></msqrt></mrow></mtd></mtr><mtr><mtd style="padding-left:0em;padding-right:5.9776pt;"><mrow><mn>12</mn><msqrt><mn>5</mn></msqrt></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:5.9776pt;"><mrow><mn>24</mn><msqrt><mn>5</mn></msqrt></mrow></mtd><mtd style="padding-left:5.9776pt;padding-right:0em;"><mrow><mo form="prefix" stretchy="false">−</mo><mn>48</mn><msqrt><mn>5</mn></msqrt></mrow></mtd></mtr></mtable><mo fence="true" form="postfix" stretchy="true">)</mo></mrow><mi>.</mi></mrow></math></div>
+<p>These are the first three coefficients of the quaternionic constant in the main article times <math><msub><mi>f</mi><mn>5</mn></msub></math>. The weight-six coefficient bound is three.</p>
+<h2 id="brandt-and-averaging-checks">Brandt and Averaging Checks<a class="anchor" href="#brandt-and-averaging-checks" aria-label="Link to Brandt and Averaging Checks">#</a></h2>
+<p>The data file records the three harmonic cubics, their Fischer Gram matrix, the nine compressed representation polynomials <math><mrow><mi style="--ic:0.074em">C</mi><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi style="--ic:0.026em">a</mi><mo fence="true" form="postfix" stretchy="false">)</mo></mrow></mrow></math>, and <math><mrow><mi style="--ic:0.024em">B</mi><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mn>1</mn><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mo separator="true">,</mo><mi>…</mi><mo separator="true">,</mo><mi style="--ic:0.024em">B</mi><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mn>5</mn><mo fence="true" form="postfix" stretchy="false">)</mo></mrow></mrow></math>. The verifier reconstructs <math><mrow><mi style="--ic:0.074em">C</mi><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi style="--ic:0.026em">a</mi><mo fence="true" form="postfix" stretchy="false">)</mo></mrow></mrow></math> from the cubics and the average over the six units. It then checks the norm-shell matrices, the independence of all nine polynomial entries, and that the five commutant polynomials are proper-invariant. This proves the identification <math><mrow><mi>A</mi><mo>↦</mo><mi>tr</mi><mo>⁡</mo><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi>A</mi><mi style="--ic:0.074em">C</mi><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi style="--ic:0.026em">a</mi><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mo fence="true" form="postfix" stretchy="false">)</mo></mrow></mrow></math> with the complete invariant space.</p>
+<p>The even polynomial is normalized by
+<math><mrow><msub><mi>P</mi><mo form="prefix" stretchy="false">+</mo></msub><mo>=</mo><mi>tr</mi><mo>⁡</mo><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><msub><mi>A</mi><mo form="prefix" stretchy="false">+</mo></msub><mi style="--ic:0.074em">C</mi><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mi>/</mi><mn>7500</mn></mrow></math>, and the odd polynomial by
+<math><mrow><msub><mi>P</mi><mo form="prefix" stretchy="false">−</mo></msub><mo>=</mo><mo form="prefix" stretchy="false">−</mo><mi>tr</mi><mo>⁡</mo><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><msub><mi>A</mi><mo form="prefix" stretchy="false">−</mo></msub><mi style="--ic:0.074em">C</mi><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><mi>/</mi><mn>30000</mn></mrow></math>.
+Both their rational-coordinate and order-coordinate coefficient vectors are in the data file. The verifier checks these equalities and the two adjoint-parity identities.</p>
+<p>Finally it generates the three order-five numerators directly from
+<math><mrow><msub><mi>H</mi><mrow><mi style="--ic:0.08em">ν</mi><mo>+</mo><msub><mi>ϵ</mi><mi style="--ic:0.063em">j</mi></msub></mrow></msub><mo>=</mo><mi style="--ic:0.142em">N</mi><msub><mi>∂</mi><mi style="--ic:0.063em">j</mi></msub><msub><mi>H</mi><mi style="--ic:0.08em">ν</mi></msub><mo>−</mo><mn>2</mn><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mi>|</mi><mi style="--ic:0.08em">ν</mi><mi>|</mi><mo>+</mo><mn>2</mn><mo fence="true" form="postfix" stretchy="false">)</mo></mrow><msub><mi>x</mi><mi style="--ic:0.063em">j</mi></msub><msub><mi>H</mi><mi style="--ic:0.08em">ν</mi></msub></mrow></math>.
+After pullback to order coordinates, their weighted combination has common radical <math><msqrt><mn>5</mn></msqrt></math>. The average over the enumerated 72-element group, after dividing by <math><msqrt><mn>5</mn></msqrt></math>, is exactly <math><mrow><mo form="prefix" stretchy="false">−</mo><mn>12000</mn><msub><mi>P</mi><mo>+</mo></msub></mrow></math>. Evaluation of the unaveraged numerator at <math><mrow><mo fence="true" form="prefix" stretchy="false">(</mo><mn>1,1,0,1</mn><mo fence="true" form="postfix" stretchy="false">)</mo></mrow></math> and division by <math><msup><mn>3</mn><mn>7</mn></msup></math> gives <math><mrow><mo form="prefix" stretchy="false">−</mo><mn>1280</mn><mi>/</mi><mn>243</mn></mrow></math>.</p>
+<p>No numerical L-value approximation is used in these verifications. The bad-prime commutation argument and the deduction from zero theta series to absolutely convergent Eisenstein sums remain the infinite arguments given in the article.</p>
+
+</article>
+<script>(function(){var a=document.querySelector('main article'),h=a&&a.querySelector('h1'),i=document.querySelector('.page-intro');if(h&&i)h.after(i);})();</script>
+<nav class="adjacent" aria-label="Reading order"><a rel="prev" href="../quaternionic-analysis/harmonic-theta-values.html"><small>Previous</small> Harmonic Theta Series and Special L-Values</a><a rel="next" href="../quaternionic-analysis/regular-differential-forms.html"><small>Next</small> Fueter-Regular Functions and Closed Three-Forms</a></nav>
+</main>
+</div>
+</div>
+<footer class="site-footer">
+<a href="../about.html">About this wiki</a>
+</footer>
+</body>
+</html>
