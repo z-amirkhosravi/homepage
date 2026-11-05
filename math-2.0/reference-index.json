@@ -5871,219 +5871,12 @@
       "navigationLabel": "Related Constructions"
     },
     {
-      "tag": "0060",
-      "kind": "section",
-      "title": "Quaternionic Elliptic Coefficients as Lattice Sums",
-      "article": "quaternionic-analysis/directions.md",
-      "url": "quaternionic-analysis/directions.html",
-      "articleTitle": "Quaternionic Elliptic Coefficients as Lattice Sums",
-      "anchor": "tag-0060",
-      "aliases": [
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "from-lattice-sums-to-number-theory",
-          "kind": "context"
-        },
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "tag-0060",
-          "kind": "canonical"
-        }
-      ],
-      "number": null,
-      "numberText": null,
-      "displayLabel": "Quaternionic Elliptic Coefficients as Lattice Sums",
-      "statementName": null,
-      "navigationLabel": "Quaternionic Elliptic Coefficients as Lattice Sums"
-    },
-    {
-      "tag": "0061",
-      "kind": "context",
-      "title": "Higher derivatives and Eisenstein sums",
-      "article": "quaternionic-analysis/directions.md",
-      "url": "quaternionic-analysis/directions.html",
-      "articleTitle": "Quaternionic Elliptic Coefficients as Lattice Sums",
-      "anchor": "tag-0061",
-      "aliases": [
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "n-d1",
-          "kind": "context"
-        },
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "n-d1-title",
-          "kind": "context"
-        },
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "tag-0061",
-          "kind": "canonical"
-        }
-      ],
-      "number": null,
-      "numberText": null,
-      "displayLabel": "Higher derivatives and Eisenstein sums",
-      "statementName": null,
-      "navigationLabel": "Higher derivatives and Eisenstein sums"
-    },
-    {
-      "tag": "0062",
-      "kind": "construction",
-      "title": "Higher Eisenstein and elliptic sums",
-      "article": "quaternionic-analysis/directions.md",
-      "url": "quaternionic-analysis/directions.html",
-      "articleTitle": "Quaternionic Elliptic Coefficients as Lattice Sums",
-      "anchor": "tag-0062",
-      "aliases": [
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "n-c1",
-          "kind": "statement"
-        },
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "n-c1-title",
-          "kind": "title"
-        },
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "tag-0062",
-          "kind": "canonical"
-        }
-      ],
-      "number": 1,
-      "numberText": "QC.1",
-      "displayLabel": "Construction QC.1",
-      "statementName": null,
-      "navigationLabel": "Construction QC.1"
-    },
-    {
-      "tag": "0063",
-      "kind": "proposition",
-      "title": "Convergence and periodicity of the higher sums",
-      "article": "quaternionic-analysis/directions.md",
-      "url": "quaternionic-analysis/directions.html",
-      "articleTitle": "Quaternionic Elliptic Coefficients as Lattice Sums",
-      "anchor": "tag-0063",
-      "aliases": [
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "n2",
-          "kind": "statement"
-        },
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "n2-title",
-          "kind": "title"
-        },
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "tag-0063",
-          "kind": "canonical"
-        }
-      ],
-      "number": 2,
-      "numberText": "QC.2",
-      "displayLabel": "Proposition QC.2",
-      "statementName": null,
-      "navigationLabel": "Proposition QC.2"
-    },
-    {
-      "tag": "0064",
-      "kind": "proposition",
-      "title": "Coefficients at the singularity",
-      "article": "quaternionic-analysis/directions.md",
-      "url": "quaternionic-analysis/directions.html",
-      "articleTitle": "Quaternionic Elliptic Coefficients as Lattice Sums",
-      "anchor": "tag-0064",
-      "aliases": [
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "n1",
-          "kind": "statement"
-        },
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "n1-title",
-          "kind": "title"
-        },
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "tag-0064",
-          "kind": "canonical"
-        }
-      ],
-      "number": 3,
-      "numberText": "QC.3",
-      "displayLabel": "Proposition QC.3",
-      "statementName": null,
-      "navigationLabel": "Proposition QC.3"
-    },
-    {
-      "tag": "0065",
-      "kind": "corollary",
-      "title": "Parity cancellation",
-      "article": "quaternionic-analysis/directions.md",
-      "url": "quaternionic-analysis/directions.html",
-      "articleTitle": "Quaternionic Elliptic Coefficients as Lattice Sums",
-      "anchor": "tag-0065",
-      "aliases": [
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "n3",
-          "kind": "statement"
-        },
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "n3-title",
-          "kind": "title"
-        },
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "tag-0065",
-          "kind": "canonical"
-        }
-      ],
-      "number": 4,
-      "numberText": "QC.4",
-      "displayLabel": "Corollary QC.4",
-      "statementName": null,
-      "navigationLabel": "Corollary QC.4"
-    },
-    {
-      "tag": "0066",
-      "kind": "context",
-      "title": "Harmonic theta series",
-      "article": "quaternionic-analysis/directions.md",
-      "url": "quaternionic-analysis/directions.html",
-      "articleTitle": "Quaternionic Elliptic Coefficients as Lattice Sums",
-      "anchor": "tag-0066",
-      "aliases": [
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "discussion-open-directions-no-theorem-asserted",
-          "kind": "context"
-        },
-        {
-          "article": "quaternionic-analysis/directions.md",
-          "anchor": "tag-0066",
-          "kind": "canonical"
-        }
-      ],
-      "number": null,
-      "numberText": null,
-      "displayLabel": "Harmonic theta series",
-      "statementName": null,
-      "navigationLabel": "Harmonic theta series"
-    },
-    {
       "tag": "0067",
       "kind": "section",
-      "title": "Quaternionic Weierstrass Functions and Quasi-Periods",
+      "title": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
       "article": "quaternionic-analysis/elliptic-functions.md",
       "url": "quaternionic-analysis/elliptic-functions.html",
-      "articleTitle": "Quaternionic Weierstrass Functions and Quasi-Periods",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
       "anchor": "tag-0067",
       "aliases": [
         {
@@ -6099,17 +5892,43 @@
       ],
       "number": null,
       "numberText": null,
-      "displayLabel": "Quaternionic Weierstrass Functions and Quasi-Periods",
+      "displayLabel": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
       "statementName": null,
-      "navigationLabel": "Quaternionic Weierstrass Functions and Quasi-Periods"
+      "navigationLabel": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods"
+    },
+    {
+      "tag": "006K",
+      "kind": "context",
+      "title": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods \\label{0067}",
+      "article": "quaternionic-analysis/elliptic-functions.md",
+      "url": "quaternionic-analysis/elliptic-functions.html",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
+      "anchor": "tag-006K",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "discussion-sources-and-scope",
+          "kind": "context"
+        },
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "tag-006K",
+          "kind": "canonical"
+        }
+      ],
+      "number": null,
+      "numberText": null,
+      "displayLabel": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods \\label{0067}",
+      "statementName": null,
+      "navigationLabel": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods \\label{0067}"
     },
     {
       "tag": "0068",
       "kind": "context",
-      "title": "1. The lattice",
+      "title": "Lattice and Kernel Conventions",
       "article": "quaternionic-analysis/elliptic-functions.md",
       "url": "quaternionic-analysis/elliptic-functions.html",
-      "articleTitle": "Quaternionic Weierstrass Functions and Quasi-Periods",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
       "anchor": "tag-0068",
       "aliases": [
         {
@@ -6130,17 +5949,17 @@
       ],
       "number": null,
       "numberText": null,
-      "displayLabel": "1. The lattice",
+      "displayLabel": "Lattice and Kernel Conventions",
       "statementName": null,
-      "navigationLabel": "1. The lattice"
+      "navigationLabel": "Lattice and Kernel Conventions"
     },
     {
       "tag": "0069",
       "kind": "context",
-      "title": "1. The lattice",
+      "title": "Lattice and Kernel Conventions",
       "article": "quaternionic-analysis/elliptic-functions.md",
       "url": "quaternionic-analysis/elliptic-functions.html",
-      "articleTitle": "Quaternionic Weierstrass Functions and Quasi-Periods",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
       "anchor": "tag-0069",
       "aliases": [
         {
@@ -6156,17 +5975,17 @@
       ],
       "number": null,
       "numberText": null,
-      "displayLabel": "1. The lattice",
+      "displayLabel": "Lattice and Kernel Conventions",
       "statementName": null,
-      "navigationLabel": "1. The lattice"
+      "navigationLabel": "Lattice and Kernel Conventions"
     },
     {
       "tag": "006A",
       "kind": "construction",
-      "title": "Regularized first-derivative lattice sums",
+      "title": "Regularized First-Derivative Lattice Sums",
       "article": "quaternionic-analysis/elliptic-functions.md",
       "url": "quaternionic-analysis/elliptic-functions.html",
-      "articleTitle": "Quaternionic Weierstrass Functions and Quasi-Periods",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
       "anchor": "tag-006A",
       "aliases": [
         {
@@ -6194,10 +6013,10 @@
     {
       "tag": "006B",
       "kind": "proposition",
-      "title": "Convergence and regularity",
+      "title": "Convergence and Regularity",
       "article": "quaternionic-analysis/elliptic-functions.md",
       "url": "quaternionic-analysis/elliptic-functions.html",
-      "articleTitle": "Quaternionic Weierstrass Functions and Quasi-Periods",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
       "anchor": "tag-006B",
       "aliases": [
         {
@@ -6225,10 +6044,10 @@
     {
       "tag": "006C",
       "kind": "proposition",
-      "title": "Parity and periodicity",
+      "title": "Parity and Periodicity",
       "article": "quaternionic-analysis/elliptic-functions.md",
       "url": "quaternionic-analysis/elliptic-functions.html",
-      "articleTitle": "Quaternionic Weierstrass Functions and Quasi-Periods",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
       "anchor": "tag-006C",
       "aliases": [
         {
@@ -6254,12 +6073,278 @@
       "navigationLabel": "Proposition QW.3"
     },
     {
-      "tag": "006D",
-      "kind": "construction",
-      "title": "Subtraction of the first Taylor polynomial",
+      "tag": "0060",
+      "kind": "context",
+      "title": "Higher Derivatives and Elliptic Coefficients",
       "article": "quaternionic-analysis/elliptic-functions.md",
       "url": "quaternionic-analysis/elliptic-functions.html",
-      "articleTitle": "Quaternionic Weierstrass Functions and Quasi-Periods",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
+      "anchor": "tag-0060",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "from-lattice-sums-to-number-theory",
+          "kind": "context"
+        },
+        {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "tag-0060",
+          "kind": "canonical"
+        },
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "from-lattice-sums-to-number-theory",
+          "kind": "context"
+        },
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "tag-0060",
+          "kind": "canonical"
+        }
+      ],
+      "number": null,
+      "numberText": null,
+      "displayLabel": "Higher Derivatives and Elliptic Coefficients",
+      "statementName": null,
+      "navigationLabel": "Higher Derivatives and Elliptic Coefficients"
+    },
+    {
+      "tag": "0061",
+      "kind": "context",
+      "title": "Higher Derivatives and Elliptic Coefficients",
+      "article": "quaternionic-analysis/elliptic-functions.md",
+      "url": "quaternionic-analysis/elliptic-functions.html",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
+      "anchor": "tag-0061",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "n-d1",
+          "kind": "context"
+        },
+        {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "n-d1-title",
+          "kind": "context"
+        },
+        {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "tag-0061",
+          "kind": "canonical"
+        },
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "n-d1",
+          "kind": "context"
+        },
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "n-d1-title",
+          "kind": "context"
+        },
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "tag-0061",
+          "kind": "canonical"
+        }
+      ],
+      "number": null,
+      "numberText": null,
+      "displayLabel": "Higher Derivatives and Elliptic Coefficients",
+      "statementName": null,
+      "navigationLabel": "Higher Derivatives and Elliptic Coefficients"
+    },
+    {
+      "tag": "0062",
+      "kind": "construction",
+      "title": "Higher Eisenstein and Elliptic Sums",
+      "article": "quaternionic-analysis/elliptic-functions.md",
+      "url": "quaternionic-analysis/elliptic-functions.html",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
+      "anchor": "tag-0062",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "n-c1",
+          "kind": "statement"
+        },
+        {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "n-c1-title",
+          "kind": "title"
+        },
+        {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "tag-0062",
+          "kind": "canonical"
+        },
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "n-c1",
+          "kind": "statement"
+        },
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "n-c1-title",
+          "kind": "title"
+        },
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "tag-0062",
+          "kind": "canonical"
+        }
+      ],
+      "number": 4,
+      "numberText": "QW.4",
+      "displayLabel": "Construction QW.4",
+      "statementName": null,
+      "navigationLabel": "Construction QW.4"
+    },
+    {
+      "tag": "0063",
+      "kind": "proposition",
+      "title": "Convergence and Periodicity of the Higher Sums",
+      "article": "quaternionic-analysis/elliptic-functions.md",
+      "url": "quaternionic-analysis/elliptic-functions.html",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
+      "anchor": "tag-0063",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "n2",
+          "kind": "statement"
+        },
+        {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "n2-title",
+          "kind": "title"
+        },
+        {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "tag-0063",
+          "kind": "canonical"
+        },
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "n2",
+          "kind": "statement"
+        },
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "n2-title",
+          "kind": "title"
+        },
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "tag-0063",
+          "kind": "canonical"
+        }
+      ],
+      "number": 5,
+      "numberText": "QW.5",
+      "displayLabel": "Proposition QW.5",
+      "statementName": null,
+      "navigationLabel": "Proposition QW.5"
+    },
+    {
+      "tag": "0064",
+      "kind": "proposition",
+      "title": "Coefficients at the Singularity",
+      "article": "quaternionic-analysis/elliptic-functions.md",
+      "url": "quaternionic-analysis/elliptic-functions.html",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
+      "anchor": "tag-0064",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "n1",
+          "kind": "statement"
+        },
+        {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "n1-title",
+          "kind": "title"
+        },
+        {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "tag-0064",
+          "kind": "canonical"
+        },
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "n1",
+          "kind": "statement"
+        },
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "n1-title",
+          "kind": "title"
+        },
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "tag-0064",
+          "kind": "canonical"
+        }
+      ],
+      "number": 6,
+      "numberText": "QW.6",
+      "displayLabel": "Proposition QW.6",
+      "statementName": null,
+      "navigationLabel": "Proposition QW.6"
+    },
+    {
+      "tag": "0065",
+      "kind": "corollary",
+      "title": "Parity Cancellation",
+      "article": "quaternionic-analysis/elliptic-functions.md",
+      "url": "quaternionic-analysis/elliptic-functions.html",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
+      "anchor": "tag-0065",
+      "aliases": [
+        {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "n3",
+          "kind": "statement"
+        },
+        {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "n3-title",
+          "kind": "title"
+        },
+        {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "tag-0065",
+          "kind": "canonical"
+        },
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "n3",
+          "kind": "statement"
+        },
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "n3-title",
+          "kind": "title"
+        },
+        {
+          "article": "quaternionic-analysis/elliptic-functions.md",
+          "anchor": "tag-0065",
+          "kind": "canonical"
+        }
+      ],
+      "number": 7,
+      "numberText": "QW.7",
+      "displayLabel": "Corollary QW.7",
+      "statementName": null,
+      "navigationLabel": "Corollary QW.7"
+    },
+    {
+      "tag": "006D",
+      "kind": "construction",
+      "title": "Subtraction of the First Taylor Polynomial",
+      "article": "quaternionic-analysis/elliptic-functions.md",
+      "url": "quaternionic-analysis/elliptic-functions.html",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
       "anchor": "tag-006D",
       "aliases": [
         {
@@ -6278,19 +6363,19 @@
           "kind": "canonical"
         }
       ],
-      "number": 4,
-      "numberText": "QW.4",
-      "displayLabel": "Construction QW.4",
+      "number": 8,
+      "numberText": "QW.8",
+      "displayLabel": "Construction QW.8",
       "statementName": null,
-      "navigationLabel": "Construction QW.4"
+      "navigationLabel": "Construction QW.8"
     },
     {
       "tag": "006E",
       "kind": "lemma",
-      "title": "Comparison with the regular linear coordinates",
+      "title": "Comparison with the Regular Linear Coordinates",
       "article": "quaternionic-analysis/elliptic-functions.md",
       "url": "quaternionic-analysis/elliptic-functions.html",
-      "articleTitle": "Quaternionic Weierstrass Functions and Quasi-Periods",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
       "anchor": "tag-006E",
       "aliases": [
         {
@@ -6309,19 +6394,19 @@
           "kind": "canonical"
         }
       ],
-      "number": 5,
-      "numberText": "QW.5",
-      "displayLabel": "Lemma QW.5",
+      "number": 9,
+      "numberText": "QW.9",
+      "displayLabel": "Lemma QW.9",
       "statementName": null,
-      "navigationLabel": "Lemma QW.5"
+      "navigationLabel": "Lemma QW.9"
     },
     {
       "tag": "006F",
       "kind": "proposition",
-      "title": "Convergence, derivatives, and quasi-periods",
+      "title": "Convergence, Derivatives, and Quasi-Periods",
       "article": "quaternionic-analysis/elliptic-functions.md",
       "url": "quaternionic-analysis/elliptic-functions.html",
-      "articleTitle": "Quaternionic Weierstrass Functions and Quasi-Periods",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
       "anchor": "tag-006F",
       "aliases": [
         {
@@ -6340,19 +6425,19 @@
           "kind": "canonical"
         }
       ],
-      "number": 6,
-      "numberText": "QW.6",
-      "displayLabel": "Proposition QW.6",
+      "number": 10,
+      "numberText": "QW.10",
+      "displayLabel": "Proposition QW.10",
       "statementName": null,
-      "navigationLabel": "Proposition QW.6"
+      "navigationLabel": "Proposition QW.10"
     },
     {
       "tag": "006G",
       "kind": "corollary",
-      "title": "Half-period values of zeta",
+      "title": "Half-Period Values of Zeta",
       "article": "quaternionic-analysis/elliptic-functions.md",
       "url": "quaternionic-analysis/elliptic-functions.html",
-      "articleTitle": "Quaternionic Weierstrass Functions and Quasi-Periods",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
       "anchor": "tag-006G",
       "aliases": [
         {
@@ -6371,19 +6456,19 @@
           "kind": "canonical"
         }
       ],
-      "number": 7,
-      "numberText": "QW.7",
-      "displayLabel": "Corollary QW.7",
+      "number": 11,
+      "numberText": "QW.11",
+      "displayLabel": "Corollary QW.11",
       "statementName": null,
-      "navigationLabel": "Corollary QW.7"
+      "navigationLabel": "Corollary QW.11"
     },
     {
       "tag": "006H",
       "kind": "corollary",
-      "title": "Stationary points at half-periods",
+      "title": "Stationary Points at Half-Periods",
       "article": "quaternionic-analysis/elliptic-functions.md",
       "url": "quaternionic-analysis/elliptic-functions.html",
-      "articleTitle": "Quaternionic Weierstrass Functions and Quasi-Periods",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
       "anchor": "tag-006H",
       "aliases": [
         {
@@ -6402,19 +6487,19 @@
           "kind": "canonical"
         }
       ],
-      "number": 8,
-      "numberText": "QW.8",
-      "displayLabel": "Corollary QW.8",
+      "number": 12,
+      "numberText": "QW.12",
+      "displayLabel": "Corollary QW.12",
       "statementName": null,
-      "navigationLabel": "Corollary QW.8"
+      "navigationLabel": "Corollary QW.12"
     },
     {
       "tag": "006I",
       "kind": "corollary",
-      "title": "Real dilation",
+      "title": "Real Dilation",
       "article": "quaternionic-analysis/elliptic-functions.md",
       "url": "quaternionic-analysis/elliptic-functions.html",
-      "articleTitle": "Quaternionic Weierstrass Functions and Quasi-Periods",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
       "anchor": "tag-006I",
       "aliases": [
         {
@@ -6433,19 +6518,19 @@
           "kind": "canonical"
         }
       ],
-      "number": 9,
-      "numberText": "QW.9",
-      "displayLabel": "Corollary QW.9",
+      "number": 13,
+      "numberText": "QW.13",
+      "displayLabel": "Corollary QW.13",
       "statementName": null,
-      "navigationLabel": "Corollary QW.9"
+      "navigationLabel": "Corollary QW.13"
     },
     {
       "tag": "006J",
       "kind": "context",
-      "title": "4. Consequences and examples",
+      "title": "Relations to Eisenstein Series, Theta Series, and Periods",
       "article": "quaternionic-analysis/elliptic-functions.md",
       "url": "quaternionic-analysis/elliptic-functions.html",
-      "articleTitle": "Quaternionic Weierstrass Functions and Quasi-Periods",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
       "anchor": "tag-006J",
       "aliases": [
         {
@@ -6461,35 +6546,45 @@
       ],
       "number": null,
       "numberText": null,
-      "displayLabel": "4. Consequences and examples",
+      "displayLabel": "Relations to Eisenstein Series, Theta Series, and Periods",
       "statementName": null,
-      "navigationLabel": "4. Consequences and examples"
+      "navigationLabel": "Relations to Eisenstein Series, Theta Series, and Periods"
     },
     {
-      "tag": "006K",
+      "tag": "0066",
       "kind": "context",
-      "title": "5. Further questions",
+      "title": "Relations to Eisenstein Series, Theta Series, and Periods",
       "article": "quaternionic-analysis/elliptic-functions.md",
       "url": "quaternionic-analysis/elliptic-functions.html",
-      "articleTitle": "Quaternionic Weierstrass Functions and Quasi-Periods",
-      "anchor": "tag-006K",
+      "articleTitle": "Quaternionic Weierstrass Functions, Coefficients, and Quasi-Periods",
+      "anchor": "tag-0066",
       "aliases": [
         {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "discussion-open-directions-no-theorem-asserted",
+          "kind": "context"
+        },
+        {
+          "article": "quaternionic-analysis/directions.md",
+          "anchor": "tag-0066",
+          "kind": "canonical"
+        },
+        {
           "article": "quaternionic-analysis/elliptic-functions.md",
-          "anchor": "discussion-sources-and-scope",
+          "anchor": "discussion-open-directions-no-theorem-asserted",
           "kind": "context"
         },
         {
           "article": "quaternionic-analysis/elliptic-functions.md",
-          "anchor": "tag-006K",
+          "anchor": "tag-0066",
           "kind": "canonical"
         }
       ],
       "number": null,
       "numberText": null,
-      "displayLabel": "5. Further questions",
+      "displayLabel": "Relations to Eisenstein Series, Theta Series, and Periods",
       "statementName": null,
-      "navigationLabel": "5. Further questions"
+      "navigationLabel": "Relations to Eisenstein Series, Theta Series, and Periods"
     },
     {
       "tag": "006L",
